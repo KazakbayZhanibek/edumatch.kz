@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduMatch KZ — Выбери свой университет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+
+<!-- Leaflet (map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- AOS — scroll animations -->
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css"/>
+
+<!-- Swiper — touch slider -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<!-- Notyf — beautiful toasts -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+
+<!-- NProgress — loading bar -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
+
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" onclick="navigate('home')">
+      <img src="logo.svg" class="logo-mark" alt="EduMatch KZ logo">
+      <span class="logo-text">EduMatch<span class="logo-kz">KZ</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#" class="nav-link" onclick="navigate('home')">Вузы</a>
+      <a href="#" class="nav-link" onclick="navigate('compare')">Сравнение <span class="compare-badge" id="compare-badge" style="display:none">0</span></a>
+      <a href="#" class="nav-link" onclick="navigate('advisor')">ИИ-советник</a>
+      <a href="#" class="nav-link" onclick="navigate('roi')">ROI</a>
+      <a href="#" class="nav-link" onclick="navigate('ent')">ЕНТ</a>
+      <a href="#" class="nav-link" onclick="navigate('career')">Профориентация</a>
+      <a href="#" class="nav-link" onclick="navigate('grants')">Гранты</a>
+      <a href="#" class="nav-link" onclick="navigate('map')">Карта</a>
+      <a href="#" class="nav-link" onclick="navigate('tips')">Советы</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="burger" id="burger" onclick="toggleMobileMenu()" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-header">
+    <span class="mobile-menu-title">Меню</span>
+    <button class="mobile-menu-close" onclick="closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <nav class="mobile-nav">
+    <a class="mobile-nav-link" onclick="navigate('home');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      Университеты
+    </a>
+    <a class="mobile-nav-link" onclick="navigate('compare');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+      Сравнение <span class="compare-badge-mob" id="compare-badge-mob" style="display:none">0</span>
+    </a>
+    <a class="mobile-nav-link" onclick="navigate('advisor');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      ИИ-советник
+    </a>
+    <div class="mobile-nav-divider">Инструменты</div>
+    <a class="mobile-nav-link" onclick="navigate('roi');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Калькулятор ROI
+    </a>
+    <a class="mobile-nav-link" onclick="navigate('ent');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      ЕНТ-калькулятор
+    </a>
+    <a class="mobile-nav-link" onclick="navigate('career');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      Профориентация
+    </a>
+    <div class="mobile-nav-divider">Информация</div>
+    <a class="mobile-nav-link" onclick="navigate('grants');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      Гранты и стипендии
+    </a>
+    <a class="mobile-nav-link" onclick="navigate('map');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+      Карта вузов
+    </a>
+    <a class="mobile-nav-link" onclick="navigate('tips');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Советы абитуриенту
+    </a>
+  </nav>
+  <div class="mobile-menu-footer">
+    <button class="mobile-theme-btn" onclick="toggleTheme()">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      Переключить тему
+    </button>
+  </div>
+</div>
+
+<!-- PAGES -->
+<main id="app">
+
+  <!-- HOME PAGE -->
+  <div id="page-home" class="page active">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-badge" data-aos="fade-down" data-aos-duration="600">Алматы · 2025–2026</div>
+        <h1 class="hero-title" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">Выбор университета —<br><em>главное финансовое решение</em></h1>
+        <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200">Сравните стоимость, рейтинги и специальности ведущих вузов Алматы. Получите персональный совет от ИИ-советника.</p>
+        <div class="hero-actions" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
+          <button class="btn btn-primary" onclick="navigate('advisor')">Получить совет ИИ</button>
+          <button class="btn btn-ghost" onclick="document.getElementById('universities-section').scrollIntoView({behavior:'smooth'})">Смотреть вузы</button>
+        </div>
+        <div class="hero-stats" data-aos="fade-up" data-aos-duration="700" data-aos-delay="400">
+          <div class="stat"><span class="stat-num" id="stat-unis" data-target="15">15</span><span class="stat-label">университетов</span></div>
+          <div class="stat-div"></div>
+          <div class="stat"><span class="stat-num" id="stat-specs" data-target="30">30</span><span class="stat-label">специальностей</span></div>
+          <div class="stat-div"></div>
+          <div class="stat"><span class="stat-num">от 580K</span><span class="stat-label">тенге/год</span></div>
+        </div>
+      </div>
+      <div class="hero-visual" data-aos="fade-left" data-aos-duration="900" data-aos-delay="200">
+        <div class="hero-card-stack">
+          <div class="hcard hcard-1"><div class="hcard-label">QS World</div><div class="hcard-val">#163</div><div class="hcard-uni">КазНУ</div></div>
+          <div class="hcard hcard-2"><div class="hcard-label">Стоимость</div><div class="hcard-val">580K–3.8M</div><div class="hcard-uni">тенге/год</div></div>
+          <div class="hcard hcard-3"><div class="hcard-label">Вузов в Алматы</div><div class="hcard-val">15</div><div class="hcard-uni">в базе данных</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="universities-section" id="universities-section">
+      <div class="container">
+        <div class="section-head" data-aos="fade-up" data-aos-duration="600">
+          <h2 class="section-title">Университеты Алматы</h2>
+          <p class="section-sub">Данные актуальны на 2025–2026 учебный год</p>
+        </div>
+
+        <div class="filters">
+          <div class="search-and-filter-btn">
+            <div class="search-wrap">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" class="search-input" id="search-input" placeholder="Поиск университета..." oninput="applyFilters()">
+            </div>
+            <button class="filter-sheet-btn" onclick="openFilterSheet()" aria-label="Фильтры">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18" stroke-linecap="round" stroke-width="3"/></svg>
+              Фильтры
+            </button>
+          </div>
+          <div class="filters-row desktop-only">
+            <div class="filter-group">
+              <label class="filter-label">Специальность</label>
+              <select class="filter-select" id="filter-specialty" onchange="applyFilters()">
+                <option value="">Все направления</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Макс. стоимость</label>
+              <select class="filter-select" id="filter-price" onchange="applyFilters()">
+                <option value="">Любая</option>
+                <option value="1000000">до 1 млн тг</option>
+                <option value="1500000">до 1.5 млн тг</option>
+                <option value="2000000">до 2 млн тг</option>
+                <option value="3000000">до 3 млн тг</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Язык обучения</label>
+              <select class="filter-select" id="filter-language" onchange="applyFilters()">
+                <option value="">Любой</option>
+                <option value="Английский">Английский</option>
+                <option value="Русский">Русский</option>
+                <option value="Казахский">Казахский</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Сортировка</label>
+              <select class="filter-select" id="filter-sort" onchange="applyFilters()">
+                <option value="qs_world">По рейтингу QS</option>
+                <option value="price_asc">Сначала дешевле</option>
+                <option value="price_desc">Сначала дороже</option>
+              </select>
+            </div>
+            <button class="btn btn-outline btn-reset" onclick="resetFilters()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.73"/></svg>
+              Сбросить
+            </button>
+          </div>
+        </div>
+
+        <div class="uni-grid" id="uni-grid">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Загружаем данные...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fin-literacy">
+      <div class="container">
+        <div class="fin-inner">
+          <div class="fin-text">
+            <div class="section-badge">Финансовая грамотность</div>
+            <h2 class="fin-title">Считайте полную стоимость обучения</h2>
+            <p class="fin-desc">4 года учёбы — это крупная инвестиция. Разница между самым дешёвым и самым дорогим вузом Алматы составляет до <strong>13 миллионов тенге</strong> за весь период.</p>
+          </div>
+          <div class="fin-cards">
+            <div class="fin-card">
+              <div class="fin-card-label">Бюджетный вариант</div>
+              <div class="fin-card-amount">~2.3 млн</div>
+              <div class="fin-card-note">за 4 года (580K/год)</div>
+            </div>
+            <div class="fin-card fin-card-accent">
+              <div class="fin-card-label">Средний вариант</div>
+              <div class="fin-card-amount">~6 млн</div>
+              <div class="fin-card-note">за 4 года (1.5M/год)</div>
+            </div>
+            <div class="fin-card">
+              <div class="fin-card-label">Премиум вариант</div>
+              <div class="fin-card-amount">~15 млн</div>
+              <div class="fin-card-note">за 4 года (3.8M/год)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- UNIVERSITY DETAIL PAGE -->
+  <div id="page-university" class="page">
+    <div class="container" id="uni-detail-content">
+      <div class="loading-state"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- COMPARE PAGE -->
+  <div id="page-compare" class="page">
+    <div class="container">
+      <div class="page-head">
+        <h1 class="page-title">Сравнение университетов</h1>
+        <p class="page-sub">Выберите 2–3 вуза на главной странице для сравнения</p>
+      </div>
+      <div id="compare-content">
+        <div class="compare-empty">
+          <div class="compare-empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+          </div>
+          <p>Добавьте вузы для сравнения с главной страницы</p>
+          <button class="btn btn-primary" onclick="navigate('home')">Выбрать вузы</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI ADVISOR PAGE -->
+  <div id="page-advisor" class="page">
+    <div class="advisor-layout">
+      <div class="advisor-sidebar">
+        <div class="advisor-sidebar-inner">
+          <div class="advisor-logo">
+            <div class="advisor-avatar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div>
+              <div class="advisor-name">ИИ-советник</div>
+              <div class="advisor-status"><span class="status-dot"></span> Онлайн</div>
+            </div>
+          </div>
+          <p class="advisor-desc">Опишите ваши интересы, бюджет и цели. Я помогу выбрать подходящий университет с учётом финансовой стороны.</p>
+          
+
+          <div class="advisor-prompts">
+            <p class="prompts-label">Примеры вопросов</p>
+            <button class="prompt-chip" onclick="usePrompt(this)">У меня бюджет 1.2 млн тг/год, интересует IT</button>
+            <button class="prompt-chip" onclick="usePrompt(this)">Хочу в медицину, какой вуз лучше?</button>
+            <button class="prompt-chip" onclick="usePrompt(this)">Сравни КБТУ и КазНУ по стоимости</button>
+            <button class="prompt-chip" onclick="usePrompt(this)">Какой вуз даёт лучший старт в бизнесе?</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-area">
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-welcome">
+            <h2>Привет! Я помогу выбрать университет</h2>
+            <p>Расскажите о своих интересах, бюджете и планах — я дам персональную рекомендацию на основе актуальных данных по вузам Алматы.</p>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <div class="chat-input-wrap">
+            <textarea class="chat-input" id="chat-input" placeholder="Напишите вопрос..." rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+            <button class="chat-send" id="chat-send" onclick="sendMessage()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <p class="chat-disclaimer">Совет основан на публичных данных. Уточняйте актуальную информацию на сайтах вузов.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ROI CALCULATOR PAGE -->
+  <div id="page-roi" class="page">
+    <div class="container">
+      <div class="page-head">
+        <div class="section-badge">Финансовая грамотность</div>
+        <h1 class="page-title">Калькулятор ROI образования</h1>
+        <p class="page-sub">Рассчитайте, за сколько лет окупится ваше образование</p>
+      </div>
+
+      <div class="roi-layout">
+        <div class="roi-form">
+          <div class="tool-card">
+            <h3 class="tool-card-title">Параметры расчёта</h3>
+
+            <div class="form-group">
+              <label class="form-label">Выберите университет</label>
+              <select class="form-select" id="roi-uni">
+                <option value="">— выберите вуз —</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ожидаемая стоимость/год (тг) <span class="form-hint">заполнится автоматически</span></label>
+              <input type="number" class="form-input" id="roi-price" placeholder="например: 1 500 000" min="0" step="50000">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ожидаемая зарплата после диплома (тг/мес)</label>
+              <select class="form-select" id="roi-salary">
+                <option value="200000">200 000 — начальный уровень</option>
+                <option value="350000" selected>350 000 — средний специалист</option>
+                <option value="500000">500 000 — опытный специалист</option>
+                <option value="800000">800 000 — ведущий специалист</option>
+                <option value="1200000">1 200 000 — менеджер/руководитель</option>
+                <option value="custom">Ввести вручную</option>
+              </select>
+              <input type="number" class="form-input" id="roi-salary-custom" placeholder="Зарплата в тг/мес" style="display:none;margin-top:8px" min="0">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Грант / Льгота</label>
+              <select class="form-select" id="roi-grant">
+                <option value="0">Нет гранта, полная оплата</option>
+                <option value="0.5">Частичный грант (50% покрытие)</option>
+                <option value="1">Государственный грант (бесплатно)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Срок обучения</label>
+              <select class="form-select" id="roi-years">
+                <option value="4" selected>4 года (бакалавриат)</option>
+                <option value="5">5 лет (специалитет / медицина)</option>
+                <option value="2">2 года (магистратура)</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="calcROI()">Рассчитать окупаемость</button>
+          </div>
+        </div>
+
+        <div class="roi-result" id="roi-result">
+          <div class="roi-empty">
+            <div class="roi-empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <p>Заполните форму и нажмите «Рассчитать»</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="roi-comparison" id="roi-comparison" style="display:none">
+        <h3 class="tool-card-title">Сравнение всех вузов по ROI</h3>
+        <div id="roi-bars"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENT CALCULATOR PAGE -->
+  <div id="page-ent" class="page">
+    <div class="container">
+      <div class="page-head">
+        <div class="section-badge">Поступление 2025</div>
+        <h1 class="page-title">ЕНТ-калькулятор</h1>
+        <p class="page-sub">Введите баллы ЕНТ — узнайте, в какие вузы вы проходите на грант или платно</p>
+      </div>
+
+      <div class="ent-layout">
+        <div class="tool-card ent-input-card">
+          <h3 class="tool-card-title">Ваши баллы</h3>
+          <div class="ent-score-wrap">
+            <div class="ent-score-display" id="ent-score-display">—</div>
+            <div class="ent-score-label">баллов из 140</div>
+          </div>
+          <input type="range" class="ent-slider" id="ent-slider" min="0" max="140" value="85" oninput="updateENTScore(this.value)">
+          <div class="ent-slider-labels"><span>0</span><span>50</span><span>100</span><span>140</span></div>
+
+          <div style="margin-top:20px">
+            <label class="form-label">Или введите точно</label>
+            <input type="number" class="form-input" id="ent-exact" min="0" max="140" placeholder="Введите баллы" oninput="syncENTInput(this.value)">
+          </div>
+
+          <div class="form-group" style="margin-top:16px">
+            <label class="form-label">Выбранная специальность</label>
+            <select class="form-select" id="ent-specialty">
+              <option value="">Любая специальность</option>
+              <option value="IT">IT и программирование</option>
+              <option value="Экономика">Экономика и бизнес</option>
+              <option value="Медицина">Медицина</option>
+              <option value="Право">Юриспруденция и право</option>
+              <option value="Инженерия">Инженерия</option>
+              <option value="Гуманитарные">Гуманитарные науки</option>
+              <option value="Образование">Педагогика</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="calcENT()">Проверить шансы</button>
+
+          <div class="ent-thresholds">
+            <div class="threshold-title">Пороги грантов 2025</div>
+            <div class="threshold-row"><span class="threshold-dot dot-green"></span><span>70+ баллов</span><span class="threshold-note">Технические специальности</span></div>
+            <div class="threshold-row"><span class="threshold-dot dot-yellow"></span><span>80+ баллов</span><span class="threshold-note">Экономика, Право</span></div>
+            <div class="threshold-row"><span class="threshold-dot dot-red"></span><span>90+ баллов</span><span class="threshold-note">Медицина, IT, Топ-вузы</span></div>
+          </div>
+        </div>
+
+        <div class="ent-results" id="ent-results">
+          <div class="roi-empty">
+            <div class="roi-empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <p>Введите баллы и нажмите «Проверить шансы»</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAREER TEST PAGE -->
+  <div id="page-career" class="page">
+    <div class="container">
+      <div class="page-head">
+        <div class="section-badge">Профориентация</div>
+        <h1 class="page-title">Тест профориентации</h1>
+        <p class="page-sub">Ответьте на 8 вопросов — получите рекомендацию по специальности и вузу</p>
+      </div>
+
+      <div id="career-quiz-wrap">
+        <div class="career-progress-wrap">
+          <div class="career-progress-bar"><div class="career-progress-fill" id="career-progress-fill" style="width:0%"></div></div>
+          <span class="career-progress-text" id="career-progress-text">Вопрос 1 из 8</span>
+        </div>
+        <div class="career-question-wrap" id="career-question-wrap"></div>
+      </div>
+
+      <div id="career-result-wrap" style="display:none">
+        <div class="career-result-inner" id="career-result-inner"></div>
+        <div style="text-align:center;margin-top:32px">
+          <button class="btn btn-ghost" onclick="restartCareerTest()">Пройти заново</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- GRANTS PAGE -->
+  <div id="page-grants" class="page">
+    <div class="container">
+      <div class="page-head">
+        <h1 class="page-title">Гранты и стипендии</h1>
+        <p class="page-sub">Финансовая поддержка для студентов Казахстана</p>
+      </div>
+      <div class="grants-filters">
+        <button class="grant-filter-btn active" onclick="filterGrants('all', this)">Все</button>
+        <button class="grant-filter-btn" onclick="filterGrants('government', this)">Государственные</button>
+        <button class="grant-filter-btn" onclick="filterGrants('regional', this)">Региональные</button>
+        <button class="grant-filter-btn" onclick="filterGrants('corporate', this)">Корпоративные</button>
+        <button class="grant-filter-btn" onclick="filterGrants('university', this)">Вузовские</button>
+      </div>
+      <div class="grants-grid" id="grants-grid">
+        <div class="loading-state"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP PAGE -->
+  <div id="page-map" class="page">
+    <div class="container">
+      <div class="page-head">
+        <h1 class="page-title">Карта университетов</h1>
+        <p class="page-sub">Все вузы Алматы на интерактивной карте</p>
+      </div>
+    </div>
+    <div id="map-container" style="height:600px;width:100%;"></div>
+    <div class="container" style="margin-top:32px">
+      <div class="map-uni-list" id="map-uni-list"></div>
+    </div>
+  </div>
+
+  <!-- TIPS PAGE -->
+  <div id="page-tips" class="page">
+    <div class="container">
+      <div class="page-head">
+        <h1 class="page-title">Советы абитуриенту</h1>
+        <p class="page-sub">Как выбрать университет осознанно и сэкономить миллионы</p>
+      </div>
+      <div class="tips-grid" id="tips-grid">
+        <div class="loading-state"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 404 PAGE -->
+  <div id="page-404" class="page">
+    <div class="container">
+      <div class="not-found">
+        <div class="not-found-code">404</div>
+        <h1 class="not-found-title">Страница не найдена</h1>
+        <p class="not-found-sub">Похоже, вы зашли не туда. Но мы поможем найти нужный университет.</p>
+        <button class="btn btn-primary" onclick="navigate('home')">На главную</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="logo.svg" alt="EduMatch KZ" class="footer-logo-img">
+        <span class="footer-logo-text">EduMatch<span class="footer-logo-kz">KZ</span></span>
+      </div>
+      <p class="footer-desc">Платформа для сравнения университетов Алматы — цены, рейтинги, специальности и ИИ-советник.</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <div class="footer-col-title">Разделы</div>
+        <a href="#" class="footer-link" onclick="navigate('home')">Университеты</a>
+        <a href="#" class="footer-link" onclick="navigate('compare')">Сравнение</a>
+        <a href="#" class="footer-link" onclick="navigate('advisor')">ИИ-советник</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Проект</div>
+        <a href="#" class="footer-link" onclick="event.preventDefault(); openModal('modal-about')">О проекте</a>
+        <a href="#" class="footer-link">Финансовая грамотность</a>
+        <a href="#" class="footer-link" onclick="event.preventDefault(); openModal('modal-contacts')">Контакты</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Данные</div>
+        <span class="footer-text">Алматы, Казахстан</span>
+        <span class="footer-text">2025–2026 учебный год</span>
+        <span class="footer-text">15 университетов</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 EduMatch KZ</span>
+    <span>Учебный проект по финансовой грамотности</span>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+
+<div class="modal" id="modal-about">
+  <button class="modal-close" onclick="closeModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <h2 class="modal-title">О проекте</h2>
+  <p class="modal-text">EduMatch KZ — учебный проект по финансовой грамотности, созданный чтобы помочь абитуриентам Алматы осознанно выбирать университет.</p>
+  <p class="modal-text">Выбор вуза — это крупное финансовое решение на 4 года. Разница между самым дешёвым и самым дорогим университетом Алматы составляет более <strong>13 миллионов тенге</strong>. EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов города в одном месте.</p>
+  <p class="modal-text"><strong>Стек:</strong> Node.js, Express, HTML/CSS/JS, Google Gemma AI</p>
+  <p class="modal-text"><strong>Данные:</strong> 11 университетов Алматы, актуальные на 2025–2026 учебный год</p>
+</div>
+
+<div class="modal" id="modal-contacts">
+  <button class="modal-close" onclick="closeModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <h2 class="modal-title">Контакты</h2>
+  <p class="modal-text">По вопросам сотрудничества, предложениям и обратной связи:</p>
+  <div class="modal-contacts-list">
+    <a href="mailto:janibekkaz3@gmail.com" class="modal-contact-item">
+      <div class="modal-contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+      </div>
+      <div>
+        <div class="modal-contact-label">Email</div>
+        <div class="modal-contact-val">janibekkaz3@gmail.com</div>
+      </div>
+    </a>
+    <a href="https://www.instagram.com/kazakbay_zhan/" target="_blank" class="modal-contact-item">
+      <div class="modal-contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+      </div>
+      <div>
+        <div class="modal-contact-label">Instagram</div>
+        <div class="modal-contact-val">@kazakbay_zhan</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- BOTTOM NAV (mobile only) -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bottom-nav-item active" id="bnav-home" onclick="navigate('home');setBottomNav('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Вузы</span>
+  </button>
+  <button class="bottom-nav-item" id="bnav-compare" onclick="navigate('compare');setBottomNav('compare')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+    <span>Сравнение</span>
+    <span class="bnav-badge" id="bnav-badge" style="display:none">0</span>
+  </button>
+  <button class="bottom-nav-item bottom-nav-ai" id="bnav-advisor" onclick="navigate('advisor');setBottomNav('advisor')">
+    <div class="bnav-ai-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </div>
+    <span>ИИ</span>
+  </button>
+  <button class="bottom-nav-item" id="bnav-tools" onclick="openToolsSheet()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    <span>Инструменты</span>
+  </button>
+  <button class="bottom-nav-item" id="bnav-more" onclick="openMoreSheet()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>
+    <span>Ещё</span>
+  </button>
+</nav>
+
+<!-- STICKY COMPARE BAR (mobile) -->
+<div class="sticky-compare" id="sticky-compare">
+  <span class="sticky-compare-text">Выбрано: <strong id="sticky-compare-count">0</strong></span>
+  <button class="btn btn-primary btn-sm" onclick="navigate('compare')">Сравнить →</button>
+</div>
+
+<!-- FILTER BOTTOM SHEET -->
+<div class="sheet-overlay" id="filter-sheet-overlay" onclick="closeFilterSheet()"></div>
+<div class="bottom-sheet" id="filter-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <span class="sheet-title">Фильтры</span>
+    <button class="sheet-close" onclick="closeFilterSheet()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="sheet-body">
+    <div class="sheet-field"><label class="sheet-label">Специальность</label>
+      <select class="form-select" id="sheet-specialty" onchange="syncSheetFilters()"><option value="">Все направления</option></select></div>
+    <div class="sheet-field"><label class="sheet-label">Максимальная стоимость</label>
+      <select class="form-select" id="sheet-price" onchange="syncSheetFilters()">
+        <option value="">Любая</option><option value="1000000">до 1 млн тг</option>
+        <option value="1500000">до 1.5 млн тг</option><option value="2000000">до 2 млн тг</option>
+        <option value="3000000">до 3 млн тг</option></select></div>
+    <div class="sheet-field"><label class="sheet-label">Язык обучения</label>
+      <select class="form-select" id="sheet-language" onchange="syncSheetFilters()">
+        <option value="">Любой</option><option value="Английский">Английский</option>
+        <option value="Русский">Русский</option><option value="Казахский">Казахский</option></select></div>
+    <div class="sheet-field"><label class="sheet-label">Сортировка</label>
+      <select class="form-select" id="sheet-sort" onchange="syncSheetFilters()">
+        <option value="qs_world">По рейтингу QS</option>
+        <option value="price_asc">Сначала дешевле</option>
+        <option value="price_desc">Сначала дороже</option></select></div>
+  </div>
+  <div class="sheet-footer">
+    <button class="btn btn-ghost" onclick="resetFilters();closeFilterSheet()">Сбросить</button>
+    <button class="btn btn-primary" onclick="applyFilters();closeFilterSheet()">Применить</button>
+  </div>
+</div>
+
+<!-- TOOLS SHEET -->
+<div class="sheet-overlay" id="tools-sheet-overlay" onclick="closeToolsSheet()"></div>
+<div class="bottom-sheet" id="tools-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header"><span class="sheet-title">Инструменты</span></div>
+  <div class="sheet-body sheet-grid">
+    <button class="sheet-grid-item" onclick="navigate('roi');closeToolsSheet()">
+      <div class="sheet-grid-icon">₸</div><span>ROI</span>
+    </button>
+    <button class="sheet-grid-item" onclick="navigate('ent');closeToolsSheet()">
+      <div class="sheet-grid-icon" style="font-size:11px;font-weight:700">ЕНТ</div><span>ЕНТ</span>
+    </button>
+    <button class="sheet-grid-item" onclick="navigate('career');closeToolsSheet()">
+      <div class="sheet-grid-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div><span>Профориент.</span>
+    </button>
+    <button class="sheet-grid-item" onclick="navigate('map');closeToolsSheet()">
+      <div class="sheet-grid-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg></div><span>Карта</span>
+    </button>
+  </div>
+</div>
+
+<!-- MORE SHEET -->
+<div class="sheet-overlay" id="more-sheet-overlay" onclick="closeMoreSheet()"></div>
+<div class="bottom-sheet" id="more-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header"><span class="sheet-title">Ещё</span></div>
+  <div class="sheet-body">
+    <button class="sheet-menu-item" onclick="navigate('grants');closeMoreSheet()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      Гранты и стипендии
+    </button>
+    <button class="sheet-menu-item" onclick="navigate('tips');closeMoreSheet()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Советы абитуриенту
+    </button>
+    <div class="sheet-divider"></div>
+    <button class="sheet-menu-item" onclick="toggleTheme();closeMoreSheet()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+      Переключить тему
+    </button>
+    <button class="sheet-menu-item" onclick="openModal('modal-about');closeMoreSheet()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      О проекте
+    </button>
+    <button class="sheet-menu-item" onclick="openModal('modal-contacts');closeMoreSheet()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+      Контакты
+    </button>
+  </div>
+</div>
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.0/dist/countUp.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script src="js/app.js"></script>
+<button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Наверх">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+</body>
+</html>
