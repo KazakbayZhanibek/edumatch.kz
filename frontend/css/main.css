@@ -2504,6 +2504,132 @@ body { font-family: var(--font-sans) !important; }
 }
 .chat-bubble-user .markdown-body strong { color: #fff; }
 
+/* =============================================
+   SKELETON LOADER (loading states)
+   ============================================= */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.skeleton-card {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+}
+
+.skeleton-card .skeleton-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.skeleton-card .skeleton-text-sm {
+  width: 80px;
+  height: 20px;
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.skeleton-card .skeleton-text-md {
+  width: 60%;
+  height: 16px;
+  background: var(--border);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.skeleton-card .skeleton-text-lg {
+  width: 90%;
+  height: 18px;
+  background: var(--border);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.skeleton-card .skeleton-description {
+  height: 40px;
+  background: var(--border);
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.skeleton-card .skeleton-price {
+  height: 24px;
+  background: var(--border);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  width: 70%;
+}
+
+.skeleton-card .skeleton-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.skeleton-card .skeleton-tag {
+  width: 70px;
+  height: 24px;
+  background: var(--border);
+  border-radius: 20px;
+}
+
+.skeleton-card .skeleton-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.skeleton-card .skeleton-button {
+  flex: 1;
+  height: 36px;
+  background: var(--border);
+  border-radius: 6px;
+}
+
+/* Favorite button */
+.btn-favorite {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all var(--transition);
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-favorite:hover {
+  color: var(--red);
+  transform: scale(1.15);
+}
+
+.btn-favorite.favorited {
+  color: var(--red);
+}
+
+.btn-favorite svg {
+  width: 20px;
+  height: 20px;
+  transition: all var(--transition);
+}
+
+.btn-favorite.favorited svg {
+  fill: currentColor;
+}
+
+.uni-card-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
 /* Smooth page transition */
 .page { transition: opacity 0.15s ease; }
 

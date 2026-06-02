@@ -8,9 +8,48 @@ const API = 'http://localhost:3000/api';
 const state = {
   universities: [],
   compareList: [],   // array of ids (max 3)
+  favoriteList: [],  // array of ids (from localStorage)
   chatHistory: [],
   currentPage: 'home',
 };
+
+// ─── FAVORITES (localStorage) ────────────────
+function loadFavorites() {
+  try {
+    const saved = localStorage.getItem('edumatch_favorites');
+    state.favoriteList = saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    state.favoriteList = [];
+  }
+}
+
+function saveFavorites() {
+  localStorage.setItem('edumatch_favorites', JSON.stringify(state.favoriteList));
+}
+
+function toggleFavorite(id) {
+  const idx = state.favoriteList.indexOf(id);
+  if (idx > -1) {
+    state.favoriteList.splice(idx, 1);
+  } else {
+    state.favoriteList.push(id);
+  }
+  saveFavorites();
+  
+  // Update card visual
+  const btn = document.querySelector(`[data-favorite-btn="${id}"]`);
+  if (btn) {
+    btn.classList.toggle('favorited');
+  }
+  
+  // Show toast
+  const isFav = state.favoriteList.includes(id);
+  showToast(isFav ? '♥ Добавлено в избранное' : '✕ Удалено из избранного');
+}
+
+function isFavorited(id) {
+  return state.favoriteList.includes(id);
+}
 
 // ─── ROUTER ──────────────────────────────────
 function navigate(page, param) {
@@ -75,7 +114,7 @@ function initTheme() {
 async function loadUniversities() {
   startProgress();
   const grid = document.getElementById('uni-grid');
-  grid.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Загружаем вузы...</p></div>`;
+  grid.innerHTML = renderSkeletonGrid(6);
 
   try {
     const sort = document.getElementById('filter-sort')?.value || 'qs_world';
@@ -133,8 +172,46 @@ function renderUniversityGrid(unis) {
   grid.innerHTML = unis.map(u => renderUniversityCard(u)).join('');
 }
 
+/**
+ * Render skeleton card (for loading state)
+ */
+function renderSkeletonCard() {
+  return `
+    <div class="uni-card skeleton-card">
+      <div class="skeleton-header">
+        <div class="skeleton-text-sm"></div>
+        <div class="skeleton-text-sm"></div>
+      </div>
+      <div class="skeleton-text-lg"></div>
+      <div class="skeleton-description"></div>
+      <div class="skeleton-price"></div>
+      <div class="skeleton-tags">
+        <div class="skeleton-tag"></div>
+        <div class="skeleton-tag"></div>
+        <div class="skeleton-tag"></div>
+      </div>
+      <div class="skeleton-buttons">
+        <div class="skeleton-button"></div>
+        <div class="skeleton-button"></div>
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Render multiple skeleton cards
+ */
+function renderSkeletonGrid(count) {
+  let html = '';
+  for (let i = 0; i < count; i++) {
+    html += renderSkeletonCard();
+  }
+  return `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">${html}</div>`;
+}
+
 function renderUniversityCard(u) {
   const isSelected = state.compareList.includes(u.id);
+  const isFav = isFavorited(u.id);
   const specialties = u.specialties || [];
   const shown = specialties.slice(0, 4);
   const rest = specialties.length - 4;
@@ -151,9 +228,14 @@ function renderUniversityCard(u) {
 
   return `
     <div class="uni-card" id="card-${u.id}">
-      <div class="uni-card-header">
-        <span class="uni-short-name">${u.short_name || u.name.split(' ')[0]}</span>
-        ${qs}
+      <div class="uni-card-header-actions">
+        <div class="uni-card-header">
+          <span class="uni-short-name">${u.short_name || u.name.split(' ')[0]}</span>
+          ${qs}
+        </div>
+        <button class="btn-favorite ${isFav ? 'favorited' : ''}" data-favorite-btn="${u.id}" onclick="toggleFavorite(${u.id}); event.stopPropagation();" title="Добавить в избранное">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
       </div>
       <div class="uni-name">${u.name}</div>
       <div class="uni-description">${u.description || ''}</div>
@@ -657,6 +739,7 @@ function celebrateCompare() {
 // ─── INIT ─────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  loadFavorites();  // Initialize favorites from localStorage
   loadSpecialties();
   navigate('home');
 
