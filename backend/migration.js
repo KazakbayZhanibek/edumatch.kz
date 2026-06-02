@@ -5,9 +5,15 @@
  */
 
 const { getDb } = require('./database');
+const fs = require('fs');
+const path = require('path');
 
-// SEED - текущие данные (скопированы из db.js)
-const SEED = {
+// Загружаем данные из data.json
+const dataPath = path.join(__dirname, 'data.json');
+const SEED = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+
+// Fallback SEED - текущие данные (используется если data.json не найден)
+const FALLBACK_SEED = {
   cities: [{ id: 1, name: 'Алматы' }],
   specialties: [
     { id: 1,  name: 'Информационные технологии',  category: 'IT' },
