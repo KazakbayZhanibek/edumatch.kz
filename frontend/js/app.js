@@ -120,11 +120,13 @@ async function loadUniversities() {
     const sort = document.getElementById('filter-sort')?.value || 'qs_world';
     const priceMax = document.getElementById('filter-price')?.value || '';
     const specialty = document.getElementById('filter-specialty')?.value || '';
+    const cityId = document.getElementById('filter-city')?.value || '';
 
     const params = new URLSearchParams();
     if (sort) params.set('sort', sort);
     if (priceMax) params.set('price_max', priceMax);
     if (specialty) params.set('specialty', specialty);
+    if (cityId) params.set('city_id', cityId);
 
     const res = await fetch(`${API}/universities?${params}`);
     let unis = await res.json();
@@ -158,6 +160,21 @@ async function loadSpecialties() {
       const opt = document.createElement('option');
       opt.value = cat;
       opt.textContent = cat;
+      sel.appendChild(opt);
+    });
+  } catch (e) { /* silent */ }
+}
+
+async function loadCities() {
+  try {
+    const res = await fetch(`${API}/cities`);
+    const cities = await res.json();
+    const sel = document.getElementById('filter-city');
+    if (!sel) return;
+    cities.forEach(city => {
+      const opt = document.createElement('option');
+      opt.value = city.id;
+      opt.textContent = `${city.name} (${city.count})`;
       sel.appendChild(opt);
     });
   } catch (e) { /* silent */ }
@@ -261,6 +278,7 @@ function applyFilters() {
 }
 
 function resetFilters() {
+  document.getElementById('filter-city').value = '';
   document.getElementById('filter-specialty').value = '';
   document.getElementById('filter-price').value = '';
   document.getElementById('filter-sort').value = 'qs_world';
@@ -741,6 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   loadFavorites();  // Initialize favorites from localStorage
   loadSpecialties();
+  loadCities();
   navigate('home');
 
   // AOS scroll animations

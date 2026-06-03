@@ -9,12 +9,12 @@
 const { getDb } = require('./database');
 
 /**
- * getUniversities({ sort, price_max, specialty, language })
+ * getUniversities({ sort, price_max, specialty, language, city_id })
  * 
  * Возвращает массив университетов с фильтрацией и сортировкой
  * Совместимо со старым API
  */
-function getUniversities({ sort, price_max, specialty, language } = {}) {
+function getUniversities({ sort, price_max, specialty, language, city_id } = {}) {
   const db = getDb();
   
   let query = `
@@ -30,6 +30,12 @@ function getUniversities({ sort, price_max, specialty, language } = {}) {
 
   const conditions = [];
   const params = [];
+
+  // Фильтр по городу
+  if (city_id) {
+    conditions.push('u.city_id = ?');
+    params.push(parseInt(city_id));
+  }
 
   // Фильтр по цене
   if (price_max) {
@@ -221,6 +227,27 @@ function getTips() {
 }
 
 /**
+ * getCities()
+ * Возвращает список городов с количеством университетов
+ */
+function getCities() {
+  const db = getDb();
+  
+  const stmt = db.prepare(`
+    SELECT 
+      c.id,
+      c.name,
+      COUNT(u.id) as count
+    FROM cities c
+    LEFT JOIN universities u ON c.id = u.city_id
+    GROUP BY c.id, c.name
+    ORDER BY count DESC, c.name ASC
+  `);
+
+  return stmt.all();
+}
+
+/**
  * getUniversitiesContext()
  * Возвращает краткий текстовый контекст всех университетов для ИИ
  * Используется в AI advisor'е
@@ -238,5 +265,6 @@ module.exports = {
   getSpecialtyCategories,
   getGrants,
   getTips,
-  getUniversitiesContext
+  getUniversitiesContext,
+  getCities
 };

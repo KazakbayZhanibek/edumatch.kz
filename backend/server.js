@@ -10,13 +10,18 @@ const { seedDatabaseIfEmpty } = require('./migration');
 initDatabase();
 seedDatabaseIfEmpty();
 
-const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTips, getUniversitiesContext } = require('./db');
+const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTips, getUniversitiesContext, getCities } = require('./db');
 const aiRoutes = require('./ai-routes');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend')));
+
+app.get('/api/cities', (req, res) => {
+  try { res.json(getCities()); }
+  catch (err) { res.status(500).json({ error: err.message }); }
+});
 
 app.get('/api/universities', (req, res) => {
   try { res.json(getUniversities(req.query)); }
