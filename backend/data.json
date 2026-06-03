@@ -2,161 +2,61 @@
   "cities": [
     {
       "id": 1,
-      "name": "Нұр-Сұлтан қаласы"
+      "name": "Нур-Султан (Астана)"
     },
     {
       "id": 2,
-      "name": "Нұр-Сұлтан"
-    },
-    {
-      "id": 3,
-      "name": "Түркістан облысы"
-    },
-    {
-      "id": 4,
-      "name": "Түркістан"
-    },
-    {
-      "id": 5,
-      "name": "Жетісай"
-    },
-    {
-      "id": 6,
-      "name": "Шымкент қаласы"
-    },
-    {
-      "id": 7,
-      "name": "Шымкент"
-    },
-    {
-      "id": 8,
-      "name": "Нұр-Сұлтан  Қабанбай батыр даңғылы"
-    },
-    {
-      "id": 9,
-      "name": "Нұр-Сұлтан  Мәңгілік Ел даңғылы даңғылы"
-    },
-    {
-      "id": 10,
-      "name": "Ақмола облысы"
-    },
-    {
-      "id": 11,
-      "name": "Көкшетау"
-    },
-    {
-      "id": 12,
-      "name": "Алматы қаласы"
-    },
-    {
-      "id": 13,
       "name": "Алматы"
     },
     {
-      "id": 14,
-      "name": "Нұр-Сұлтан  ."
+      "id": 3,
+      "name": "Шымкент"
     },
     {
-      "id": 15,
-      "name": "Алматы  Сәтпаев көшесі 16-18"
+      "id": 4,
+      "name": "Караганда"
     },
     {
-      "id": 16,
-      "name": "Алматы облысы"
-    },
-    {
-      "id": 17,
-      "name": "Қаскелен"
-    },
-    {
-      "id": 18,
-      "name": "Ақтөбе облысы"
-    },
-    {
-      "id": 19,
-      "name": "Ақтөбе"
-    },
-    {
-      "id": 20,
-      "name": "Атырау облысы"
-    },
-    {
-      "id": 21,
-      "name": "Атырау"
-    },
-    {
-      "id": 22,
-      "name": "Шығыс Қазақстан облысы"
-    },
-    {
-      "id": 23,
-      "name": "Өскемен"
-    },
-    {
-      "id": 24,
+      "id": 5,
       "name": "Семей"
     },
     {
-      "id": 25,
-      "name": "Жамбыл облысы"
+      "id": 6,
+      "name": "Актобе"
     },
     {
-      "id": 26,
+      "id": 7,
+      "name": "Атырау"
+    },
+    {
+      "id": 8,
+      "name": "Костанай"
+    },
+    {
+      "id": 9,
+      "name": "Павлодар"
+    },
+    {
+      "id": 10,
       "name": "Тараз"
     },
     {
-      "id": 27,
-      "name": "Батыс Қазақстан облысы"
-    },
-    {
-      "id": 28,
-      "name": "Орал"
-    },
-    {
-      "id": 29,
-      "name": "Қарағанды облысы"
-    },
-    {
-      "id": 30,
-      "name": "Қарағанды"
-    },
-    {
-      "id": 31,
-      "name": "Қарағанды     Пичугин көшесі"
-    },
-    {
-      "id": 32,
-      "name": "Жезқазған"
-    },
-    {
-      "id": 33,
-      "name": "Қостанай облысы"
-    },
-    {
-      "id": 34,
-      "name": "Рудный"
-    },
-    {
-      "id": 35,
-      "name": "Қостанай"
-    },
-    {
-      "id": 36,
-      "name": "Қызылорда облысы"
+      "id": 11,
+      "name": "Уральск"
     }
   ],
   "universities": [
     {
       "id": 1,
-      "name": "Л.Н. Гумилев атындағы Еуразиялық ұлттық университеті ",
-      "short_name": "Евразийский нац",
+      "name": "Назарбаев Университет",
+      "short_name": "Назарбаев Университет",
       "city_id": 1,
-      "qs_world": null,
+      "qs_world": 197,
       "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
+      "price_from": 2000000,
+      "price_to": 4500000,
       "website": "",
-      "description": "Университет в городе Нұр-Сұлтан қаласы",
+      "description": "Университет в городе Нур-Султан (Астана)",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -167,29 +67,556 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Нұр-Сұлтан қ.   Сәтпаев көшесі, 2а"
+      "address": "Город Нур-Султан (Астана)",
+      "is_top": true
+    },
+    {
+      "id": 2,
+      "name": "Казахский национальный университет им. аль-Фараби",
+      "short_name": "Казахский национальный университет ",
+      "city_id": 2,
+      "qs_world": 163,
+      "qs_asia": null,
+      "price_from": 580000,
+      "price_to": 1500000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": true
+    },
+    {
+      "id": 3,
+      "name": "Казахстанско-Британский технический университет (КБТУ)",
+      "short_name": "Казахстанско-Британский технический",
+      "city_id": 2,
+      "qs_world": 601,
+      "qs_asia": null,
+      "price_from": 2100000,
+      "price_to": 3500000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": true
+    },
+    {
+      "id": 4,
+      "name": "Казахский национальный технический университет им. Сатпаева",
+      "short_name": "Казахский национальный технический ",
+      "city_id": 2,
+      "qs_world": 383,
+      "qs_asia": null,
+      "price_from": 720000,
+      "price_to": 1680000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": true
+    },
+    {
+      "id": 5,
+      "name": "КИМЭП Университет",
+      "short_name": "КИМЭП Университет",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 2600000,
+      "price_to": 3800000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": true
+    },
+    {
+      "id": 6,
+      "name": "Казахский национальный медицинский университет",
+      "short_name": "Казахский национальный медицинский ",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 1200000,
+      "price_to": 2500000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": true
+    },
+    {
+      "id": 7,
+      "name": "Университет Нархоз",
+      "short_name": "Университет Нархоз",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 1300000,
+      "price_to": 1860000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": true
+    },
+    {
+      "id": 8,
+      "name": "Казахский национальный педагогический университет им. Абая",
+      "short_name": "Казахский национальный педагогическ",
+      "city_id": 2,
+      "qs_world": 1001,
+      "qs_asia": null,
+      "price_from": 700000,
+      "price_to": 1100000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": true
+    },
+    {
+      "id": 9,
+      "name": "Евразийский национальный университет им. Гумилева",
+      "short_name": "Евразийский национальный университе",
+      "city_id": 1,
+      "qs_world": 401,
+      "qs_asia": null,
+      "price_from": 650000,
+      "price_to": 1400000,
+      "website": "",
+      "description": "Университет в городе Нур-Султан (Астана)",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Нур-Султан (Астана)",
+      "is_top": true
     },
     {
       "id": 10,
-      "name": "«Туран-Астана» университеті",
-      "short_name": "Университет \"Ту",
+      "name": "Международный университет информационных технологий (МУИТ)",
+      "short_name": "Международный университет информаци",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 1100000,
+      "price_to": 1800000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": true
+    },
+    {
+      "id": 11,
+      "name": "Алматы менеджмент университет",
+      "short_name": "Алматы менеджмент университет",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 1400000,
+      "price_to": 2900000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 12,
+      "name": "Каспийский общественный университет",
+      "short_name": "Каспийский общественный университет",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 1200000,
+      "price_to": 2400000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 13,
+      "name": "Алматы технологиялық университеті",
+      "short_name": "Алматы технологиялық университеті",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 800000,
+      "price_to": 1500000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 14,
+      "name": "Казахский национальный аграрный университет",
+      "short_name": "Казахский национальный аграрный уни",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 600000,
+      "price_to": 1200000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 15,
+      "name": "Казахский национальный консерватория им. Курмангазы",
+      "short_name": "Казахский национальный консерватори",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 700000,
+      "price_to": 1300000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 16,
+      "name": "Казахский национальный университет театра и кино",
+      "short_name": "Казахский национальный университет ",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 800000,
+      "price_to": 1400000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 17,
+      "name": "Казахский национальный колледж медицины",
+      "short_name": "Казахский национальный колледж меди",
       "city_id": 2,
       "qs_world": null,
       "qs_asia": null,
       "price_from": 500000,
-      "price_to": 2000000,
+      "price_to": 1000000,
       "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
+      "description": "Университет в городе Алматы",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -200,29 +627,311 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Нұр-Сұлтан қ.,  Ы. Дүкенұлы көш., 29"
+      "address": "Город Алматы",
+      "is_top": false
     },
     {
-      "id": 100,
-      "name": "Х.А.Ясауи атындағы Халықаралық қазақ-түрік  университеті  ",
-      "short_name": "Международный к",
+      "id": 18,
+      "name": "Казахский национальный женский педагогический университет",
+      "short_name": "Казахский национальный женский педа",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 650000,
+      "price_to": 1100000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 19,
+      "name": "Алматы архитектуры и строительства университеті",
+      "short_name": "Алматы архитектуры и строительства ",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 900000,
+      "price_to": 1600000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 20,
+      "name": "Хуаньизы дизайна, архитектуры и текстиля",
+      "short_name": "Хуаньизы дизайна, архитектуры и тек",
+      "city_id": 2,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 1000000,
+      "price_to": 1700000,
+      "website": "",
+      "description": "Университет в городе Алматы",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Алматы",
+      "is_top": false
+    },
+    {
+      "id": 21,
+      "name": "Туран-Астана университеті",
+      "short_name": "Туран-Астана университеті",
+      "city_id": 1,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 900000,
+      "price_to": 1600000,
+      "website": "",
+      "description": "Университет в городе Нур-Султан (Астана)",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Нур-Султан (Астана)",
+      "is_top": false
+    },
+    {
+      "id": 22,
+      "name": "Астана медициналық университеті",
+      "short_name": "Астана медициналық университеті",
+      "city_id": 1,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 1300000,
+      "price_to": 2200000,
+      "website": "",
+      "description": "Университет в городе Нур-Султан (Астана)",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Нур-Султан (Астана)",
+      "is_top": false
+    },
+    {
+      "id": 23,
+      "name": "Казахский агротехнический университет им. С.Сейфуллина",
+      "short_name": "Казахский агротехнический университ",
+      "city_id": 1,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 700000,
+      "price_to": 1200000,
+      "website": "",
+      "description": "Университет в городе Нур-Султан (Астана)",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Нур-Султан (Астана)",
+      "is_top": false
+    },
+    {
+      "id": 24,
+      "name": "Казахский технология және бизнес университеті",
+      "short_name": "Казахский технология және бизнес ун",
+      "city_id": 1,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 800000,
+      "price_to": 1400000,
+      "website": "",
+      "description": "Университет в городе Нур-Султан (Астана)",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Нур-Султан (Астана)",
+      "is_top": false
+    },
+    {
+      "id": 25,
+      "name": "Ақмола облысының мәмлекеттік биліктіліктендіру институты",
+      "short_name": "Ақмола облысының мәмлекеттік билікт",
+      "city_id": 1,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 600000,
+      "price_to": 1100000,
+      "website": "",
+      "description": "Университет в городе Нур-Султан (Астана)",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Нур-Султан (Астана)",
+      "is_top": false
+    },
+    {
+      "id": 26,
+      "name": "Южно-Казахстанский государственный университет им. Ауэзова",
+      "short_name": "Южно-Казахстанский государственный ",
       "city_id": 3,
       "qs_world": null,
       "qs_asia": null,
       "price_from": 500000,
-      "price_to": 2000000,
+      "price_to": 1200000,
       "website": "",
-      "description": "Университет в городе Түркістан облысы",
+      "description": "Университет в городе Шымкент",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -233,29 +942,136 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Түркістан қ.,   Б.Саттарханов даңғылы, 29"
+      "address": "Город Шымкент",
+      "is_top": false
     },
     {
-      "id": 101,
-      "name": "Халықаралық туризм және меймандостық университеті",
-      "short_name": "Международный у",
+      "id": 27,
+      "name": "Шымкент педагогикалық университеті",
+      "short_name": "Шымкент педагогикалық университеті",
+      "city_id": 3,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 600000,
+      "price_to": 1100000,
+      "website": "",
+      "description": "Университет в городе Шымкент",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Шымкент",
+      "is_top": false
+    },
+    {
+      "id": 28,
+      "name": "Орталық Азия инновациялық университеті",
+      "short_name": "Орталық Азия инновациялық университ",
+      "city_id": 3,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 700000,
+      "price_to": 1300000,
+      "website": "",
+      "description": "Университет в городе Шымкент",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Шымкент",
+      "is_top": false
+    },
+    {
+      "id": 29,
+      "name": "Мирас университеті",
+      "short_name": "Мирас университеті",
+      "city_id": 3,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 800000,
+      "price_to": 1400000,
+      "website": "",
+      "description": "Университет в городе Шымкент",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Шымкент",
+      "is_top": false
+    },
+    {
+      "id": 30,
+      "name": "Карагандинский государственный университет",
+      "short_name": "Карагандинский государственный унив",
       "city_id": 4,
       "qs_world": null,
       "qs_asia": null,
       "price_from": 500000,
-      "price_to": 2000000,
+      "price_to": 1200000,
       "website": "",
-      "description": "Университет в городе Түркістан",
+      "description": "Университет в городе Караганда",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -266,29 +1082,136 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Түркістан қ., Рәбия Сұлтан Бегім көшесі, 14 \"Б\""
+      "address": "Город Караганда",
+      "is_top": false
     },
     {
-      "id": 102,
-      "name": "Сырдария университеті",
-      "short_name": "Университет \"Сы",
+      "id": 31,
+      "name": "Карагандинский медицинский университет",
+      "short_name": "Карагандинский медицинский универси",
+      "city_id": 4,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 900000,
+      "price_to": 1600000,
+      "website": "",
+      "description": "Университет в городе Караганда",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Караганда",
+      "is_top": false
+    },
+    {
+      "id": 32,
+      "name": "Карагандинский технический университет",
+      "short_name": "Карагандинский технический универси",
+      "city_id": 4,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 700000,
+      "price_to": 1300000,
+      "website": "",
+      "description": "Университет в городе Караганда",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Караганда",
+      "is_top": false
+    },
+    {
+      "id": 33,
+      "name": "Болашақ академиясы",
+      "short_name": "Болашақ академиясы",
+      "city_id": 4,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 800000,
+      "price_to": 1400000,
+      "website": "",
+      "description": "Университет в городе Караганда",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Караганда",
+      "is_top": false
+    },
+    {
+      "id": 34,
+      "name": "Семей медициналық университеті",
+      "short_name": "Семей медициналық университеті",
       "city_id": 5,
       "qs_world": null,
       "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
+      "price_from": 800000,
+      "price_to": 1500000,
       "website": "",
-      "description": "Университет в городе Жетісай",
+      "description": "Университет в городе Семей",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -299,29 +1222,101 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Жетісай қ.,М.Әуезов көшесі, 11"
+      "address": "Город Семей",
+      "is_top": false
     },
     {
-      "id": 103,
-      "name": "Оңтүстік Қазақстан медицина академиясы",
-      "short_name": "Южно-Казахстанс",
+      "id": 35,
+      "name": "Шәкәрім Түскібай атындағы Семей университеті",
+      "short_name": "Шәкәрім Түскібай атындағы Семей уни",
+      "city_id": 5,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 600000,
+      "price_to": 1100000,
+      "website": "",
+      "description": "Университет в городе Семей",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Семей",
+      "is_top": false
+    },
+    {
+      "id": 36,
+      "name": "Семей мемлекеттік педагогикалық институты",
+      "short_name": "Семей мемлекеттік педагогикалық инс",
+      "city_id": 5,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 550000,
+      "price_to": 1000000,
+      "website": "",
+      "description": "Университет в городе Семей",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Семей",
+      "is_top": false
+    },
+    {
+      "id": 37,
+      "name": "С.Баишев атындағы Актобе университеті",
+      "short_name": "С.Баишев атындағы Актобе университе",
       "city_id": 6,
       "qs_world": null,
       "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
+      "price_from": 600000,
+      "price_to": 1100000,
       "website": "",
-      "description": "Университет в городе Шымкент қаласы",
+      "description": "Университет в городе Актобе",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -332,29 +1327,66 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Шымкент қ.,   әл-Фараби даңғылы, 1"
+      "address": "Город Актобе",
+      "is_top": false
     },
     {
-      "id": 104,
-      "name": "Оңтүстік Қазақстан мемлекеттік педагогикалық университеті",
-      "short_name": "Южно-Казахстанс",
+      "id": 38,
+      "name": "М.Өспанов атындағы Батыс-Қазақстан медициналық университеті",
+      "short_name": "М.Өспанов атындағы Батыс-Қазақстан ",
+      "city_id": 6,
+      "qs_world": null,
+      "qs_asia": null,
+      "price_from": 850000,
+      "price_to": 1500000,
+      "website": "",
+      "description": "Университет в городе Актобе",
+      "founded": 1990,
+      "students_count": 5000,
+      "languages": [
+        "Казахский",
+        "Русский"
+      ],
+      "accreditations": [
+        "Национальная"
+      ],
+      "has_dorm": true,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
+      "lat": 50.0,
+      "lng": 70.0,
+      "specialty_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "address": "Город Актобе",
+      "is_top": false
+    },
+    {
+      "id": 39,
+      "name": "Атырау мемлекеттік университеті",
+      "short_name": "Атырау мемлекеттік университеті",
       "city_id": 7,
       "qs_world": null,
       "qs_asia": null,
       "price_from": 500000,
-      "price_to": 2000000,
+      "price_to": 950000,
       "website": "",
-      "description": "Университет в городе Шымкент",
+      "description": "Университет в городе Атырау",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -365,29 +1397,31 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Шымкент қ. ,   Г.Иляев көшесі 16"
+      "address": "Город Атырау",
+      "is_top": false
     },
     {
-      "id": 105,
-      "name": "М. Әуэзов атындағы  Оңтүстік Қазақстан  университеті   ",
-      "short_name": "Южно-Казахстанс",
+      "id": 40,
+      "name": "Атырау облысының мемлекеттік университеті",
+      "short_name": "Атырау облысының мемлекеттік универ",
       "city_id": 7,
       "qs_world": null,
       "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
+      "price_from": 550000,
+      "price_to": 1000000,
       "website": "",
-      "description": "Университет в городе Шымкент",
+      "description": "Университет в городе Атырау",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -398,260 +1432,31 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Шымкент қ.,   Тәуке хан даңғылы, 5"
+      "address": "Город Атырау",
+      "is_top": false
     },
     {
-      "id": 106,
-      "name": "«Мирас» университеті",
-      "short_name": "Университет \"Ми",
-      "city_id": 7,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Шымкент",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Шымкент қ.,  Г.Иляев көшесі, 3"
-    },
-    {
-      "id": 107,
-      "name": "Шымкент  университеті",
-      "short_name": "Шымкентский уни",
-      "city_id": 7,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Шымкент",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Шымкент қ., Жібек жолы көшесі ,131"
-    },
-    {
-      "id": 108,
-      "name": "Орталық Азия инновациялық университеті ",
-      "short_name": "Центрально-азия",
-      "city_id": 7,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Шымкент",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Шымкент қ.,   Байтұрсынов көшесі, 80А"
-    },
-    {
-      "id": 109,
-      "name": "ҚМ. Куатбеков атындағы  халықтар достығы   университеті  ",
-      "short_name": "Университет Дру",
-      "city_id": 7,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Шымкент",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Шымкент қ.,   Төле би көшесі, 32"
-    },
-    {
-      "id": 11,
-      "name": "«Астана» университеті",
-      "short_name": "Университет \"Ас",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ., Павлов көшесі, 30"
-    },
-    {
-      "id": 12,
-      "name": "Еуразиялық  гуманитарлық  институты",
-      "short_name": "Евразийский гум",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ.,  М.Жумабаев даңғылы,   4 үй"
-    },
-    {
-      "id": 13,
-      "name": "Қазақ технология және бизнес  университеті",
-      "short_name": "Казахский униве",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ.,  Қайым Мұхамедханов көшесі,37А"
-    },
-    {
-      "id": 14,
-      "name": "Астана халықаралық университеті ",
-      "short_name": "Международный у",
+      "id": 41,
+      "name": "Костанай мемлекеттік университеті",
+      "short_name": "Костанай мемлекеттік университеті",
       "city_id": 8,
       "qs_world": null,
       "qs_asia": null,
       "price_from": 500000,
-      "price_to": 2000000,
+      "price_to": 950000,
       "website": "",
-      "description": "Университет в городе Нұр-Сұлтан  Қабанбай батыр даңғылы",
+      "description": "Университет в городе Костанай",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -662,29 +1467,31 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Нұр-Сұлтан қ. Қабанбай батыр даңғылы, 8"
+      "address": "Город Костанай",
+      "is_top": false
     },
     {
-      "id": 15,
-      "name": "Астана IT университеті",
-      "short_name": "Астана IT униве",
+      "id": 42,
+      "name": "Павлодар мемлекеттік университеті",
+      "short_name": "Павлодар мемлекеттік университеті",
       "city_id": 9,
       "qs_world": null,
       "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
+      "price_from": 550000,
+      "price_to": 1050000,
       "website": "",
-      "description": "Университет в городе Нұр-Сұлтан  Мәңгілік Ел даңғылы даңғылы",
+      "description": "Университет в городе Павлодар",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -695,2073 +1502,29 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Нұр-Сұлтан қ. Мәңгілік Ел даңғылы даңғылы, 53/2"
+      "address": "Город Павлодар",
+      "is_top": false
     },
     {
-      "id": 16,
-      "name": "Ш.Уәлиханов атындағы Көкшетау    университеті   ",
-      "short_name": "Кокшетауский  у",
+      "id": 43,
+      "name": "Жамбылский мемлекеттік университеті",
+      "short_name": "Жамбылский мемлекеттік университеті",
       "city_id": 10,
       "qs_world": null,
       "qs_asia": null,
       "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Ақмола облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Көкшетау қ.  Абай көшесі, 76"
-    },
-    {
-      "id": 17,
-      "name": "Гуманитарлық-техникалық академия",
-      "short_name": "Гуманитарно-тех",
-      "city_id": 11,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Көкшетау",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Көкшетау қ.,   Жамбыл көшесі, 35"
-    },
-    {
-      "id": 18,
-      "name": "А.Мырзахметов атындағы Көкшетау  университеті",
-      "short_name": "Кокшетауский ун",
-      "city_id": 11,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Көкшетау",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Көкшетау қ.,   Әуэзов көшесі, 189 А"
-    },
-    {
-      "id": 19,
-      "name": "Т.К.Жүргенов атындағы Қазақ ұлттық өнер академиясы    ",
-      "short_name": "Казахская нацио",
-      "city_id": 12,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы қаласы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Панфилов көш., 127"
-    },
-    {
-      "id": 2,
-      "name": "Қазақ ұлттық өнер  университеті  ",
-      "short_name": "Казахский нацио",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ., Тәуелсіздік даңғылы, 50"
-    },
-    {
-      "id": 20,
-      "name": "Қазақ ұлттық аграрлық  университеті",
-      "short_name": "Казахский нацио",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Абай көшесі, 8"
-    },
-    {
-      "id": 21,
-      "name": "С.Д.Асфендияров атындағы  Қазақ ұлттық медициналық   университеті ",
-      "short_name": "Казахский нацио",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,  Төле би көшесі, 88"
-    },
-    {
-      "id": 22,
-      "name": "Абай атындағы Қазақ ұлттық педагогикалық    университеті  ",
-      "short_name": "Казахский нацио",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,  Достық даңғылы,13"
-    },
-    {
-      "id": 23,
-      "name": "Қ.И.Сәтпаев атындағы Қазақ ұлттық ғылыми-зерттеу техникалық   университеті  ",
-      "short_name": "Казахский нацио",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Сәтпаев көшесі, 22"
-    },
-    {
-      "id": 24,
-      "name": "Әл-Фараби  атындағы Қазақ ұлттық   университеті    ",
-      "short_name": "Казахский нацио",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ., Әл-Фараби даңғылы, 71"
-    },
-    {
-      "id": 25,
-      "name": "Құрманғазы атындағы Қазақ ұлттық консерваториясы   ",
-      "short_name": "Казахская нацио",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Абылай хан көш. , 86"
-    },
-    {
-      "id": 26,
-      "name": "Қазақ ұлттық қыздар педагогикалық   университеті",
-      "short_name": "Казахский нацио",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Айтеке би көшесі, 99"
-    },
-    {
-      "id": 27,
-      "name": "Азаматтық авиация академиясы  ",
-      "short_name": "Академия гражда",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Закарпатская көшесі, 44"
-    },
-    {
-      "id": 28,
-      "name": "Алматы энергетика және байланыс  университеті  ",
-      "short_name": "Алматинский уни",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,  Байтурсынов көшесі, 126"
-    },
-    {
-      "id": 29,
-      "name": "Алматы технологиялық университеті",
-      "short_name": "Алматинский тех",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Төле би көшесі, 100"
-    },
-    {
-      "id": 3,
-      "name": "Қазақ ұлттық хореография академиясы   ",
-      "short_name": "Казахская нацио",
-      "city_id": 14,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан  .",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ. ., Ұлы Дала даңғылы, 9"
-    },
-    {
-      "id": 30,
-      "name": "Абылай хан атындағы  Қазақ халықаралық қатынастар және әлем  тілдері  университеті  ",
-      "short_name": "Казахский униве",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Муратбаев көшесі,200"
-    },
-    {
-      "id": 31,
-      "name": "Қазақ-Британ техникалық университеті",
-      "short_name": "Казахстанско-Бр",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Төле би көшесі, 59"
-    },
-    {
-      "id": 32,
-      "name": "Логистика және көлік академиясы ",
-      "short_name": "Академия логист",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Шевченко көшесі, 97"
-    },
-    {
-      "id": 33,
-      "name": "Қазақ спорт және туризм  академиясы  ",
-      "short_name": "Казахская акаде",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Абай даңғылы, 85/105"
-    },
-    {
-      "id": 34,
-      "name": "Нархоз университеті",
-      "short_name": "Университет Нар",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Жандосов көшесі, 55"
-    },
-    {
-      "id": 35,
-      "name": "Халықаралық білім беру корпорациясы ",
-      "short_name": "Международная о",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,  Рысқұлбеков көшесі, 28"
-    },
-    {
-      "id": 36,
-      "name": "Халықаралық ақпараттық технологиялар   университеті ",
-      "short_name": "Международный у",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,  Абай даңғылы, 8 А"
-    },
-    {
-      "id": 37,
-      "name": "«КИМЭП» университеті",
-      "short_name": "Университет \"КИ",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ., Абай көшесі, 2"
-    },
-    {
-      "id": 38,
-      "name": "«Кайнар» университеті",
-      "short_name": "Академия \"Кайна",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,  Сәтпаев көшесі, 7 а"
-    },
-    {
-      "id": 39,
-      "name": "Қазақстан-Ресей медициналық университеті",
-      "short_name": "Казахстанско-Ро",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Төреқұлов көшесі, 71"
-    },
-    {
-      "id": 4,
-      "name": "Назарбаев Университеті",
-      "short_name": "Назарбаев униве",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ. , Қабанбай Батыр даңғылы 53"
-    },
-    {
-      "id": 40,
-      "name": "«Туран» университеті",
-      "short_name": "Университет \"Ту",
-      "city_id": 15,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы  Сәтпаев көшесі 16-18",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ. Сәтпаев көшесі 16-18, 18а"
-    },
-    {
-      "id": 41,
-      "name": "Орталық  Азия университеті",
-      "short_name": "Центрально-Азиа",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ., Джансдосов көшесі, 60а"
-    },
-    {
-      "id": 42,
-      "name": "Д.Қонаев атындағы Еуразиялық заң академиясы   ",
-      "short_name": "Евразийская юри",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Құрманғазы көшесі, 107"
-    },
-    {
-      "id": 43,
-      "name": "Қазақ еңбек және әлеуметтік қатынастар  академиясы  ",
-      "short_name": "Казахский Униве",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы,   Жетісу-1 ш/ауданы,   32а үй"
-    },
-    {
-      "id": 44,
-      "name": "Халықаралық бизнес университеті",
-      "short_name": "Университет меж",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Абай даңғылы, 8А"
-    },
-    {
-      "id": 45,
-      "name": "Қазақ-неміс университеті",
-      "short_name": "Казахстанско-Не",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ., Пушкин көшесі, 111"
-    },
-    {
-      "id": 46,
-      "name": "Шет  тілдер  және іскерлік карьера университеті  ",
-      "short_name": "Университет ино",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,  Қазыбек би көшесі, 168"
-    },
-    {
-      "id": 47,
-      "name": "Еуразиялық технологиялық университет",
-      "short_name": "Евразийский Тех",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Төле би көшесі, 109"
-    },
-    {
-      "id": 48,
-      "name": "Қазақстан инженерлік-технологиялық университеті  ",
-      "short_name": "Казахстанский и",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Әл-Фараби даңғылы, 93а"
-    },
-    {
-      "id": 49,
-      "name": "«Нұр-Мүбарак» Мысыр ислам мәдениеті   университеті   ",
-      "short_name": "Египетский унив",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ., Әл-Фараби көшесі, 73"
-    },
-    {
-      "id": 5,
-      "name": "Қазақстан Республикасы Президенті  жанындағы Мемлекеттік басқару академиясы  ",
-      "short_name": "Академия госуда",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ.,  Абай көш., 33 а,"
-    },
-    {
-      "id": 50,
-      "name": "Каспий қоғамдық университеті",
-      "short_name": "Каспийский обще",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,    Сейфуллин даңғылы, 521"
-    },
-    {
-      "id": 51,
-      "name": "Алматы гуманитарлы-экономикалық университеті ",
-      "short_name": "Алматинский гум",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Жандосов  көшесі, 59"
-    },
-    {
-      "id": 52,
-      "name": "Қазақ Еңбек және әлеуметтік қатынастар  академиясы  ",
-      "short_name": "Казахская акаде",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Наурызбай батыр көшесі, 9"
-    },
-    {
-      "id": 53,
-      "name": "Алматы менеджмент университеті",
-      "short_name": "Алматы Менеджме",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,    Розыбакиев көшесі, 227"
-    },
-    {
-      "id": 54,
-      "name": "Л.Гончаров атындағы Қазақ автомобиль жолдары академиясы",
-      "short_name": "Казахская автом",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,   Ташкент көшесі, 415 В"
-    },
-    {
-      "id": 55,
-      "name": "«ҚДЖМ» Қазақ медициналық   университеті",
-      "short_name": "Казахстанский м",
-      "city_id": 13,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Алматы қ.,  Утепов көшесі, 19 а"
-    },
-    {
-      "id": 56,
-      "name": "Ілияс  Жансүгүров атындағы Жетісу университеті ",
-      "short_name": "Жетысуский  уни",
-      "city_id": 16,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Алматы облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Талдықорған қ.,   Жансүгүров көшесі  187 А"
-    },
-    {
-      "id": 57,
-      "name": "С.Демирель атындағы университет  ",
-      "short_name": "Университет им.",
-      "city_id": 17,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қаскелен",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қаскелен қ."
-    },
-    {
-      "id": 58,
-      "name": "Қ. Жұбанов атындағы Ақтөбе өңірлік  университеті ",
-      "short_name": "Актюбинский рег",
-      "city_id": 18,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Ақтөбе облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Ақтөбе қ.,  Ә.Молдағұлова көшесі, 34"
-    },
-    {
-      "id": 59,
-      "name": "М.Оспанов атындағы Батыс-Қазақстан   медициналық университет  ",
-      "short_name": "Западно-Казахст",
-      "city_id": 19,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Ақтөбе",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Ақтөбе қ.,  Маресьев көшесі,68"
-    },
-    {
-      "id": 6,
-      "name": "С.Сейфуллин атындағы Қазақ агротехникалық университеті  ",
-      "short_name": "Казахский агрот",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ., Жеңіс даңғылы 62"
-    },
-    {
-      "id": 60,
-      "name": "С.Баишев атындағы Ақтөбе университеті   ",
-      "short_name": "Актюбинский уни",
-      "city_id": 19,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Ақтөбе",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Ақтөбе қ.,   Ағайынды Жұбановтар көш., 302А"
-    },
-    {
-      "id": 61,
-      "name": "Қазақ-Орыс халықаралық университеті",
-      "short_name": "Казахско-Русски",
-      "city_id": 19,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Ақтөбе",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Ақтөбе қ.,   Айтеке би көшесі, 52"
-    },
-    {
-      "id": 62,
-      "name": "Х.Досмұхамедов атындағы Атырау университеті ",
-      "short_name": "Атырауский унив",
-      "city_id": 20,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Атырау облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Атырау қ.,   Студентер даңғылы,   1-құрылыс"
-    },
-    {
-      "id": 63,
-      "name": "С. Өтебаев атындағы Атырау мұнай және газ университеті",
-      "short_name": "Атырауский унив",
-      "city_id": 21,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Атырау",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Атырау қ.,   М.Баймұханов көшесі, 45-а"
-    },
-    {
-      "id": 64,
-      "name": "Атырау  инженерлік-гуманитарлық институт",
-      "short_name": "Атырауский инже",
-      "city_id": 21,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Атырау",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Атырау қ.,   Худин көшесі, 5"
-    },
-    {
-      "id": 65,
-      "name": "Д.Серікбаев атындағы Шығыс-Қазақстан  техникалық университеті  ",
-      "short_name": "Восточно-Казахс",
-      "city_id": 22,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Шығыс Қазақстан облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Өскемен қ.,   Протозанов көшесі, 69"
-    },
-    {
-      "id": 66,
-      "name": "С.Аманжолов атындағы  Шығыс-Қазақстан  университеті  ",
-      "short_name": "Восточно-Казахс",
-      "city_id": 23,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Өскемен",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Өскемен қ.,   Қазақстан көшесі, 55"
-    },
-    {
-      "id": 67,
-      "name": "Қазақстан-Америка еркін университеті",
-      "short_name": "Казахстанско-Ам",
-      "city_id": 23,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Өскемен",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Өскемен қ.,  Бажов көшесі, 68"
-    },
-    {
-      "id": 68,
-      "name": "Семей медицина университеті",
-      "short_name": "Медицинский уни",
-      "city_id": 24,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Семей",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Семей қ.,   Абай көшесі, 103"
-    },
-    {
-      "id": 69,
-      "name": "Семей қаласының Шәкәрім атындағы  университеті",
-      "short_name": "Университет им.",
-      "city_id": 24,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Семей",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Семей қ.,   Тәңірбергенов көшесі, 1"
-    },
-    {
-      "id": 7,
-      "name": "\"Астана\" Медициналық  университеті  ",
-      "short_name": "Медицинский уни",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ.,   «Сарыарқа» даңғылы, 33"
-    },
-    {
-      "id": 70,
-      "name": "Қазақ гуманитарлық-заң инновациялық университеті",
-      "short_name": "Казахский гуман",
-      "city_id": 24,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Семей",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Семей қ.,   Ленин көшесі, 11"
-    },
-    {
-      "id": 71,
-      "name": "М.Дулати атындағы Тараз  өңірлік университеті   ",
-      "short_name": "Таразский регио",
-      "city_id": 25,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Жамбыл облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Тараз қ.,  Суүлейменов көшесі, 7 "
-    },
-    {
-      "id": 72,
-      "name": "Халықаралық Тараз  инновациялық институты  ",
-      "short_name": "Международный Т",
-      "city_id": 26,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
+      "price_to": 900000,
       "website": "",
       "description": "Университет в городе Тараз",
       "founded": 1990,
@@ -2774,29 +1537,31 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Тараз қ.,   Желтоқсан көшесі, 69 «Б»"
+      "address": "Город Тараз",
+      "is_top": false
     },
     {
-      "id": 73,
-      "name": "Жәңгір хан атындағы Батыс-Қазақстан агротехникалық университеті",
-      "short_name": "Западно-Казахст",
-      "city_id": 27,
+      "id": 44,
+      "name": "Батыс-Қазақстан мемлекеттік университеті",
+      "short_name": "Батыс-Қазақстан мемлекеттік универс",
+      "city_id": 11,
       "qs_world": null,
       "qs_asia": null,
       "price_from": 500000,
-      "price_to": 2000000,
+      "price_to": 950000,
       "website": "",
-      "description": "Университет в городе Батыс Қазақстан облысы",
+      "description": "Университет в городе Уральск",
       "founded": 1990,
       "students_count": 5000,
       "languages": [
@@ -2807,644 +1572,19 @@
         "Национальная"
       ],
       "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
+      "dorm_price": 50000,
+      "avg_salary": 450000,
       "lat": 50.0,
       "lng": 70.0,
       "specialty_ids": [
         1,
         2,
-        5,
-        6
+        3,
+        4,
+        5
       ],
-      "address": "Орал қ., Жангір хан көшесі, 51"
-    },
-    {
-      "id": 74,
-      "name": "М.Өтемісов атындағы Батыс-Қазақстан   университеті  ",
-      "short_name": "Западно-Казахст",
-      "city_id": 28,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Орал",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Орал қ.,  Достық даңғылы, 162"
-    },
-    {
-      "id": 75,
-      "name": "Батыс-Қазақстан инновациялық-технологиялық университеті",
-      "short_name": "Западно-Казахст",
-      "city_id": 28,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Орал",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Орал қ.,   Достық даңғылы, 194"
-    },
-    {
-      "id": 76,
-      "name": "Қазақстан инновациялық және телекеммуникациялық  жүйелер университеті ",
-      "short_name": "Казахстанский у",
-      "city_id": 28,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Орал",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Орал қ.,   М.Маметова көшесі 81"
-    },
-    {
-      "id": 77,
-      "name": "Қарағанды  индустриалдық университеті",
-      "short_name": "Карагандинский",
-      "city_id": 29,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қарағанды облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Теміртау қ.,  Республика даңғылы, 30"
-    },
-    {
-      "id": 78,
-      "name": "Қарағанды медициналық университеті",
-      "short_name": "Медицинский уни",
-      "city_id": 30,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қарағанды",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қарағанды  қ.,   Гоголь көшесі, 40"
-    },
-    {
-      "id": 79,
-      "name": "Қарағанды техникалық университеті",
-      "short_name": "Карагандинский",
-      "city_id": 30,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қарағанды",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қарағанды  қ.,   Бульвар мира көшесі, 56"
-    },
-    {
-      "id": 8,
-      "name": "М.Нарикбаев атындағы КАЗГЮУ университеті",
-      "short_name": "Университет КАЗ",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ., Қорғалжын тас жолы, 8."
-    },
-    {
-      "id": 80,
-      "name": "Академик Е.Бөкетов атындағы Қарағанды    университеті   ",
-      "short_name": "Карагандинский",
-      "city_id": 30,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қарағанды",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қарағанды  қ.,   Университет көшесі, 28"
-    },
-    {
-      "id": 81,
-      "name": "Қазақстан тұтынушылар одағының Қарағанды    экономикалық университеті  ",
-      "short_name": "Карагандинский",
-      "city_id": 30,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қарағанды",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қарағанды  қ.,   Академическая көшесі, 9"
-    },
-    {
-      "id": 82,
-      "name": "«Болашақ» академиясы",
-      "short_name": "Академия \"Болаш",
-      "city_id": 30,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қарағанды",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қарағанды  қ.,   Ерубаев көшесі 16"
-    },
-    {
-      "id": 83,
-      "name": "Орталық-Қазақстан академиясы",
-      "short_name": "Центрально-Каза",
-      "city_id": 31,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қарағанды     Пичугин көшесі",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қарағанды  қ.   Пичугин көшесі, 259"
-    },
-    {
-      "id": 84,
-      "name": "О.Байқоңуров атындағы Жезқазган университеті ",
-      "short_name": "Жезказганский у",
-      "city_id": 32,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Жезқазған",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Жезқазған,   Алашахан даңғылы, 1-Б"
-    },
-    {
-      "id": 85,
-      "name": "Ы.Алтынсарин атындағы Арқалық педагогикалық институты   ",
-      "short_name": "Аркалыкский пед",
-      "city_id": 33,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қостанай облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Арқалық қ.,   Әуелбеков көшесі, 17"
-    },
-    {
-      "id": 86,
-      "name": "Рудный индустриалдық институты",
-      "short_name": "Рудненский инду",
-      "city_id": 34,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Рудный",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Рудный қ., Октябрьдің 50 жылдығы көшесі 38"
-    },
-    {
-      "id": 87,
-      "name": "А.Байтұрсынов атындағы Қостанай   өңірлік университеті   ",
-      "short_name": "Костанайский ре",
-      "city_id": 35,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қостанай",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қостанай қ., ул. Байтурсынова, 47"
-    },
-    {
-      "id": 88,
-      "name": "М.Дулатов атындағы Қостанай  инженерлік-экономикалық университеті   ",
-      "short_name": "Костанайский ин",
-      "city_id": 35,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қостанай",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қостанай қ.,   Чернышевский көшесі, 59"
-    },
-    {
-      "id": 89,
-      "name": "З.Алдамжар атындағы Қостанай   әлеуметтік-техникалық университеті  ",
-      "short_name": "Костанайский со",
-      "city_id": 35,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қостанай",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қостанай қ.,  Герцен көшесі, 27"
-    },
-    {
-      "id": 9,
-      "name": "Қазақ экономика, қаржы және халықаралық сауда  университеті  ",
-      "short_name": "Казахский униве",
-      "city_id": 2,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Нұр-Сұлтан",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Нұр-Сұлтан қ.,   Жұбанов көшесі, 7"
-    },
-    {
-      "id": 90,
-      "name": "Қорқыт Ата атындағы Қызылорда университеті   ",
-      "short_name": "Кызылординский",
-      "city_id": 36,
-      "qs_world": null,
-      "qs_asia": null,
-      "price_from": 500000,
-      "price_to": 2000000,
-      "website": "",
-      "description": "Университет в городе Қызылорда облысы",
-      "founded": 1990,
-      "students_count": 5000,
-      "languages": [
-        "Казахский",
-        "Русский"
-      ],
-      "accreditations": [
-        "Национальная"
-      ],
-      "has_dorm": true,
-      "dorm_price": 60000,
-      "avg_salary": 400000,
-      "lat": 50.0,
-      "lng": 70.0,
-      "specialty_ids": [
-        1,
-        2,
-        5,
-        6
-      ],
-      "address": "Қызылорда қ.,  Айтеке би  көшесі, 29А"
+      "address": "Город Уральск",
+      "is_top": false
     }
   ],
   "specialties": [
@@ -3480,169 +1620,70 @@
     },
     {
       "id": 7,
-      "name": "Менеджмент",
+      "name": "Бизнес",
       "category": "Экономика"
     },
     {
       "id": 8,
-      "name": "Бухгалтерский учет",
-      "category": "Экономика"
+      "name": "Медицина",
+      "category": "Здоровье"
     },
     {
       "id": 9,
-      "name": "Юриспруденция",
-      "category": "Право"
+      "name": "Сестринское дело",
+      "category": "Здоровье"
     },
     {
       "id": 10,
-      "name": "Международное право",
-      "category": "Право"
-    },
-    {
-      "id": 11,
-      "name": "Медицина",
-      "category": "Медицина"
-    },
-    {
-      "id": 12,
-      "name": "Фармация",
-      "category": "Медицина"
-    },
-    {
-      "id": 13,
-      "name": "Стоматология",
-      "category": "Медицина"
-    },
-    {
-      "id": 14,
       "name": "Педагогика",
       "category": "Образование"
     },
     {
-      "id": 15,
-      "name": "Психология",
-      "category": "Гуманитарные"
-    },
-    {
-      "id": 16,
-      "name": "Журналистика",
-      "category": "Гуманитарные"
-    },
-    {
-      "id": 17,
-      "name": "Международные отношения",
-      "category": "Гуманитарные"
-    },
-    {
-      "id": 18,
-      "name": "Переводческое дело",
-      "category": "Гуманитарные"
-    },
-    {
-      "id": 19,
-      "name": "Химическая инженерия",
-      "category": "Инженерия"
-    },
-    {
-      "id": 20,
-      "name": "Нефтегазовое дело",
-      "category": "Инженерия"
-    },
-    {
-      "id": 21,
-      "name": "Горное дело",
-      "category": "Инженерия"
-    },
-    {
-      "id": 22,
-      "name": "Строительство",
-      "category": "Инженерия"
-    },
-    {
-      "id": 23,
-      "name": "Архитектура",
-      "category": "Инженерия"
-    },
-    {
-      "id": 24,
-      "name": "Биология",
-      "category": "Естественные науки"
-    },
-    {
-      "id": 25,
-      "name": "Физика",
-      "category": "Естественные науки"
-    },
-    {
-      "id": 26,
-      "name": "Математика",
-      "category": "Естественные науки"
-    },
-    {
-      "id": 27,
-      "name": "Маркетинг",
-      "category": "Экономика"
-    },
-    {
-      "id": 28,
-      "name": "Туризм",
-      "category": "Сервис"
-    },
-    {
-      "id": 29,
-      "name": "Дизайн",
-      "category": "Искусство"
-    },
-    {
-      "id": 30,
-      "name": "Музыка",
-      "category": "Искусство"
-    },
-    {
-      "id": 31,
-      "name": "Логистика",
-      "category": "Экономика"
-    },
-    {
-      "id": 32,
-      "name": "Банковское дело",
-      "category": "Экономика"
-    },
-    {
-      "id": 33,
-      "name": "Геология",
-      "category": "Естественные науки"
-    },
-    {
-      "id": 34,
-      "name": "Экология",
-      "category": "Естественные науки"
-    },
-    {
-      "id": 35,
-      "name": "Социология",
-      "category": "Гуманитарные"
+      "id": 11,
+      "name": "Начальное образование",
+      "category": "Образование"
     }
   ],
   "grants": [
     {
       "id": 1,
-      "name": "Государственный образовательный грант",
+      "name": "Государственный грант",
       "type": "government",
       "amount": "Полное покрытие",
-      "description": "Грант на обучение",
-      "requirements": [],
-      "deadline": "",
-      "link": ""
+      "description": "Основной государственный грант",
+      "requirements": [
+        "Высокий ЕНТ (850+)"
+      ],
+      "deadline": "После ЕНТ",
+      "link": "https://www.edu.gov.kz"
+    },
+    {
+      "id": 2,
+      "name": "Грант Болашак",
+      "type": "government",
+      "amount": "до 2000 USD/год",
+      "description": "Программа поддержки одаренной молодежи",
+      "requirements": [
+        "Отличные оценки"
+      ],
+      "deadline": "Февраль-март",
+      "link": "https://bolashak.gov.kz"
     }
   ],
   "tips": [
     {
       "id": 1,
-      "title": "Выбор университета",
+      "title": "Как выбрать университет",
       "category": "Советы",
-      "content": "Изучите рейтинги",
-      "tip": "Выбирайте по своим интересам"
+      "content": "Выбирайте вуз, ориентируясь на рейтинги, специальности и цены.",
+      "tip": "Не выбирайте только по цене"
+    },
+    {
+      "id": 2,
+      "title": "Подготовка к ЕНТ",
+      "category": "Советы",
+      "content": "Начните подготовку за 6 месяцев. Решайте тесты каждый день.",
+      "tip": "ЕНТ - это не только знания"
     }
   ]
 }

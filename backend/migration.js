@@ -126,8 +126,8 @@ function seedDatabaseIfEmpty() {
     const insertSpecialties = db.prepare('INSERT OR IGNORE INTO specialties (id, name, category) VALUES (?, ?, ?)');
     const insertUniversities = db.prepare(
       `INSERT OR IGNORE INTO universities 
-       (id, name, short_name, city_id, qs_world, qs_asia, price_from, price_to, website, description, founded, students_count, languages, accreditations, has_dorm, dorm_price, avg_salary, lat, lng) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       (id, name, short_name, city_id, qs_world, qs_asia, price_from, price_to, website, description, founded, students_count, languages, accreditations, has_dorm, dorm_price, avg_salary, lat, lng, is_top) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     );
     const insertUniversitySpecialty = db.prepare('INSERT OR IGNORE INTO university_specialties (university_id, specialty_id) VALUES (?, ?)');
     const insertGrant = db.prepare(
@@ -160,7 +160,8 @@ function seedDatabaseIfEmpty() {
           JSON.stringify(uniData.accreditations),
           uniData.has_dorm ? 1 : 0,
           uniData.dorm_price, uniData.avg_salary,
-          uniData.lat, uniData.lng
+          uniData.lat, uniData.lng,
+          uniData.is_top ? 1 : 0
         );
 
         // Связи: университет -> специальности

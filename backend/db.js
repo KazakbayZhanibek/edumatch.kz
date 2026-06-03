@@ -9,12 +9,12 @@
 const { getDb } = require('./database');
 
 /**
- * getUniversities({ sort, price_max, specialty, language, city_id })
+ * getUniversities({ sort, price_max, specialty, language, city_id, is_top })
  * 
  * Возвращает массив университетов с фильтрацией и сортировкой
  * Совместимо со старым API
  */
-function getUniversities({ sort, price_max, specialty, language, city_id } = {}) {
+function getUniversities({ sort, price_max, specialty, language, city_id, is_top } = {}) {
   const db = getDb();
   
   let query = `
@@ -30,6 +30,11 @@ function getUniversities({ sort, price_max, specialty, language, city_id } = {})
 
   const conditions = [];
   const params = [];
+
+  // Фильтр по ТОП статусу
+  if (is_top === 'top') {
+    conditions.push('u.is_top = 1');
+  }
 
   // Фильтр по городу
   if (city_id) {

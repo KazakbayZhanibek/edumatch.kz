@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS universities (
   avg_salary INTEGER,
   lat REAL,
   lng REAL,
+  is_top INTEGER DEFAULT 0,          -- 0 или 1 (входит ли в ТОП-20)
   last_updated_at DATETIME,          -- future-field
   data_status TEXT,                  -- future-field: 'active', 'inactive', 'pending'
   admission_phone TEXT,              -- future-field
@@ -48,6 +49,7 @@ CREATE TABLE IF NOT EXISTS universities (
 CREATE INDEX IF NOT EXISTS idx_universities_city_id ON universities(city_id);
 CREATE INDEX IF NOT EXISTS idx_universities_price_from ON universities(price_from);
 CREATE INDEX IF NOT EXISTS idx_universities_qs_world ON universities(qs_world);
+CREATE INDEX IF NOT EXISTS idx_universities_is_top ON universities(is_top);
 
 -- Связь: Университет ↔ Специальность (многие-ко-многим)
 CREATE TABLE IF NOT EXISTS university_specialties (

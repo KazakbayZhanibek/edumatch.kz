@@ -5,7 +5,7 @@
 const API = 'http://localhost:3000/api';
 
 // ─── STATE ───────────────────────────────────
-const state = {
+const state = window.state = {
   universities: [],
   compareList: [],   // array of ids (max 3)
   favoriteList: [],  // array of ids (from localStorage)
@@ -74,7 +74,15 @@ function navigate(page, param) {
     loadGrants();
   } else if (page === 'map') {
     document.getElementById('page-map').classList.add('active');
-    setTimeout(loadMap, 100);
+    // Wait for DOM to be ready and element to have size
+    setTimeout(() => {
+      const mapContainer = document.getElementById('map-container');
+      if (mapContainer && mapContainer.offsetHeight > 0) {
+        loadMap();
+      } else {
+        setTimeout(loadMap, 500);
+      }
+    }, 200);
   } else if (page === 'tips') {
     document.getElementById('page-tips').classList.add('active');
     loadTips();
@@ -110,6 +118,81 @@ function initTheme() {
   document.documentElement.setAttribute('data-theme', saved);
 }
 
+function initLanguage() {
+  const lang = window.currentLanguage || 'ru';
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  document.getElementById('lang-' + lang)?.classList.add('active');
+  applyTranslations();
+}
+
+function applyTranslations() {
+  const lang = window.currentLanguage || 'ru';
+  const trans = window.translations && window.translations[lang] || window.translations.ru;
+  
+  // Карта селекторов и путей перевода
+  const selectorMap = [
+    // Навигация
+    { selector: '.nav-links .nav-link:nth-child(1)', path: 'nav.universities' },
+    { selector: '.nav-links .nav-link:nth-child(2)', path: 'nav.comparison' },
+    { selector: '.nav-links .nav-link:nth-child(3)', path: 'nav.advisor' },
+    { selector: '.nav-links .nav-link:nth-child(4)', path: 'nav.roi' },
+    { selector: '.nav-links .nav-link:nth-child(5)', path: 'nav.ent' },
+    { selector: '.nav-links .nav-link:nth-child(6)', path: 'nav.career' },
+    { selector: '.nav-links .nav-link:nth-child(7)', path: 'nav.grants' },
+    { selector: '.nav-links .nav-link:nth-child(8)', path: 'nav.map' },
+    { selector: '.nav-links .nav-link:nth-child(9)', path: 'nav.tips' },
+    
+    // Мобильное меню
+    { selector: '.mobile-menu-title', path: 'menu.title' },
+    
+    // Главная страница
+    { selector: '.hero-title', path: 'home.hero_title' },
+    { selector: '.hero-subtitle', path: 'home.hero_sub' },
+    
+    // Кнопки на главной странице
+    { selector: '.hero-actions .btn-primary', path: 'home.hero_btn1' },
+    { selector: '.hero-actions .btn-ghost', path: 'home.hero_btn2' },
+    
+    // Карта  
+    { selector: '#page-map .page-title', path: 'map.title' },
+    { selector: '#page-map .page-sub', path: 'map.sub' },
+    
+    // Поиск на карте
+    { selector: '#map-search', path: 'map.search', attr: 'placeholder' }
+  ];
+  
+  if (!trans) return;  // Guard clause if translations not loaded
+  
+  selectorMap.forEach(item => {
+    const el = document.querySelector(item.selector);
+    if (el) {
+      const value = getNestedTranslation(trans, item.path);
+      if (value) {
+        if (item.attr) {
+          el.setAttribute(item.attr, value);
+        } else {
+          el.textContent = value;
+        }
+      }
+    }
+  });
+}
+
+function getNestedTranslation(obj, path) {
+  const keys = path.split('.');
+  let current = obj;
+  for (const key of keys) {
+    if (current[key] !== undefined) {
+      current = current[key];
+    } else {
+      return null;
+    }
+  }
+  return current;
+}
+
 // ─── UNIVERSITIES ────────────────────────────
 async function loadUniversities() {
   startProgress();
@@ -121,12 +204,14 @@ async function loadUniversities() {
     const priceMax = document.getElementById('filter-price')?.value || '';
     const specialty = document.getElementById('filter-specialty')?.value || '';
     const cityId = document.getElementById('filter-city')?.value || '';
+    const isTop = document.getElementById('filter-top')?.value || '';
 
     const params = new URLSearchParams();
     if (sort) params.set('sort', sort);
     if (priceMax) params.set('price_max', priceMax);
     if (specialty) params.set('specialty', specialty);
     if (cityId) params.set('city_id', cityId);
+    if (isTop) params.set('is_top', isTop);
 
     const res = await fetch(`${API}/universities?${params}`);
     let unis = await res.json();
@@ -278,6 +363,7 @@ function applyFilters() {
 }
 
 function resetFilters() {
+  document.getElementById('filter-top').value = '';
   document.getElementById('filter-city').value = '';
   document.getElementById('filter-specialty').value = '';
   document.getElementById('filter-price').value = '';
@@ -757,6 +843,7 @@ function celebrateCompare() {
 // ─── INIT ─────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  initLanguage();  // Initialize language selector
   loadFavorites();  // Initialize favorites from localStorage
   loadSpecialties();
   loadCities();
@@ -1492,19 +1579,27 @@ function renderGrants(grants) {
 }
 
 // ─── MAP ─────────────────────────────────────
-let mapInstance = null;
+let mapInstance = window.mapInstance = null;
 
 async function loadMap() {
   if (mapInstance) { mapInstance.invalidateSize(); return; }
   if (typeof L === 'undefined') { setTimeout(loadMap, 500); return; }
 
-  mapInstance = L.map('map-container').setView([43.238, 76.915], 13);
+  const mapContainer = document.getElementById('map-container');
+  if (!mapContainer || mapContainer.offsetHeight === 0) {
+    setTimeout(loadMap, 500);
+    return;
+  }
+
+  // Алматы центр: 43.2, 76.9
+  mapInstance = window.mapInstance = L.map('map-container', { minZoom: 5, maxZoom: 18 }).setView([43.2, 76.9], 10);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
   }).addTo(mapInstance);
 
   const unis = state.universities.length ? state.universities : await fetch(`${API}/universities`).then(r=>r.json());
+  state.mapUniversities = unis;
 
   const greenIcon = L.divIcon({
     className: '',
@@ -1513,6 +1608,10 @@ async function loadMap() {
     iconAnchor: [16, 16]
   });
 
+  // Store markers for later filtering
+  state.mapMarkers = [];
+  const bounds = L.latLngBounds();
+  
   unis.forEach(u => {
     if (!u.lat || !u.lng) return;
     const marker = L.marker([u.lat, u.lng], { icon: greenIcon }).addTo(mapInstance);
@@ -1525,18 +1624,65 @@ async function loadMap() {
         <button onclick="navigate('university',${u.id})" style="margin-top:8px;padding:4px 10px;background:#2d6a4f;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer">Подробнее</button>
       </div>
     `);
+    state.mapMarkers.push({ marker, uni: u });
+    bounds.extend([u.lat, u.lng]);
   });
 
   // List under map
   const list = document.getElementById('map-uni-list');
   if (list) {
-    list.innerHTML = `<div class="map-legend-title">Все университеты на карте</div><div class="map-uni-chips">${unis.filter(u=>u.lat).map(u=>`<button class="map-uni-chip" onclick="mapFlyTo(${u.lat},${u.lng},'${u.short_name}')">${u.short_name}</button>`).join('')}</div>`;
+    list.innerHTML = `<div class="map-legend-title">Все университеты на карте (${unis.filter(u=>u.lat).length})</div><div class="map-uni-chips" id="map-chips">${unis.filter(u=>u.lat).map(u=>`<button class="map-uni-chip" onclick="mapFlyTo(${u.lat},${u.lng},'${u.short_name}')">${u.short_name}</button>`).join('')}</div>`;
+  }
+  
+  // Fit all markers in view with padding
+  if (state.mapMarkers.length > 0 && bounds.isValid()) {
+    mapInstance.fitBounds(bounds, { padding: [100, 100], maxZoom: 11 });
+  }
+}
+
+function filterMapUniversities() {
+  const searchInput = document.getElementById('map-search');
+  if (!searchInput || !state.mapMarkers) return;
+  
+  const query = searchInput.value.toLowerCase().trim();
+  const filtered = query ? state.mapMarkers.filter(m => 
+    m.uni.name.toLowerCase().includes(query) || 
+    m.uni.short_name.toLowerCase().includes(query)
+  ) : state.mapMarkers;
+  
+  // Show/hide markers
+  state.mapMarkers.forEach(m => {
+    const shouldShow = filtered.some(f => f.uni.id === m.uni.id);
+    if (shouldShow && !mapInstance.hasLayer(m.marker)) {
+      m.marker.addTo(mapInstance);
+    } else if (!shouldShow && mapInstance.hasLayer(m.marker)) {
+      mapInstance.removeLayer(m.marker);
+    }
+  });
+  
+  // Update chips
+  const chipsContainer = document.getElementById('map-chips');
+  if (chipsContainer) {
+    chipsContainer.innerHTML = filtered.map(m => 
+      `<button class="map-uni-chip" onclick="mapFlyTo(${m.uni.lat},${m.uni.lng},'${m.uni.short_name}')">${m.uni.short_name}</button>`
+    ).join('');
+  }
+  
+  // Zoom to filtered results
+  if (filtered.length > 0) {
+    const bounds = L.latLngBounds();
+    filtered.forEach(m => {
+      bounds.extend([m.uni.lat, m.uni.lng]);
+    });
+    if (bounds.isValid()) {
+      mapInstance.fitBounds(bounds, { padding: [80, 80], maxZoom: 14 });
+    }
   }
 }
 
 function mapFlyTo(lat, lng, name) {
   if (mapInstance) {
-    mapInstance.flyTo([lat, lng], 16, { duration: 1 });
+    mapInstance.flyTo([lat, lng], 14, { duration: 1 });
   }
 }
 
