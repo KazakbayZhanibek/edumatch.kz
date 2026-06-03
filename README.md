@@ -7,28 +7,50 @@
 ```
 edumatch-kz/
 ├── backend/
-│   ├── server.js       — Express API сервер
-│   ├── db.js           — Инициализация SQLite базы данных
+│   ├── server.js              — Express API сервер
+│   ├── db.js                  — SQLite connection API
+│   ├── database.js            — Инициализация БД и подключение
+│   ├── migration.js           — Миграция и SEED данных
+│   ├── schema.sql             — SQL схема (7 таблиц)
+│   ├── ai-controller.js       — Контроллер для ИИ запросов
+│   ├── ai-routes.js           — Роуты для ИИ
+│   ├── ai-service.js          — Сервис работы с Gemini
+│   ├── ai-prompts.js          — Шаблоны промптов
+│   ├── edumatch.db            — SQLite база данных
 │   ├── package.json
-│   └── .env            — (создать вручную)
+│   └── .env                   — переменные окружения
 ├── frontend/
-│   ├── index.html      — Single Page Application
+│   ├── index.html             — Single Page Application
 │   ├── css/
-│   │   └── main.css    — Все стили + темная тема
+│   │   └── main.css           — Все стили + темная тема
 │   └── js/
-│       └── app.js      — Вся логика SPA
+│       └── app.js             — Вся логика SPA
+├── Parcerscript/              — Скрипты для парсинга данных
+│   ├── analyze_cities.py
+│   ├── parse_excel.py
+│   ├── parse_top_unis.py
+│   └── ...
 └── README.md
 ```
 
-## База данных (SQL)
+## База данных (SQLite)
 
-Таблицы:
+**Таблицы (7 шт.):**
 - `cities` — города (Алматы, в будущем другие города Казахстана)
-- `universities` — вузы с рейтингами, ценами, описанием
+- `universities` — вузы с рейтингами (QS World, QS Asia), ценами, описанием
 - `specialties` — специальности с категориями
-- `university_specialties` — связь вузов и специальностей
+- `university_specialties` — связь вузов и специальностей (M2M)
+- `grants` — гранты с условиями
+- `grant_specialties` — связь грантов и специальностей (M2M)
+- `tips` — советы для абитуриентов
 
-База создаётся автоматически при первом запуске.
+**Миграция данных:**
+- 15 вузов с полной информацией
+- 35 специальностей в категориях
+- 13 грантов
+- 6 советов
+
+База создаётся автоматически при первом запуске (`node server.js`).
 
 ## Данные вузов (2025–2026)
 
@@ -47,7 +69,7 @@ edumatch-kz/
 
 ## Требования
 
-- **Node.js**: версия 22.20.0 (LTS)
+- **Node.js**: версия 22.20.0 (LTS) или выше
 - **npm**: 10.x+
 
 Проверьте версию:
@@ -58,20 +80,14 @@ npm --version
 
 ## Установка и запуск
 
-### 1. Убедитесь, что установлена правильная версия Node.js
-
-Если у вас другая версия, установите Node.js 22.20.0:
-- **Windows**: https://nodejs.org/en/download/package-manager/
-- **macOS/Linux**: используйте nvm (Node Version Manager)
-
-### 2. Установите зависимости
+### 1. Установите зависимости
 
 ```bash
 cd backend
 npm install
 ```
 
-### 3. Создайте файл окружения (опционально)
+### 2. Создайте файл окружения (опционально)
 
 ```bash
 cp .env.example .env
@@ -83,21 +99,27 @@ PORT=3000
 GEMINI_API_KEY=ваш_ключ_здесь   # можно вводить прямо на сайте
 ```
 
-### 4. Запустите сервер
+### 3. Запустите сервер
 
 ```bash
 node server.js
 ```
 
-Ожидаемый вывод:
+**Первый запуск:**
+- Создаёт SQLite БД (`edumatch.db`)
+- Применяет схему из `schema.sql`
+- Выполняет миграцию данных из `migration.js` (идемпотентная)
+
+**Ожидаемый вывод:**
 ```
-◇ injected env (3) from .env
-✓ Подключено к существующей БД: ...
-✓ Маршруты ИИ загружены
-✓ Сервер запущен на http://localhost:3000
+✓ Database connected: edumatch.db
+✓ Schema initialized
+✓ Data migrated
+✓ AI routes loaded
+✓ Server running on http://localhost:3000
 ```
 
-### 5. Откройте браузер
+### 4. Откройте браузер
 
 ```
 http://localhost:3000
@@ -116,9 +138,11 @@ http://localhost:3000
 | Метод | URL | Описание |
 |-------|-----|----------|
 | GET | /api/universities | Список вузов с фильтрами |
-| GET | /api/universities/:id | Детали вуза |
+| GET | /api/universities/:id | Детали вуза со специальностями |
 | GET | /api/compare?ids=1,2,3 | Сравнение 2-3 вузов |
 | GET | /api/specialties | Категории специальностей |
+| GET | /api/grants | Доступные гранты |
+| GET | /api/tips | Советы абитуриентам |
 | POST | /api/ai-advisor | Запрос к Gemini |
 
 ### Параметры фильтрации (GET /api/universities)
@@ -126,6 +150,64 @@ http://localhost:3000
 - `sort` — `qs_world`, `price_asc`, `price_desc`
 - `price_max` — максимальная стоимость в год (тенге)
 - `specialty` — название категории специальности
+- `language` — язык обучения (казахский, русский, английский)
+
+### Структура ответов
+better-sqlite3)
+- **ИИ**: Google Gemini 1.5 Flash
+- **Дизайн**: Светлая + тёмная тема, шрифты Instrument Serif + Geist
+
+## Этапы разработки
+
+**Stage 1 (Current):**
+- ✅ Миграция данных с JSON на SQLite
+- ✅ Нормализованная 7-таблица схема
+- ✅ Поддержка грантов и советов
+- ✅ ИИ-советник через Gemini API
+- ✅ Полная фильтрация и сравнение
+
+**Future Stages:**
+- Admin panel для CRUD операций
+- Web scraper для обновления данных
+- Расширение на другие города Казахстана
+- Продвинутое кэширование и индексирование
+
+## Полезные ссылки
+
+- [Migration SQLite Runbook](backend/MIGRATION_SQLITE_README.md) — детальное описание миграции
+- [Schema SQL](backend/schema.sql) — структура БД
+- [Gemini API Docs](https://ai.google.dev/docs) — документация по ИИ
+{
+  "id": 1,
+  "name": "КазНУ им. аль-Фараби",
+  "city_id": 1,
+  "qs_world_rank": 163,
+  "qs_asia_rank": 39,
+  "price_min": 580000,
+  "price_max": 1500000,
+  "languages": ["Казахский", "Русский", "Английский"],
+  "website": "https://www.kaznu.kz",
+  "specialties": [
+    { "id": 1, "name": "Информатика", "category": "IT" },
+    ...
+  ]
+}
+```
+
+**GET /api/grants** возвращает:
+```json
+{
+  "grants": [
+    {
+      "id": 1,
+      "name": "Болашак",
+      "specialty_ids": [1, 5, 12],
+      ...
+    },
+    ...
+  ]
+}
+```
 
 ## Технологии
 
