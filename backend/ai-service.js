@@ -147,6 +147,7 @@ function extractBudget(question) {
 
 /**
  * Extract specialty keywords from question
+ * FIXED: Now correctly maps user keywords to actual DB categories
  */
 function extractSpecialties(question) {
   if (!question) return [];
@@ -154,19 +155,21 @@ function extractSpecialties(question) {
   const q_lower = question.toLowerCase();
   const db = getDb();
   
-  // Get all specialties from DB
+  // Get all specialties from DB (both names and categories)
   const allSpecialties = [];
+  const categoryMap = {};
   try {
     const stmt = db.prepare('SELECT DISTINCT name, category FROM specialties');
     const rows = stmt.all();
     rows.forEach(row => {
       allSpecialties.push(row.name, row.category);
+      categoryMap[row.category.toLowerCase()] = row.category; // Store actual category names
     });
   } catch (err) {
     console.error('[ai-service] error fetching specialties:', err.message);
   }
 
-  // Match question against specialty names/categories
+  // Match question against specialty names
   const matched = [];
   allSpecialties.forEach(spec => {
     const spec_lower = spec.toLowerCase();
@@ -175,21 +178,36 @@ function extractSpecialties(question) {
     }
   });
 
-  // Also check for category aliases
-  const categoryAliases = {
-    'ИТ': ['информационные технологии', 'программирование', 'кодирование', 'разработка', 'it', 'программист'],
-    'Медицина': ['медицина', 'врач', 'доктор', 'медицинский'],
-    'Экономика': ['экономика', 'финансы', 'бизнес', 'бухгалтерия', 'экономист'],
-    'Право': ['право', 'юрист', 'законодательство', 'юриспруденция'],
-    'Инженерия': ['инженерия', 'инженер', 'техническая', 'техническое'],
+  // Map user keywords to actual DB categories (FIXED: Use actual category names from DB)
+  const keywordToCategoryMap = {
+    'информационные технологии': 'Информационные технологии',
+    'программирование': 'Информационные технологии',
+    'кодирование': 'Информационные технологии',
+    'разработка': 'Информационные технологии',
+    'it': 'Информационные технологии',
+    'программист': 'Информационные технологии',
+    'медицина': 'Медицина',
+    'врач': 'Медицина',
+    'доктор': 'Медицина',
+    'медицинский': 'Медицина',
+    'экономика': 'Бизнес',
+    'финансы': 'Бизнес',
+    'бизнес': 'Бизнес',
+    'бухгалтерия': 'Бизнес',
+    'экономист': 'Бизнес',
+    'право': 'Гуманитарные науки',
+    'юрист': 'Гуманитарные науки',
+    'законодательство': 'Гуманитарные науки',
+    'юриспруденция': 'Гуманитарные науки',
+    'инженерия': 'Инженерия',
+    'инженер': 'Инженерия',
+    'техническая': 'Инженерия',
+    'техническое': 'Инженерия',
   };
 
-  for (const [category, keywords] of Object.entries(categoryAliases)) {
-    for (const keyword of keywords) {
-      if (q_lower.includes(keyword)) {
-        matched.push(category);
-        break;
-      }
+  for (const [keyword, realCategory] of Object.entries(keywordToCategoryMap)) {
+    if (q_lower.includes(keyword)) {
+      matched.push(realCategory);
     }
   }
 
