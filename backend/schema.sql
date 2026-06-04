@@ -90,3 +90,75 @@ CREATE TABLE IF NOT EXISTS tips (
   content TEXT NOT NULL,
   tip TEXT
 );
+
+-- ==================== PHASE 2: AUTHENTICATION ====================
+
+-- Пользователи (новое в Phase 2)
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  username TEXT UNIQUE NOT NULL,
+  full_name TEXT,
+  phone TEXT,
+  profile_picture TEXT,
+  bio TEXT,
+  preferences TEXT,                  -- JSON: {"theme": "light", "language": "kk"}
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+
+-- Сохранённые вузы (избранные)
+CREATE TABLE IF NOT EXISTS saved_universities (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  university_id INTEGER NOT NULL,
+  note TEXT,
+  saved_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  UNIQUE(user_id, university_id)
+);
+CREATE INDEX IF NOT EXISTS idx_saved_universities_user_id ON saved_universities(user_id);
+
+-- Сессии пользователя (JWT токены)
+CREATE TABLE IF NOT EXISTS user_sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  token TEXT UNIQUE NOT NULL,
+  refresh_token TEXT UNIQUE,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_user_id ON user_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_token ON user_sessions(token);
+
+-- История чатов с ИИ
+CREATE TABLE IF NOT EXISTS chat_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  message TEXT NOT NULL,
+  response TEXT NOT NULL,
+  context TEXT,                      -- JSON с параметрами запроса
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_chat_history_user_id ON chat_history(user_id);
+CREATE INDEX IF NOT EXISTS idx_chat_history_created_at ON chat_history(created_at);
+
+-- Результаты тестов (ЕНТ, профориентация и т.д.)
+CREATE TABLE IF NOT EXISTS test_results (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  test_type TEXT NOT NULL,           -- 'ent_calc', 'career_test', 'personality'
+  score INTEGER,
+  max_score INTEGER,
+  result_data TEXT,                  -- JSON с результатами
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_test_results_user_id ON test_results(user_id);
+CREATE INDEX IF NOT EXISTS idx_test_results_test_type ON test_results(test_type);

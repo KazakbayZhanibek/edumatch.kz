@@ -20,6 +20,7 @@ initDatabase();
 
 const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTips, getUniversitiesContext, getCities } = require('./db');
 const aiRoutes = require('./ai-routes');
+const authRoutes = require('./auth-routes');
 
 const app = express();
 app.use(cors());
@@ -70,6 +71,10 @@ app.get('/api/tips', (req, res) => {
 
 // AI Advisor routes (new OpenRouter-based system)
 app.use('/api/ai', aiRoutes);
+
+// Authentication & Profile routes (Phase 2)
+app.use('/api/auth', authRoutes);
+app.use('/api/users', authRoutes);
 
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
