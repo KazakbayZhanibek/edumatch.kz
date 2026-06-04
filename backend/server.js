@@ -4,11 +4,19 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
+// Глобальные обработчики ошибок
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('⚠ Unhandled Rejection:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('⚠ Uncaught Exception:', error);
+  // Не выходим из процесса, чтобы сервер продолжал работать
+});
+
 // Инициализируем БД перед импортом db модуля
 const { initDatabase } = require('./database');
-const { seedDatabaseIfEmpty } = require('./migration');
 initDatabase();
-seedDatabaseIfEmpty();
 
 const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTips, getUniversitiesContext, getCities } = require('./db');
 const aiRoutes = require('./ai-routes');

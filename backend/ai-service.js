@@ -433,9 +433,10 @@ async function getAIAdvice(userMessage, history = []) {
     aiResponse = await callOpenRouter(systemPrompt, msg, history);
   } catch (err) {
     console.error('[ai-service] LLM call failed:', err.message);
+    console.error('[ai-service] Full error:', err);
     // Fallback to safe response
     return {
-      answer: `Извините, произошла ошибка при обработке вашего запроса. Попробуйте позже или напишите на edumatchsupport@gmail.com`,
+      answer: `Извините, произошла ошибка при обработке вашего запроса. Попробуйте позже или напишите на edumatchsupport@gmail.com\n\n**Ошибка**: ${err.message}`,
       matches: universities.slice(0, 3),
       usedData: {
         universities_count: universities.length,
