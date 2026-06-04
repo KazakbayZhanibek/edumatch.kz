@@ -314,6 +314,7 @@ function renderSkeletonGrid(count) {
 function renderUniversityCard(u) {
   const isSelected = state.compareList.includes(u.id);
   const isFav = isFavorited(u.id);
+  const websiteUrl = normalizeWebsiteUrl(u.website);
   const specialties = u.specialties || [];
   const shown = specialties.slice(0, 4);
   const rest = specialties.length - 4;
@@ -352,6 +353,7 @@ function renderUniversityCard(u) {
         <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" onclick="toggleCompare(${u.id}, event)">
           ${isSelected ? 'В сравнении' : '+ Сравнить'}
         </button>
+        ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()">Сайт</a>` : ''}
         <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})">Подробнее</button>
       </div>
     </div>
@@ -451,7 +453,12 @@ function renderCompareTable(unis, container) {
     { label: 'Макс. стоимость/год', key: u => fmtPrice(u.price_to) + ' тг' },
     { label: 'Стоимость за 4 года (min)', key: u => fmtPrice(u.price_from * 4) + ' тг' },
     { label: 'Специальностей', key: u => (u.specialties || []).length },
-    { label: 'Сайт', key: u => u.website ? `<a href="${u.website}" target="_blank" style="color:var(--accent)">${u.website.replace('https://', '')}</a>` : '—' },
+    { label: 'Сайт', key: u => {
+      const href = normalizeWebsiteUrl(u.website);
+      return href
+        ? `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${formatWebsiteLabel(u.website)}</a>`
+        : '—';
+    }},
   ];
 
   const headers = unis.map(u => `<th><div class="compare-uni-head">${u.name}</div></th>`).join('');
@@ -679,7 +686,7 @@ function renderUniversityDetail(u, container) {
           <div class="detail-short">${u.short_name || ''}</div>
           <p class="detail-desc">${u.description || ''}</p>
           <div class="detail-actions">
-            ${u.website ? `<a href="${u.website}" target="_blank" class="btn btn-primary">Официальный сайт</a>` : ''}
+            ${normalizeWebsiteUrl(u.website) ? `<a href="${normalizeWebsiteUrl(u.website)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Официальный сайт</a>` : ''}
             <button class="btn btn-ghost" onclick="addToCompareAndGo(${u.id})">Добавить в сравнение</button>
             <button class="btn btn-ghost" onclick="navigate('advisor')">Спросить ИИ</button>
           </div>
@@ -988,6 +995,20 @@ function fmtPrice(n) {
   if (!n) return '—';
   if (n >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + ' млн';
   return (n / 1000).toFixed(0) + ' тыс';
+}
+
+function normalizeWebsiteUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (!trimmed || !trimmed.includes('.')) return '';
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed.replace(/^\/\//, '')}`;
+}
+
+function formatWebsiteLabel(url) {
+  return normalizeWebsiteUrl(url)
+    .replace(/^https?:\/\//i, '')
+    .replace(/\/$/, '');
 }
 
 function formatMarkdown(text) {
