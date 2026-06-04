@@ -104,7 +104,23 @@ node server.js
 ✓ Server running on http://localhost:3000
 ```
 
-### 4. Откройте браузер
+### 4. Аккаунты (Phase 2)
+
+Таблицы `users`, `saved_universities`, `user_sessions`, `chat_history`, `test_results` уже в `schema.sql`.
+
+Если БД создана до Phase 2:
+```bash
+node init-auth-tables.js
+```
+
+На сайте: **Регистрация** / **Войти** в шапке → **Личный кабинет**.
+
+В `.env` рекомендуется задать:
+```
+JWT_SECRET=длинный-случайный-ключ
+```
+
+### 5. Откройте браузер
 
 ```
 http://localhost:3000

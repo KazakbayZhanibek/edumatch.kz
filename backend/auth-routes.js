@@ -259,8 +259,7 @@ router.post('/saved-universities', verifyAuth, (req, res) => {
 
 /**
  * DELETE /api/saved-universities/:id
- * Удалить сохранённый вуз
- * Header: Authorization: Bearer <token>
+ * Удалить сохранённый вуз (по ID записи)
  */
 router.delete('/saved-universities/:id', verifyAuth, (req, res) => {
   try {
@@ -273,6 +272,30 @@ router.delete('/saved-universities/:id', verifyAuth, (req, res) => {
     return res.json({ success: true });
   } catch (error) {
     console.error('Remove saved university error:', error);
+    return res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+/**
+ * DELETE /api/saved-universities/university/:universityId
+ * Удалить из избранного по ID вуза
+ */
+router.delete('/saved-universities/university/:universityId', verifyAuth, (req, res) => {
+  try {
+    const universityId = parseInt(req.params.universityId, 10);
+    if (!universityId) {
+      return res.status(400).json({ error: 'Некорректный ID вуза' });
+    }
+
+    const result = authService.removeSavedUniversityByUniversityId(req.userId, universityId);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Remove saved university by uni id error:', error);
     return res.status(500).json({ error: 'Ошибка сервера' });
   }
 });

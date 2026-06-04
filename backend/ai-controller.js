@@ -4,6 +4,7 @@
  */
 
 const { getAIAdvice } = require('./ai-service');
+const authService = require('./auth-service');
 
 /**
  * POST /api/ai/advice
@@ -95,6 +96,15 @@ async function handleAIAdvice(req, res) {
 
     // Log statistics
     console.log(`[ai-controller] Response: confidence=${result.confidence.toFixed(2)}, fallback=${result.fallback}, took=${result.took_ms}ms`);
+
+    // Сохранить в историю, если пользователь авторизован
+    if (req.userId && result.answer) {
+      authService.saveChatMessage(req.userId, msg, result.answer, {
+        confidence: result.confidence,
+        fallback: result.fallback,
+        matches_count: result.matches?.length || 0
+      });
+    }
 
     return res.json(response);
 

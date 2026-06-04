@@ -75,6 +75,8 @@ app.use('/api/ai', aiRoutes);
 // Authentication & Profile routes (Phase 2)
 app.use('/api/auth', authRoutes);
 app.use('/api/users', authRoutes);
+// saved-universities, chat-history, test-results на /api/*
+app.use('/api', authRoutes);
 
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));

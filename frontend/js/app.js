@@ -27,24 +27,42 @@ function saveFavorites() {
   localStorage.setItem('edumatch_favorites', JSON.stringify(state.favoriteList));
 }
 
-function toggleFavorite(id) {
-  const idx = state.favoriteList.indexOf(id);
-  if (idx > -1) {
-    state.favoriteList.splice(idx, 1);
+async function toggleFavorite(id) {
+  const wasFav = state.favoriteList.includes(id);
+
+  if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+    try {
+      if (wasFav) {
+        await Auth.removeUniversity(id);
+        state.favoriteList = state.favoriteList.filter(x => x !== id);
+      } else {
+        await Auth.saveUniversity(id);
+        if (!state.favoriteList.includes(id)) state.favoriteList.push(id);
+      }
+      saveFavorites();
+    } catch (e) {
+      showToast(e.message || 'Ошибка сохранения');
+      return;
+    }
   } else {
-    state.favoriteList.push(id);
+    const idx = state.favoriteList.indexOf(id);
+    if (idx > -1) {
+      state.favoriteList.splice(idx, 1);
+    } else {
+      state.favoriteList.push(id);
+    }
+    saveFavorites();
+    if (!wasFav) {
+      showToast('Сохранено локально. Войдите, чтобы синхронизировать', 'warning');
+    }
   }
-  saveFavorites();
-  
-  // Update card visual
+
   const btn = document.querySelector(`[data-favorite-btn="${id}"]`);
-  if (btn) {
-    btn.classList.toggle('favorited');
-  }
-  
-  // Show toast
+  if (btn) btn.classList.toggle('favorited', state.favoriteList.includes(id));
+
   const isFav = state.favoriteList.includes(id);
-  showToast(isFav ? '♥ Добавлено в избранное' : '✕ Удалено из избранного');
+  if (isFav && !wasFav) showToast('♥ Добавлено в избранное', 'success');
+  else if (!isFav && wasFav) showToast('✕ Удалено из избранного');
 }
 
 function isFavorited(id) {
@@ -101,6 +119,13 @@ function navigate(page, param) {
     document.getElementById('page-career').classList.add('active');
     document.querySelectorAll('.nav-link')[5].classList.add('active');
     initCareerTest();
+  } else if (page === 'login') {
+    document.getElementById('page-login').classList.add('active');
+  } else if (page === 'register') {
+    document.getElementById('page-register').classList.add('active');
+  } else if (page === 'profile') {
+    document.getElementById('page-profile').classList.add('active');
+    loadProfilePage();
   }
 }
 
@@ -205,6 +230,7 @@ async function loadUniversities() {
     const specialty = document.getElementById('filter-specialty')?.value || '';
     const cityId = document.getElementById('filter-city')?.value || '';
     const isTop = document.getElementById('filter-top')?.value || '';
+    const lang = document.getElementById('filter-language')?.value || '';
 
     const params = new URLSearchParams();
     if (sort) params.set('sort', sort);
@@ -212,21 +238,25 @@ async function loadUniversities() {
     if (specialty) params.set('specialty', specialty);
     if (cityId) params.set('city_id', cityId);
     if (isTop) params.set('is_top', isTop);
+    if (lang) params.set('language', lang);
 
     const res = await fetch(`${API}/universities?${params}`);
     let unis = await res.json();
-    state.universities = unis;
+    if (!Array.isArray(unis)) throw new Error('Invalid response');
 
     // Client-side search filter
     const search = document.getElementById('search-input')?.value.trim().toLowerCase() || '';
-    if (search) unis = unis.filter(u => u.name.toLowerCase().includes(search) || (u.short_name||'').toLowerCase().includes(search));
+    if (search) {
+      unis = unis.filter(u =>
+        u.name.toLowerCase().includes(search) ||
+        (u.short_name || '').toLowerCase().includes(search)
+      );
+    }
 
-    // Client-side language filter
-    const lang = document.getElementById('filter-language')?.value || '';
-    if (lang) unis = unis.filter(u => (u.languages||[]).includes(lang));
-
+    state.universities = unis;
     renderUniversityGrid(unis);
-    document.getElementById('stat-unis').textContent = state.universities.length;
+    const statEl = document.getElementById('stat-unis');
+    if (statEl) statEl.textContent = unis.length;
     stopProgress();
     // Refresh AOS for new cards
     setTimeout(() => { if (typeof AOS !== 'undefined') AOS.refresh(); }, 100);
@@ -240,12 +270,19 @@ async function loadSpecialties() {
   try {
     const res = await fetch(`${API}/specialties`);
     const cats = await res.json();
-    const sel = document.getElementById('filter-specialty');
-    cats.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat;
-      opt.textContent = cat;
-      sel.appendChild(opt);
+    const selects = [
+      document.getElementById('filter-specialty'),
+      document.getElementById('sheet-specialty')
+    ].filter(Boolean);
+
+    selects.forEach(sel => {
+      while (sel.options.length > 1) sel.remove(1);
+      cats.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        sel.appendChild(opt);
+      });
     });
   } catch (e) { /* silent */ }
 }
@@ -254,13 +291,19 @@ async function loadCities() {
   try {
     const res = await fetch(`${API}/cities`);
     const cities = await res.json();
-    const sel = document.getElementById('filter-city');
-    if (!sel) return;
-    cities.forEach(city => {
-      const opt = document.createElement('option');
-      opt.value = city.id;
-      opt.textContent = `${city.name} (${city.count})`;
-      sel.appendChild(opt);
+    const selects = [
+      document.getElementById('filter-city'),
+      document.getElementById('sheet-city')
+    ].filter(Boolean);
+
+    selects.forEach(sel => {
+      while (sel.options.length > 1) sel.remove(1);
+      cities.forEach(city => {
+        const opt = document.createElement('option');
+        opt.value = city.id;
+        opt.textContent = `${city.name} (${city.count})`;
+        sel.appendChild(opt);
+      });
     });
   } catch (e) { /* silent */ }
 }
@@ -365,11 +408,14 @@ function applyFilters() {
 }
 
 function resetFilters() {
-  document.getElementById('filter-top').value = '';
-  document.getElementById('filter-city').value = '';
-  document.getElementById('filter-specialty').value = '';
-  document.getElementById('filter-price').value = '';
-  document.getElementById('filter-sort').value = 'qs_world';
+  const ids = ['filter-top', 'filter-city', 'filter-specialty', 'filter-price', 'filter-language', 'filter-sort'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = id === 'filter-sort' ? 'qs_world' : '';
+  });
+  const search = document.getElementById('search-input');
+  if (search) search.value = '';
+  syncSheetFilters();
   loadUniversities();
 }
 
@@ -772,14 +818,17 @@ async function sendMessage() {
 
   try {
     // Call new OpenRouter-based endpoint
+    const headers = { 'Content-Type': 'application/json' };
+    if (typeof Auth !== 'undefined' && Auth.getToken()) {
+      headers['Authorization'] = `Bearer ${Auth.getToken()}`;
+    }
+
     const res = await fetch(`${API}/ai/advice`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         message: text,
-        history: state.chatHistory.slice(-20),  // Last 20 messages
+        history: state.chatHistory.slice(-20),
       })
     });
     const data = await res.json();
@@ -1081,8 +1130,9 @@ function celebrateCompare() {
 // ─── INIT ─────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
-  initLanguage();  // Initialize language selector
-  loadFavorites();  // Initialize favorites from localStorage
+  initLanguage();
+  loadFavorites();
+  if (typeof Auth !== 'undefined') Auth.init();
   loadSpecialties();
   loadCities();
   navigate('home');
@@ -1181,6 +1231,8 @@ function openFilterSheet() {
     const t = document.getElementById(to);
     if (f && t) t.value = f.value;
   };
+  syncVal('filter-top', 'sheet-top');
+  syncVal('filter-city', 'sheet-city');
   syncVal('filter-specialty', 'sheet-specialty');
   syncVal('filter-price', 'sheet-price');
   syncVal('filter-language', 'sheet-language');
@@ -1202,6 +1254,8 @@ function syncSheetFilters() {
     const t = document.getElementById(to);
     if (f && t) t.value = f.value;
   };
+  syncVal('sheet-top', 'filter-top');
+  syncVal('sheet-city', 'filter-city');
   syncVal('sheet-specialty', 'filter-specialty');
   syncVal('sheet-price', 'filter-price');
   syncVal('sheet-language', 'filter-language');
@@ -1479,6 +1533,15 @@ async function calcENT() {
   const grantCount = results.filter(r => r.status === 'grant').length;
   const paidCount = results.filter(r => r.status === 'paid_possible').length;
 
+  if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+    Auth.saveTestResult('ent_calc', score, 140, {
+      summary: `Грант: ${grantCount}, платное: ${paidCount}, специальность: ${specialty}`,
+      specialty,
+      grantCount,
+      paidCount
+    }).catch(() => {});
+  }
+
   resultsEl.innerHTML = `
     <div class="ent-summary">
       <div class="ent-summary-stat" style="color:var(--green)">
@@ -1706,9 +1769,16 @@ async function showCareerResult() {
     'Естественные науки': 'Естественные науки',
   };
 
+  if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+    Auth.saveTestResult('career_test', recommendedUnis.length, 4, {
+      summary: `Направления: ${topCats.join(', ')}`,
+      topCategories: topCats,
+      recommendedIds: recommendedUnis.map(u => u.id),
+      budget: careerState.budget
+    }).catch(() => {});
+  }
+
   document.getElementById('career-result-inner').innerHTML = `
-  // 🎉 Confetti on career result
-  setTimeout(celebrateCompare, 400);
     <div class="career-result-header">
       <div class="career-result-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -1756,6 +1826,7 @@ async function showCareerResult() {
       </div>
     </div>
   `;
+  setTimeout(celebrateCompare, 400);
 }
 
 function restartCareerTest() {

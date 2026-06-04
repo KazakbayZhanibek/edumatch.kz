@@ -31,9 +31,19 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
   const conditions = [];
   const params = [];
 
-  // Фильтр по ТОП статусу
+  // ТОП-20: 20 лучших по QS (мировой → азиатский → число студентов)
   if (is_top === 'top') {
-    conditions.push('u.is_top = 1');
+    conditions.push(`u.id IN (
+      SELECT id FROM universities
+      ORDER BY
+        CASE WHEN qs_world IS NULL THEN 1 ELSE 0 END,
+        qs_world ASC,
+        CASE WHEN qs_asia IS NULL THEN 1 ELSE 0 END,
+        qs_asia ASC,
+        COALESCE(students_count, 0) DESC,
+        id ASC
+      LIMIT 20
+    )`);
   }
 
   // Фильтр по городу
@@ -42,26 +52,27 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
     params.push(parseInt(city_id));
   }
 
-  // Фильтр по цене
+  // Макс. стоимость: минимальный тариф вуза не дороже бюджета
   if (price_max) {
     conditions.push('u.price_from <= ?');
-    params.push(parseInt(price_max));
+    params.push(parseInt(price_max, 10));
   }
 
-  // Фильтр по языку
+  // Фильтр по языку (в БД: «казахский», «русский», «английский»)
   if (language) {
-    conditions.push(`u.languages LIKE ?`);
-    params.push(`%${language}%`);
+    const langKey = String(language).trim().toLowerCase();
+    conditions.push(`LOWER(u.languages) LIKE ?`);
+    params.push(`%${langKey}%`);
   }
 
-  // Фильтр по специальности (по названию или категории)
+  // Фильтр по категории специальности
   if (specialty) {
-    query += `
-      LEFT JOIN university_specialties us ON u.id = us.university_id
-      LEFT JOIN specialties s ON us.specialty_id = s.id
-    `;
-    conditions.push(`(s.name = ? OR s.category = ?)`);
-    params.push(specialty, specialty);
+    conditions.push(`EXISTS (
+      SELECT 1 FROM university_specialties us
+      JOIN specialties s ON us.specialty_id = s.id
+      WHERE us.university_id = u.id AND s.category = ?
+    )`);
+    params.push(specialty);
   }
 
   // Добавляем условия WHERE
@@ -160,9 +171,10 @@ function getUniversity(id) {
 function getSpecialtyCategories() {
   const db = getDb();
   const stmt = db.prepare(`
-    SELECT DISTINCT category
-    FROM specialties
-    ORDER BY category ASC
+    SELECT DISTINCT s.category
+    FROM specialties s
+    JOIN university_specialties us ON s.id = us.specialty_id
+    ORDER BY s.category ASC
   `);
   return stmt.all().map(row => row.category);
 }

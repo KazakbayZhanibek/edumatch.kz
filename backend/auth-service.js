@@ -5,6 +5,7 @@
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { getDb } = require('./database');
 
 // Получить JWT секрет из переменной окружения
@@ -157,7 +158,7 @@ async function loginUser(email, password) {
  */
 function generateToken(userId) {
   return jwt.sign(
-    { userId, iat: Math.floor(Date.now() / 1000) },
+    { userId, jti: crypto.randomUUID(), iat: Math.floor(Date.now() / 1000) },
     JWT_SECRET,
     { expiresIn: JWT_EXPIRES_IN }
   );
@@ -371,6 +372,40 @@ function removeSavedUniversity(userId, savedUniversityId) {
   }
 }
 
+/**
+ * Удалить сохранённый вуз по ID университета
+ */
+function removeSavedUniversityByUniversityId(userId, universityId) {
+  try {
+    const result = getDb().prepare(
+      'DELETE FROM saved_universities WHERE university_id = ? AND user_id = ?'
+    ).run(universityId, userId);
+
+    if (result.changes === 0) {
+      return { success: false, error: 'Вуз не найден в избранном' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Remove saved university by uni id error:', error);
+    return { success: false, error: 'Ошибка при удалении' };
+  }
+}
+
+/**
+ * ID университетов в избранном пользователя
+ */
+function getSavedUniversityIds(userId) {
+  try {
+    return getDb().prepare(
+      'SELECT university_id FROM saved_universities WHERE user_id = ?'
+    ).all(userId).map(row => row.university_id);
+  } catch (error) {
+    console.error('Get saved university ids error:', error);
+    return [];
+  }
+}
+
 // ============== ИСТОРИЯ И РЕЗУЛЬТАТЫ ==============
 
 /**
@@ -484,6 +519,8 @@ module.exports = {
   getSavedUniversities,
   saveUniversity,
   removeSavedUniversity,
+  removeSavedUniversityByUniversityId,
+  getSavedUniversityIds,
   
   // Chat & Tests
   saveChatMessage,

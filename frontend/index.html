@@ -56,6 +56,15 @@
         <button class="lang-btn" onclick="setLanguage('kk')" id="lang-kk" title="Қазақша">ҚА</button>
         <button class="lang-btn" onclick="setLanguage('en')" id="lang-en" title="English">EN</button>
       </div>
+      <div class="nav-auth" id="nav-auth-guest">
+        <button class="btn btn-ghost btn-sm nav-auth-btn" onclick="navigate('login')">Войти</button>
+        <button class="btn btn-primary btn-sm nav-auth-btn" onclick="navigate('register')">Регистрация</button>
+      </div>
+      <div class="nav-auth nav-auth-user" id="nav-auth-user" style="display:none">
+        <button class="btn btn-ghost btn-sm nav-auth-btn" onclick="navigate('profile')">
+          <span id="nav-auth-username">Профиль</span>
+        </button>
+      </div>
       <button class="burger" id="burger" onclick="toggleMobileMenu()" aria-label="Меню">
         <span></span><span></span><span></span>
       </button>
@@ -204,9 +213,9 @@
               <label class="filter-label">Язык обучения</label>
               <select class="filter-select" id="filter-language" onchange="applyFilters()">
                 <option value="">Любой</option>
-                <option value="Английский">Английский</option>
-                <option value="Русский">Русский</option>
-                <option value="Казахский">Казахский</option>
+                <option value="английский">Английский</option>
+                <option value="русский">Русский</option>
+                <option value="казахский">Казахский</option>
               </select>
             </div>
             <div class="filter-group">
@@ -552,6 +561,71 @@
     </div>
   </div>
 
+  <!-- LOGIN -->
+  <div id="page-login" class="page">
+    <div class="container auth-container">
+      <div class="auth-card">
+        <h1 class="auth-title">Вход</h1>
+        <p class="auth-sub">Войдите, чтобы сохранять вузы и историю с ИИ</p>
+        <form class="auth-form" onsubmit="handleLogin(event)">
+          <div class="form-field">
+            <label>Email</label>
+            <input type="email" id="login-email" class="form-input" required placeholder="you@email.com" autocomplete="email">
+          </div>
+          <div class="form-field">
+            <label>Пароль</label>
+            <input type="password" id="login-password" class="form-input" required placeholder="••••••" autocomplete="current-password">
+          </div>
+          <p class="form-error" id="login-error"></p>
+          <button type="submit" class="btn btn-primary auth-submit" id="login-submit">Войти</button>
+        </form>
+        <p class="auth-switch">Нет аккаунта? <a href="#" onclick="navigate('register')">Зарегистрироваться</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="page-register" class="page">
+    <div class="container auth-container">
+      <div class="auth-card">
+        <h1 class="auth-title">Регистрация</h1>
+        <p class="auth-sub">Создайте аккаунт за минуту — это бесплатно</p>
+        <form class="auth-form" onsubmit="handleRegister(event)">
+          <div class="form-field">
+            <label>Email</label>
+            <input type="email" id="reg-email" class="form-input" required placeholder="you@email.com" autocomplete="email">
+          </div>
+          <div class="form-field">
+            <label>Никнейм</label>
+            <input type="text" id="reg-username" class="form-input" required minlength="3" maxlength="20" placeholder="abiturient2025" autocomplete="username">
+          </div>
+          <div class="form-field">
+            <label>Имя <span class="form-optional">(необязательно)</span></label>
+            <input type="text" id="reg-fullname" class="form-input" placeholder="Айдар">
+          </div>
+          <div class="form-field">
+            <label>Пароль</label>
+            <input type="password" id="reg-password" class="form-input" required minlength="6" placeholder="минимум 6 символов" autocomplete="new-password">
+          </div>
+          <p class="form-error" id="register-error"></p>
+          <button type="submit" class="btn btn-primary auth-submit" id="register-submit">Создать аккаунт</button>
+        </form>
+        <p class="auth-switch">Уже есть аккаунт? <a href="#" onclick="navigate('login')">Войти</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="page-profile" class="page">
+    <div class="container">
+      <div class="page-head">
+        <h1 class="page-title">Личный кабинет</h1>
+        <p class="page-sub">Сохранённые вузы, история ИИ и результаты тестов</p>
+      </div>
+      <div id="profile-content"></div>
+    </div>
+  </div>
+
   <!-- 404 PAGE -->
   <div id="page-404" class="page">
     <div class="container">
@@ -688,6 +762,13 @@
     <button class="sheet-close" onclick="closeFilterSheet()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>
   <div class="sheet-body">
+    <div class="sheet-field"><label class="sheet-label">Уровень</label>
+      <select class="form-select" id="sheet-top" onchange="syncSheetFilters()">
+        <option value="">Все университеты</option>
+        <option value="top">Только ТОП-20</option>
+      </select></div>
+    <div class="sheet-field"><label class="sheet-label">Город</label>
+      <select class="form-select" id="sheet-city" onchange="syncSheetFilters()"><option value="">Все города</option></select></div>
     <div class="sheet-field"><label class="sheet-label">Специальность</label>
       <select class="form-select" id="sheet-specialty" onchange="syncSheetFilters()"><option value="">Все направления</option></select></div>
     <div class="sheet-field"><label class="sheet-label">Максимальная стоимость</label>
@@ -697,8 +778,10 @@
         <option value="3000000">до 3 млн тг</option></select></div>
     <div class="sheet-field"><label class="sheet-label">Язык обучения</label>
       <select class="form-select" id="sheet-language" onchange="syncSheetFilters()">
-        <option value="">Любой</option><option value="Английский">Английский</option>
-        <option value="Русский">Русский</option><option value="Казахский">Казахский</option></select></div>
+        <option value="">Любой</option>
+        <option value="английский">Английский</option>
+        <option value="русский">Русский</option>
+        <option value="казахский">Казахский</option></select></div>
     <div class="sheet-field"><label class="sheet-label">Сортировка</label>
       <select class="form-select" id="sheet-sort" onchange="syncSheetFilters()">
         <option value="qs_world">По рейтингу QS</option>
@@ -755,6 +838,14 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       О проекте
     </button>
+    <button class="sheet-menu-item" onclick="navigate('profile');closeMoreSheet()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Личный кабинет
+    </button>
+    <button class="sheet-menu-item" onclick="navigate('login');closeMoreSheet()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Войти
+    </button>
     <button class="sheet-menu-item" onclick="openModal('modal-contacts');closeMoreSheet()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
       Контакты
@@ -772,6 +863,7 @@
 <script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.0/dist/countUp.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 <script src="js/translations.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/app.js"></script>
 <button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Наверх">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
