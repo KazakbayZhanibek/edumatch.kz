@@ -667,30 +667,120 @@ async function sendMessage() {
 }
 
 /**
- * Render university matches as compact cards
+ * Render university matches as professional cards
  */
 function renderMatches(matches) {
   if (!matches || matches.length === 0) return '';
 
-  let html = '<div class="ai-matches" style="margin-top: 1rem;">';
-  html += '<strong>Релевантные вузы:</strong><div style="display: grid; gap: 0.5rem; margin-top: 0.5rem;">';
+  let html = `
+  <div style="margin-top: 1.5rem; border-top: 1px solid #e0e0e0; padding-top: 1rem;">
+    <div style="font-size: 0.9rem; font-weight: 600; color: #666; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">
+      📋 Рекомендуемые университеты (${matches.length})
+    </div>
+    <div style="display: grid; gap: 0.8rem;">
+  `;
 
-  matches.slice(0, 5).forEach(u => {
-    const languages = (u.languages || []).join(', ');
-    const specs = (u.specialties || []).slice(0, 2).join(', ');
-    const qs = u.qs_world ? ` QS: ${u.qs_world}` : '';
-
+  matches.slice(0, 5).forEach((u, idx) => {
+    const languages = (u.languages || []).join(', ') || 'Не указано';
+    const specs = (u.specialties || []).slice(0, 3).join(', ') || 'N/A';
+    const qs = u.qs_world ? `QS World: #${u.qs_world}` : (u.qs_asia ? `QS Asia: #${u.qs_asia}` : 'Рейтинг не указан');
+    const priceRange = `${(u.price_from/1000000).toFixed(2)}–${(u.price_to/1000000).toFixed(2)}M тг`;
+    
     html += `
-      <div style="padding: 0.75rem; background: #f5f5f5; border-radius: 4px; cursor: pointer;" onclick="navigate('university', ${u.id})">
-        <strong>${u.short_name}</strong> (${u.name})<br/>
-        <small>💰 ${u.price_from.toLocaleString()}-${u.price_to.toLocaleString()} тг/год${qs}</small><br/>
-        <small>🌐 ${languages}</small><br/>
-        <small>📚 ${specs}</small>
+    <div style="
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    " 
+    onclick="navigate('university', ${u.id})"
+    onmouseover="this.style.boxShadow='0 4px 12px rgba(45,106,79,0.15)'; this.style.transform='translateY(-2px)'"
+    onmouseout="this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)'; this.style.transform='none'"
+    style="transform: none;">
+      
+      <!-- Header: Name + Rank -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+        <div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: #2d6a4f; margin-bottom: 0.25rem;">
+            ${u.short_name}
+          </div>
+          <div style="font-size: 0.85rem; color: #666;">
+            ${u.name}
+          </div>
+        </div>
+        <div style="background: #2d6a4f; color: white; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
+          ${qs}
+        </div>
       </div>
+      
+      <!-- Details Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; color: #555; margin-bottom: 0.75rem; border-top: 1px solid #eee; padding-top: 0.75rem;">
+        
+        <div>
+          <div style="color: #999; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem; font-weight: 600;">Стоимость</div>
+          <div style="color: #2d6a4f; font-weight: 600;">💰 ${priceRange}/год</div>
+        </div>
+        
+        <div>
+          <div style="color: #999; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem; font-weight: 600;">Языки обучения</div>
+          <div style="color: #333;">🌐 ${languages}</div>
+        </div>
+        
+        <div style="grid-column: 1 / -1;">
+          <div style="color: #999; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem; font-weight: 600;">Специальности</div>
+          <div style="color: #333;">📚 ${specs}${(u.specialties || []).length > 3 ? '...' : ''}</div>
+        </div>
+      </div>
+      
+      <!-- CTA -->
+      <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+        <button style="
+          flex: 1;
+          background: #2d6a4f;
+          color: white;
+          border: none;
+          padding: 0.6rem;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.2s;
+        " 
+        onclick="event.stopPropagation(); navigate('university', ${u.id})"
+        onmouseover="this.style.background='#1d4a3f'"
+        onmouseout="this.style.background='#2d6a4f'">
+          Подробнее
+        </button>
+        <button style="
+          flex: 1;
+          background: #f0f0f0;
+          color: #333;
+          border: none;
+          padding: 0.6rem;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background 0.2s;
+        "
+        onclick="event.stopPropagation(); toggleFavorite(${u.id})"
+        onmouseover="this.style.background='#e0e0e0'"
+        onmouseout="this.style.background='#f0f0f0'">
+          ${state.favoriteList?.includes(u.id) ? '♥ В избранном' : '♡ В избранное'}
+        </button>
+      </div>
+    </div>
     `;
   });
 
-  html += '</div></div>';
+  html += `
+    </div>
+  </div>
+  `;
+  
   return html;
 }
 
