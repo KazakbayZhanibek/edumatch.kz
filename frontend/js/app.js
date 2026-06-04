@@ -842,16 +842,21 @@ async function sendMessage() {
     if (!data.success) {
       appendMessage('ai', `Ошибка: ${data.error || 'Unknown error'}`);
     } else {
-      // Show AI answer (with university cards in the same bubble)
-      appendMessage('ai', data.answer, data.matches);
+      // Show AI answer
+      if (data.intent === 'admission' && data.admission && data.admission.type === 'result') {
+        appendMessage('ai', data.answer, [], data.admission);
+      } else {
+        appendMessage('ai', data.answer, data.matches);
+      }
       state.chatHistory.push({ role: 'assistant', content: data.answer });
 
-      // Log metadata for debugging (optional)
+      // Log metadata
       console.log('[AI Response]', {
+        intent: data.intent,
         confidence: data.metadata.confidence,
         fallback: data.metadata.fallback,
         universities_analyzed: data.metadata.universities_analyzed,
-        took_ms: data.metadata.took_ms
+        took_ms: data.metadata.took_ms,
       });
     }
   } catch (e) {
@@ -879,7 +884,7 @@ function renderMatches(matches) {
 
   matches.slice(0, 5).forEach((u, idx) => {
     const languages = (u.languages || []).join(', ') || 'Не указано';
-    const specs = (u.specialties || []).slice(0, 3).join(', ') || 'N/A';
+    const specs = (u.specialties || []).map(s => typeof s === 'string' ? s : s.name || s.category).filter(Boolean).slice(0, 3).join(', ') || 'N/A';
     const qs = u.qs_world ? `QS World: #${u.qs_world}` : (u.qs_asia ? `QS Asia: #${u.qs_asia}` : 'Рейтинг не указан');
     const priceRange = `${(u.price_from/1000000).toFixed(2)}–${(u.price_to/1000000).toFixed(2)}M тг`;
     
@@ -981,13 +986,58 @@ function renderMatches(matches) {
   return html;
 }
 
+/**
+ * Render admission prediction cards inside chat bubble
+ */
+function renderAdmissionChatCards(matches, input) {
+  if (!matches || matches.length === 0) return '';
+
+  let html = `
+  <div class="chat-admission-cards">
+    <div class="chat-admission-header">
+      <span class="chat-admission-badge">🎯 Прогноз поступления</span>
+      <span class="chat-admission-input">ЕНТ ${input?.ent || '—'} · ${input?.specialty || '—'}</span>
+    </div>
+  `;
+
+  matches.slice(0, 5).forEach((m, idx) => {
+    const barClass = m.chance >= 80 ? 'chance-high' : m.chance >= 60 ? 'chance-mid' : 'chance-low';
+    const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+    html += `
+    <div class="chat-admission-card" onclick="navigate('university', ${m.university_id})">
+      <div class="chat-admission-card-head">
+        <div>
+          <span class="chat-admission-rank">${rankIcon}</span>
+          <span class="chat-admission-uni">${escapeAdmissionHtml(m.university)}</span>
+          <span class="chat-admission-name">${escapeAdmissionHtml(m.name || '')}</span>
+        </div>
+        <div class="chat-admission-chance ${barClass}">${m.chance}%</div>
+      </div>
+      <div class="chat-admission-bar">
+        <div class="chat-admission-fill ${barClass}" style="width:${m.chance}%"></div>
+      </div>
+      <div class="chat-admission-rec">${escapeAdmissionHtml(m.recommendation)}</div>
+      <ul class="chat-admission-reasons">
+        ${(m.reasons || []).slice(0, 3).map(r => {
+          const icon = r.type === 'positive' ? '✓' : r.type === 'negative' ? '✗' : '•';
+          const cls = r.type === 'positive' ? 'reason-pos' : r.type === 'negative' ? 'reason-neg' : 'reason-neu';
+          return `<li class="${cls}">${icon} ${escapeAdmissionHtml(r.text)}</li>`;
+        }).join('')}
+      </ul>
+    </div>`;
+  });
+
+  html += `</div>`;
+  return html;
+}
+
 function scrollChatToBottom() {
   requestAnimationFrame(() => {
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
   });
 }
 
-function appendMessage(role, text, matches = null) {
+function appendMessage(role, text, matches = null, admission = null) {
   const msgs = document.getElementById('chat-messages');
 
   // Remove welcome if present
@@ -1002,6 +1052,10 @@ function appendMessage(role, text, matches = null) {
   let content = role === 'ai' ? renderMarkdown(text) : `<p>${text}</p>`;
   if (role === 'ai' && matches && matches.length > 0) {
     content += renderMatches(matches);
+  }
+  // Render admission prediction cards in chat
+  if (admission && admission.type === 'result' && admission.matches && admission.matches.length > 0) {
+    content += renderAdmissionChatCards(admission.matches, admission.input);
   }
   div.innerHTML = `<div class="chat-bubble chat-bubble-${role === 'user' ? 'user' : 'ai'} markdown-body">${content}</div>`;
   msgs.appendChild(div);

@@ -12,7 +12,7 @@ const synonyms = {
 };
 
 try {
-  const lines = fs.readFileSync('../universities_grants_full.jsonl', 'utf8').trim().split('\n');
+  const lines = fs.readFileSync('../../universities_grants_full.jsonl', 'utf8').trim().split('\n');
   const universities = lines.map((line, i) => {
     try { return JSON.parse(line); }
     catch (e) { throw new Error(`JSON parse error on line ${i + 1}: ${e.message}`); }

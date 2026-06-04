@@ -1,7 +1,7 @@
 // Comprehensive DB and AI function validation
 
 const Database = require('better-sqlite3');
-const { getAIAdvice, retrieveRelevantUniversities } = require('./ai-service');
+const { getAIAdvice, retrieveRelevantUniversities } = require('../ai-service');
 require('dotenv').config();
 
 const db = new Database('edumatch.db');
@@ -128,7 +128,7 @@ console.log('\n5️⃣ FIELD NAME CONSISTENCY\n');
 const field_issues = [];
 
 // Check if ai-service.js uses correct field names
-const ai_service_code = require('fs').readFileSync('./ai-service.js', 'utf8');
+const ai_service_code = require('fs').readFileSync('../ai-service.js', 'utf8');
 
 // Fields used in AI service
 const fields_to_check = ['avg_salary', 'dorm_price', 'has_dorm', 'specialties', 'accreditations'];

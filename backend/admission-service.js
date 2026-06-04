@@ -3,7 +3,6 @@
  */
 
 const { getDb } = require('./database');
-const { callOpenRouter } = require('./ai-service');
 
 /** Ключ формы → категория специальности в БД */
 const SPECIALTY_MAP = {
@@ -333,6 +332,7 @@ ${reasonText}
 
 Дай рекомендацию: стоит ли подавать документы в этот вуз и что улучшить.`;
 
+  const { callOpenRouter } = require('./ai-service');
   const result = await callOpenRouter(systemPrompt, userMessage, []);
   return result.text;
 }

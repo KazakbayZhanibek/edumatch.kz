@@ -1,158 +1,214 @@
-/**
- * AI PROMPTS & FALLBACK MESSAGES
- * Жёсткие инструкции для OpenRouter, чтобы избежать галлюцинаций
- */
+const { getDb } = require('./database');
 
-/**
- * System prompt для модели
- * Даёт контекст о вузах и грантах, но ЗАПРЕЩАЕТ додумывать данные
- */
-function getSystemPrompt(universitiesData, grantsData) {
-  return `You are EduMatch KZ AI Advisor — a professional university selection assistant for Kazakhstan.
+const PERSONALITIES = {
+  professional: {
+    name: 'professional',
+    instruction: `Дай чёткий, структурированный ответ. Используй профессиональный, но доступный тон.
+Форматирование не обязательно — отвечай естественно, как эксперт по образованию.`,
+  },
+  friendly: {
+    name: 'friendly',
+    instruction: `Будь дружелюбным и поддерживающим, как старший товарищ.
+Отвечай тепло, но информативно. Можешь начать с короткого позитивного вступления.`,
+  },
+  concise: {
+    name: 'concise',
+    instruction: `Отвечай максимально кратко и по делу. 2–3 предложения.
+Только суть, без воды и лишних деталей.`,
+  },
+  detailed: {
+    name: 'detailed',
+    instruction: `Разверни ответ с примерами и конкретикой.
+Можешь дать 2-3 варианта с плюсами и минусами каждого.`,
+  },
+};
 
-📋 YOUR ROLE:
-- Analyze student requirements (budget, specialties, languages, preferences)
-- Recommend universities from the database with specific matching criteria
-- Provide professional, structured advice with real data
-- Direct to official sources when data is unavailable
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎯 RESPONSE FORMAT (MUST FOLLOW EXACTLY):
-
-Use this structure for recommendations:
-
-## 📊 Анализ вашего запроса
-Brief summary of requirements extracted from the message.
-
-## 🎓 Рекомендуемые университеты
-Present universities with:
-- **Название (аббревиатура)**: Full name
-- 💰 Цена: X.XM - X.XM тг/год
-- 📚 Направления: Program names
-- 🌐 Языки: Languages supported
-- 📈 Рейтинг: QS World ranking (if available)
-
-## ✅ Почему эти университеты подходят
-2-3 sentences explaining the match with their criteria.
-
-## 💡 Советы по выбору
-- Specific actionable advice
-- Links to websites when relevant
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-🚫 CRITICAL RULES (НИКОГДА НЕ НАРУШАЙ):
-1. NEVER invent data. ONLY use context provided below.
-2. NEVER fabricate: ЕНТ scores, admission requirements, or programs not in database.
-3. If data missing: "К сожалению, эта информация отсутствует в базе. Рекомендуем посетить официальный веб-сайт университета."
-4. ALL prices must be exact from database (no estimates).
-5. Never reference external knowledge about universities.
-6. Keep professional, concise tone. Max 3-4 paragraphs.
-7. Use exact names/abbreviations from database.
-8. When uncertainty exists, explicitly state: "Данные не подтверждены базой".
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-DATABASE CONTEXT:
-
-UNIVERSITIES:
-${universitiesData}
-
-GRANTS & SCHOLARSHIPS:
-${grantsData}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Respond in Russian. Use structured markdown. No emoji except provided icons.`;
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
-/**
- * Fallback message если retrieval нашёл слишком мало вузов
- */
-const FALLBACK_MESSAGE_FEW_MATCHES = `## ⚠️ Ограниченные результаты поиска
+function getSystemPrompt(intent, universitiesData, grantsData) {
+  const db = getDb();
+  const uniCount = db.prepare('SELECT COUNT(*) as c FROM universities').get().c;
+  const specCount = db.prepare('SELECT COUNT(*) as c FROM specialties').get().c;
+  const grantCount = db.prepare('SELECT COUNT(*) as c FROM grants').get().c;
 
-К сожалению, в базе найдено мало университетов, соответствующих вашему запросу.
+  if (intent === 'general' || intent === 'comparison') {
+    return buildGeneralPrompt(uniCount, specCount, grantCount);
+  }
 
-### Возможные причины:
-- Очень узкие критерии поиска
-- Редкие специальности
-- Небольшой бюджет для специализированных программ
+  if (intent === 'grant') {
+    return buildGrantPrompt(uniCount, specCount, grantCount, grantsData);
+  }
 
-### Рекомендуемые действия:
-1. **Расширьте критерии**: попробуйте указать несколько специальностей
-2. **Уточните бюджет**: найдите информацию о стоимости интересующих программ
-3. **Посетите официальные сайты**:
-   - казну.kz (КазНУ)
-   - kbtu.kz (КБТУ)
-   - cu.edu.kz (Caspian)
-   - muirckz.com (МУИТ)
-   - karaganda.kz (КарГТУ)
+  return buildBasePrompt(universitiesData, grantsData);
+}
 
-Я помогу, если уточните параметры поиска! 💡`;
+function buildBasePrompt(universitiesData, grantsData) {
+  const tone = pickRandom([PERSONALITIES.professional, PERSONALITIES.friendly]);
+  return `Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.
 
-/**
- * Fallback message если вопрос вне контекста БД
- */
-const FALLBACK_MESSAGE_OUT_OF_SCOPE = `## 📚 Эта информация вне моей базы
+${tone.instruction}
 
-Похоже, ваш вопрос касается данных, которых нет в моей системе.
+📋 ЧТО ТЫ ЗНАЕШЬ:
+База данных содержит информацию о вузах: цены, рейтинги QS, языки, специальности, общежития, зарплаты выпускников, а также данные о грантах.
 
-### Я знаю (в базе есть):
-✓ 45 университетов Казахстана (полная информация)
-✓ 24+ специальности по категориям
-✓ Цены обучения и гранты
-✓ Рейтинги QS World/Asia
-✓ Условия проживания и средние зарплаты выпускников
+🚫 ЧЕГО НЕЛЬЗЯ:
+- Выдумывать цифры — используй ТОЛЬКО данные из контекста ниже
+- Добавлять требования по ЕНТ или проходные баллы (их нет в базе)
+- Давать ссылки, которых нет в данных
 
-### Информация, которой НЕТ в базе:
-✗ Минимальные баллы ЕНТ/ПСА
-✗ Проходные баллы прошлых лет
-✗ Условия общежитий
-✗ Расписание занятий
-✗ Конкретные контакты приемных комиссий
+ВАЖНО: Отвечай естественно, без принудительных шаблонов. Если данных мало — честно скажи об этом.
 
-### Для других вопросов:
-🌐 Посетите официальный сайт университета
-📞 Позвоните на горячую линию приемной комиссии
-✉️ Напишите на email приемной комиссии`;
+ДАННЫЕ О ВУЗАХ:
+${universitiesData}
 
-/**
- * Fallback message если нет данных о специальности
- */
-const FALLBACK_MESSAGE_NO_SPECIALTY_DATA = `## 📋 Данные по этой специальности недоступны
+ГРАНТЫ:
+${grantsData}
 
-К сожалению, в моей базе нет подробной информации о программах по этой специальности.
+Отвечай на русском языке.`;
+}
 
-### Как найти информацию:
-1. Перейдите на официальный сайт интересующего университета
-2. Найдите раздел "Приемная комиссия" или "Программы обучения"
-3. Свяжитесь с приемной комиссией напрямую
-4. Возьмите документ о приеме (обычно содержит все детали)
+function buildGeneralPrompt(uniCount, specCount, grantCount) {
+  const tone = pickRandom([PERSONALITIES.friendly, PERSONALITIES.concise]);
+  return `Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.
 
-Я могу помочь рекомендовать университеты, если укажете другие критерии (бюджет, город, направление).`;
+${tone.instruction}
 
-/**
- * Fallback message если нет контактной информации
- */
-const FALLBACK_MESSAGE_NO_CONTACTS = `## 📞 Контакты приемной комиссии
+У тебя есть доступ к базе данных с:
+• ${uniCount} университетами (цены, рейтинги, языки, общежития)
+• ${specCount} специальностями
+• ${grantCount} грантами и стипендиями
 
-К сожалению, актуальные контакты отсутствуют в моей базе данных.
+Отвечай на русском языке. Не выдумывай данные. Если не знаешь — так и скажи.
 
-### Как получить контакты:
-1. **Официальный сайт** → раздел "Контакты" или "Приемная комиссия"
-2. **Google Maps** → найдите университет и наберите номер
-3. **Официальные социальные сети** (Instagram, Facebook, LinkedIn)
-4. **Портал edumatch.kz** может иметь актуальные контакты
+Строй ответ естественно, как живой консультант, а не как автоматический шаблон.`;
+}
 
-### Типовой формат поиска:
-- **Веб-сайт**: [название университета].kz
-- **Email**: info@[название].kz или abit@[название].kz
-- **Телефон**: обычно указан на главной странице сайта`;
+function buildGrantPrompt(uniCount, specCount, grantCount, grantsData) {
+  const tone = pickRandom([PERSONALITIES.detailed, PERSONALITIES.professional]);
+  return `Ты — EduMatch KZ, консультант по грантам и стипендиям в Казахстане.
+
+${tone.instruction}
+
+В базе ${grantCount} грантов разных типов (государственные, корпоративные, университетские).
+
+ДАННЫЕ О ГРАНТАХ:
+${grantsData}
+
+🚫 НЕЛЬЗЯ:
+- Придумывать гранты, которых нет в данных
+- Гарантировать получение гранта
+
+Отвечай на русском языке. Если грантов подходящих нет — предложи альтернативы.`;
+}
+
+function getAdmissionBriefPrompt(params, prediction) {
+  if (!prediction.success || !prediction.matches?.length) {
+    return 'К сожалению, не удалось рассчитать шансы по вашему запросу. Попробуйте другие параметры.';
+  }
+
+  const matches = prediction.matches.slice(0, 6);
+  const top = matches[0];
+  const ent = prediction.input.ent;
+
+  let text = '';
+  const isSingle = matches.length === 1;
+  const isAllLow = matches.every(m => m.chance < 40);
+
+  if (isSingle) {
+    const m = matches[0];
+    text = `## 🎯 ${m.university}\n\n**Вероятность поступления: ${m.chance}%** — ${m.recommendation}\n\n`;
+    if (m.requirement) {
+      text += `📊 **Ваш ЕНТ: ${ent}**\n`;
+      if (ent >= m.requirement.grant_min_ent) {
+        text += `✅ Выше порога на грант (нужно ${m.requirement.grant_min_ent})\n`;
+      } else if (ent >= m.requirement.avg_ent) {
+        text += `✅ Выше среднего балла (${m.requirement.avg_ent}), но до гранта не хватает ${m.requirement.grant_min_ent - ent} баллов\n`;
+      } else if (ent >= m.requirement.min_ent) {
+        text += `⚠ Выше минимального порога (${m.requirement.min_ent}), но ниже среднего (${m.requirement.avg_ent})\n`;
+      }
+      text += '\n';
+    }
+    const reasons = m.reasons || [];
+    if (reasons.length > 0) {
+      const pos = reasons.filter(r => r.type === 'positive');
+      const neg = reasons.filter(r => r.type === 'negative');
+      if (pos.length > 0) {
+        text += '✅ **Что работает в вашу пользу:**\n';
+        pos.forEach(r => { text += `• ${r.text}\n`; });
+        text += '\n';
+      }
+      if (neg.length > 0) {
+        text += '⚠ **На что обратить внимание:**\n';
+        neg.forEach(r => { text += `• ${r.text}\n`; });
+        text += '\n';
+      }
+    }
+    const grantGap = m.requirement?.grant_min_ent ? m.requirement.grant_min_ent - ent : null;
+    if (grantGap && grantGap > 0 && grantGap <= 10) {
+      text += `💡 До гранта не хватает всего ${grantGap} баллов. Рассмотрите подготовительные курсы или пересдачу ЕНТ.\n\n`;
+    }
+    text += `🔗 [Подробнее о вузе] → нажмите на карточку ниже`;
+  } else {
+    text = `## 🎯 Результаты для ${prediction.input.specialty}\n\n`;
+    text += `**Ваш ЕНТ: ${ent} баллов**\n`;
+    if (prediction.input.budget) {
+      text += `**Бюджет:** до ${fmtBudget(prediction.input.budget)}\n`;
+    }
+    text += '\n';
+
+    const high = matches.filter(m => m.chance >= 70);
+    const medium = matches.filter(m => m.chance >= 40 && m.chance < 70);
+    const low = matches.filter(m => m.chance < 40);
+
+    if (high.length > 0) {
+      text += `🟢 **Высокие шансы (${high.length}):** `;
+      text += high.map(m => `${m.university} (${m.chance}%)`).join(', ');
+      text += '\n\n';
+    }
+    if (medium.length > 0) {
+      text += `🟡 **Реальные варианты (${medium.length}):** `;
+      text += medium.map(m => `${m.university} (${m.chance}%)`).join(', ');
+      text += '\n\n';
+    }
+    if (low.length > 0) {
+      text += `🔴 **Низкие шансы (${low.length}):** `;
+      text += low.map(m => `${m.university} (${m.chance}%)`).join(', ');
+      text += '\n\n';
+    }
+
+    if (top && top.chance >= 70) {
+      text += `💡 **Лучший вариант:** ${top.university} — ${top.recommendation}\n\n`;
+    } else if (top && top.chance >= 40) {
+      text += `💡 ${top.university} — ${top.recommendation}\n\n`;
+    } else if (isAllLow) {
+      text += `💡 С вашими баллами нужен запасной вариант. Рассмотрите вузы с порогом ЕНТ ниже ${ent}.\n\n`;
+    }
+  }
+
+  return text;
+}
+
+function fmtBudget(n) {
+  if (!n) return '';
+  if (n >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + ' млн ₸/год';
+  return (n / 1000).toFixed(0) + ' тыс ₸/год';
+}
+
+function getMissingParamsMessage(params) {
+  const missing = [];
+  if (!params.ent) missing.push('балл ЕНТ (например, "у меня 110 баллов")');
+  if (!params.university_id && !params.specialty) missing.push('вуз или специальность (например, "в КБТУ на IT")');
+
+  if (!missing.length) return null;
+
+  return `Чтобы рассчитать шансы, уточните:\n• ${missing.join('\n• ')}\n\nНапример: *"Поступлю ли я в КБТУ с ЕНТ 110?"* или *"Мои шансы на грант с 120 баллами?"*`;
+}
 
 module.exports = {
   getSystemPrompt,
-  FALLBACK_MESSAGE_FEW_MATCHES,
-  FALLBACK_MESSAGE_OUT_OF_SCOPE,
-  FALLBACK_MESSAGE_NO_SPECIALTY_DATA,
-  FALLBACK_MESSAGE_NO_CONTACTS
+  getAdmissionBriefPrompt,
+  getMissingParamsMessage,
+  PERSONALITIES,
 };

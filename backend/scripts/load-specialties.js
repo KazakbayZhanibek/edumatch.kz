@@ -3,7 +3,7 @@ const fs = require('fs');
 
 try {
   // Загрузить JSON
-  const data = JSON.parse(fs.readFileSync('../Parcerscript/universities.json', 'utf8'));
+  const data = JSON.parse(fs.readFileSync('../../Parcerscript/universities.json', 'utf8'));
   
   // Собрать все уникальные специальности из всех вузов
   const specialtiesMap = new Map();

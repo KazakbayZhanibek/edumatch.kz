@@ -2,7 +2,7 @@ const fs = require('fs');
 const db = require('better-sqlite3')('edumatch.db');
 
 try {
-  const content = fs.readFileSync('../universities_cards.md', 'utf8');
+  const content = fs.readFileSync('../../universities_cards.md', 'utf8');
   
   // Парсим описания по паттерну: # **Name (Abbr)** ... **О университете:**...
   // Берем ТОЛЬКО текст "О университете", до следующего **Факультеты**
