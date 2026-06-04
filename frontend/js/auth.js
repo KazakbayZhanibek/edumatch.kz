@@ -394,7 +394,8 @@ async function loadProfilePage() {
 
 const TEST_TYPE_LABELS = {
   ent_calc: 'ЕНТ-калькулятор',
-  career_test: 'Профориентация'
+  career_test: 'Профориентация',
+  admission_predict: 'Прогноз поступления',
 };
 
 function handleProfileSave(e) {

@@ -21,6 +21,7 @@ initDatabase();
 const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTips, getUniversitiesContext, getCities } = require('./db');
 const aiRoutes = require('./ai-routes');
 const authRoutes = require('./auth-routes');
+const admissionRoutes = require('./admission-routes');
 
 const app = express();
 app.use(cors());
@@ -71,6 +72,9 @@ app.get('/api/tips', (req, res) => {
 
 // AI Advisor routes (new OpenRouter-based system)
 app.use('/api/ai', aiRoutes);
+
+// Admission Predictor
+app.use('/api/admission', admissionRoutes);
 
 // Authentication & Profile routes (Phase 2)
 app.use('/api/auth', authRoutes);

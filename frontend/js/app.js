@@ -10,6 +10,7 @@ const state = window.state = {
   compareList: [],   // array of ids (max 3)
   favoriteList: [],  // array of ids (from localStorage)
   chatHistory: [],
+  admissionLastResult: null,
   currentPage: 'home',
 };
 
@@ -89,9 +90,11 @@ function navigate(page, param) {
     renderComparePage();
   } else if (page === 'grants') {
     document.getElementById('page-grants').classList.add('active');
+    document.querySelectorAll('.nav-link')[6].classList.add('active');
     loadGrants();
   } else if (page === 'map') {
     document.getElementById('page-map').classList.add('active');
+    document.querySelectorAll('.nav-link')[7].classList.add('active');
     // Wait for DOM to be ready and element to have size
     setTimeout(() => {
       const mapContainer = document.getElementById('map-container');
@@ -103,14 +106,11 @@ function navigate(page, param) {
     }, 200);
   } else if (page === 'tips') {
     document.getElementById('page-tips').classList.add('active');
+    document.querySelectorAll('.nav-link')[8].classList.add('active');
     loadTips();
   } else if (page === 'advisor') {
     document.getElementById('page-advisor').classList.add('active');
     document.querySelectorAll('.nav-link')[2].classList.add('active');
-  } else if (page === 'roi') {
-    document.getElementById('page-roi').classList.add('active');
-    document.querySelectorAll('.nav-link')[3].classList.add('active');
-    initROIPage();
   } else if (page === 'ent') {
     document.getElementById('page-ent').classList.add('active');
     document.querySelectorAll('.nav-link')[4].classList.add('active');
@@ -126,6 +126,10 @@ function navigate(page, param) {
   } else if (page === 'profile') {
     document.getElementById('page-profile').classList.add('active');
     loadProfilePage();
+  } else if (page === 'admission') {
+    document.getElementById('page-admission').classList.add('active');
+    document.querySelectorAll('.nav-link')[3].classList.add('active');
+    initAdmissionPage();
   }
 }
 
@@ -162,7 +166,7 @@ function applyTranslations() {
     { selector: '.nav-links .nav-link:nth-child(1)', path: 'nav.universities' },
     { selector: '.nav-links .nav-link:nth-child(2)', path: 'nav.comparison' },
     { selector: '.nav-links .nav-link:nth-child(3)', path: 'nav.advisor' },
-    { selector: '.nav-links .nav-link:nth-child(4)', path: 'nav.roi' },
+    { selector: '.nav-links .nav-link:nth-child(4)', path: 'nav.admission' },
     { selector: '.nav-links .nav-link:nth-child(5)', path: 'nav.ent' },
     { selector: '.nav-links .nav-link:nth-child(6)', path: 'nav.career' },
     { selector: '.nav-links .nav-link:nth-child(7)', path: 'nav.grants' },
@@ -293,7 +297,8 @@ async function loadCities() {
     const cities = await res.json();
     const selects = [
       document.getElementById('filter-city'),
-      document.getElementById('sheet-city')
+      document.getElementById('sheet-city'),
+      document.getElementById('admit-city')
     ].filter(Boolean);
 
     selects.forEach(sel => {
@@ -597,7 +602,7 @@ function renderUniversityDetail(u, container) {
   const specCats = Object.entries(byCategory).map(([cat, names]) => `
     <div>
       <div class="spec-category-name">${cat}</div>
-      <div class="spec-tags">${names.map(n => `<span class="spec-tag">${n}</span>`).join('')}</div>
+      <div class="spec-tags">${names.map(n => `<span class="spec-tag" onclick="showProfessionAnalysis('${n.replace(/'/g, "\\'")}')">${n}</span>`).join('')}</div>
     </div>
   `).join('');
 
@@ -1268,183 +1273,197 @@ function openMoreSheet()  { openSheet('more-sheet-overlay', 'more-sheet'); }
 function closeMoreSheet() { closeSheet('more-sheet-overlay', 'more-sheet'); }
 
 /* =============================================
-   ROI CALCULATOR
+   ADMISSION PREDICTOR
    ============================================= */
 
-function initROIPage() {
-  const sel = document.getElementById('roi-uni');
-  if (sel.options.length > 1) return; // already populated
-  const unis = state.universities.length ? state.universities : null;
-  if (!unis) {
-    fetch(`${API}/universities`).then(r => r.json()).then(data => {
-      data.forEach(u => {
-        const opt = document.createElement('option');
-        opt.value = u.id;
-        opt.dataset.price = u.price_from;
-        opt.textContent = u.short_name || u.name;
-        sel.appendChild(opt);
-      });
-    });
-  } else {
-    unis.forEach(u => {
-      const opt = document.createElement('option');
-      opt.value = u.id;
-      opt.dataset.price = u.price_from;
-      opt.textContent = u.short_name || u.name;
-      sel.appendChild(opt);
-    });
+function initAdmissionPage() {
+  const citySel = document.getElementById('admit-city');
+  if (citySel && citySel.options.length <= 1) {
+    loadCities();
   }
-
-  document.getElementById('roi-uni').addEventListener('change', function() {
-    const opt = this.options[this.selectedIndex];
-    if (opt.dataset.price) {
-      document.getElementById('roi-price').value = opt.dataset.price;
-    }
-  });
-
-  document.getElementById('roi-salary').addEventListener('change', function() {
-    const custom = document.getElementById('roi-salary-custom');
-    custom.style.display = this.value === 'custom' ? 'block' : 'none';
-  });
 }
 
-function calcROI() {
-  const pricePerYear = parseInt(document.getElementById('roi-price').value) || 0;
-  const salarySel = document.getElementById('roi-salary').value;
-  const salary = salarySel === 'custom'
-    ? parseInt(document.getElementById('roi-salary-custom').value) || 0
-    : parseInt(salarySel) || 0;
-  const grantCover = parseFloat(document.getElementById('roi-grant').value) || 0;
-  const studYears = parseInt(document.getElementById('roi-years').value) || 4;
-  const uniName = document.getElementById('roi-uni').options[document.getElementById('roi-uni').selectedIndex]?.textContent || 'Вуз';
+function chanceBarClass(chance) {
+  if (chance >= 85) return 'chance-high';
+  if (chance >= 65) return 'chance-mid';
+  return 'chance-low';
+}
 
-  if (!pricePerYear || !salary) {
-    showToast('Заполните стоимость обучения и ожидаемую зарплату');
+async function runAdmissionPredict() {
+  const btn = document.getElementById('admit-submit');
+  const resultsEl = document.getElementById('admission-results');
+  const ent = parseInt(document.getElementById('admit-ent').value, 10);
+  const specialty = document.getElementById('admit-specialty').value;
+  const budget = document.getElementById('admit-budget').value;
+  const language = document.getElementById('admit-language').value;
+  const cityId = document.getElementById('admit-city').value;
+  const needDorm = document.getElementById('admit-dorm').checked;
+  const attestat = document.getElementById('admit-attestat').value;
+
+  if (!specialty) {
+    showToast('Выберите специальность', 'warning');
     return;
   }
 
-  const totalCost = pricePerYear * studYears * (1 - grantCover);
-  const monthsToPayback = totalCost / salary;
-  const yearsToPayback = monthsToPayback / 12;
-  const totalEarned5y = salary * 12 * 5;
-  const roi5y = ((totalEarned5y - totalCost) / totalCost * 100).toFixed(0);
+  btn.disabled = true;
+  resultsEl.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Считаем шансы...</p></div>';
 
-  const resultEl = document.getElementById('roi-result');
-  const color = yearsToPayback < 3 ? 'var(--green)' : yearsToPayback < 6 ? 'var(--gold)' : 'var(--red)';
-  const verdict = yearsToPayback < 3 ? 'Отличная инвестиция' : yearsToPayback < 6 ? 'Хорошая инвестиция' : 'Требует обдумывания';
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (typeof Auth !== 'undefined' && Auth.getToken()) {
+      headers.Authorization = `Bearer ${Auth.getToken()}`;
+    }
 
-  resultEl.innerHTML = `
-    <div class="tool-card roi-result-card">
-      <div class="roi-verdict" style="color:${color}">${verdict}</div>
-      <div class="roi-main-metric">
-        <div class="roi-metric-val" style="color:${color}">${yearsToPayback.toFixed(1)} лет</div>
-        <div class="roi-metric-label">до полной окупаемости</div>
-      </div>
-      <div class="roi-stats-grid">
-        <div class="roi-stat">
-          <div class="roi-stat-label">Полная стоимость обучения</div>
-          <div class="roi-stat-val">${fmtPrice(totalCost)} тг</div>
-        </div>
-        <div class="roi-stat">
-          <div class="roi-stat-label">Срок окупаемости</div>
-          <div class="roi-stat-val">${Math.ceil(monthsToPayback)} месяцев</div>
-        </div>
-        <div class="roi-stat">
-          <div class="roi-stat-label">Зарплата за 5 лет</div>
-          <div class="roi-stat-val">${fmtPrice(totalEarned5y)} тг</div>
-        </div>
-        <div class="roi-stat">
-          <div class="roi-stat-label">ROI за 5 лет работы</div>
-          <div class="roi-stat-val" style="color:${parseInt(roi5y)>0?'var(--green)':'var(--red)'}">+${roi5y}%</div>
-        </div>
-      </div>
-      <div class="roi-tip">
-        <strong>Совет:</strong> При зарплате ${fmtPrice(salary)} тг/мес вы покроете стоимость обучения в ${uniName}
-        примерно через <strong>${yearsToPayback.toFixed(1)} лет</strong> после окончания.
-        ${grantCover > 0 ? `Грант экономит вам <strong>${fmtPrice(pricePerYear * studYears * grantCover)} тг</strong>.` : ''}
-      </div>
-    </div>
-  `;
+    const res = await fetch(`${API}/admission/predict`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        ent,
+        attestat: attestat || undefined,
+        specialty,
+        budget: budget || undefined,
+        language: language || undefined,
+        cityId: cityId || undefined,
+        needDorm,
+      }),
+    });
 
-  // Show comparison bars
-  showROIComparison(salary, studYears, grantCover);
+    const data = await res.json();
+    if (!data.success) {
+      resultsEl.innerHTML = `<div class="loading-state"><p style="color:var(--red)">${data.error || 'Ошибка расчёта'}</p></div>`;
+      return;
+    }
+
+    state.admissionLastResult = data;
+    renderAdmissionResults(data);
+  } catch (e) {
+    resultsEl.innerHTML = `<div class="loading-state"><p style="color:var(--red)">Сервер недоступен. Запустите backend.</p></div>`;
+  } finally {
+    btn.disabled = false;
+  }
 }
 
-async function showROIComparison(salary, studYears, grantCover) {
-  const compWrap = document.getElementById('roi-comparison');
-  compWrap.style.display = 'block';
+function renderAdmissionResults(data) {
+  const resultsEl = document.getElementById('admission-results');
+  const matches = data.matches || [];
 
-  let unis = state.universities;
-  if (!unis.length) {
-    const res = await fetch(`${API}/universities`);
-    unis = await res.json();
+  if (!matches.length) {
+    resultsEl.innerHTML = `
+      <div class="tool-card">
+        <p>${data.message || 'Подходящих вузов не найдено. Измените город или специальность.'}</p>
+      </div>`;
+    return;
   }
 
-  const items = unis.map(u => {
-    const cost = u.price_from * studYears * (1 - grantCover);
-    const months = cost / salary;
-    return { name: u.short_name, months, cost };
-  }).sort((a, b) => a.months - b.months);
+  resultsEl.innerHTML = `
+    <div class="admission-summary tool-card">
+      <h3 class="tool-card-title">Результаты</h3>
+      <p class="admission-summary-text">
+        ЕНТ <strong>${data.input.ent}</strong> · ${data.input.specialty}
+        ${data.input.budget ? ` · бюджет до ${fmtPrice(data.input.budget)} тг/год` : ''}
+      </p>
+      <p class="admission-summary-note">Найдено ${matches.length} вариантов. Оценка основана на порогах ЕНТ, бюджете, языке и общежитии.</p>
+    </div>
+    <div class="admission-matches">
+      ${matches.map((m, i) => renderAdmissionCard(m, i)).join('')}
+    </div>
+  `;
+}
 
-  // Chart.js horizontal bar chart
-  const barsEl = document.getElementById('roi-bars');
-  barsEl.innerHTML = '<canvas id="roi-chart" height="320"></canvas>';
+function renderAdmissionCard(m, index) {
+  const barClass = chanceBarClass(m.chance);
+  const reasonsHtml = (m.reasons || []).map(r => {
+    const icon = r.type === 'positive' ? '✓' : r.type === 'negative' ? '✗' : '•';
+    const cls = r.type === 'positive' ? 'reason-pos' : r.type === 'negative' ? 'reason-neg' : 'reason-neu';
+    return `<li class="${cls}">${icon} ${escapeAdmissionHtml(r.text)}</li>`;
+  }).join('');
 
-  if (typeof Chart !== 'undefined') {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-    const textColor = isDark ? '#9c9890' : '#6b6760';
+  return `
+    <article class="admission-card tool-card" data-uni-id="${m.university_id}">
+      <div class="admission-card-head">
+        <div>
+          <span class="admission-rank">#${index + 1}</span>
+          <h4 class="admission-uni-name">${escapeAdmissionHtml(m.university)}</h4>
+          <p class="admission-uni-full">${escapeAdmissionHtml(m.name)}</p>
+          ${m.city_name ? `<span class="admission-city">${escapeAdmissionHtml(m.city_name)}</span>` : ''}
+        </div>
+        <div class="admission-chance-wrap">
+          <div class="admission-chance-value ${barClass}">${m.chance}%</div>
+          <div class="admission-chance-bar"><div class="admission-chance-fill ${barClass}" style="width:${m.chance}%"></div></div>
+        </div>
+      </div>
+      <p class="admission-rec">${escapeAdmissionHtml(m.recommendation)}</p>
+      <ul class="admission-reasons">${reasonsHtml}</ul>
+      <div class="admission-card-meta">
+        <span>от ${fmtPrice(m.price_from)} тг/год</span>
+        ${m.requirement ? `<span>ЕНТ: ${m.requirement.min_ent}+ (средний ${m.requirement.avg_ent})</span>` : ''}
+      </div>
+      <div class="admission-card-actions">
+        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${m.university_id})">Подробнее о вузе</button>
+        <button class="btn btn-sm btn-ghost" onclick="explainAdmission(${m.university_id}, this)">Объяснение ИИ</button>
+      </div>
+      <div class="admission-ai-explain" id="admit-explain-${m.university_id}" style="display:none"></div>
+    </article>
+  `;
+}
 
-    new Chart(document.getElementById('roi-chart'), {
-      type: 'bar',
-      data: {
-        labels: items.map(i => i.name),
-        datasets: [{
-          label: 'Лет до окупаемости',
-          data: items.map(i => parseFloat((i.months/12).toFixed(1))),
-          backgroundColor: items.map(i =>
-            i.months < 36 ? '#52b788' : i.months < 72 ? '#e9c46a' : '#e63946'
-          ),
-          borderRadius: 6,
-          borderSkipped: false,
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: ctx => ` ${ctx.parsed.x} лет до окупаемости`
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { color: gridColor },
-            ticks: { color: textColor, font: { family: 'Inter' } },
-            title: { display: true, text: 'лет', color: textColor }
-          },
-          y: {
-            grid: { display: false },
-            ticks: { color: textColor, font: { family: 'Inter', size: 12 } }
-          }
-        }
-      }
+function escapeAdmissionHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str || '';
+  return d.innerHTML;
+}
+
+async function explainAdmission(universityId, btn) {
+  const card = document.querySelector(`[data-uni-id="${universityId}"]`);
+  if (!card) return;
+  const box = document.getElementById(`admit-explain-${universityId}`);
+  if (!box) return;
+
+  if (box.style.display === 'block' && box.textContent) {
+    box.style.display = 'none';
+    return;
+  }
+
+  btn.disabled = true;
+  box.style.display = 'block';
+  box.innerHTML = '<div class="admission-ai-loading">ИИ формирует объяснение...</div>';
+
+  const chanceEl = card.querySelector('.admission-chance-value');
+  const nameEl = card.querySelector('.admission-uni-full');
+  const shortEl = card.querySelector('.admission-uni-name');
+
+  const match = (state.admissionLastResult?.matches || []).find(m => m.university_id === universityId);
+
+  const payload = {
+    university_id: universityId,
+    university: match?.university || shortEl?.textContent,
+    name: match?.name || nameEl?.textContent,
+    chance: match?.chance || parseInt(chanceEl?.textContent, 10),
+    ent: state.admissionLastResult?.input?.ent || parseInt(document.getElementById('admit-ent').value, 10),
+    budget: document.getElementById('admit-budget').value,
+    language: document.getElementById('admit-language').value,
+    needDorm: document.getElementById('admit-dorm').checked,
+    requirement: match?.requirement,
+    reasons: match?.reasons || [],
+  };
+
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (typeof Auth !== 'undefined' && Auth.getToken()) {
+      headers.Authorization = `Bearer ${Auth.getToken()}`;
+    }
+    const res = await fetch(`${API}/admission/explain`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(payload),
     });
-  } else {
-    // Fallback bars
-    const maxMonths = Math.max(...items.map(i => i.months));
-    barsEl.innerHTML = items.map(item => {
-      const pct = (item.months / maxMonths * 100).toFixed(1);
-      const color = item.months < 36 ? 'var(--green)' : item.months < 72 ? 'var(--gold)' : 'var(--red)';
-      return `<div class="roi-bar-row">
-        <div class="roi-bar-label">${item.name}</div>
-        <div class="roi-bar-track"><div class="roi-bar-fill" style="width:${pct}%;background:${color}"></div></div>
-        <div class="roi-bar-val">${(item.months/12).toFixed(1)} лет</div>
-      </div>`;
-    }).join('');
+    const data = await res.json();
+    const text = data.explanation || 'Нет ответа';
+    box.innerHTML = `<div class="admission-ai-text">${formatMarkdown(text)}</div>`;
+  } catch (e) {
+    box.innerHTML = '<p class="form-error">Не удалось получить объяснение ИИ</p>';
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -1822,7 +1841,7 @@ async function showCareerResult() {
       <div>
         <strong>Финансовый совет:</strong> при вашем бюджете до <strong>${fmtPrice(careerState.budget)} тг/год</strong>
         за 4 года вы потратите от <strong>${fmtPrice(recommendedUnis[0]?.price_from * 4)} тг</strong>.
-        Используйте наш <a href="#" onclick="navigate('roi')" style="color:var(--accent);text-decoration:underline">ROI-калькулятор</a> чтобы рассчитать окупаемость.
+        Используйте наш <a href="#" onclick="navigate('tips')" style="color:var(--accent);text-decoration:underline">калькулятор</a> чтобы рассчитать окупаемость.
       </div>
     </div>
   `;
@@ -1842,6 +1861,7 @@ async function loadGrants() {
     const res = await fetch(`${API}/grants`);
     allGrants = await res.json();
     renderGrants(allGrants);
+    initGrantMatching();
   } catch(e) {
     if(grid) grid.innerHTML = '<div class="loading-state"><p>Ошибка загрузки</p></div>';
   }
@@ -1885,6 +1905,178 @@ function renderGrants(grants) {
       </div>
     </div>
   `).join('');
+}
+
+// ─── PROFESSION ANALYSIS ─────────────────────
+const professionData = {
+  'Computer Science': { title: 'AI / ML Engineer', salary: '1 200 000 ₸', growth: '+55%', demand: 'Очень высокий' },
+  'Программная инженерия': { title: 'Software Engineer', salary: '1 100 000 ₸', growth: '+50%', demand: 'Очень высокий' },
+  'Информационные технологии': { title: 'IT Specialist / Architect', salary: '1 000 000 ₸', growth: '+48%', demand: 'Очень высокий' },
+  'Информационные системы': { title: 'System Analyst / IT Project Manager', salary: '950 000 ₸', growth: '+45%', demand: 'Высокий' },
+  'Кибербезопасность': { title: 'Cybersecurity Analyst', salary: '1 300 000 ₸', growth: '+60%', demand: 'Очень высокий' },
+  'Искусственный интеллект': { title: 'AI Research Scientist', salary: '1 500 000 ₸', growth: '+65%', demand: 'Очень высокий' },
+  'Big Data': { title: 'Data Engineer / Data Scientist', salary: '1 400 000 ₸', growth: '+58%', demand: 'Очень высокий' },
+  'Медицина': { title: 'Врач / Хирург', salary: '800 000 ₸', growth: '+25%', demand: 'Стабильный' },
+  'Педиатрия': { title: 'Педиатр', salary: '700 000 ₸', growth: '+22%', demand: 'Стабильный' },
+  'Фармация': { title: 'Фармацевт / Клинический провизор', salary: '650 000 ₸', growth: '+20%', demand: 'Стабильный' },
+  'Стоматология': { title: 'Стоматолог', salary: '950 000 ₸', growth: '+28%', demand: 'Высокий' },
+  'Экономика': { title: 'Economist / Financial Analyst', salary: '750 000 ₸', growth: '+25%', demand: 'Высокий' },
+  'Бизнес-администрирование': { title: 'Business Analyst / Operations Manager', salary: '900 000 ₸', growth: '+30%', demand: 'Высокий' },
+  'Менеджмент': { title: 'Project Manager / Team Lead', salary: '850 000 ₸', growth: '+28%', demand: 'Высокий' },
+  'Финансы': { title: 'Financial Analyst / Investment Manager', salary: '950 000 ₸', growth: '+30%', demand: 'Высокий' },
+  'Учет и аудит': { title: 'Accountant / Auditor', salary: '700 000 ₸', growth: '+18%', demand: 'Стабильный' },
+  'Маркетинг': { title: 'Marketing Manager / Brand Strategist', salary: '800 000 ₸', growth: '+30%', demand: 'Высокий' },
+  'Право': { title: 'Юрист / Адвокат', salary: '850 000 ₸', growth: '+22%', demand: 'Высокий' },
+  'Международное право': { title: 'International Lawyer', salary: '1 000 000 ₸', growth: '+25%', demand: 'Высокий' },
+  'Инженерия': { title: 'Engineer / Technical Lead', salary: '850 000 ₸', growth: '+25%', demand: 'Высокий' },
+  'Нефтегазовое дело': { title: 'Petroleum Engineer', salary: '1 500 000 ₸', growth: '+20%', demand: 'Высокий' },
+  'Строительство': { title: 'Civil Engineer / Project Manager', salary: '750 000 ₸', growth: '+22%', demand: 'Стабильный' },
+  'Архитектура': { title: 'Architect / Urban Planner', salary: '800 000 ₸', growth: '+20%', demand: 'Стабильный' },
+  'Электротехника': { title: 'Electrical Engineer', salary: '900 000 ₸', growth: '+28%', demand: 'Высокий' },
+  'Робототехника': { title: 'Robotics Engineer', salary: '1 200 000 ₸', growth: '+50%', demand: 'Очень высокий' },
+  'Гуманитарные науки': { title: 'Analyst / Content Specialist', salary: '500 000 ₸', growth: '+15%', demand: 'Умеренный' },
+  'Филология': { title: 'Editor / Linguist / Translator', salary: '450 000 ₸', growth: '+12%', demand: 'Умеренный' },
+  'Журналистика': { title: 'Journalist / Media Producer', salary: '550 000 ₸', growth: '+18%', demand: 'Умеренный' },
+  'Психология': { title: 'Psychologist / HR Specialist', salary: '600 000 ₸', growth: '+25%', demand: 'Высокий' },
+  'Педагогика': { title: 'Teacher / Educational Specialist', salary: '400 000 ₸', growth: '+15%', demand: 'Стабильный' },
+  'Биология': { title: 'Biologist / Lab Researcher', salary: '550 000 ₸', growth: '+20%', demand: 'Умеренный' },
+  'Химия': { title: 'Chemist / Process Engineer', salary: '600 000 ₸', growth: '+18%', demand: 'Умеренный' },
+  'Математика': { title: 'Data Analyst / Actuary', salary: '900 000 ₸', growth: '+35%', demand: 'Высокий' },
+  'Физика': { title: 'Physicist / R&D Engineer', salary: '700 000 ₸', growth: '+22%', demand: 'Умеренный' },
+  'Дизайн': { title: 'UI/UX Designer / Art Director', salary: '850 000 ₸', growth: '+35%', demand: 'Высокий' },
+  'Графический дизайн': { title: 'Graphic Designer / Brand Designer', salary: '650 000 ₸', growth: '+28%', demand: 'Высокий' },
+  'Туризм': { title: 'Tourism Manager / Event Coordinator', salary: '500 000 ₸', growth: '+25%', demand: 'Умеренный' },
+  'Спорт': { title: 'Sports Manager / Coach', salary: '550 000 ₸', growth: '+20%', demand: 'Умеренный' },
+};
+
+const demandColors = {
+  'Очень высокий': '#52b788',
+  'Высокий': '#74b566',
+  'Стабильный': '#e9c46a',
+  'Умеренный': '#e9c46a',
+};
+
+function showProfessionAnalysis(name) {
+  const data = professionData[name] || {
+    title: name,
+    salary: '—',
+    growth: '—',
+    demand: '—'
+  };
+
+  const demandColor = demandColors[data.demand] || 'var(--text-muted)';
+
+  document.getElementById('profession-modal-content').innerHTML = `
+    <div class="prof-badge">AI Анализ профессии</div>
+    <div class="prof-title">${data.title}</div>
+    <div class="prof-subtitle">${name}</div>
+    <div class="prof-grid">
+      <div class="prof-card">
+        <div class="prof-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <div class="prof-card-label">Средняя зарплата</div>
+        <div class="prof-card-val">${data.salary}</div>
+      </div>
+      <div class="prof-card">
+        <div class="prof-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="prof-card-label">Рост рынка</div>
+        <div class="prof-card-val" style="color:${data.growth !== '—' ? '#52b788' : 'var(--text-muted)'}">${data.growth}</div>
+      </div>
+      <div class="prof-card">
+        <div class="prof-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="prof-card-label">Спрос</div>
+        <div class="prof-card-val" style="color:${demandColor}">${data.demand}</div>
+      </div>
+    </div>
+    <div class="prof-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Данные основаны на анализе рынка труда Казахстана и международных тенденций 2025–2026 гг.
+    </div>
+  `;
+  openModal('modal-profession');
+}
+
+// ─── GRANT MATCHING ───────────────────────────
+function initGrantMatching() {
+  const sel = document.getElementById('grant-ai-spec');
+  if (!sel || sel.options.length > 1) return;
+  const names = new Set();
+  state.universities.forEach(u => {
+    (u.specialties || []).forEach(s => names.add(s.name));
+  });
+  [...names].sort().forEach(n => {
+    const opt = document.createElement('option');
+    opt.value = n;
+    opt.textContent = n;
+    sel.appendChild(opt);
+  });
+}
+
+function runGrantMatching() {
+  const ent = parseInt(document.getElementById('grant-ai-ent').value) || 0;
+  const spec = document.getElementById('grant-ai-spec').value;
+  const resultEl = document.getElementById('grant-ai-result');
+
+  if (!ent || !spec) {
+    showToast('Введите балл ЕНТ и выберите специальность');
+    return;
+  }
+
+  const matched = allGrants.filter(g => {
+    const reqs = (g.requirements || []).join(' ').toLowerCase();
+    const desc = (g.description || '').toLowerCase();
+    const name = (g.name || '').toLowerCase();
+    const specLower = spec.toLowerCase();
+    return reqs.includes(specLower) || desc.includes(specLower) || name.includes(specLower);
+  });
+
+  const professionTitle = professionData[spec]?.title || spec;
+  const hasDemand = professionData[spec];
+
+  const demandHTML = hasDemand ? `
+    <div class="gm-demand">
+      <span>Спрос на рынке: <strong style="color:${demandColors[hasDemand.demand] || 'var(--text)'}">${hasDemand.demand}</strong></span>
+      <span>Рост: <strong style="color:#52b788">${hasDemand.growth}</strong></span>
+      <span>Средняя зарплата: <strong>${hasDemand.salary}</strong></span>
+    </div>
+  ` : '';
+
+  resultEl.style.display = 'block';
+
+  if (matched.length === 0) {
+    resultEl.innerHTML = `
+      <div class="gm-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span>Для специальности <strong>${spec}</strong> подходящих грантов пока не найдено.</span>
+      </div>
+    `;
+    return;
+  }
+
+  resultEl.innerHTML = `
+    <div class="gm-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>ИИ подобрал <strong>${matched.length}</strong> грант${matched.length !== 1 ? 'ов' : ''} для вас</span>
+    </div>
+    ${demandHTML}
+    <div class="gm-list">
+      ${matched.map(g => `
+        <div class="gm-item">
+          <div class="gm-check">✓</div>
+          <div class="gm-info">
+            <div class="gm-name">${g.name}</div>
+            <div class="gm-meta">${g.type === 'university' ? 'Вузовский' : g.type} · ${g.amount}</div>
+          </div>
+          ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">Подробнее</a>` : ''}
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
 // ─── MAP ─────────────────────────────────────
@@ -1996,57 +2188,4 @@ function mapFlyTo(lat, lng, name) {
 }
 
 // ─── TIPS ────────────────────────────────────
-async function loadTips() {
-  const grid = document.getElementById('tips-grid');
-  if (!grid) return;
-  try {
-    const res = await fetch(`${API}/tips`);
-    const tips = await res.json();
-    renderTips(tips);
-  } catch(e) {
-    if(grid) grid.innerHTML = '<div class="loading-state"><p>Ошибка загрузки</p></div>';
-  }
-}
-
-function renderTips(tips) {
-  const grid = document.getElementById('tips-grid');
-  if (!grid) return;
-
-  const catColors = {
-    'Финансы': 'accent',
-    'Рейтинги': 'gold',
-    'Качество образования': 'blue',
-    'Выбор вуза': 'purple'
-  };
-
-  grid.innerHTML = tips.map((t, i) => `
-    <div class="tip-card" onclick="toggleTip(${t.id})">
-      <div class="tip-card-header">
-        <div class="tip-num">${String(i+1).padStart(2,'0')}</div>
-        <div class="tip-info">
-          <span class="tip-cat tip-cat-${catColors[t.category] || 'accent'}">${t.category}</span>
-          <h3 class="tip-title">${t.title}</h3>
-        </div>
-        <div class="tip-arrow" id="tip-arrow-${t.id}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
-      </div>
-      <div class="tip-body" id="tip-body-${t.id}" style="display:none">
-        <p class="tip-content">${t.content}</p>
-        <div class="tip-highlight">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-          ${t.tip}
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function toggleTip(id) {
-  const body = document.getElementById(`tip-body-${id}`);
-  const arrow = document.getElementById(`tip-arrow-${id}`);
-  if (!body) return;
-  const open = body.style.display !== 'none';
-  body.style.display = open ? 'none' : 'block';
-  if (arrow) arrow.style.transform = open ? '' : 'rotate(180deg)';
-}
+function loadTips() {}

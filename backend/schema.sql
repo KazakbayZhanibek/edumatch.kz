@@ -162,3 +162,35 @@ CREATE TABLE IF NOT EXISTS test_results (
 );
 CREATE INDEX IF NOT EXISTS idx_test_results_user_id ON test_results(user_id);
 CREATE INDEX IF NOT EXISTS idx_test_results_test_type ON test_results(test_type);
+
+-- ==================== ADMISSION PREDICTOR ====================
+
+CREATE TABLE IF NOT EXISTS admission_requirements (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  university_id INTEGER NOT NULL,
+  specialty_id INTEGER NOT NULL,
+  min_ent INTEGER NOT NULL,
+  avg_ent INTEGER NOT NULL,
+  grant_min_ent INTEGER,
+  competition_level INTEGER DEFAULT 3,
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  FOREIGN KEY(specialty_id) REFERENCES specialties(id) ON DELETE CASCADE,
+  UNIQUE(university_id, specialty_id)
+);
+CREATE INDEX IF NOT EXISTS idx_admission_req_uni ON admission_requirements(university_id);
+CREATE INDEX IF NOT EXISTS idx_admission_req_spec ON admission_requirements(specialty_id);
+
+-- История предсказаний (для улучшения модели в будущем)
+CREATE TABLE IF NOT EXISTS prediction_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  ent INTEGER,
+  specialty_category TEXT,
+  university_id INTEGER,
+  predicted_chance INTEGER,
+  actual_result INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_prediction_history_user ON prediction_history(user_id);

@@ -120,7 +120,16 @@ node init-auth-tables.js
 JWT_SECRET=длинный-случайный-ключ
 ```
 
-### 5. Откройте браузер
+### 5. Admission Predictor (опционально)
+
+```bash
+node init-admission-tables.js
+node seed-admission-requirements.js
+```
+
+Раздел **«Мои шансы»** в меню: `POST /api/admission/predict`, `POST /api/admission/explain` (ИИ).
+
+### 6. Откройте браузер
 
 ```
 http://localhost:3000

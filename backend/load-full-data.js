@@ -113,48 +113,17 @@ try {
 
   console.log(`Loaded ${linkCount} university-specialty links`);
 
-  // 4. Вставить гранты если есть
-  const insertGrant = db.prepare(`
-    INSERT INTO grants (id, name, type, amount, description, requirements, link)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `);
-
-  let grantCount = 0;
-  let grantId = 1;
-  
-  for (const uni of data) {
-    if (uni.scholarships && Array.isArray(uni.scholarships)) {
-      for (const scholarship of uni.scholarships) {
-        try {
-          insertGrant.run(
-            grantId++,
-            scholarship,
-            'university',
-            'variable',
-            `Грант/стипендия от ${uni.name}`,
-            JSON.stringify([`Учитываемо в ${uni.name}`]),
-            uni.address || ''
-          );
-          grantCount++;
-        } catch (err) {
-          // Грант может уже существовать
-        }
-      }
-    }
-  }
-
-  console.log(`Loaded ${grantCount} grants`);
-
   // Проверим что загрузилось
   const uniCheck = db.prepare('SELECT COUNT(*) as cnt FROM universities').get();
   const specCheck = db.prepare('SELECT COUNT(*) as cnt FROM specialties').get();
   const linkCheck = db.prepare('SELECT COUNT(*) as cnt FROM university_specialties').get();
+  const grantCheck = db.prepare('SELECT COUNT(*) as cnt FROM grants').get();
   
   console.log('\n✓ Summary:');
   console.log(`  Universities: ${uniCheck.cnt}`);
   console.log(`  Specialties: ${specCheck.cnt}`);
   console.log(`  Links: ${linkCheck.cnt}`);
-  console.log(`  Grants: ${grantCount}`);
+  console.log(`  Grants: ${grantCheck.cnt} (загружаются отдельно через load-grants-data.js)`);
   
 } catch (err) {
   console.error('Error:', err.message);
