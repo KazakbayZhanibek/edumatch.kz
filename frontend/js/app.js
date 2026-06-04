@@ -781,14 +781,9 @@ async function sendMessage() {
     if (!data.success) {
       appendMessage('ai', `Ошибка: ${data.error || 'Unknown error'}`);
     } else {
-      // Show AI answer
-      appendMessage('ai', data.answer);
+      // Show AI answer (with university cards in the same bubble)
+      appendMessage('ai', data.answer, data.matches);
       state.chatHistory.push({ role: 'assistant', content: data.answer });
-
-      // If there are matches (relevant universities), show them as HTML
-      if (data.matches && data.matches.length > 0) {
-        appendMatches(data.matches);
-      }
 
       // Log metadata for debugging (optional)
       console.log('[AI Response]', {
@@ -925,7 +920,13 @@ function renderMatches(matches) {
   return html;
 }
 
-function appendMessage(role, text) {
+function scrollChatToBottom() {
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  });
+}
+
+function appendMessage(role, text, matches = null) {
   const msgs = document.getElementById('chat-messages');
 
   // Remove welcome if present
@@ -937,39 +938,24 @@ function appendMessage(role, text) {
   div.style.animation = 'fadeInUp 0.3s ease both';
 
   // Use marked.js for AI responses, plain text for user
-  const content = role === 'ai' ? renderMarkdown(text) : `<p>${text}</p>`;
+  let content = role === 'ai' ? renderMarkdown(text) : `<p>${text}</p>`;
+  if (role === 'ai' && matches && matches.length > 0) {
+    content += renderMatches(matches);
+  }
   div.innerHTML = `<div class="chat-bubble chat-bubble-${role === 'user' ? 'user' : 'ai'} markdown-body">${content}</div>`;
   msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function appendMatches(matches) {
-  const msgs = document.getElementById('chat-messages');
-
-  // Remove welcome if present
-  const welcome = msgs.querySelector('.chat-welcome');
-  if (welcome) welcome.remove();
-
-  const div = document.createElement('div');
-  div.className = 'chat-msg chat-msg-ai';
-  div.style.animation = 'fadeInUp 0.3s ease both';
-
-  // Add matches HTML directly (no markdown processing)
-  const content = renderMatches(matches);
-  div.innerHTML = `<div class="chat-bubble chat-bubble-ai">${content}</div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
+  scrollChatToBottom();
 }
 
 function appendTyping() {
   const msgs = document.getElementById('chat-messages');
   const id = 'typing-' + Date.now();
   const div = document.createElement('div');
-  div.className = 'chat-msg chat-msg-ai';
+  div.className = 'chat-msg chat-msg-ai chat-msg-typing';
   div.id = id;
-  div.innerHTML = `<div class="chat-bubble"><div class="chat-typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  div.innerHTML = `<div class="chat-bubble chat-bubble-ai chat-bubble-typing"><div class="chat-typing"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
   msgs.appendChild(div);
-  msgs.scrollTop = msgs.scrollHeight;
+  scrollChatToBottom();
   return id;
 }
 
