@@ -29,7 +29,6 @@ const translations = {
       hero_title: 'Выбери свой университет',
       hero_sub: 'Найди лучший вуз на основе рейтингов, цены и специальностей',
       hero_btn1: 'Получить совет ИИ',
-      hero_btn2: 'Смотреть вузы',
       stat_unis: 'университетов',
       stat_specs: 'специальностей',
       stat_price: 'тенге/год'
@@ -97,7 +96,6 @@ const translations = {
       hero_title: 'Өзіңнің университетін таңда',
       hero_sub: 'Рейтингтар, бағасы және мамандықтары бойынша ең жақсы университетті тап',
       hero_btn1: 'ҚИ кеңесін алу',
-      hero_btn2: 'Университеттерді көру',
       stat_unis: 'университеттер',
       stat_specs: 'мамандықтар',
       stat_price: 'теңге/жыл'
@@ -165,7 +163,6 @@ const translations = {
       hero_title: 'Choose Your University',
       hero_sub: 'Find the best university based on rankings, price, and specialties',
       hero_btn1: 'Get AI Advice',
-      hero_btn2: 'View Universities',
       stat_unis: 'universities',
       stat_specs: 'specialties',
       stat_price: 'tenge/year'

@@ -39,7 +39,7 @@
       <a href="#" class="nav-link" onclick="navigate('home')">Вузы</a>
       <a href="#" class="nav-link" onclick="navigate('compare')">Сравнение <span class="compare-badge" id="compare-badge" style="display:none">0</span></a>
       <a href="#" class="nav-link" onclick="navigate('advisor')">ИИ-советник</a>
-      <a href="#" class="nav-link nav-link-highlight" onclick="navigate('admission')">Мои шансы</a>
+      <a href="#" class="nav-link" onclick="navigate('admission')">Мои шансы</a>
       <a href="#" class="nav-link" onclick="navigate('ent')">ЕНТ</a>
       <a href="#" class="nav-link" onclick="navigate('career')">Профориентация</a>
       <a href="#" class="nav-link" onclick="navigate('grants')">Гранты</a>
@@ -141,14 +141,13 @@
         <h1 class="hero-title" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100">Выбор университета —<br><em>главное финансовое решение</em></h1>
         <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200">Сравните стоимость, рейтинги и специальности ведущих вузов Алматы. Получите персональный совет от ИИ-советника.</p>
         <div class="hero-actions" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
-          <button class="btn btn-primary" onclick="navigate('admission')">Рассчитать шансы</button>
-          <button class="btn btn-ghost" onclick="navigate('advisor')">Совет ИИ</button>
-          <button class="btn btn-ghost" onclick="document.getElementById('universities-section').scrollIntoView({behavior:'smooth'})">Смотреть вузы</button>
+          <button class="btn btn-primary" onclick="navigate('advisor')">Получить совет ИИ</button>
+          <button class="btn btn-ghost hero-btn-scroll" onclick="document.getElementById('universities-section').scrollIntoView({behavior:'smooth'})">Смотреть вузы</button>
         </div>
         <div class="hero-stats" data-aos="fade-up" data-aos-duration="700" data-aos-delay="400">
           <div class="stat"><span class="stat-num" id="stat-unis" data-target="15">15</span><span class="stat-label">университетов</span></div>
           <div class="stat-div"></div>
-          <div class="stat"><span class="stat-num" id="stat-specs" data-target="30">30</span><span class="stat-label">специальностей</span></div>
+          <div class="stat"><span class="stat-num" id="stat-specs" data-target="35">35</span><span class="stat-label">специальностей</span></div>
           <div class="stat-div"></div>
           <div class="stat"><span class="stat-num">от 580K</span><span class="stat-label">тенге/год</span></div>
         </div>
@@ -982,7 +981,6 @@
   </div>
   <div class="footer-bottom">
     <span>© 2025 EduMatch KZ</span>
-    <span>Учебный проект по финансовой грамотности</span>
   </div>
 </footer>
 

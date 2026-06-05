@@ -182,7 +182,6 @@ function applyTranslations() {
     
     // Кнопки на главной странице
     { selector: '.hero-actions .btn-primary', path: 'home.hero_btn1' },
-    { selector: '.hero-actions .btn-ghost', path: 'home.hero_btn2' },
     
     // Карта  
     { selector: '#page-map .page-title', path: 'map.title' },
@@ -889,11 +888,11 @@ function renderMatches(matches) {
   if (!matches || matches.length === 0) return '';
 
   let html = `
-  <div style="margin-top: 1.5rem; border-top: 1px solid #e0e0e0; padding-top: 1rem;">
-    <div style="font-size: 0.9rem; font-weight: 600; color: #666; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.5px;">
+  <div class="chat-rec-header">
+    <div class="chat-rec-title">
       📋 Рекомендуемые университеты (${matches.length})
     </div>
-    <div style="display: grid; gap: 0.8rem;">
+    <div class="chat-rec-grid">
   `;
 
   matches.slice(0, 5).forEach((u, idx) => {
@@ -903,90 +902,31 @@ function renderMatches(matches) {
     const priceRange = `${(u.price_from/1000000).toFixed(2)}–${(u.price_to/1000000).toFixed(2)}M тг`;
     
     html += `
-    <div style="
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 1rem;
-      background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    " 
-    onclick="navigate('university', ${u.id})"
-    onmouseover="this.style.boxShadow='0 4px 12px rgba(45,106,79,0.15)'; this.style.transform='translateY(-2px)'"
-    onmouseout="this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)'; this.style.transform='none'"
-    style="transform: none;">
-      
-      <!-- Header: Name + Rank -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+    <div class="chat-rec-card" onclick="navigate('university', ${u.id})">
+      <div class="chat-rec-head">
         <div>
-          <div style="font-size: 1.1rem; font-weight: 700; color: #2d6a4f; margin-bottom: 0.25rem;">
-            ${u.short_name}
-          </div>
-          <div style="font-size: 0.85rem; color: #666;">
-            ${u.name}
-          </div>
+          <div class="chat-rec-uni-name">${u.short_name}</div>
+          <div class="chat-rec-uni-full">${u.name}</div>
         </div>
-        <div style="background: #2d6a4f; color: white; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;">
-          ${qs}
+        <div class="chat-rec-badge">${qs}</div>
+      </div>
+      <div class="chat-rec-details">
+        <div>
+          <div class="chat-rec-label">Стоимость</div>
+          <div class="chat-rec-value-accent">💰 ${priceRange}/год</div>
+        </div>
+        <div>
+          <div class="chat-rec-label">Языки обучения</div>
+          <div class="chat-rec-value">🌐 ${languages}</div>
+        </div>
+        <div class="chat-rec-full">
+          <div class="chat-rec-label">Специальности</div>
+          <div class="chat-rec-value">📚 ${specs}${(u.specialties || []).length > 3 ? '...' : ''}</div>
         </div>
       </div>
-      
-      <!-- Details Grid -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; color: #555; margin-bottom: 0.75rem; border-top: 1px solid #eee; padding-top: 0.75rem;">
-        
-        <div>
-          <div style="color: #999; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem; font-weight: 600;">Стоимость</div>
-          <div style="color: #2d6a4f; font-weight: 600;">💰 ${priceRange}/год</div>
-        </div>
-        
-        <div>
-          <div style="color: #999; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem; font-weight: 600;">Языки обучения</div>
-          <div style="color: #333;">🌐 ${languages}</div>
-        </div>
-        
-        <div style="grid-column: 1 / -1;">
-          <div style="color: #999; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 0.25rem; font-weight: 600;">Специальности</div>
-          <div style="color: #333;">📚 ${specs}${(u.specialties || []).length > 3 ? '...' : ''}</div>
-        </div>
-      </div>
-      
-      <!-- CTA -->
-      <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
-        <button style="
-          flex: 1;
-          background: #2d6a4f;
-          color: white;
-          border: none;
-          padding: 0.6rem;
-          border-radius: 6px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background 0.2s;
-        " 
-        onclick="event.stopPropagation(); navigate('university', ${u.id})"
-        onmouseover="this.style.background='#1d4a3f'"
-        onmouseout="this.style.background='#2d6a4f'">
-          Подробнее
-        </button>
-        <button style="
-          flex: 1;
-          background: #f0f0f0;
-          color: #333;
-          border: none;
-          padding: 0.6rem;
-          border-radius: 6px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: background 0.2s;
-        "
-        onclick="event.stopPropagation(); toggleFavorite(${u.id})"
-        onmouseover="this.style.background='#e0e0e0'"
-        onmouseout="this.style.background='#f0f0f0'">
-          ${state.favoriteList?.includes(u.id) ? '♥ В избранном' : '♡ В избранное'}
-        </button>
+      <div class="chat-rec-actions">
+        <button class="chat-rec-btn-primary" onclick="event.stopPropagation(); navigate('university', ${u.id})">Подробнее</button>
+        <button class="chat-rec-btn-ghost" onclick="event.stopPropagation(); toggleFavorite(${u.id})">${state.favoriteList?.includes(u.id) ? '♥ В избранном' : '♡ В избранное'}</button>
       </div>
     </div>
     `;
