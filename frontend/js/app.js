@@ -111,13 +111,9 @@ function navigate(page, param) {
   } else if (page === 'advisor') {
     document.getElementById('page-advisor').classList.add('active');
     document.querySelectorAll('.nav-link')[2].classList.add('active');
-  } else if (page === 'ent') {
-    document.getElementById('page-ent').classList.add('active');
-    document.querySelectorAll('.nav-link')[4].classList.add('active');
-    updateENTScore(document.getElementById('ent-slider').value);
   } else if (page === 'career') {
     document.getElementById('page-career').classList.add('active');
-    document.querySelectorAll('.nav-link')[5].classList.add('active');
+    document.querySelectorAll('.nav-link')[4].classList.add('active');
     initCareerTest();
   } else if (page === 'login') {
     document.getElementById('page-login').classList.add('active');
@@ -1479,126 +1475,7 @@ async function explainAdmission(universityId, btn) {
    ENT CALCULATOR
    ============================================= */
 
-// Grant thresholds by specialty category (approximate 2025 data)
-const ENT_THRESHOLDS = {
-  'IT':               { grant: 90, paid: 50 },
-  'Медицина':         { grant: 92, paid: 60 },
-  'Право':            { grant: 82, paid: 50 },
-  'Экономика':        { grant: 80, paid: 45 },
-  'Инженерия':        { grant: 70, paid: 40 },
-  'Гуманитарные':     { grant: 78, paid: 45 },
-  'Образование':      { grant: 65, paid: 35 },
-  'default':          { grant: 75, paid: 40 },
-};
 
-// Per-university approximate grant thresholds (top unis are more competitive)
-const UNI_DIFFICULTY = {
-  1: 1.05,  // КазНУ — slightly more competitive
-  2: 1.10,  // КБТУ — highest
-  3: 1.08,  // КазНМУ
-  4: 0,     // КИМЭП — private, no state grants
-  5: 0.95,
-  6: 0,     // AlmaU — private
-  7: 0.95,
-  8: 0.95,
-  9: 0.90,  // КазНПУ — easier to get grant
-  10: 0.92,
-  11: 0,    // Каспийский — private
-};
-
-function updateENTScore(val) {
-  document.getElementById('ent-score-display').textContent = val;
-  document.getElementById('ent-slider').value = val;
-  const exact = document.getElementById('ent-exact');
-  if (exact) exact.value = val;
-}
-
-function syncENTInput(val) {
-  const clamped = Math.min(140, Math.max(0, parseInt(val) || 0));
-  document.getElementById('ent-slider').value = clamped;
-  document.getElementById('ent-score-display').textContent = clamped;
-}
-
-async function calcENT() {
-  const score = parseInt(document.getElementById('ent-slider').value) || 0;
-  const specialty = document.getElementById('ent-specialty').value;
-  const resultsEl = document.getElementById('ent-results');
-
-  let unis = state.universities;
-  if (!unis.length) {
-    const res = await fetch(`${API}/universities`);
-    unis = await res.json();
-  }
-
-  const thresholds = ENT_THRESHOLDS[specialty] || ENT_THRESHOLDS['default'];
-
-  const results = unis.map(u => {
-    const diff = UNI_DIFFICULTY[u.id];
-    const hasGrant = diff > 0; // private unis (diff=0) have no state grants
-
-    if (!hasGrant) {
-      return { u, status: 'paid', label: 'Платное', note: 'Частный вуз — госгрант не предусмотрен', color: 'var(--text2)' };
-    }
-
-    const grantThreshold = Math.round(thresholds.grant * diff);
-    const paidThreshold = thresholds.paid;
-
-    if (score >= grantThreshold) {
-      return { u, status: 'grant', label: 'Грант', note: `Порог гранта ~${grantThreshold} баллов`, color: 'var(--green)' };
-    } else if (score >= paidThreshold) {
-      const gap = grantThreshold - score;
-      return { u, status: 'paid_possible', label: 'Платное', note: `До гранта не хватает ${gap} баллов`, color: 'var(--gold)' };
-    } else {
-      return { u, status: 'unlikely', label: 'Мало шансов', note: `Минимум для поступления ~${paidThreshold} баллов`, color: 'var(--red)' };
-    }
-  });
-
-  // Sort: grant first, then paid, then unlikely
-  const order = { grant: 0, paid_possible: 1, unlikely: 2, paid: 3 };
-  results.sort((a, b) => order[a.status] - order[b.status]);
-
-  const grantCount = results.filter(r => r.status === 'grant').length;
-  const paidCount = results.filter(r => r.status === 'paid_possible').length;
-
-  if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
-    Auth.saveTestResult('ent_calc', score, 140, {
-      summary: `Грант: ${grantCount}, платное: ${paidCount}, специальность: ${specialty}`,
-      specialty,
-      grantCount,
-      paidCount
-    }).catch(() => {});
-  }
-
-  resultsEl.innerHTML = `
-    <div class="ent-summary">
-      <div class="ent-summary-stat" style="color:var(--green)">
-        <div class="ent-summary-num">${grantCount}</div>
-        <div class="ent-summary-label">вузов — грант</div>
-      </div>
-      <div class="ent-summary-stat" style="color:var(--gold)">
-        <div class="ent-summary-num">${paidCount}</div>
-        <div class="ent-summary-label">вузов — платно</div>
-      </div>
-      <div class="ent-summary-stat">
-        <div class="ent-summary-num">${score}</div>
-        <div class="ent-summary-label">ваш балл</div>
-      </div>
-    </div>
-    <div class="ent-uni-list">
-      ${results.map(r => `
-        <div class="ent-uni-row">
-          <div class="ent-uni-info">
-            <div class="ent-uni-name">${r.u.short_name}</div>
-            <div class="ent-uni-note">${r.note}</div>
-          </div>
-          <div class="ent-uni-price">${fmtPrice(r.u.price_from)} тг/год</div>
-          <div class="ent-status-badge" style="background:${r.color}20;color:${r.color};border-color:${r.color}40">${r.label}</div>
-        </div>
-      `).join('')}
-    </div>
-    <p class="ent-disclaimer">* Пороговые баллы — ориентировочные на основе данных МОН РК за 2024 год. Точные пороги публикуются после объявления результатов ЕНТ.</p>
-  `;
-}
 
 /* =============================================
    CAREER ORIENTATION TEST
