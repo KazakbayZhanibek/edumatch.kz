@@ -23,6 +23,7 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
       u.price_from, u.price_to, u.website, u.description, u.founded,
       u.students_count, u.languages, u.accreditations, u.has_dorm,
       u.dorm_price, u.avg_salary, u.lat, u.lng,
+      u.admission_phone, u.admission_email,
       c.name as city_name
     FROM universities u
     LEFT JOIN cities c ON u.city_id = c.id

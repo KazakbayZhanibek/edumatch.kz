@@ -419,6 +419,10 @@ input, select, textarea { font-family: inherit; }
 .price-label { font-size: 11px; color: var(--text-muted); }
 .price-from { font-size: 18px; font-weight: 600; color: var(--text); letter-spacing: -0.03em; }
 .price-to { font-size: 13px; color: var(--text-secondary); }
+.uni-contact-row { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-bottom: 12px; padding: 8px 12px; font-size: 12px; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--border); align-items: center; }
+.uni-contact-item { display: inline-flex; align-items: center; gap: 4px; color: var(--text-secondary); text-decoration: none; white-space: nowrap; line-height: 1; }
+.uni-contact-item:hover { color: var(--accent); }
+.uni-contact-item svg { flex-shrink: 0; display: block; }
 .price-period { font-size: 11px; color: var(--text-muted); margin-left: 2px; }
 .uni-specialties { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
 .specialty-tag {
@@ -3090,6 +3094,8 @@ body { font-family: var(--font-sans) !important; }
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
 }
+.info-contact-row { justify-content: flex-start; gap: 8px; }
+.info-contact-row svg { flex-shrink: 0; display: block; }
 
 .info-row:last-child {
   border-bottom: none;

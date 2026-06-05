@@ -374,6 +374,19 @@ function renderUniversityCard(u) {
     `<span class="specialty-tag">${s.name}</span>`
   ).join('') + (rest > 0 ? `<span class="specialty-tag specialty-tag-more">+${rest}</span>` : '');
 
+  const contactLine = (u.admission_phone || u.admission_email) ? `
+    <div class="uni-contact-row">
+      ${u.admission_phone ? `<a href="tel:${u.admission_phone.split('\n')[0].replace(/[\s\-\(\)]/g,'')}" class="uni-contact-item" onclick="event.stopPropagation()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        ${u.admission_phone.split('\n')[0]}
+      </a>` : ''}
+      ${u.admission_email ? `<a href="mailto:${u.admission_email}" class="uni-contact-item" onclick="event.stopPropagation()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+        ${u.admission_email}
+      </a>` : ''}
+    </div>
+  ` : '';
+
   return `
     <div class="uni-card" id="card-${u.id}">
       <div class="uni-card-header-actions">
@@ -393,6 +406,7 @@ function renderUniversityCard(u) {
         <span class="price-to"> — ${fmtPrice(u.price_to)}</span>
         <span class="price-period">тг/год</span>
       </div>
+      ${contactLine}
       <div class="uni-specialties">${specTags}</div>
       <div class="uni-card-actions">
         <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" onclick="toggleCompare(${u.id}, event)">
@@ -692,23 +706,26 @@ function renderUniversityDetail(u, container) {
   // Контакты приемной комиссии (плейсхолдер)
   const contactsHTML = `
     <div class="info-block">
-      <div class="info-block-title">${getSVGIcon('phone')} Контакты приемной комиссии</div>
+      <div class="info-block-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+        Контакты приемной комиссии
+      </div>
       <div class="info-block-content">
-        ${u.admission_phone ? `
-          <div class="info-row">
-            <span>${getSVGIcon('phone')} Телефон:</span>
-            <a href="tel:${u.admission_phone}" style="color: var(--primary)">${u.admission_phone}</a>
+        ${u.admission_phone ? u.admission_phone.split('\n').map((ph, i) => `
+          <div class="info-row info-contact-row">
+            ${i === 0 ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>` : '<span style="width:14px;display:inline-block"></span>'}
+            <a href="tel:${ph.replace(/[\s\-\(\)]/g,'')}" style="color: var(--primary)">${ph}</a>
           </div>
-        ` : '<div style="color: #999;">Контакты не указаны</div>'}
+        `).join('') : '<div style="color: #999;">Контакты не указаны</div>'}
         ${u.admission_email ? `
-          <div class="info-row">
-            <span>${getSVGIcon('email')} Email:</span>
+          <div class="info-row info-contact-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
             <a href="mailto:${u.admission_email}" style="color: var(--primary)">${u.admission_email}</a>
           </div>
         ` : ''}
         ${u.admission_whatsapp ? `
-          <div class="info-row">
-            <span>${getSVGIcon('chat')} WhatsApp:</span>
+          <div class="info-row info-contact-row">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             <a href="https://wa.me/${u.admission_whatsapp.replace(/\D/g, '')}" target="_blank" style="color: var(--primary)">${u.admission_whatsapp}</a>
           </div>
         ` : ''}
