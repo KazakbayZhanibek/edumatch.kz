@@ -40,7 +40,6 @@
       <a href="#" class="nav-link" onclick="navigate('compare')">Сравнение <span class="compare-badge" id="compare-badge" style="display:none">0</span></a>
       <a href="#" class="nav-link" onclick="navigate('advisor')">ИИ-советник</a>
       <a href="#" class="nav-link" onclick="navigate('admission')">Мои шансы</a>
-      <a href="#" class="nav-link" onclick="navigate('ent')">ЕНТ</a>
       <a href="#" class="nav-link" onclick="navigate('career')">Профориентация</a>
       <a href="#" class="nav-link" onclick="navigate('grants')">Гранты</a>
       <a href="#" class="nav-link" onclick="navigate('map')">Карта</a>
@@ -97,11 +96,6 @@
     <a class="mobile-nav-link" onclick="navigate('admission');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       Мои шансы на поступление
-    </a>
-    <div class="mobile-nav-divider">Инструменты</div>
-    <a class="mobile-nav-link" onclick="navigate('ent');closeMobileMenu()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      ЕНТ-калькулятор
     </a>
     <a class="mobile-nav-link" onclick="navigate('career');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
@@ -426,66 +420,6 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
             </div>
             <p>Заполните форму и нажмите «Рассчитать шансы»</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ENT CALCULATOR PAGE -->
-  <div id="page-ent" class="page">
-    <div class="container">
-      <div class="page-head">
-        <div class="section-badge">Поступление 2025</div>
-        <h1 class="page-title">ЕНТ-калькулятор</h1>
-        <p class="page-sub">Введите баллы ЕНТ — узнайте, в какие вузы вы проходите на грант или платно</p>
-      </div>
-
-      <div class="ent-layout">
-        <div class="tool-card ent-input-card">
-          <h3 class="tool-card-title">Ваши баллы</h3>
-          <div class="ent-score-wrap">
-            <div class="ent-score-display" id="ent-score-display">—</div>
-            <div class="ent-score-label">баллов из 140</div>
-          </div>
-          <input type="range" class="ent-slider" id="ent-slider" min="0" max="140" value="85" oninput="updateENTScore(this.value)">
-          <div class="ent-slider-labels"><span>0</span><span>50</span><span>100</span><span>140</span></div>
-
-          <div style="margin-top:20px">
-            <label class="form-label">Или введите точно</label>
-            <input type="number" class="form-input" id="ent-exact" min="0" max="140" placeholder="Введите баллы" oninput="syncENTInput(this.value)">
-          </div>
-
-          <div class="form-group" style="margin-top:16px">
-            <label class="form-label">Выбранная специальность</label>
-            <select class="form-select" id="ent-specialty">
-              <option value="">Любая специальность</option>
-              <option value="IT">IT и программирование</option>
-              <option value="Экономика">Экономика и бизнес</option>
-              <option value="Медицина">Медицина</option>
-              <option value="Право">Юриспруденция и право</option>
-              <option value="Инженерия">Инженерия</option>
-              <option value="Гуманитарные">Гуманитарные науки</option>
-              <option value="Образование">Педагогика</option>
-            </select>
-          </div>
-
-          <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="calcENT()">Проверить шансы</button>
-
-          <div class="ent-thresholds">
-            <div class="threshold-title">Пороги грантов 2025</div>
-            <div class="threshold-row"><span class="threshold-dot dot-green"></span><span>70+ баллов</span><span class="threshold-note">Технические специальности</span></div>
-            <div class="threshold-row"><span class="threshold-dot dot-yellow"></span><span>80+ баллов</span><span class="threshold-note">Экономика, Право</span></div>
-            <div class="threshold-row"><span class="threshold-dot dot-red"></span><span>90+ баллов</span><span class="threshold-note">Медицина, IT, Топ-вузы</span></div>
-          </div>
-        </div>
-
-        <div class="ent-results" id="ent-results">
-          <div class="empty-state">
-            <div class="empty-state-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            </div>
-            <p>Введите баллы и нажмите «Проверить шансы»</p>
           </div>
         </div>
       </div>
