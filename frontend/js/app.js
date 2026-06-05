@@ -226,7 +226,8 @@ function getNestedTranslation(obj, path) {
 async function loadUniversities() {
   startProgress();
   const grid = document.getElementById('uni-grid');
-  grid.innerHTML = renderSkeletonGrid(6);
+  const isMobile = window.innerWidth <= 768;
+  grid.innerHTML = renderSkeletonGrid(isMobile ? 3 : 6);
 
   try {
     const sort = document.getElementById('filter-sort')?.value || 'qs_world';
@@ -327,23 +328,19 @@ function renderUniversityGrid(unis) {
  */
 function renderSkeletonCard() {
   return `
-    <div class="uni-card skeleton-card">
-      <div class="skeleton-header">
-        <div class="skeleton-text-sm"></div>
-        <div class="skeleton-text-sm"></div>
+    <div class="skeleton-card">
+      <div class="sk-head">
+        <div class="sk-badge"></div>
+        <div class="sk-rank"></div>
       </div>
-      <div class="skeleton-text-lg"></div>
-      <div class="skeleton-description"></div>
-      <div class="skeleton-price"></div>
-      <div class="skeleton-tags">
-        <div class="skeleton-tag"></div>
-        <div class="skeleton-tag"></div>
-        <div class="skeleton-tag"></div>
+      <div class="sk-title"></div>
+      <div class="sk-desc"><div class="sk-line"></div><div class="sk-line short"></div></div>
+      <div class="sk-price">
+        <div class="sk-line" style="width:60%"></div>
+        <div class="sk-line" style="width:40%;height:12px;margin-top:4px"></div>
       </div>
-      <div class="skeleton-buttons">
-        <div class="skeleton-button"></div>
-        <div class="skeleton-button"></div>
-      </div>
+      <div class="sk-tags"><div class="sk-tag"></div><div class="sk-tag"></div><div class="sk-tag"></div></div>
+      <div class="sk-actions"><div class="sk-btn"></div><div class="sk-btn"></div></div>
     </div>
   `;
 }
@@ -356,7 +353,7 @@ function renderSkeletonGrid(count) {
   for (let i = 0; i < count; i++) {
     html += renderSkeletonCard();
   }
-  return `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">${html}</div>`;
+  return `<div class="uni-grid">${html}</div>`;
 }
 
 function renderUniversityCard(u) {
@@ -2153,8 +2150,9 @@ async function loadMap() {
     attribution: '© OpenStreetMap contributors'
   }).addTo(mapInstance);
 
-  const unis = state.universities.length ? state.universities : await fetch(`${API}/universities`).then(r=>r.json());
-  state.mapUniversities = unis;
+  const res = await fetch(`${API}/universities`);
+  const unis = await res.json();
+  state.mapUniversities = Array.isArray(unis) ? unis : [];
 
   const greenIcon = L.divIcon({
     className: '',

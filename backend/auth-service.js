@@ -435,6 +435,81 @@ function saveChatMessage(userId, message, response, context = null) {
  * @param {number} limit - Количество последних сообщений
  * @returns {array} - История чатов
  */
+/**
+ * Сменить пароль
+ * @param {number} userId - ID пользователя
+ * @param {string} currentPassword - Текущий пароль
+ * @param {string} newPassword - Новый пароль
+ * @returns {object} - {success: true/false, error: "..."}
+ */
+async function changePassword(userId, currentPassword, newPassword) {
+  try {
+    if (newPassword.length < 6) {
+      return { success: false, error: 'Новый пароль должен быть не менее 6 символов' };
+    }
+
+    const user = getDb().prepare('SELECT password_hash FROM users WHERE id = ?').get(userId);
+    if (!user) return { success: false, error: 'Пользователь не найден' };
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!isMatch) return { success: false, error: 'Текущий пароль неверен' };
+
+    const newHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+    getDb().prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(newHash, userId);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Change password error:', error);
+    return { success: false, error: 'Ошибка при смене пароля' };
+  }
+}
+
+/**
+ * Удалить результат теста
+ * @param {number} userId - ID пользователя
+ * @param {number} resultId - ID результата
+ * @returns {object} - {success: true/false, error: "..."}
+ */
+function deleteTestResult(userId, resultId) {
+  try {
+    const result = getDb().prepare(
+      'DELETE FROM test_results WHERE id = ? AND user_id = ?'
+    ).run(resultId, userId);
+
+    if (result.changes === 0) {
+      return { success: false, error: 'Результат не найден' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Delete test result error:', error);
+    return { success: false, error: 'Ошибка при удалении' };
+  }
+}
+
+/**
+ * Удалить сообщение из истории чатов
+ * @param {number} userId - ID пользователя
+ * @param {number} messageId - ID сообщения
+ * @returns {object} - {success: true/false, error: "..."}
+ */
+function deleteChatMessage(userId, messageId) {
+  try {
+    const result = getDb().prepare(
+      'DELETE FROM chat_history WHERE id = ? AND user_id = ?'
+    ).run(messageId, userId);
+
+    if (result.changes === 0) {
+      return { success: false, error: 'Сообщение не найдено' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Delete chat message error:', error);
+    return { success: false, error: 'Ошибка при удалении' };
+  }
+}
+
 function getChatHistory(userId, limit = 50) {
   try {
     return getDb().prepare(
@@ -504,6 +579,7 @@ module.exports = {
   // Auth
   registerUser,
   loginUser,
+  changePassword,
   
   // Tokens
   generateToken,
@@ -525,6 +601,8 @@ module.exports = {
   // Chat & Tests
   saveChatMessage,
   getChatHistory,
+  deleteChatMessage,
   saveTestResult,
-  getTestResults
+  getTestResults,
+  deleteTestResult
 };

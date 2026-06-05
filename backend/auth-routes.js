@@ -351,7 +351,58 @@ router.post('/chat-history', verifyAuth, (req, res) => {
   }
 });
 
+/**
+ * DELETE /api/chat-history/:id
+ * Удалить сообщение из истории чатов
+ */
+router.delete('/chat-history/:id', verifyAuth, (req, res) => {
+  try {
+    const messageId = parseInt(req.params.id, 10);
+    if (!messageId) {
+      return res.status(400).json({ error: 'Некорректный ID сообщения' });
+    }
+
+    const result = authService.deleteChatMessage(req.userId, messageId);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Delete chat message error:', error);
+    return res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
 // ==================== TEST RESULTS ENDPOINTS ====================
+
+/**
+ * POST /api/auth/change-password
+ * Сменить пароль
+ * Header: Authorization: Bearer <token>
+ * Body: { currentPassword, newPassword }
+ */
+router.post('/change-password', verifyAuth, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'currentPassword и newPassword обязательны' });
+    }
+
+    const result = await authService.changePassword(req.userId, currentPassword, newPassword);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Change password error:', error);
+    return res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
 
 /**
  * GET /api/test-results
@@ -406,6 +457,30 @@ router.post('/test-results', verifyAuth, (req, res) => {
     return res.status(201).json({ success: true });
   } catch (error) {
     console.error('Save test result error:', error);
+    return res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+/**
+ * DELETE /api/test-results/:id
+ * Удалить результат теста
+ */
+router.delete('/test-results/:id', verifyAuth, (req, res) => {
+  try {
+    const resultId = parseInt(req.params.id, 10);
+    if (!resultId) {
+      return res.status(400).json({ error: 'Некорректный ID результата' });
+    }
+
+    const result = authService.deleteTestResult(req.userId, resultId);
+
+    if (!result.success) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Delete test result error:', error);
     return res.status(500).json({ error: 'Ошибка сервера' });
   }
 });

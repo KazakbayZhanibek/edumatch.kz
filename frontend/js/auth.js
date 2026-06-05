@@ -45,7 +45,8 @@ const Auth = {
   async verifySession() {
     try {
       const res = await this.fetch('/auth/verify', { method: 'POST' });
-      if (!res.ok) throw new Error('invalid');
+      if (res.status === 401) { this.clearSession(); return false; }
+      if (!res.ok) return false; // временная ошибка — не чистим токен
       const data = await res.json();
       this.user = data.user;
       localStorage.setItem(AUTH_USER_KEY, JSON.stringify(this.user));
@@ -53,8 +54,7 @@ const Auth = {
       this.updateNavUI();
       return true;
     } catch (e) {
-      this.clearSession();
-      return false;
+      return false; // сеть недоступна — не чистим токен
     }
   },
 
@@ -117,7 +117,9 @@ const Auth = {
     return data;
   },
 
-  async updateProfile({ fullName, phone, bio }) {
+  async updateProfile({ fullName, phone, bio, preferences }) {
+    const body = { fullName, phone, bio };
+    if (preferences) body.preferences = preferences;
     const res = await this.fetch('/users/profile', {
       method: 'PUT',
       body: JSON.stringify({ fullName, phone, bio })
@@ -200,6 +202,30 @@ const Auth = {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Ошибка загрузки истории');
     return data.messages || [];
+  },
+
+  async deleteChatMessage(messageId) {
+    const res = await this.fetch(`/chat-history/${messageId}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось удалить');
+    return data;
+  },
+
+  async changePassword(currentPassword, newPassword) {
+    const res = await this.fetch('/auth/change-password', {
+      method: 'POST',
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Ошибка смены пароля');
+    return data;
+  },
+
+  async deleteTestResult(resultId) {
+    const res = await this.fetch(`/test-results/${resultId}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось удалить');
+    return data;
   },
 
   async getTestResults(testType) {
@@ -335,20 +361,65 @@ async function loadProfilePage() {
         </section>
 
         <section class="profile-card">
+          <h2 class="profile-card-title">Смена пароля</h2>
+          <form id="password-form" class="auth-form" onsubmit="handlePasswordChange(event)">
+            <div class="form-field">
+              <label>Текущий пароль</label>
+              <input type="password" id="pw-current" class="form-input" required minlength="6">
+            </div>
+            <div class="form-field">
+              <label>Новый пароль</label>
+              <div class="pw-toggle-wrap">
+                <input type="password" id="pw-new" class="form-input" required minlength="6">
+                <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">👁</button>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Подтвердите новый пароль</label>
+              <div class="pw-toggle-wrap">
+                <input type="password" id="pw-confirm" class="form-input" required minlength="6">
+                <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">👁</button>
+              </div>
+            </div>
+            <p class="form-error" id="password-error"></p>
+            <button type="submit" class="btn btn-primary">Сменить пароль</button>
+          </form>
+        </section>
+
+        <section class="profile-card">
           <h2 class="profile-card-title">Сохранённые вузы <span class="profile-count">${saved.length}</span></h2>
           ${saved.length ? `
             <div class="profile-saved-list">
               ${saved.map(u => `
-                <div class="profile-saved-item">
+                <div class="profile-saved-item" data-uni-id="${u.university_id}">
                   <div>
                     <strong>${u.short_name || u.name}</strong>
                     <div class="profile-saved-meta">от ${fmtPrice(u.price_from)} тг/год</div>
                   </div>
-                  <button class="btn btn-sm btn-ghost" onclick="navigate('university', ${u.university_id})">Открыть</button>
+                  <div class="profile-saved-actions">
+                    <button class="btn btn-sm btn-ghost" onclick="navigate('university', ${u.university_id})">Открыть</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteSavedUniversity(${u.university_id}, this)" title="Удалить">✕</button>
+                  </div>
                 </div>
               `).join('')}
             </div>
           ` : '<p class="profile-empty">Пока нет сохранённых вузов. Нажмите ♥ на карточке.</p>'}
+        </section>
+
+        <section class="profile-card">
+          <h2 class="profile-card-title">Настройки</h2>
+          <form class="auth-form" onsubmit="handlePreferencesSave(event)">
+            <div class="form-field">
+              <label>Язык интерфейса</label>
+              <select id="pref-lang" class="form-input">
+                <option value="ru"${(profile.preferences && profile.preferences.language === 'ru') ? ' selected' : ''}>Русский</option>
+                <option value="kk"${(profile.preferences && profile.preferences.language === 'kk') ? ' selected' : ''}>Қазақша</option>
+                <option value="en"${(profile.preferences && profile.preferences.language === 'en') ? ' selected' : ''}>English</option>
+              </select>
+            </div>
+            <p class="form-error" id="preferences-error"></p>
+            <button type="submit" class="btn btn-primary">Сохранить настройки</button>
+          </form>
         </section>
 
         <section class="profile-card profile-card-wide">
@@ -356,7 +427,8 @@ async function loadProfilePage() {
           ${chats.length ? `
             <div class="profile-chat-list">
               ${chats.slice(0, 15).map(c => `
-                <div class="profile-chat-item">
+                <div class="profile-chat-item" data-chat-id="${c.id}">
+                  <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="Удалить">✕</button>
                   <div class="profile-chat-q"><strong>Вы:</strong> ${escapeHtml(c.message.slice(0, 120))}${c.message.length > 120 ? '…' : ''}</div>
                   <div class="profile-chat-a">${escapeHtml(c.response.slice(0, 200))}${c.response.length > 200 ? '…' : ''}</div>
                   <div class="profile-chat-date">${formatDate(c.created_at)}</div>
@@ -375,6 +447,7 @@ async function loadProfilePage() {
                 const label = TEST_TYPE_LABELS[t.test_type] || t.test_type;
                 return `
                   <div class="profile-test-item">
+                    <button class="profile-chat-delete" onclick="deleteTestResultItem(${t.id}, this)" title="Удалить">✕</button>
                     <div class="profile-test-type">${label}</div>
                     <div class="profile-test-score">${t.score}${t.max_score ? ` / ${t.max_score}` : ''}</div>
                     ${data.summary ? `<div class="profile-test-meta">${escapeHtml(data.summary)}</div>` : ''}
@@ -390,6 +463,103 @@ async function loadProfilePage() {
   } catch (e) {
     content.innerHTML = `<p class="form-error">${e.message}</p>`;
   }
+}
+
+async function deleteSavedUniversity(uniId, btn) {
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    await Auth.removeUniversity(uniId);
+    const item = btn.closest('.profile-saved-item');
+    item.remove();
+    const countEl = document.querySelector('.profile-grid > section:nth-child(3) .profile-count');
+    if (countEl) {
+      const n = parseInt(countEl.textContent) - 1;
+      countEl.textContent = n;
+      const list = document.querySelector('.profile-saved-list');
+      if (n === 0 && list) {
+        list.outerHTML = '<p class="profile-empty">Пока нет сохранённых вузов. Нажмите ♥ на карточке.</p>';
+      }
+    }
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = '✕';
+  }
+}
+
+async function deleteChatItem(msgId, btn) {
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    await Auth.deleteChatMessage(msgId);
+    const item = btn.closest('.profile-chat-item');
+    item.remove();
+    const list = document.querySelector('.profile-chat-list');
+    const countEl = document.querySelector('.profile-grid > section:nth-child(5) .profile-count');
+    if (countEl) {
+      const n = parseInt(countEl.textContent) - 1;
+      countEl.textContent = n;
+      if (n === 0 && list) {
+        list.outerHTML = '<p class="profile-empty">Задайте вопрос в разделе «ИИ-советник» — история сохранится автоматически.</p>';
+      }
+    }
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = '✕';
+  }
+}
+
+async function deleteTestResultItem(resultId, btn) {
+  btn.disabled = true;
+  btn.textContent = '…';
+  try {
+    await Auth.deleteTestResult(resultId);
+    const item = btn.closest('.profile-test-item');
+    item.remove();
+    const list = document.querySelector('.profile-tests-list');
+    const countEl = document.querySelector('.profile-grid > section:nth-child(6) .profile-count');
+    if (countEl) {
+      const n = parseInt(countEl.textContent) - 1;
+      countEl.textContent = n;
+      if (n === 0 && list) {
+        list.outerHTML = '<p class="profile-empty">Пройдите ЕНТ-калькулятор или профориентацию — результаты появятся здесь.</p>';
+      }
+    }
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = '✕';
+  }
+}
+
+function handlePasswordChange(e) {
+  e.preventDefault();
+  const err = document.getElementById('password-error');
+  err.textContent = '';
+  const current = document.getElementById('pw-current').value;
+  const newPw = document.getElementById('pw-new').value;
+  const confirm = document.getElementById('pw-confirm').value;
+  if (newPw !== confirm) { err.textContent = 'Пароли не совпадают'; return; }
+  Auth.changePassword(current, newPw)
+    .then(() => {
+      showToast('Пароль изменён', 'success');
+      document.getElementById('password-form').reset();
+    })
+    .catch(e => { err.textContent = e.message; });
+}
+
+function handlePreferencesSave(e) {
+  e.preventDefault();
+  const err = document.getElementById('preferences-error');
+  err.textContent = '';
+  const language = document.getElementById('pref-lang').value;
+  Auth.updateProfile({
+    fullName: document.getElementById('profile-fullname').value.trim(),
+    phone: document.getElementById('profile-phone').value.trim(),
+    bio: document.getElementById('profile-bio').value.trim(),
+    preferences: { language }
+  })
+    .then(() => showToast('Настройки сохранены', 'success'))
+    .catch(e => { err.textContent = e.message; });
 }
 
 const TEST_TYPE_LABELS = {
@@ -409,6 +579,14 @@ function handleProfileSave(e) {
   })
     .then(() => showToast('Профиль сохранён', 'success'))
     .catch(e => { err.textContent = e.message; });
+}
+
+function togglePW(btn) {
+  const input = btn.previousElementSibling;
+  const isPW = input.type === 'password';
+  input.type = isPW ? 'text' : 'password';
+  btn.textContent = isPW ? '🙈' : '👁';
+  btn.setAttribute('aria-label', isPW ? 'Скрыть пароль' : 'Показать пароль');
 }
 
 function escapeHtml(str) {
