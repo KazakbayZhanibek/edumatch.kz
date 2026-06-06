@@ -1,9 +1,11 @@
 const db = require('better-sqlite3')('edumatch.db');
 const fs = require('fs');
+const path = require('path');
 
 try {
   // Загрузить JSON с полными данными
-  const data = JSON.parse(fs.readFileSync('../../universities_full(1).json', 'utf8'));
+  const dataPath = path.join(__dirname, '../../universities_full(1).json');
+  const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
   
   // 1. Вставить специальности из faculties
   const insertSpecialty = db.prepare(`

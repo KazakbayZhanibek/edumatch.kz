@@ -10,12 +10,34 @@ const {
   explainAdmissionChance,
   SPECIALTY_MAP,
 } = require('./admission-service');
+const {
+  calculateAdmissionChance,
+} = require('./admission-calculator');
 const { verifyAuthOptional } = require('./auth-middleware');
 const authService = require('./auth-service');
+const { getDb } = require('./database');
+const { getExplanationForMatch } = require('./admission-explanation-service');
+
+/**
+ * GET /api/admission/specialties
+ * Все специальности из БД
+ */
+router.get('/specialties', (req, res) => {
+  try {
+    console.log('GET /specialties called');
+    const db = getDb();
+    const specialties = db.prepare('SELECT id, name FROM specialties ORDER BY name').all();
+    console.log(`Found ${specialties.length} specialties`);
+    res.json({ specialties });
+  } catch (err) {
+    console.error('Error fetching specialties:', err);
+    res.json({ specialties: [] });
+  }
+});
 
 /**
  * GET /api/admission/options
- * Специальности для формы
+ * Специальности для формы (legacy)
  */
 router.get('/options', (req, res) => {
   const specialties = Object.entries(SPECIALTY_MAP)
@@ -105,6 +127,127 @@ router.post('/explain', verifyAuthOptional, async (req, res) => {
     console.error('[admission] explain error:', err);
     const fallback = 'ИИ-объяснение временно недоступно. Ориентируйтесь на процент и список факторов выше.';
     return res.json({ success: true, explanation: fallback, fallback: true });
+  }
+});
+
+/**
+ * POST /api/admission/calculate
+ * Детерминированный расчет без AI с использованием исторической статистики
+ * 
+ * Input:
+ * {
+ *   "entScore": 110,
+ *   "gpa": 4.5,
+ *   "cityId": 1,
+ *   "specialtyId": 1,
+ *   "budgetMax": 2500000,
+ *   "language": "ru",
+ *   "needsDorm": true,
+ *   "useAiExplanation": false  // ← NEW: опционально добавить AI объяснение
+ * }
+ * 
+ * Output:
+ * {
+ *   "success": true,
+ *   "matches": [...],
+ *   "explanation": {  // ← NEW: если useAiExplanation: true
+ *     "summary": "...",
+ *     "strengths": ["..."],
+ *     "risks": ["..."],
+ *     "strategy": "safe|target|ambitious|mixed",
+ *     "tips": ["..."],
+ *     "fallback": false
+ *   }
+ * }
+ */
+router.post('/calculate', verifyAuthOptional, async (req, res) => {
+  try {
+    const input = req.body;
+    const useAiExplanation = input.useAiExplanation === true;
+    
+    console.log('[admission /calculate] Received request, useAiExplanation:', useAiExplanation);
+    
+    // Валидируем входные данные
+    if (input.entScore === undefined) {
+      return res.status(400).json({ error: 'entScore обязателен' });
+    }
+    if (input.specialtyId === undefined) {
+      return res.status(400).json({ error: 'specialtyId обязателен' });
+    }
+
+    // Выполняем расчет (чистая логика, без AI)
+    const result = calculateAdmissionChance(input);
+    
+    // DEBUG: Log contacts
+    if (result.matches && result.matches.length > 0) {
+      console.log('[DEBUG] First match has contacts:', !!result.matches[0].contacts);
+    }
+    
+    console.log('[admission] Result: success=', result.success, 'matches=', result.matches ? result.matches.length : 0);
+
+    // Если ошибка валидации
+    if (result.error && !result.matches) {
+      return res.status(400).json({ error: result.error });
+    }
+
+    // Опционально: добавляем AI объяснение для ВСЕХ matches
+    if (useAiExplanation && result.success && result.matches && result.matches.length > 0) {
+      try {
+        console.log('[admission] Requesting AI explanation for', result.matches.length, 'matches');
+        
+        // Подготавливаем данные для AI
+        const normalizedInput = {
+          ent: input.entScore,
+          specialty: result.specialty || '—',
+          budget: input.budgetMax,
+          language: input.language,
+          needDorm: input.needsDorm,
+          attestat: input.gpa,
+        };
+
+        // Получаем объяснение
+        const explanation = await getExplanationForMatch(result.matches, normalizedInput, true);
+        result.explanation = explanation;
+        
+        console.log('[admission] AI explanation added, fallback:', explanation.fallback);
+      } catch (error) {
+        console.error('[admission] AI explanation failed, continuing without:', error.message);
+        // Не прерываем запрос, просто не добавляем explanation
+      }
+    }
+
+    return res.json(result);
+  } catch (err) {
+    console.error('[admission] calculate error:', err);
+    return res.status(500).json({ error: 'Ошибка расчёта: ' + err.message });
+  }
+});
+
+/**
+ * POST /api/admission/save-history
+ * Сохраняет результаты расчета в prediction_history
+ * 
+ * Требует:
+ * - userId (из auth token или не требуется если анонимный)
+ * - input: { entScore, specialtyId, gpa, cityId, budgetMax, language, needsDorm }
+ * - matches: массив из результатов расчета
+ */
+router.post('/save-history', verifyAuthOptional, (req, res) => {
+  try {
+    const { input, matches } = req.body;
+    
+    // Если не авторизован, просто возвращаем успех (local-only)
+    if (!req.userId || !input || !matches || !Array.isArray(matches)) {
+      return res.json({ success: true, saved: false, reason: 'Anonymous or incomplete data' });
+    }
+
+    // Сохраняем в prediction_history для авторизованных пользователей
+    savePredictionHistory(req.userId, input, matches);
+    
+    return res.json({ success: true, saved: true, recordsCount: Math.min(matches.length, 5) });
+  } catch (err) {
+    console.error('[admission] save-history error:', err);
+    return res.status(500).json({ success: false, error: 'Ошибка сохранения' });
   }
 });
 

@@ -1,0 +1,24 @@
+{
+  "name": "edumatch-kz",
+  "version": "1.0.0",
+  "description": "EduMatch KZ - University admission prediction system for Kazakhstan",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "cd backend && node server.js",
+    "dev": "cd backend && node server.js",
+    "seed": "cd backend && node scripts/seed-admission-stats.js",
+    "db:init": "cd backend && node scripts/load-full-data.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "education",
+    "universities",
+    "admission",
+    "kazakhstan"
+  ],
+  "author": "EduMatch Team",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

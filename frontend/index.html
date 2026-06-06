@@ -349,43 +349,44 @@
   <div id="page-admission" class="page">
     <div class="container">
       <div class="page-head">
-        <div class="section-badge">AI Admission Predictor</div>
+        <div class="section-badge">Калькулятор шансов</div>
         <h1 class="page-title">Мои шансы на поступление</h1>
-        <p class="page-sub">Узнайте, в какие вузы вы проходите с вашим ЕНТ, бюджетом и целями</p>
+        <p class="page-sub">Рассчитайте вероятность поступления в выбранный вуз на основе вашего ЕНТ, GPA, бюджета и других критериев</p>
       </div>
 
       <div class="admission-layout">
         <div class="tool-card admission-form-card">
           <h3 class="tool-card-title">Ваши данные</h3>
+          
           <div class="form-field">
-            <label class="form-label">Балл ЕНТ</label>
-            <input type="number" class="form-input" id="admit-ent" min="0" max="140" value="110" placeholder="0–140">
+            <label class="form-label">Балл ЕНТ *</label>
+            <input type="number" class="form-input" id="admit-ent" min="0" max="140" value="110" placeholder="0–140" required>
+            <span class="form-error" id="error-ent"></span>
           </div>
+          
           <div class="form-field">
-            <label class="form-label">Средний балл аттестата</label>
-            <input type="number" class="form-input" id="admit-attestat" min="2" max="5" step="0.1" value="4.5" placeholder="например 4.8">
+            <label class="form-label">GPA (средний балл школы) *</label>
+            <input type="number" class="form-input" id="admit-gpa" min="0" max="5" step="0.1" value="4.5" placeholder="0–5" required>
+            <span class="form-error" id="error-gpa"></span>
           </div>
+          
           <div class="form-field">
             <label class="form-label">Город</label>
             <select class="form-select" id="admit-city">
               <option value="">Все города</option>
             </select>
           </div>
+          
           <div class="form-field">
-            <label class="form-label">Специальность</label>
+            <label class="form-label">Специальность *</label>
             <select class="form-select" id="admit-specialty" required>
-              <option value="">Выберите направление</option>
-              <option value="IT">IT и программирование</option>
-              <option value="Экономика">Экономика и бизнес</option>
-              <option value="Медицина">Медицина</option>
-              <option value="Инженерия">Инженерия</option>
-              <option value="Право">Юриспруденция</option>
-              <option value="Гуманитарные">Гуманитарные науки</option>
-              <option value="Образование">Педагогика</option>
+              <option value="">Выберите специальность</option>
             </select>
+            <span class="form-error" id="error-specialty"></span>
           </div>
+          
           <div class="form-field">
-            <label class="form-label">Бюджет (тг/год)</label>
+            <label class="form-label">Максимальный бюджет (тг/год)</label>
             <select class="form-select" id="admit-budget">
               <option value="">Не учитывать</option>
               <option value="1000000">до 1 млн</option>
@@ -396,22 +397,25 @@
               <option value="5000000">до 5 млн</option>
             </select>
           </div>
+          
           <div class="form-field">
             <label class="form-label">Язык обучения</label>
             <select class="form-select" id="admit-language">
               <option value="">Любой</option>
-              <option value="английский">Английский</option>
-              <option value="русский">Русский</option>
-              <option value="казахский">Казахский</option>
+              <option value="ru">Русский</option>
+              <option value="en">Английский</option>
+              <option value="kk">Казахский</option>
             </select>
           </div>
+          
           <div class="form-field form-field-check">
             <label class="admit-check">
               <input type="checkbox" id="admit-dorm">
               <span>Нужно общежитие</span>
             </label>
           </div>
-          <button class="btn btn-primary" style="width:100%;margin-top:8px" id="admit-submit" onclick="runAdmissionPredict()">Рассчитать шансы</button>
+          
+          <button class="btn btn-primary" style="width:100%;margin-top:8px" id="admit-submit" onclick="calculateAdmissionChance()">Рассчитать шансы</button>
         </div>
 
         <div class="admission-results" id="admission-results">

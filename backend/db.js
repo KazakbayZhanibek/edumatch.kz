@@ -104,9 +104,23 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
     `);
     const specialties = specialtiesStmt.all(u.id);
 
-    // Парсим JSON поля
-    const languages = u.languages ? JSON.parse(u.languages) : [];
-    const accreditations = u.accreditations ? JSON.parse(u.accreditations) : [];
+    // Парсим JSON поля с error handling
+    let languages = [];
+    let accreditations = [];
+    
+    try {
+      languages = u.languages ? JSON.parse(u.languages) : [];
+    } catch (e) {
+      console.warn(`Invalid languages JSON for university ${u.id}:`, u.languages);
+      languages = ['Русский'];
+    }
+    
+    try {
+      accreditations = u.accreditations ? JSON.parse(u.accreditations) : [];
+    } catch (e) {
+      console.warn(`Invalid accreditations JSON for university ${u.id}:`, u.accreditations);
+      accreditations = ['Национальная'];
+    }
 
     return {
       ...u,
@@ -152,9 +166,23 @@ function getUniversity(id) {
   `);
   const specialties = specialtiesStmt.all(u.id);
 
-  // Парсим JSON поля
-  const languages = u.languages ? JSON.parse(u.languages) : [];
-  const accreditations = u.accreditations ? JSON.parse(u.accreditations) : [];
+  // Парсим JSON поля с error handling
+  let languages = [];
+  let accreditations = [];
+  
+  try {
+    languages = u.languages ? JSON.parse(u.languages) : [];
+  } catch (e) {
+    console.warn(`Invalid languages JSON for university ${u.id}:`, u.languages);
+    languages = ['Русский'];
+  }
+  
+  try {
+    accreditations = u.accreditations ? JSON.parse(u.accreditations) : [];
+  } catch (e) {
+    console.warn(`Invalid accreditations JSON for university ${u.id}:`, u.accreditations);
+    accreditations = ['Национальная'];
+  }
 
   return {
     ...u,
@@ -210,8 +238,14 @@ function getGrants() {
     const specialtyRows = specialtiesStmt.all(g.id);
     const specialty_ids = specialtyRows.map(row => row.specialty_id);
 
-    // Парсим JSON поля
-    const requirements = g.requirements ? JSON.parse(g.requirements) : [];
+    // Парсим JSON поля с error handling
+    let requirements = [];
+    try {
+      requirements = g.requirements ? JSON.parse(g.requirements) : [];
+    } catch (e) {
+      console.warn(`Invalid requirements JSON for grant ${g.id}:`, g.requirements);
+      requirements = [];
+    }
 
     const result = {
       ...g,

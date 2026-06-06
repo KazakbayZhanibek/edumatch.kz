@@ -26,6 +26,13 @@ const admissionRoutes = require('./admission-routes');
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Add logging middleware
+app.use((req, res, next) => {
+  process.stderr.write(`[${new Date().toISOString()}] ${req.method} ${req.path}\n`);
+  next();
+});
+
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 app.get('/api/cities', (req, res) => {
@@ -68,6 +75,17 @@ app.get('/api/grants', (req, res) => {
 app.get('/api/tips', (req, res) => {
   try { res.json(getTips()); }
   catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// TEST: Simple endpoint
+app.get('/api/test-specialties', (req, res) => {
+  try {
+    const db = require('./database').getDb();
+    const specialties = db.prepare('SELECT id, name FROM specialties ORDER BY name').all();
+    res.json({ test: true, specialties });
+  } catch (err) {
+    res.status(500).json({ error: err.message, stack: err.stack });
+  }
 });
 
 // AI Advisor routes (new OpenRouter-based system)

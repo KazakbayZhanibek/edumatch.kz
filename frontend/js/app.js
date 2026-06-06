@@ -309,6 +309,53 @@ async function loadCities() {
   } catch (e) { /* silent */ }
 }
 
+/**
+ * Load specialties from API
+ */
+async function loadSpecialties() {
+  try {
+    console.log('Loading specialties from API...');
+    const res = await fetch(`${API}/specialties`);
+    console.log('Response status:', res.status);
+    
+    if (!res.ok) {
+      console.error('API error:', res.statusText);
+      return;
+    }
+    
+    const data = await res.json();
+    // Данные приходят как: { specialties: [...] } или как массив
+    const specialties = data.specialties || data;
+    
+    const specSelect = document.getElementById('admit-specialty');
+    if (!specSelect) {
+      console.warn('Specialty select element not found');
+      return;
+    }
+    
+    console.log(`Adding ${Array.isArray(specialties) ? specialties.length : 0} specialties to select`);
+    
+    // Сохраняем placeholder
+    while (specSelect.options.length > 1) {
+      specSelect.remove(1);
+    }
+    
+    // Добавляем все специальности
+    if (Array.isArray(specialties)) {
+      specialties.forEach((spec, idx) => {
+        const opt = document.createElement('option');
+        // Spec может быть {name, id, category} или просто {name, category}
+        opt.value = spec.id || (idx + 1);
+        opt.textContent = spec.name || spec;
+        specSelect.appendChild(opt);
+      });
+    }
+    console.log('Specialties loaded successfully');
+  } catch (e) { 
+    console.error('Failed to load specialties:', e);
+  }
+}
+
 function renderUniversityGrid(unis) {
   const grid = document.getElementById('uni-grid');
   if (!unis.length) {
@@ -1285,191 +1332,353 @@ function initAdmissionPage() {
   if (citySel && citySel.options.length <= 1) {
     loadCities();
   }
+  
+  // Загружаем специальности
+  loadSpecialties();
 }
 
-function chanceBarClass(chance) {
-  if (chance >= 85) return 'chance-high';
-  if (chance >= 65) return 'chance-mid';
-  return 'chance-low';
+// ─── ADMISSION CALCULATOR STATES ─────────────────────
+function showAdmissionLoading() {
+  const resultsEl = document.getElementById('admission-results');
+  resultsEl.innerHTML = `
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Рассчитываем ваши шансы...</p>
+    </div>
+  `;
 }
 
-async function runAdmissionPredict() {
+function showAdmissionError(message) {
+  const resultsEl = document.getElementById('admission-results');
+  resultsEl.innerHTML = `
+    <div class="tool-card" style="border: 1px solid var(--red, #ef4444);">
+      <p style="color: var(--red, #ef4444); margin: 0;">
+        <strong>⚠ Ошибка:</strong> ${escapeHtml(message)}
+      </p>
+    </div>
+  `;
+}
+
+function showAdmissionEmpty(message) {
+  const resultsEl = document.getElementById('admission-results');
+  resultsEl.innerHTML = `
+    <div class="tool-card empty-state">
+      <p>${escapeHtml(message || 'Подходящих вузов не найдено')}</p>
+    </div>
+  `;
+}
+
+// ─── MAIN CALCULATOR FUNCTION ─────────────────────────
+async function calculateAdmissionChance() {
   const btn = document.getElementById('admit-submit');
   const resultsEl = document.getElementById('admission-results');
-  const ent = parseInt(document.getElementById('admit-ent').value, 10);
-  const specialty = document.getElementById('admit-specialty').value;
-  const budget = document.getElementById('admit-budget').value;
-  const language = document.getElementById('admit-language').value;
-  const cityId = document.getElementById('admit-city').value;
-  const needDorm = document.getElementById('admit-dorm').checked;
-  const attestat = document.getElementById('admit-attestat').value;
+  
+  // Получаем значения из формы
+  const entScore = parseInt(document.getElementById('admit-ent').value, 10);
+  const gpa = parseFloat(document.getElementById('admit-gpa').value);
+  const specialtyId = parseInt(document.getElementById('admit-specialty').value, 10);
+  const cityId = document.getElementById('admit-city').value ? parseInt(document.getElementById('admit-city').value, 10) : null;
+  const budgetMax = document.getElementById('admit-budget').value ? parseInt(document.getElementById('admit-budget').value, 10) : null;
+  const language = document.getElementById('admit-language').value || null;
+  const needsDorm = document.getElementById('admit-dorm').checked;
 
-  if (!specialty) {
+  // Валидация
+  if (!entScore || entScore < 0 || entScore > 140) {
+    showToast('ЕНТ должен быть от 0 до 140', 'warning');
+    return;
+  }
+  if (!gpa || gpa < 0 || gpa > 5) {
+    showToast('GPA должен быть от 0 до 5', 'warning');
+    return;
+  }
+  if (!specialtyId) {
     showToast('Выберите специальность', 'warning');
     return;
   }
 
   btn.disabled = true;
-  resultsEl.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Считаем шансы...</p></div>';
+  showAdmissionLoading();
 
   try {
+    // Отправляем запрос на новый endpoint
     const headers = { 'Content-Type': 'application/json' };
     if (typeof Auth !== 'undefined' && Auth.getToken()) {
       headers.Authorization = `Bearer ${Auth.getToken()}`;
     }
 
-    const res = await fetch(`${API}/admission/predict`, {
+    const payload = {
+      entScore,
+      gpa,
+      specialtyId,
+      cityId,
+      budgetMax,
+      language,
+      needsDorm,
+      useAiExplanation: true,  // Запрашиваем AI объяснение
+    };
+
+    const res = await fetch(`${API}/admission/calculate`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({
-        ent,
-        attestat: attestat || undefined,
-        specialty,
-        budget: budget || undefined,
-        language: language || undefined,
-        cityId: cityId || undefined,
-        needDorm,
-      }),
+      body: JSON.stringify(payload),
     });
 
-    const data = await res.json();
-    if (!data.success) {
-      resultsEl.innerHTML = `<div class="loading-state"><p style="color:var(--red)">${data.error || 'Ошибка расчёта'}</p></div>`;
+    const result = await res.json();
+
+    // Если ошибка
+    if (result.error) {
+      showAdmissionError(result.error);
       return;
     }
 
-    state.admissionLastResult = data;
-    renderAdmissionResults(data);
-  } catch (e) {
-    resultsEl.innerHTML = `<div class="loading-state"><p style="color:var(--red)">Сервер недоступен. Запустите backend.</p></div>`;
+    // Если нет совпадений
+    if (!result.matches || result.matches.length === 0) {
+      showAdmissionEmpty('К сожалению, вузов, соответствующих вашим критериям, не найдено. Попробуйте изменить параметры.');
+      return;
+    }
+
+    // Сохраняем результат в state
+    state.admissionLastResult = result;
+
+    // Рендерим результаты
+    renderAdmissionResults(result, payload);
+
+    // Сохраняем в историю (для авторизованных пользователей)
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+      saveAdmissionHistory(payload, result.matches);
+    }
+
+  } catch (err) {
+    console.error('Admission calculate error:', err);
+    showAdmissionError('Сервер недоступен. Убедитесь, что backend запущен.');
   } finally {
     btn.disabled = false;
   }
 }
 
-function renderAdmissionResults(data) {
+// ─── RENDER FUNCTIONS ─────────────────────────────────
+function renderAdmissionResults(result, input) {
   const resultsEl = document.getElementById('admission-results');
-  const matches = data.matches || [];
+  const matches = result.matches || [];
 
   if (!matches.length) {
-    resultsEl.innerHTML = `
-      <div class="tool-card">
-        <p>${data.message || 'Подходящих вузов не найдено. Измените город или специальность.'}</p>
-      </div>`;
+    showAdmissionEmpty();
     return;
   }
 
-  resultsEl.innerHTML = `
+  const specialtyName = getSpecialtyName(input.specialtyId);
+  const cityName = input.cityId ? getCityName(input.cityId) : 'все города';
+
+  let summaryHtml = `
     <div class="admission-summary tool-card">
-      <h3 class="tool-card-title">Результаты</h3>
+      <h3 class="tool-card-title">✓ Результаты расчета</h3>
       <p class="admission-summary-text">
-        ЕНТ <strong>${data.input.ent}</strong> · ${data.input.specialty}
-        ${data.input.budget ? ` · бюджет до ${fmtPrice(data.input.budget)} тг/год` : ''}
+        <strong>ЕНТ:</strong> ${input.entScore} · 
+        <strong>Специальность:</strong> ${escapeHtml(specialtyName)}
+        ${input.budgetMax ? ` · <strong>Бюджет:</strong> до ${(input.budgetMax / 1000000).toFixed(1)} млн тг/год` : ''}
       </p>
-      <p class="admission-summary-note">Найдено ${matches.length} вариантов. Оценка основана на порогах ЕНТ, бюджете, языке и общежитии.</p>
+      <p class="admission-summary-note">
+        Найдено <strong>${matches.length}</strong> вузов. 
+        Расчет основан на ЕНТ, GPA, бюджете, языке обучения и потребности в общежитии.
+      </p>
+  `;
+
+  // Добавляем AI объяснение если оно есть
+  if (result.explanation) {
+    summaryHtml += renderExplanationBlock(result.explanation);
+  }
+
+  summaryHtml += `
     </div>
     <div class="admission-matches">
       ${matches.map((m, i) => renderAdmissionCard(m, i)).join('')}
     </div>
   `;
+
+  resultsEl.innerHTML = summaryHtml;
 }
 
-function renderAdmissionCard(m, index) {
-  const barClass = chanceBarClass(m.chance);
-  const reasonsHtml = (m.reasons || []).map(r => {
-    const icon = r.type === 'positive' ? '✓' : r.type === 'negative' ? '✗' : '•';
-    const cls = r.type === 'positive' ? 'reason-pos' : r.type === 'negative' ? 'reason-neg' : 'reason-neu';
-    return `<li class="${cls}">${icon} ${escapeAdmissionHtml(r.text)}</li>`;
-  }).join('');
+function renderAdmissionCard(match, index) {
+  const { 
+    universityId, 
+    universityName, 
+    universityCity,
+    specialtyName,
+    chancePercent, 
+    confidenceLevel,
+    reasoning,
+    contacts 
+  } = match;
+
+  const barClass = getChanceBarClass(chancePercent);
+  const reasoningHtml = (reasoning || [])
+    .slice(0, 5)
+    .map(reason => `<li>• ${escapeHtml(reason)}</li>`)
+    .join('');
+
+  const contactsHtml = contacts ? `
+    <div class="admission-card-contacts">
+      ${contacts.phone ? `<div class="contact-item"><strong>☎:</strong> ${escapeHtml(contacts.phone)}</div>` : ''}
+      ${contacts.email ? `<div class="contact-item"><strong>✉:</strong> <a href="mailto:${escapeHtml(contacts.email)}">${escapeHtml(contacts.email)}</a></div>` : ''}
+      ${contacts.whatsapp ? `<div class="contact-item"><strong>💬:</strong> <a href="https://wa.me/${contacts.whatsapp.replace(/[^\d]/g, '')}" target="_blank">${escapeHtml(contacts.whatsapp)}</a></div>` : ''}
+    </div>
+  ` : '';
 
   return `
-    <article class="admission-card tool-card" data-uni-id="${m.university_id}">
+    <article class="admission-card tool-card" data-uni-id="${universityId}">
       <div class="admission-card-head">
         <div>
           <span class="admission-rank">#${index + 1}</span>
-          <h4 class="admission-uni-name">${escapeAdmissionHtml(m.university)}</h4>
-          <p class="admission-uni-full">${escapeAdmissionHtml(m.name)}</p>
-          ${m.city_name ? `<span class="admission-city">${escapeAdmissionHtml(m.city_name)}</span>` : ''}
+          <h4 class="admission-uni-name">${escapeHtml(universityName)}</h4>
+          <p class="admission-uni-full" style="font-size: 0.9rem; color: var(--gray, #666);">${escapeHtml(universityCity)}</p>
         </div>
         <div class="admission-chance-wrap">
-          <div class="admission-chance-value ${barClass}">${m.chance}%</div>
-          <div class="admission-chance-bar"><div class="admission-chance-fill ${barClass}" style="width:${m.chance}%"></div></div>
+          <div class="admission-chance-value ${barClass}">${chancePercent}%</div>
+          <div class="admission-chance-bar"><div class="admission-chance-fill ${barClass}" style="width:${chancePercent}%"></div></div>
         </div>
       </div>
-      <p class="admission-rec">${escapeAdmissionHtml(m.recommendation)}</p>
-      <ul class="admission-reasons">${reasonsHtml}</ul>
-      <div class="admission-card-meta">
-        <span>от ${fmtPrice(m.price_from)} тг/год</span>
-        ${m.requirement ? `<span>ЕНТ: ${m.requirement.min_ent}+ (средний ${m.requirement.avg_ent})</span>` : ''}
+
+      <div class="admission-card-confidence" style="margin: 8px 0; font-size: 0.85rem; color: var(--gray, #666);">
+        <strong>Надежность:</strong> ${escapeHtml(confidenceLevel || 'средняя')}
       </div>
-      <div class="admission-card-actions">
-        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${m.university_id})">Подробнее о вузе</button>
-        <button class="btn btn-sm btn-ghost" onclick="explainAdmission(${m.university_id}, this)">Объяснение ИИ</button>
+
+      <div class="admission-card-specialty" style="margin: 8px 0; font-size: 0.9rem; color: var(--blue, #3b82f6);">
+        <strong>Специальность:</strong> ${escapeHtml(specialtyName)}
       </div>
-      <div class="admission-ai-explain" id="admit-explain-${m.university_id}" style="display:none"></div>
+
+      <ul class="admission-reasons" style="margin: 12px 0; padding-left: 20px; list-style: none;">
+        ${reasoningHtml}
+      </ul>
+
+      ${contactsHtml}
+
+      <div class="admission-card-actions" style="margin-top: 12px; display: flex; gap: 8px;">
+        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${universityId})" style="flex: 1;">
+          Подробнее о вузе
+        </button>
+      </div>
     </article>
   `;
 }
 
-function escapeAdmissionHtml(str) {
-  const d = document.createElement('div');
-  d.textContent = str || '';
-  return d.innerHTML;
+// ─── HELPER FUNCTIONS ─────────────────────────────────
+function renderExplanationBlock(explanation) {
+  if (!explanation) return '';
+
+  const { 
+    summary, 
+    strengths = [], 
+    risks = [], 
+    strategy, 
+    tips = [],
+    fallback 
+  } = explanation;
+
+  const strategyLabel = {
+    'safe': '✓ Безопасный вариант',
+    'target': '◉ Целевой вариант',
+    'ambitious': '▲ Амбициозный вариант',
+    'mixed': '✓ Комбинированная стратегия'
+  }[strategy] || 'Стратегия';
+
+  const strategyClass = {
+    'safe': 'explanation-safe',
+    'target': 'explanation-target',
+    'ambitious': 'explanation-ambitious',
+    'mixed': 'explanation-mixed'
+  }[strategy] || '';
+
+  let html = `
+    <div class="ai-explanation ${strategyClass}" style="margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--bg-light, #f9fafb); border-left: 4px solid ${getStrategyColor(strategy)};">
+      ${fallback ? '<p style="font-size: 0.8rem; color: var(--gray, #999); margin: 0 0 8px 0;">💡 Шаблонное объяснение (AI недоступен)</p>' : '<p style="font-size: 0.8rem; color: var(--gray, #999); margin: 0 0 8px 0;">🤖 AI-объяснение</p>'}
+      
+      <p style="font-weight: 500; margin: 0 0 8px 0; color: var(--text);">${escapeHtml(summary || '')}</p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; font-size: 0.9rem;">
+        <div>
+          <strong style="color: var(--green, #10b981);">✓ Плюсы:</strong>
+          <ul style="margin: 4px 0 0 16px; padding: 0; list-style: none;">
+            ${strengths.slice(0, 3).map(s => `<li>• ${escapeHtml(s)}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <strong style="color: var(--orange, #f59e0b);">⚠ Риски:</strong>
+          <ul style="margin: 4px 0 0 16px; padding: 0; list-style: none;">
+            ${risks.slice(0, 3).map(r => `<li>• ${escapeHtml(r)}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 12px;">
+        <strong style="color: var(--blue, #3b82f6);">Стратегия:</strong> ${escapeHtml(strategyLabel)}
+      </div>
+
+      ${tips.length > 0 ? `
+      <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border, #e5e7eb);">
+        <strong style="color: var(--purple, #8b5cf6);">💡 Советы:</strong>
+        <ul style="margin: 4px 0 0 16px; padding: 0; list-style: none;">
+          ${tips.slice(0, 3).map(t => `<li>• ${escapeHtml(t)}</li>`).join('')}
+        </ul>
+      </div>
+      ` : ''}
+    </div>
+  `;
+
+  return html;
 }
 
-async function explainAdmission(universityId, btn) {
-  const card = document.querySelector(`[data-uni-id="${universityId}"]`);
-  if (!card) return;
-  const box = document.getElementById(`admit-explain-${universityId}`);
-  if (!box) return;
-
-  if (box.style.display === 'block' && box.textContent) {
-    box.style.display = 'none';
-    return;
+function getStrategyColor(strategy) {
+  switch(strategy) {
+    case 'safe': return 'var(--green, #10b981)';
+    case 'target': return 'var(--blue, #3b82f6)';
+    case 'ambitious': return 'var(--orange, #f59e0b)';
+    case 'mixed': return 'var(--purple, #8b5cf6)';
+    default: return 'var(--gray, #6b7280)';
   }
+}
 
-  btn.disabled = true;
-  box.style.display = 'block';
-  box.innerHTML = '<div class="admission-ai-loading">ИИ формирует объяснение...</div>';
+function getChanceBarClass(chance) {
+  if (chance >= 85) return 'chance-high';
+  if (chance >= 65) return 'chance-mid';
+  if (chance >= 40) return 'chance-low';
+  return 'chance-critical';
+}
 
-  const chanceEl = card.querySelector('.admission-chance-value');
-  const nameEl = card.querySelector('.admission-uni-full');
-  const shortEl = card.querySelector('.admission-uni-name');
+function getSpecialtyName(specialtyId) {
+  const opt = Array.from(document.getElementById('admit-specialty').options).find(o => o.value == specialtyId);
+  return opt ? opt.textContent : 'Неизвестная специальность';
+}
 
-  const match = (state.admissionLastResult?.matches || []).find(m => m.university_id === universityId);
+function getCityName(cityId) {
+  const opt = Array.from(document.getElementById('admit-city').options).find(o => o.value == cityId);
+  return opt ? opt.textContent.split('(')[0].trim() : 'N/A';
+}
 
-  const payload = {
-    university_id: universityId,
-    university: match?.university || shortEl?.textContent,
-    name: match?.name || nameEl?.textContent,
-    chance: match?.chance || parseInt(chanceEl?.textContent, 10),
-    ent: state.admissionLastResult?.input?.ent || parseInt(document.getElementById('admit-ent').value, 10),
-    budget: document.getElementById('admit-budget').value,
-    language: document.getElementById('admit-language').value,
-    needDorm: document.getElementById('admit-dorm').checked,
-    requirement: match?.requirement,
-    reasons: match?.reasons || [],
-  };
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
 
+// ─── SAVE HISTORY ─────────────────────────────────────
+async function saveAdmissionHistory(input, matches) {
   try {
-    const headers = { 'Content-Type': 'application/json' };
-    if (typeof Auth !== 'undefined' && Auth.getToken()) {
-      headers.Authorization = `Bearer ${Auth.getToken()}`;
-    }
-    const res = await fetch(`${API}/admission/explain`, {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${Auth.getToken()}`
+    };
+
+    await fetch(`${API}/admission/save-history`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ input, matches }),
     });
-    const data = await res.json();
-    const text = data.explanation || 'Нет ответа';
-    box.innerHTML = `<div class="admission-ai-text">${formatMarkdown(text)}</div>`;
-  } catch (e) {
-    box.innerHTML = '<p class="form-error">Не удалось получить объяснение ИИ</p>';
-  } finally {
-    btn.disabled = false;
+  } catch (err) {
+    console.error('Failed to save admission history:', err);
+    // Silent fail - не прерываем UX если история не сохранилась
   }
 }
+
 
 /* =============================================
    ENT CALCULATOR
