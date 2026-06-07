@@ -71,6 +71,13 @@ function isFavorited(id) {
 }
 
 // ─── ROUTER ──────────────────────────────────
+function activateNavLink(page) {
+  document.querySelectorAll('.nav-links .nav-link').forEach(link => {
+    const handler = link.getAttribute('onclick') || '';
+    link.classList.toggle('active', handler.includes(`navigate('${page}')`));
+  });
+}
+
 function navigate(page, param) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -79,22 +86,22 @@ function navigate(page, param) {
 
   if (page === 'home') {
     document.getElementById('page-home').classList.add('active');
-    document.querySelectorAll('.nav-link')[0].classList.add('active');
+    activateNavLink('home');
     if (!state.universities.length) loadUniversities();
   } else if (page === 'university' && param) {
     document.getElementById('page-university').classList.add('active');
     loadUniversityDetail(param);
   } else if (page === 'compare') {
     document.getElementById('page-compare').classList.add('active');
-    document.querySelectorAll('.nav-link')[1].classList.add('active');
+    activateNavLink('compare');
     renderComparePage();
   } else if (page === 'grants') {
     document.getElementById('page-grants').classList.add('active');
-    document.querySelectorAll('.nav-link')[6].classList.add('active');
+    activateNavLink('grants');
     loadGrants();
   } else if (page === 'map') {
     document.getElementById('page-map').classList.add('active');
-    document.querySelectorAll('.nav-link')[7].classList.add('active');
+    activateNavLink('map');
     // Wait for DOM to be ready and element to have size
     setTimeout(() => {
       const mapContainer = document.getElementById('map-container');
@@ -106,14 +113,14 @@ function navigate(page, param) {
     }, 200);
   } else if (page === 'tips') {
     document.getElementById('page-tips').classList.add('active');
-    document.querySelectorAll('.nav-link')[8].classList.add('active');
+    activateNavLink('tips');
     loadTips();
   } else if (page === 'advisor') {
     document.getElementById('page-advisor').classList.add('active');
-    document.querySelectorAll('.nav-link')[2].classList.add('active');
+    activateNavLink('advisor');
   } else if (page === 'career') {
     document.getElementById('page-career').classList.add('active');
-    document.querySelectorAll('.nav-link')[4].classList.add('active');
+    activateNavLink('career');
     initCareerTest();
   } else if (page === 'login') {
     document.getElementById('page-login').classList.add('active');
@@ -124,7 +131,7 @@ function navigate(page, param) {
     loadProfilePage();
   } else if (page === 'admission') {
     document.getElementById('page-admission').classList.add('active');
-    document.querySelectorAll('.nav-link')[3].classList.add('active');
+    activateNavLink('admission');
     initAdmissionPage();
   }
 }
@@ -163,11 +170,10 @@ function applyTranslations() {
     { selector: '.nav-links .nav-link:nth-child(2)', path: 'nav.comparison' },
     { selector: '.nav-links .nav-link:nth-child(3)', path: 'nav.advisor' },
     { selector: '.nav-links .nav-link:nth-child(4)', path: 'nav.admission' },
-    { selector: '.nav-links .nav-link:nth-child(5)', path: 'nav.ent' },
-    { selector: '.nav-links .nav-link:nth-child(6)', path: 'nav.career' },
-    { selector: '.nav-links .nav-link:nth-child(7)', path: 'nav.grants' },
-    { selector: '.nav-links .nav-link:nth-child(8)', path: 'nav.map' },
-    { selector: '.nav-links .nav-link:nth-child(9)', path: 'nav.tips' },
+    { selector: '.nav-links .nav-link:nth-child(5)', path: 'nav.career' },
+    { selector: '.nav-links .nav-link:nth-child(6)', path: 'nav.grants' },
+    { selector: '.nav-links .nav-link:nth-child(7)', path: 'nav.map' },
+    { selector: '.nav-links .nav-link:nth-child(8)', path: 'nav.tips' },
     
     // Мобильное меню
     { selector: '.mobile-menu-title', path: 'menu.title' },
