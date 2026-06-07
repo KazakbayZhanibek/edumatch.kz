@@ -3,6 +3,7 @@
  */
 
 const { getDb } = require('./database');
+const { tr } = require('./i18n');
 
 /** Ключ формы → категория специальности в БД */
 const SPECIALTY_MAP = {
@@ -58,11 +59,11 @@ function scoreToChance(total) {
   return Math.max(15, Math.round(t * 0.75));
 }
 
-function recommendationLabel(chance) {
-  if (chance >= 85) return 'Высокая вероятность поступления';
-  if (chance >= 70) return 'Хорошие шансы, рассмотрите как основной вариант';
-  if (chance >= 55) return 'Реалистичный вариант на платное отделение';
-  return 'Низкая вероятность — нужен запасной план';
+function recommendationLabel(chance, lang = 'ru') {
+  if (chance >= 85) return tr('rec_high', lang) || 'Высокая вероятность поступления';
+  if (chance >= 70) return tr('rec_good', lang) || 'Хорошие шансы, рассмотрите как основной вариант';
+  if (chance >= 55) return tr('rec_real', lang) || 'Реалистичный вариант на платное отделение';
+  return tr('rec_low', lang) || 'Низкая вероятность — нужен запасной план';
 }
 
 function scoreEnt(ent, req) {
@@ -129,27 +130,27 @@ function scoreAttestat(attestat) {
   return 0;
 }
 
-function buildReasons(parts, req, ent) {
+function buildReasons(parts, req, ent, lang = 'ru') {
   const reasons = [];
-  if (parts.ent >= 30) reasons.push({ type: 'positive', text: 'Ваш балл ЕНТ выше порога для этого направления' });
-  else if (parts.ent > 0) reasons.push({ type: 'neutral', text: `ЕНТ близок к минимуму (${req.min_ent}+)` });
-  else reasons.push({ type: 'negative', text: `ЕНТ ниже минимального порога (${req.min_ent})` });
+  if (parts.ent >= 30) reasons.push({ type: 'positive', text: tr('reason_ent_high', lang) || 'Ваш балл ЕНТ выше порога для этого направления' });
+  else if (parts.ent > 0) reasons.push({ type: 'neutral', text: `${tr('reason_ent_near', lang) || 'ЕНТ близок к минимуму'} (${req.min_ent}+)` });
+  else reasons.push({ type: 'negative', text: `${tr('reason_ent_low', lang) || 'ЕНТ ниже минимального порога'} (${req.min_ent})` });
 
-  if (parts.budget >= 12) reasons.push({ type: 'positive', text: 'Стоимость входит в ваш бюджет' });
-  else if (parts.budget < 0) reasons.push({ type: 'negative', text: 'Стоимость выше указанного бюджета' });
+  if (parts.budget >= 12) reasons.push({ type: 'positive', text: tr('reason_budget_ok', lang) || 'Стоимость входит в ваш бюджет' });
+  else if (parts.budget < 0) reasons.push({ type: 'negative', text: tr('reason_budget_high', lang) || 'Стоимость выше указанного бюджета' });
 
-  if (parts.lang >= 10) reasons.push({ type: 'positive', text: 'Есть обучение на выбранном языке' });
-  else if (parts.lang === 0 && parts.langMax === 10) reasons.push({ type: 'negative', text: 'Выбранный язык обучения не подтверждён' });
+  if (parts.lang >= 10) reasons.push({ type: 'positive', text: tr('reason_lang_ok', lang) || 'Есть обучение на выбранном языке' });
+  else if (parts.lang === 0 && parts.langMax === 10) reasons.push({ type: 'negative', text: tr('reason_lang_bad', lang) || 'Выбранный язык обучения не подтверждён' });
 
-  if (parts.dorm >= 10) reasons.push({ type: 'positive', text: 'Есть общежитие' });
-  else if (parts.dorm < 0) reasons.push({ type: 'negative', text: 'Общежитие не указано в данных вуза' });
+  if (parts.dorm >= 10) reasons.push({ type: 'positive', text: tr('reason_dorm_ok', lang) || 'Есть общежитие' });
+  else if (parts.dorm < 0) reasons.push({ type: 'negative', text: tr('reason_dorm_bad', lang) || 'Общежитие не указано в данных вуза' });
 
-  if (parts.spec >= 20) reasons.push({ type: 'positive', text: 'Вуз силён в выбранной области' });
+  if (parts.spec >= 20) reasons.push({ type: 'positive', text: tr('reason_spec_ok', lang) || 'Вуз силён в выбранной области' });
 
   if (ent >= req.grant_min_ent) {
-    reasons.push({ type: 'positive', text: `Есть шанс на грант (порог ~${req.grant_min_ent} баллов)` });
+    reasons.push({ type: 'positive', text: `${tr('reason_grant_ok', lang) || 'Есть шанс на грант'} (порог ~${req.grant_min_ent})` });
   } else if (ent < req.avg_ent) {
-    reasons.push({ type: 'negative', text: `ЕНТ ниже среднего балла поступивших (~${req.avg_ent})` });
+    reasons.push({ type: 'negative', text: `${tr('reason_ent_low_avg', lang) || 'ЕНТ ниже среднего балла поступивших'} (~${req.avg_ent})` });
   }
 
   return reasons;
@@ -167,12 +168,13 @@ function getAdmissionPrediction(params) {
   const language = normalizeLanguage(params.language);
   const needDorm = Boolean(params.needDorm);
   const attestat = params.attestat ? parseFloat(params.attestat) : null;
+  const lang = params.lang || 'ru';
 
   if (!ent || ent < 0 || ent > 140) {
-    return { success: false, error: 'Укажите балл ЕНТ от 0 до 140' };
+    return { success: false, error: tr('ent_too_high', lang) || 'Укажите балл ЕНТ от 0 до 140' };
   }
   if (!specialtyCategory) {
-    return { success: false, error: 'Выберите специальность' };
+    return { success: false, error: tr('choose_spec', lang) || 'Выберите специальность' };
   }
 
   const db = getDb();
@@ -205,7 +207,7 @@ function getAdmissionPrediction(params) {
     return {
       success: true,
       matches: [],
-      message: 'Нет данных по этой специальности. Попробуйте другой город или направление.',
+      message: tr('no_data_specialty', lang) || 'Нет данных по этой специальности. Попробуйте другой город или направление.',
       input: { ent, specialty: specialtyCategory, budget, language, needDorm, cityId, attestat }
     };
   }
@@ -232,7 +234,7 @@ function getAdmissionPrediction(params) {
       parts.ent + parts.budget + parts.lang + parts.dorm + parts.spec + parts.attestat - penalties
     ));
     const chance = scoreToChance(total);
-    const reasons = buildReasons(parts, row, ent);
+    const reasons = buildReasons(parts, row, ent, lang);
 
     const existing = byUniversity.get(row.university_id);
     if (!existing || total > existing.score) {
@@ -246,7 +248,7 @@ function getAdmissionPrediction(params) {
         qs_world: row.qs_world,
         chance,
         score: total,
-        recommendation: recommendationLabel(chance),
+        recommendation: recommendationLabel(chance, lang),
         reasons,
         requirement: {
           min_ent: row.min_ent,
@@ -315,9 +317,8 @@ async function explainAdmissionChance(payload) {
     .map(r => `${r.type === 'positive' ? '✓' : r.type === 'negative' ? '✗' : '•'} ${r.text}`)
     .join('\n');
 
-  const systemPrompt = `Ты консультант EduMatch KZ по поступлению в вузы Казахстана.
-Объясни абитуриенту простым русским языком (3–5 коротких абзацев), без воды.
-Не придумывай факты — опирайся только на переданные данные.`;
+  const lang = payload.lang || 'ru';
+  const systemPrompt = tr('explain_system', lang) || 'Ты консультант EduMatch KZ по поступлению в вузы Казахстана. Объясни абитуриенту простым языком (3–5 коротких абзацев), без воды. Не придумывай факты — опирайся только на переданные данные.';
 
   const userMessage = `Вуз: ${name} (${university})
 Вероятность поступления: ${chance}%

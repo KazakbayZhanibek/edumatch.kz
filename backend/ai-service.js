@@ -1,6 +1,7 @@
 const { getDb } = require('./database');
 const { getSystemPrompt, getAdmissionBriefPrompt, getMissingParamsMessage } = require('./ai-prompts');
 const { getAdmissionPrediction } = require('./admission-service');
+const { tr } = require('./i18n');
 
 const INTENT_PATTERNS = [
   {
@@ -462,7 +463,7 @@ async function callOpenRouter(systemPrompt, userMessage, history) {
   }
 }
 
-async function handleAdmissionChatQuery(msg, history) {
+async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
   const startTime = Date.now();
   const params = parseAdmissionQuery(msg);
 
@@ -470,7 +471,7 @@ async function handleAdmissionChatQuery(msg, history) {
     /(1(?:4[1-9]|[5-9]\d)|[2-9]\d{2,})\s*(?:бал[а-я]*)/i.test(msg);
   if (hasEntNumber) {
     return {
-      answer: 'Максимальный балл ЕНТ — 140. Укажите корректное значение (0–140).',
+      answer: tr('max_ent', lang) || 'Максимальный балл ЕНТ — 140. Укажите корректное значение (0–140).',
       matches: [],
       usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
       fallback: false,
@@ -483,7 +484,7 @@ async function handleAdmissionChatQuery(msg, history) {
 
   if (!params.ent && !params.specialty && !params.university_id) {
     return {
-      answer: 'Укажите балл ЕНТ и направление, чтобы я рассчитал шансы.\n\nНапример: *"Поступлю ли я в КБТУ на IT с ЕНТ 110?"*',
+      answer: tr('specify_ent', lang) || 'Укажите балл ЕНТ и направление, чтобы я рассчитал шансы.\n\nНапример: *"Поступлю ли я в КБТУ на IT с ЕНТ 110?"*',
       matches: [],
       usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
       fallback: false,
@@ -559,11 +560,11 @@ async function handleAdmissionChatQuery(msg, history) {
           const qualifyCount = results.filter(r => r.qualifies).length;
           const totalCount = results.length;
 
-          let text = `🎯 **С вашим баллом ${params.ent}**\n\n`;
+          let text = (tr('overview_title', lang) || '🎯 **С вашим баллом ${score}**\n\n').replace('${score}', params.ent);
           if (qualifyCount > 0) {
-            text += `Ваш балл подходит для **${qualifyCount}** вузов (из ${totalCount} с данными):\n\n`;
+            text += (tr('overview_qualify', lang) || `Ваш балл подходит для **${qualifyCount}** вузов (из ${totalCount} с данными):\n\n`).replace('${count}', qualifyCount);
           } else {
-            text += `Ваш балл чуть ниже среднего по всем вузам, но есть варианты:\n\n`;
+            text += (tr('overview_near', lang) || 'Ваш балл чуть ниже среднего по всем вузам, но есть варианты:\n\n');
           }
 
           top.forEach((u, i) => {
@@ -571,14 +572,14 @@ async function handleAdmissionChatQuery(msg, history) {
             const qs = u.qs_world ? ` (QS #${u.qs_world})` : '';
             text += `${emoji} **${u.short_name}**${qs} — ${u.category}, средний ЕНТ ${u.avg_ent}`;
             if (u.qualifies) {
-              text += `, вы **на ${u.diff} выше**`;
+              text += `, ${tr('overview_line', lang) || 'вы **на ${diff} выше**'}`.replace('${diff}', u.diff);
             } else {
-              text += `, вам не хватает ${Math.abs(u.diff)}`;
+              text += `, ${tr('overview_need', lang) || 'вам не хватает ${diff}'}`.replace('${diff}', Math.abs(u.diff));
             }
             if (u.grant && params.ent >= u.grant) text += ` ✅ грант`;
             text += '\n';
           });
-          text += `\n💡 Напишите вуз и направление для точного расчёта.\nНапример: *"Мои шансы в КБТУ на IT"*`;
+          text += `\n${tr('overview_hint', lang) || '💡 Напишите вуз и направление для точного расчёта.\nНапример: *"Мои шансы в КБТУ на IT"*'}`;
 
           return {
             answer: text,
@@ -599,7 +600,9 @@ async function handleAdmissionChatQuery(msg, history) {
       const popularSpecs = ['Информационные технологии', 'Медицина', 'Бизнес', 'Инженерия', 'Образование'];
       let specHint = popularSpecs.map((s, i) => `${i + 1}. ${s}`).join('\n');
       return {
-        answer: `Я вижу ЕНТ: **${params.ent}** баллов. На какое направление хотите поступить?\n\n${specHint}\n\nНапишите, например: *"Шансы на IT с ${params.ent} баллами"* или *"Поступлю ли в КБТУ на программиста"*`,
+        answer: (tr('overview_fallback', lang) || 'Я вижу ЕНТ: **${ent}** баллов. На какое направление хотите поступить?\n\n${specHint}\n\nНапишите, например: *"Шансы на IT с ${ent} баллами"* или *"Поступлю ли в КБТУ на программиста"*')
+          .replace(/\$\{ent\}/g, params.ent)
+          .replace('${specHint}', specHint),
         matches: [],
         usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
         fallback: false,
@@ -610,7 +613,7 @@ async function handleAdmissionChatQuery(msg, history) {
       };
     }
     return {
-      answer: 'Укажите балл ЕНТ и направление.\n\nНапример: *"Поступлю ли я в КБТУ на IT с ЕНТ 110?"*',
+      answer: tr('no_data', lang) || 'Укажите балл ЕНТ и направление.\n\nНапример: *"Поступлю ли я в КБТУ на IT с ЕНТ 110?"*',
       matches: [],
       usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
       fallback: false,
@@ -633,7 +636,7 @@ async function handleAdmissionChatQuery(msg, history) {
 
   if (!prediction.success) {
     return {
-      answer: prediction.error || 'Ошибка при расчёте шансов. Попробуйте другие параметры.',
+      answer: prediction.error || (tr('calc_error', lang) || 'Ошибка при расчёте шансов. Попробуйте другие параметры.'),
       matches: [],
       usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
       fallback: false,
@@ -650,7 +653,9 @@ async function handleAdmissionChatQuery(msg, history) {
     if (filtered.length === 0) {
       const uni = db.prepare('SELECT short_name, name FROM universities WHERE id = ?').get(params.university_id);
       return {
-        answer: `По направлению "${specialtyToUse}" данных для ${uni?.short_name || 'этого вуза'} пока нет. Попробуйте другое направление или посмотрите другие вузы.`,
+        answer: (tr('no_data_for_uni', lang) || `По направлению "${specialtyToUse}" данных для ${uni?.short_name || 'этого вуза'} пока нет. Попробуйте другое направление или посмотрите другие вузы.`)
+          .replace('${spec}', specialtyToUse)
+          .replace('${uni}', uni?.short_name || ''),
         matches: [],
         usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
         fallback: false,
@@ -686,7 +691,7 @@ async function handleAdmissionChatQuery(msg, history) {
   };
 }
 
-async function getAIAdvice(userMessage, history = []) {
+async function getAIAdvice(userMessage, history = [], lang = 'ru') {
   const startTime = Date.now();
 
   if (!userMessage || typeof userMessage !== 'string') {
@@ -706,7 +711,7 @@ async function getAIAdvice(userMessage, history = []) {
 
   if (intent === 'admission') {
     console.log('[ai-service] Routing to admission handler');
-    return handleAdmissionChatQuery(msg, history);
+    return handleAdmissionChatQuery(msg, history, lang);
   }
 
   const { universities, extractedParams } = retrieveRelevantUniversities(msg);
@@ -718,7 +723,7 @@ async function getAIAdvice(userMessage, history = []) {
 
   if (!dataFound) {
     return {
-      answer: `Я не нашёл университеты, соответствующие вашему запросу. Попробуйте:\n- Указать конкретный вуз или специальность\n- Уточнить бюджет\n\nВ моей базе есть информация о вузах Казахстана, 35+ специальностях и грантах.`,
+      answer: tr('not_found_unis', lang) || `Я не нашёл университеты, соответствующие вашему запросу. Попробуйте:\n- Указать конкретный вуз или специальность\n- Уточнить бюджет\n\nВ моей базе есть информация о вузах Казахстана, 35+ специальностях и грантах.`,
       matches: [],
       usedData: { universities_count: 0, grants_count: 0, extraction_params: extractedParams },
       fallback: true,
@@ -730,7 +735,7 @@ async function getAIAdvice(userMessage, history = []) {
 
   const universitiesContext = formatUniversitiesForContext(universities.slice(0, 8));
   const grantsContext = formatGrantsForContext(grants);
-  const systemPrompt = getSystemPrompt(intent, universitiesContext, grantsContext);
+  const systemPrompt = getSystemPrompt(intent, universitiesContext, grantsContext, lang);
 
   let aiResponse = null;
   try {
@@ -738,7 +743,7 @@ async function getAIAdvice(userMessage, history = []) {
   } catch (err) {
     console.error('[ai-service] LLM call failed:', err.message);
     return {
-      answer: `Извините, произошла ошибка. Попробуйте позже.`,
+      answer: tr('llm_error', lang) || 'Извините, произошла ошибка. Попробуйте позже.',
       matches: universities.slice(0, 3),
       usedData: {
         universities_count: universities.length,

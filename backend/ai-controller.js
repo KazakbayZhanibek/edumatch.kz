@@ -27,9 +27,11 @@ async function handleAIAdvice(req, res) {
       validHistory = history.slice(-20).filter(h => h.role && h.content && typeof h.content === 'string');
     }
 
+    const lang = req.body.lang || req.query.lang || 'ru';
+
     console.log(`[ai-controller] Processing message (${msg.length} chars), history length: ${validHistory.length}`);
 
-    const result = await getAIAdvice(msg, validHistory);
+    const result = await getAIAdvice(msg, validHistory, lang);
 
     const response = {
       success: true,

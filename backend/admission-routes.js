@@ -79,6 +79,7 @@ router.post('/predict', verifyAuthOptional, (req, res) => {
       budget,
       language,
       needDorm: needDorm === true || needDorm === 'true' || needDorm === 1,
+      lang: req.body.lang || req.query.lang || 'ru',
     });
 
     if (!result.success) {
@@ -121,6 +122,7 @@ router.post('/explain', verifyAuthOptional, async (req, res) => {
       return res.status(400).json({ error: 'Нужны данные вуза' });
     }
 
+    payload.lang = payload.lang || req.query.lang || 'ru';
     const explanation = await explainAdmissionChance(payload);
     return res.json({ success: true, explanation });
   } catch (err) {

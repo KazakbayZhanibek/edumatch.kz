@@ -1,4 +1,5 @@
 const { getDb } = require('./database');
+const { tr } = require('./i18n');
 
 const PERSONALITIES = {
   professional: {
@@ -27,38 +28,38 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function getSystemPrompt(intent, universitiesData, grantsData) {
+function getSystemPrompt(intent, universitiesData, grantsData, lang = 'ru') {
   const db = getDb();
   const uniCount = db.prepare('SELECT COUNT(*) as c FROM universities').get().c;
   const specCount = db.prepare('SELECT COUNT(*) as c FROM specialties').get().c;
   const grantCount = db.prepare('SELECT COUNT(*) as c FROM grants').get().c;
 
   if (intent === 'general' || intent === 'comparison') {
-    return buildGeneralPrompt(uniCount, specCount, grantCount);
+    return buildGeneralPrompt(uniCount, specCount, grantCount, lang);
   }
 
   if (intent === 'grant') {
-    return buildGrantPrompt(uniCount, specCount, grantCount, grantsData);
+    return buildGrantPrompt(uniCount, specCount, grantCount, grantsData, lang);
   }
 
-  return buildBasePrompt(universitiesData, grantsData);
+  return buildBasePrompt(universitiesData, grantsData, lang);
 }
 
-function buildBasePrompt(universitiesData, grantsData) {
+function buildBasePrompt(universitiesData, grantsData, lang = 'ru') {
   const tone = pickRandom([PERSONALITIES.professional, PERSONALITIES.friendly]);
-  return `Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.
+  return `${tr('prompt_base', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
 
 ${tone.instruction}
 
-📋 ЧТО ТЫ ЗНАЕШЬ:
-База данных содержит информацию о вузах: цены, рейтинги QS, языки, специальности, общежития, зарплаты выпускников, а также данные о грантах.
+${tr('prompt_base_what', lang) || '📋 ЧТО ТЫ ЗНАЕШЬ:'}
+${tr('prompt_base_what_desc', lang) || 'База данных содержит информацию о вузах: цены, рейтинги QS, языки, специальности, общежития, зарплаты выпускников, а также данные о грантах.'}
 
-🚫 ЧЕГО НЕЛЬЗЯ:
-- Выдумывать цифры — используй ТОЛЬКО данные из контекста ниже
-- Добавлять требования по ЕНТ или проходные баллы (их нет в базе)
-- Давать ссылки, которых нет в данных
+${tr('prompt_base_no', lang) || '🚫 ЧЕГО НЕЛЬЗЯ:'}
+- ${tr('prompt_base_no1', lang) || 'Выдумывать цифры — используй ТОЛЬКО данные из контекста ниже'}
+- ${tr('prompt_base_no2', lang) || 'Добавлять требования по ЕНТ или проходные баллы (их нет в базе)'}
+- ${tr('prompt_base_no3', lang) || 'Давать ссылки, которых нет в данных'}
 
-ВАЖНО: Отвечай естественно, без принудительных шаблонов. Если данных мало — честно скажи об этом.
+${tr('prompt_base_important', lang) || 'ВАЖНО: Отвечай естественно, без принудительных шаблонов. Если данных мало — честно скажи об этом.'}
 
 ДАННЫЕ О ВУЗАХ:
 ${universitiesData}
@@ -66,12 +67,12 @@ ${universitiesData}
 ГРАНТЫ:
 ${grantsData}
 
-Отвечай на русском языке.`;
+${tr('lang_instruction', lang) || 'Отвечай на русском языке.'}`;
 }
 
-function buildGeneralPrompt(uniCount, specCount, grantCount) {
+function buildGeneralPrompt(uniCount, specCount, grantCount, lang = 'ru') {
   const tone = pickRandom([PERSONALITIES.friendly, PERSONALITIES.concise]);
-  return `Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.
+  return `${tr('prompt_general', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
 
 ${tone.instruction}
 
@@ -80,14 +81,14 @@ ${tone.instruction}
 • ${specCount} специальностями
 • ${grantCount} грантами и стипендиями
 
-Отвечай на русском языке. Не выдумывай данные. Если не знаешь — так и скажи.
+${tr('prompt_general_hint', lang) || 'Отвечай на русском языке. Не выдумывай данные. Если не знаешь — так и скажи.'}
 
 Строй ответ естественно, как живой консультант, а не как автоматический шаблон.`;
 }
 
-function buildGrantPrompt(uniCount, specCount, grantCount, grantsData) {
+function buildGrantPrompt(uniCount, specCount, grantCount, grantsData, lang = 'ru') {
   const tone = pickRandom([PERSONALITIES.detailed, PERSONALITIES.professional]);
-  return `Ты — EduMatch KZ, консультант по грантам и стипендиям в Казахстане.
+  return `${tr('prompt_grant', lang) || 'Ты — EduMatch KZ, консультант по грантам и стипендиям в Казахстане.'}
 
 ${tone.instruction}
 
@@ -100,12 +101,12 @@ ${grantsData}
 - Придумывать гранты, которых нет в данных
 - Гарантировать получение гранта
 
-Отвечай на русском языке. Если грантов подходящих нет — предложи альтернативы.`;
+${tr('prompt_grant_hint', lang) || 'Отвечай на русском языке. Если грантов подходящих нет — предложи альтернативы.'}`;
 }
 
-function getAdmissionBriefPrompt(params, prediction) {
+function getAdmissionBriefPrompt(params, prediction, lang = 'ru') {
   if (!prediction.success || !prediction.matches?.length) {
-    return 'К сожалению, не удалось рассчитать шансы по вашему запросу. Попробуйте другие параметры.';
+    return tr('brief_unfortunately', lang) || 'К сожалению, не удалось рассчитать шансы по вашему запросу. Попробуйте другие параметры.';
   }
 
   const matches = prediction.matches.slice(0, 6);
@@ -118,15 +119,16 @@ function getAdmissionBriefPrompt(params, prediction) {
 
   if (isSingle) {
     const m = matches[0];
-    text = `## 🎯 ${m.university}\n\n**Вероятность поступления: ${m.chance}%** — ${m.recommendation}\n\n`;
+    text = `## 🎯 ${m.university}\n\n${tr('brief_chance', lang) || '**Вероятность поступления: ${chance}%** — ${rec}'}`.replace('${chance}', m.chance).replace('${rec}', m.recommendation) + '\n\n';
     if (m.requirement) {
-      text += `📊 **Ваш ЕНТ: ${ent}**\n`;
+      text += `${tr('brief_your_ent', lang) || '📊 **Ваш ЕНТ: ${ent}**'}`.replace('${ent}', ent) + '\n';
       if (ent >= m.requirement.grant_min_ent) {
-        text += `✅ Выше порога на грант (нужно ${m.requirement.grant_min_ent})\n`;
+        text += `${tr('brief_above_grant', lang) || '✅ Выше порога на грант (нужно ${need})'}`.replace('${need}', m.requirement.grant_min_ent) + '\n';
       } else if (ent >= m.requirement.avg_ent) {
-        text += `✅ Выше среднего балла (${m.requirement.avg_ent}), но до гранта не хватает ${m.requirement.grant_min_ent - ent} баллов\n`;
+        const gap = m.requirement.grant_min_ent - ent;
+        text += `${tr('brief_above_avg', lang) || '✅ Выше среднего балла (${avg}), но до гранта не хватает ${gap} баллов'}`.replace('${avg}', m.requirement.avg_ent).replace('${gap}', gap) + '\n';
       } else if (ent >= m.requirement.min_ent) {
-        text += `⚠ Выше минимального порога (${m.requirement.min_ent}), но ниже среднего (${m.requirement.avg_ent})\n`;
+        text += `${tr('brief_above_min', lang) || '⚠ Выше минимального порога (${min}), но ниже среднего (${avg})'}`.replace('${min}', m.requirement.min_ent).replace('${avg}', m.requirement.avg_ent) + '\n';
       }
       text += '\n';
     }
@@ -135,26 +137,26 @@ function getAdmissionBriefPrompt(params, prediction) {
       const pos = reasons.filter(r => r.type === 'positive');
       const neg = reasons.filter(r => r.type === 'negative');
       if (pos.length > 0) {
-        text += '✅ **Что работает в вашу пользу:**\n';
+        text += `${tr('brief_pros', lang) || '✅ **Что работает в вашу пользу:**'}\n`;
         pos.forEach(r => { text += `• ${r.text}\n`; });
         text += '\n';
       }
       if (neg.length > 0) {
-        text += '⚠ **На что обратить внимание:**\n';
+        text += `${tr('brief_cons', lang) || '⚠ **На что обратить внимание:**'}\n`;
         neg.forEach(r => { text += `• ${r.text}\n`; });
         text += '\n';
       }
     }
     const grantGap = m.requirement?.grant_min_ent ? m.requirement.grant_min_ent - ent : null;
     if (grantGap && grantGap > 0 && grantGap <= 10) {
-      text += `💡 До гранта не хватает всего ${grantGap} баллов. Рассмотрите подготовительные курсы или пересдачу ЕНТ.\n\n`;
+      text += `${tr('brief_grant_gap', lang) || '💡 До гранта не хватает всего ${gap} баллов. Рассмотрите подготовительные курсы или пересдачу ЕНТ.'}`.replace('${gap}', grantGap) + '\n\n';
     }
-    text += `🔗 [Подробнее о вузе] → нажмите на карточку ниже`;
+    text += `${tr('brief_link', lang) || '🔗 [Подробнее о вузе] → нажмите на карточку ниже'}`;
   } else {
-    text = `## 🎯 Результаты для ${prediction.input.specialty}\n\n`;
-    text += `**Ваш ЕНТ: ${ent} баллов**\n`;
+    text = `${tr('brief_results', lang) || '## 🎯 Результаты для ${spec}'}`.replace('${spec}', prediction.input.specialty) + '\n\n';
+    text += `${tr('brief_ent', lang) || '**Ваш ЕНТ: ${ent} баллов**'}`.replace('${ent}', ent) + '\n';
     if (prediction.input.budget) {
-      text += `**Бюджет:** до ${fmtBudget(prediction.input.budget)}\n`;
+      text += `${tr('brief_budget', lang) || '**Бюджет:** до ${budget}'}`.replace('${budget}', fmtBudget(prediction.input.budget, lang)) + '\n';
     }
     text += '\n';
 
@@ -163,47 +165,47 @@ function getAdmissionBriefPrompt(params, prediction) {
     const low = matches.filter(m => m.chance < 40);
 
     if (high.length > 0) {
-      text += `🟢 **Высокие шансы (${high.length}):** `;
+      text += `${tr('brief_high', lang) || '🟢 **Высокие шансы (${count}):** '}`.replace('${count}', high.length);
       text += high.map(m => `${m.university} (${m.chance}%)`).join(', ');
       text += '\n\n';
     }
     if (medium.length > 0) {
-      text += `🟡 **Реальные варианты (${medium.length}):** `;
+      text += `${tr('brief_medium', lang) || '🟡 **Реальные варианты (${count}):** '}`.replace('${count}', medium.length);
       text += medium.map(m => `${m.university} (${m.chance}%)`).join(', ');
       text += '\n\n';
     }
     if (low.length > 0) {
-      text += `🔴 **Низкие шансы (${low.length}):** `;
+      text += `${tr('brief_low', lang) || '🔴 **Низкие шансы (${count}):** '}`.replace('${count}', low.length);
       text += low.map(m => `${m.university} (${m.chance}%)`).join(', ');
       text += '\n\n';
     }
 
     if (top && top.chance >= 70) {
-      text += `💡 **Лучший вариант:** ${top.university} — ${top.recommendation}\n\n`;
+      text += `${tr('brief_best', lang) || '💡 **Лучший вариант:** ${uni} — ${rec}'}`.replace('${uni}', top.university).replace('${rec}', top.recommendation) + '\n\n';
     } else if (top && top.chance >= 40) {
       text += `💡 ${top.university} — ${top.recommendation}\n\n`;
     } else if (isAllLow) {
-      text += `💡 С вашими баллами нужен запасной вариант. Рассмотрите вузы с порогом ЕНТ ниже ${ent}.\n\n`;
+      text += `${tr('brief_fallback', lang) || '💡 С вашими баллами нужен запасной вариант. Рассмотрите вузы с порогом ЕНТ ниже ${ent}.'}`.replace('${ent}', ent) + '\n\n';
     }
   }
 
   return text;
 }
 
-function fmtBudget(n) {
+function fmtBudget(n, lang = 'ru') {
   if (!n) return '';
-  if (n >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + ' млн ₸/год';
-  return (n / 1000).toFixed(0) + ' тыс ₸/год';
+  if (n >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + ' ' + (tr('fmt_budget_mln', lang) || 'млн ₸/год');
+  return (n / 1000).toFixed(0) + ' ' + (tr('fmt_budget_th', lang) || 'тыс ₸/год');
 }
 
-function getMissingParamsMessage(params) {
+function getMissingParamsMessage(params, lang = 'ru') {
   const missing = [];
-  if (!params.ent) missing.push('балл ЕНТ (например, "у меня 110 баллов")');
-  if (!params.university_id && !params.specialty) missing.push('вуз или специальность (например, "в КБТУ на IT")');
+  if (!params.ent) missing.push(tr('missing_ent', lang) || 'балл ЕНТ (например, "у меня 110 баллов")');
+  if (!params.university_id && !params.specialty) missing.push(tr('missing_uni_spec', lang) || 'вуз или специальность (например, "в КБТУ на IT")');
 
   if (!missing.length) return null;
 
-  return `Чтобы рассчитать шансы, уточните:\n• ${missing.join('\n• ')}\n\nНапример: *"Поступлю ли я в КБТУ с ЕНТ 110?"* или *"Мои шансы на грант с 120 баллами?"*`;
+  return (tr('missing_prompt', lang) || 'Чтобы рассчитать шансы, уточните:\n• ${items}\n\nНапример: *"Поступлю ли я в КБТУ с ЕНТ 110?"*').replace('${items}', missing.join('\n• '));
 }
 
 module.exports = {

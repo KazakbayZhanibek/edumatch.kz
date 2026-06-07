@@ -31,6 +31,8 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const AI_TIMEOUT_MS = 8000;
 
+const { tr } = require('./i18n');
+
 /**
  * Получить AI-объяснение для одного match или списка matches
  * 
@@ -40,39 +42,40 @@ const AI_TIMEOUT_MS = 8000;
  * @returns {Promise<Object>} - { summary, strengths, risks, strategy, tips, fallback: bool }
  */
 async function getExplanationForMatch(matchOrMatches, input, useAI = true) {
+  const lang = input.lang || 'ru';
   try {
     const matches = Array.isArray(matchOrMatches) ? matchOrMatches : [matchOrMatches];
     
     if (!matches || matches.length === 0) {
-      return getFallbackExplanation([], input);
+      return getFallbackExplanation([], input, lang);
     }
 
     if (!useAI || !OPENROUTER_API_KEY) {
       console.log('[admission-explanation] AI disabled or no key, using fallback');
-      return getFallbackExplanation(matches, input);
+      return getFallbackExplanation(matches, input, lang);
     }
 
     // Пытаемся получить AI-объяснение
-    const explanation = await requestAIExplanation(matches, input);
+    const explanation = await requestAIExplanation(matches, input, lang);
     return explanation;
   } catch (error) {
     console.error('[admission-explanation] Error:', error.message);
     // На любую ошибку → fallback
     const matches = Array.isArray(matchOrMatches) ? matchOrMatches : [matchOrMatches];
-    return getFallbackExplanation(matches, input);
+    return getFallbackExplanation(matches, input, lang);
   }
 }
 
 /**
  * Запрос AI для объяснения
  */
-async function requestAIExplanation(matches, input) {
+async function requestAIExplanation(matches, input, lang = 'ru') {
   if (!fetch) {
     throw new Error('fetch is not available');
   }
   
-  const systemPrompt = buildSystemPrompt();
-  const userPrompt = buildUserPrompt(matches, input);
+  const systemPrompt = buildSystemPrompt(lang);
+  const userPrompt = buildUserPrompt(matches, input, lang);
 
   let response;
   let responseText;
@@ -142,7 +145,13 @@ async function requestAIExplanation(matches, input) {
 /**
  * System prompt для ограничения AI
  */
-function buildSystemPrompt() {
+function buildSystemPrompt(lang = 'ru') {
+  const langInstruction = {
+    ru: 'Отвечай на русском языке.',
+    kk: 'Жауапты қазақ тілінде бер.',
+    en: 'Respond in English.',
+  }[lang] || 'Отвечай на русском языке.';
+
   return `Ты —助手 для образовательного консультанта EduMatch KZ.
 
 ТВОЯ ЗАДАЧА: Объяснить результаты расчета шансов поступления.
@@ -171,18 +180,14 @@ strategy:
 - "ambitious" → нужен запасной план (chance < 40%)
 - "mixed" → несколько вузов разного уровня шансов
 
-Примеры совести:
-- "Баллы выше среднего — есть хорошие шансы на бюджет"
-- "Проверь требования по языку обучения"
-- "Рассмотри вузы с похожими параметрами как запасные"
-
+${langInstruction}
 ВАЖНО: Ответь только JSON, ничего больше.`;
 }
 
 /**
  * User prompt с данными
  */
-function buildUserPrompt(matches, input) {
+function buildUserPrompt(matches, input, lang = 'ru') {
   const topMatch = matches[0];
   const matchesCount = matches.length;
   const isSingleMatch = matches.length === 1;
@@ -192,7 +197,7 @@ function buildUserPrompt(matches, input) {
 ПАРАМЕТРЫ СТУДЕНТА:
 - ЕНТ: ${input.ent || '—'} баллов
 - Специальность: ${input.specialty || '—'}
-- Бюджет: ${input.budget ? formatBudget(input.budget) : '—'}
+- Бюджет: ${input.budget ? formatBudget(input.budget, lang) : '—'}
 - Язык обучения: ${input.language || '—'}
 - Нужно общежитие: ${input.needDorm ? 'Да' : 'Нет'}
 - Средний балл аттестата: ${input.attestat || '—'}
@@ -245,21 +250,21 @@ function buildUserPrompt(matches, input) {
 /**
  * Fallback объяснение без AI (детерминированное)
  */
-function getFallbackExplanation(matches, input) {
+function getFallbackExplanation(matches, input, lang = 'ru') {
   const explanation = {
-    summary: buildFallbackSummary(matches, input),
-    strengths: buildFallbackStrengths(matches, input),
-    risks: buildFallbackRisks(matches, input),
+    summary: buildFallbackSummary(matches, input, lang),
+    strengths: buildFallbackStrengths(matches, input, lang),
+    risks: buildFallbackRisks(matches, input, lang),
     strategy: buildFallbackStrategy(matches),
-    tips: buildFallbackTips(matches, input),
+    tips: buildFallbackTips(matches, input, lang),
     fallback: true,
   };
   return explanation;
 }
 
-function buildFallbackSummary(matches, input) {
+function buildFallbackSummary(matches, input, lang = 'ru') {
   if (!matches || matches.length === 0) {
-    return 'Не удалось рассчитать результаты. Проверьте входные данные.';
+    return tr('expl_summary_no_data', lang) || 'Не удалось рассчитать результаты. Проверьте входные данные.';
   }
 
   const top = matches[0];
@@ -267,29 +272,29 @@ function buildFallbackSummary(matches, input) {
 
   if (isSingle) {
     if (top.chance >= 80) {
-      return `Высокие шансы на поступление в ${top.university} (${top.chance}%). Это ваш основной вариант.`;
+      return (tr('expl_summary_high', lang) || `Высокие шансы на поступление в ${top.university} (${top.chance}%). Это ваш основной вариант.`).replace('${uni}', top.university).replace('${chance}', top.chance);
     } else if (top.chance >= 60) {
-      return `Реалистичный вариант ${top.university} (${top.chance}%). Рассмотрите несколько альтернатив.`;
+      return (tr('expl_summary_good', lang) || `Реалистичный вариант ${top.university} (${top.chance}%). Рассмотрите несколько альтернатив.`).replace('${uni}', top.university).replace('${chance}', top.chance);
     } else if (top.chance >= 40) {
-      return `Умеренные шансы в ${top.university} (${top.chance}%). Нужен запасной план.`;
+      return (tr('expl_summary_moderate', lang) || `Умеренные шансы в ${top.university} (${top.chance}%). Нужен запасной план.`).replace('${uni}', top.university).replace('${chance}', top.chance);
     } else {
-      return `Низкие шансы в ${top.university} (${top.chance}%). Необходимо изучить альтернативные варианты.`;
+      return (tr('expl_summary_low', lang) || `Низкие шансы в ${top.university} (${top.chance}%). Необходимо изучить альтернативные варианты.`).replace('${uni}', top.university).replace('${chance}', top.chance);
     }
   } else {
     const hasHigh = matches.some(m => m.chance >= 70);
     const hasTarget = matches.some(m => m.chance >= 40 && m.chance < 70);
 
     if (hasHigh) {
-      return `Найдены варианты с хорошими шансами поступления. Выберите подходящий вуз из списка.`;
+      return tr('expl_summary_has_high', lang) || 'Найдены варианты с хорошими шансами поступления. Выберите подходящий вуз из списка.';
     } else if (hasTarget) {
-      return `Есть реалистичные варианты поступления. Рассмотрите несколько из них.`;
+      return tr('expl_summary_has_target', lang) || 'Есть реалистичные варианты поступления. Рассмотрите несколько из них.';
     } else {
-      return `Шансы невысокие. Рекомендуем рассмотреть дополнительные варианты или улучшить результаты.`;
+      return tr('expl_summary_all_low', lang) || 'Шансы невысокие. Рекомендуем рассмотреть дополнительные варианты или улучшить результаты.';
     }
   }
 }
 
-function buildFallbackStrengths(matches, input) {
+function buildFallbackStrengths(matches, input, lang = 'ru') {
   const strengths = [];
 
   if (!matches || matches.length === 0) {
@@ -297,43 +302,42 @@ function buildFallbackStrengths(matches, input) {
   }
 
   const top = matches[0];
-  const entDiff = input.ent && top.requirement ? input.ent - top.requirement.min_ent : 0;
 
   // ЕНТ
   if (top.requirement) {
     if (input.ent >= top.requirement.grant_min_ent) {
-      strengths.push(`ЕНТ выше порога на грант (${top.requirement.grant_min_ent}+)`);
+      strengths.push((tr('expl_str_ent_grant', lang) || `ЕНТ выше порога на грант (${top.requirement.grant_min_ent}+)`).replace('${grant}', top.requirement.grant_min_ent));
     } else if (input.ent >= top.requirement.avg_ent) {
-      strengths.push(`ЕНТ выше среднего балла (${top.requirement.avg_ent})`);
+      strengths.push((tr('expl_str_ent_avg', lang) || `ЕНТ выше среднего балла (${top.requirement.avg_ent})`).replace('${avg}', top.requirement.avg_ent));
     } else if (input.ent >= top.requirement.min_ent) {
-      strengths.push(`ЕНТ соответствует минимальным требованиям`);
+      strengths.push(tr('expl_str_ent_min', lang) || 'ЕНТ соответствует минимальным требованиям');
     }
   }
 
   // Бюджет
   if (top.budgetMatch === true) {
-    strengths.push('Стоимость входит в ваш бюджет');
+    strengths.push(tr('expl_str_budget', lang) || 'Стоимость входит в ваш бюджет');
   }
 
   // Язык
   if (top.languageMatch === true) {
-    strengths.push(`Обучение на ${input.language || 'выбранном языке'} доступно`);
+    strengths.push((tr('expl_str_lang', lang) || `Обучение на ${input.language || 'выбранном языке'} доступно`).replace('${lang}', input.language || 'выбранном'));
   }
 
   // Общежитие
   if (input.needDorm && top.dormAvailable === true) {
-    strengths.push('Общежитие доступно');
+    strengths.push(tr('expl_str_dorm', lang) || 'Общежитие доступно');
   }
 
   // High chance
   if (top.chance >= 70) {
-    strengths.push('Высокие шансы на поступление');
+    strengths.push(tr('expl_str_high', lang) || 'Высокие шансы на поступление');
   }
 
   return strengths.slice(0, 3);
 }
 
-function buildFallbackRisks(matches, input) {
+function buildFallbackRisks(matches, input, lang = 'ru') {
   const risks = [];
 
   if (!matches || matches.length === 0) {
@@ -346,33 +350,33 @@ function buildFallbackRisks(matches, input) {
   if (top.requirement && input.ent && input.ent < top.requirement.grant_min_ent) {
     const gap = top.requirement.grant_min_ent - input.ent;
     if (gap > 0) {
-      risks.push(`ЕНТ ниже порога на грант на ${gap} баллов`);
+      risks.push((tr('expl_risk_grant_gap', lang) || `ЕНТ ниже порога на грант на ${gap} баллов`).replace('${gap}', gap));
     }
   }
 
   // ЕНТ ниже минимума
   if (top.requirement && input.ent && input.ent < top.requirement.min_ent) {
-    risks.push('ЕНТ ниже минимального порога для этого вуза');
+    risks.push(tr('expl_risk_below_min', lang) || 'ЕНТ ниже минимального порога для этого вуза');
   }
 
   // Бюджет
   if (top.budgetMatch === false) {
-    risks.push('Стоимость выше указанного бюджета');
+    risks.push(tr('expl_risk_budget_high', lang) || 'Стоимость выше указанного бюджета');
   }
 
   // Язык
   if (input.language && top.languageMatch === false) {
-    risks.push(`Обучение на ${input.language} может быть недоступно`);
+    risks.push((tr('expl_risk_lang', lang) || `Обучение на ${input.language} может быть недоступно`).replace('${lang}', input.language));
   }
 
   // Общежитие
   if (input.needDorm && top.dormAvailable === false) {
-    risks.push('Общежитие не упоминается в данных вуза');
+    risks.push(tr('expl_risk_dorm', lang) || 'Общежитие не упоминается в данных вуза');
   }
 
   // Low chance
   if (top.chance < 40) {
-    risks.push('Низкие шансы на поступление на бюджет');
+    risks.push(tr('expl_risk_low', lang) || 'Низкие шансы на поступление на бюджет');
   }
 
   return risks.slice(0, 3);
@@ -406,7 +410,7 @@ function buildFallbackStrategy(matches) {
   return 'mixed';
 }
 
-function buildFallbackTips(matches, input) {
+function buildFallbackTips(matches, input, lang = 'ru') {
   const tips = [];
 
   if (!matches || matches.length === 0) {
@@ -419,7 +423,7 @@ function buildFallbackTips(matches, input) {
   if (top.requirement && input.ent) {
     const grantGap = top.requirement.grant_min_ent - input.ent;
     if (grantGap > 0 && grantGap <= 10) {
-      tips.push(`До гранта не хватает ${grantGap} баллов. Рассмотрите подготовительные курсы.`);
+      tips.push((tr('expl_tip_grant_gap', lang) || `До гранта не хватает ${grantGap} баллов. Рассмотрите подготовительные курсы.`).replace('${gap}', grantGap));
     }
   }
 
@@ -427,13 +431,13 @@ function buildFallbackTips(matches, input) {
   if (matches.length > 1) {
     const alternatives = matches.filter(m => m.chance >= 40);
     if (alternatives.length > 1) {
-      tips.push('Подайте документы в несколько вузов — это повышает шансы.');
+      tips.push(tr('expl_tip_multi', lang) || 'Подайте документы в несколько вузов — это повышает шансы.');
     }
   }
 
   // Совет про платное
   if (top.chance < 50) {
-    tips.push('На бюджет шансы невысокие. Рассмотрите вариант платного обучения или другие специальности.');
+    tips.push(tr('expl_tip_low', lang) || 'На бюджет шансы невысокие. Рассмотрите вариант платного обучения или другие специальности.');
   }
 
   return tips.slice(0, 3);
@@ -479,14 +483,14 @@ function validateExplanationObject(obj) {
   obj.tips = obj.tips.filter(t => typeof t === 'string').slice(0, 5);
 }
 
-function formatBudget(budget) {
+function formatBudget(budget, lang = 'ru') {
   if (!budget) return '—';
   if (budget >= 1000000) {
     const millions = (budget / 1000000).toFixed(1);
-    return `${millions} млн ₸/год`;
+    return `${millions} ${tr('fmt_budget_mln', lang) || 'млн ₸/год'}`;
   }
   const thousands = Math.round(budget / 1000);
-  return `${thousands} тыс ₸/год`;
+  return `${thousands} ${tr('fmt_budget_th', lang) || 'тыс ₸/год'}`;
 }
 
 module.exports = {

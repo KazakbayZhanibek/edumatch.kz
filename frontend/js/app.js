@@ -42,7 +42,7 @@ async function toggleFavorite(id) {
       }
       saveFavorites();
     } catch (e) {
-      showToast(e.message || 'Ошибка сохранения');
+      showToast(e.message || t('toast.save_error'));
       return;
     }
   } else {
@@ -54,7 +54,7 @@ async function toggleFavorite(id) {
     }
     saveFavorites();
     if (!wasFav) {
-      showToast('Сохранено локально. Войдите, чтобы синхронизировать', 'warning');
+      showToast(t('toast.saved_offline'), 'warning');
     }
   }
 
@@ -62,8 +62,8 @@ async function toggleFavorite(id) {
   if (btn) btn.classList.toggle('favorited', state.favoriteList.includes(id));
 
   const isFav = state.favoriteList.includes(id);
-  if (isFav && !wasFav) showToast('♥ Добавлено в избранное', 'success');
-  else if (!isFav && wasFav) showToast('✕ Удалено из избранного');
+  if (isFav && !wasFav) showToast(t('toast.added_fav'), 'success');
+  else if (!isFav && wasFav) showToast(t('toast.removed_fav'));
 }
 
 function isFavorited(id) {
@@ -157,6 +157,7 @@ function initLanguage() {
   });
   document.getElementById('lang-' + lang)?.classList.add('active');
   applyTranslations();
+  if (typeof applyTranslationsLegacy === 'function') applyTranslationsLegacy();
 }
 
 function applyTranslations() {
@@ -268,7 +269,7 @@ async function loadUniversities() {
     setTimeout(() => { if (typeof AOS !== 'undefined') AOS.refresh(); }, 100);
   } catch (e) {
     stopProgress();
-    grid.innerHTML = `<div class="loading-state"><p style="color:var(--red)">Ошибка загрузки. Убедитесь, что сервер запущен.</p><button class="btn btn-outline" onclick="loadUniversities()">Повторить</button></div>`;
+    grid.innerHTML = `<div class="loading-state"><p style="color:var(--red)">${t('error.load_server')}</p><button class="btn btn-outline" onclick="loadUniversities()">${t('error.retry')}</button></div>`;
   }
 }
 
@@ -308,7 +309,7 @@ async function loadCities() {
       cities.forEach(city => {
         const opt = document.createElement('option');
         opt.value = city.id;
-        opt.textContent = `${city.name} (${city.count})`;
+        opt.textContent = `${trRu(city.name)} (${city.count})`;
         sel.appendChild(opt);
       });
     });
@@ -352,7 +353,7 @@ async function loadSpecialties() {
         const opt = document.createElement('option');
         // Spec может быть {name, id, category} или просто {name, category}
         opt.value = spec.id || (idx + 1);
-        opt.textContent = spec.name || spec;
+        opt.textContent = trRu(spec.name || spec);
         specSelect.appendChild(opt);
       });
     }
@@ -365,7 +366,7 @@ async function loadSpecialties() {
 function renderUniversityGrid(unis) {
   const grid = document.getElementById('uni-grid');
   if (!unis.length) {
-    grid.innerHTML = `<div class="loading-state"><p>Вузы не найдены. Попробуйте изменить фильтры.</p></div>`;
+    grid.innerHTML = `<div class="loading-state"><p>${t('error.no_unis_found')}</p></div>`;
     return;
   }
   grid.innerHTML = unis.map(u => renderUniversityCard(u)).join('');
@@ -419,7 +420,7 @@ function renderUniversityCard(u) {
       : '';
 
   const specTags = shown.map(s =>
-    `<span class="specialty-tag">${s.name}</span>`
+    `<span class="specialty-tag">${trRu(s.name)}</span>`
   ).join('') + (rest > 0 ? `<span class="specialty-tag specialty-tag-more">+${rest}</span>` : '');
 
   const contactLine = (u.admission_phone || u.admission_email) ? `
@@ -439,29 +440,29 @@ function renderUniversityCard(u) {
     <div class="uni-card" id="card-${u.id}">
       <div class="uni-card-header-actions">
         <div class="uni-card-header">
-          <span class="uni-short-name">${u.short_name || u.name.split(' ')[0]}</span>
+          <span class="uni-short-name">${trRu(u.short_name) || trRu(u.name).split(' ')[0]}</span>
           ${qs}
         </div>
-        <button class="btn-favorite ${isFav ? 'favorited' : ''}" data-favorite-btn="${u.id}" onclick="toggleFavorite(${u.id}); event.stopPropagation();" title="Добавить в избранное">
+        <button class="btn-favorite ${isFav ? 'favorited' : ''}" data-favorite-btn="${u.id}" onclick="toggleFavorite(${u.id}); event.stopPropagation();" title="${t('card.add_fav')}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         </button>
       </div>
-      <div class="uni-name">${u.name}</div>
+      <div class="uni-name">${trRu(u.name)}</div>
       <div class="uni-description">${u.description || ''}</div>
       <div class="uni-price-row">
-        <span class="price-label">от</span>
+        <span class="price-label">${t('card.from')}</span>
         <span class="price-from">${fmtPrice(u.price_from)}</span>
         <span class="price-to"> — ${fmtPrice(u.price_to)}</span>
-        <span class="price-period">тг/год</span>
+        <span class="price-period">${t('card.tenge_year')}</span>
       </div>
       ${contactLine}
       <div class="uni-specialties">${specTags}</div>
       <div class="uni-card-actions">
         <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" onclick="toggleCompare(${u.id}, event)">
-          ${isSelected ? 'В сравнении' : '+ Сравнить'}
+          ${isSelected ? t('card.in_compare') : t('card.compare_add')}
         </button>
-        ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()">Сайт</a>` : ''}
-        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})">Подробнее</button>
+        ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()">${t('card.website')}</a>` : ''}
+        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})">${t('card.details')}</button>
       </div>
     </div>
   `;
@@ -492,7 +493,7 @@ function toggleCompare(id, event) {
     state.compareList.splice(idx, 1);
   } else {
     if (state.compareList.length >= 3) {
-      showToast('Максимум 3 вуза для сравнения');
+      showToast(t('toast.max_compare'));
       return;
     }
     state.compareList.push(id);
@@ -531,8 +532,8 @@ async function renderComparePage() {
         <div class="compare-empty-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
         </div>
-        <p>Добавьте минимум 2 вуза на главной странице</p>
-        <button class="btn btn-primary" onclick="navigate('home')">Выбрать вузы</button>
+        <p>${t('compare_page.add_minimum')}</p>
+        <button class="btn btn-primary" onclick="navigate('home')">${t('compare_page.choose_unis')}</button>
       </div>`;
     return;
   }
@@ -544,7 +545,7 @@ async function renderComparePage() {
     const unis = await res.json();
     renderCompareTable(unis, content);
   } catch (e) {
-    content.innerHTML = `<div class="loading-state"><p style="color:var(--red)">Ошибка загрузки</p></div>`;
+    content.innerHTML = `<div class="loading-state"><p style="color:var(--red)">${t('error.load_error')}</p></div>`;
   }
 }
 
@@ -553,17 +554,17 @@ function renderCompareTable(unis, container) {
   const bestQs = Math.min(...unis.map(u => u.qs_world || 9999));
 
   const rows = [
-    { label: 'Короткое название', key: u => u.short_name || '—' },
-    { label: 'Город', key: u => u.city_name || 'Алматы' },
-    { label: 'Основан', key: u => u.founded || '—' },
-    { label: 'Кол-во студентов', key: u => u.students_count ? u.students_count.toLocaleString('ru') : '—' },
+    { label: t('compare_page.short_name'), key: u => u.short_name || '—' },
+    { label: t('compare_page.city'), key: u => trRu(u.city_name) || 'Алматы' },
+    { label: t('compare_page.founded'), key: u => u.founded || '—' },
+    { label: t('compare_page.students'), key: u => u.students_count ? u.students_count.toLocaleString('ru') : '—' },
     { label: 'QS World', key: u => u.qs_world ? `#${u.qs_world}` : '—', isQs: true },
     { label: 'QS Asia', key: u => u.qs_asia ? `#${u.qs_asia}` : '—' },
-    { label: 'Мин. стоимость/год', key: u => fmtPrice(u.price_from) + ' тг', isPrice: true, best: minPrice },
-    { label: 'Макс. стоимость/год', key: u => fmtPrice(u.price_to) + ' тг' },
-    { label: 'Стоимость за 4 года (min)', key: u => fmtPrice(u.price_from * 4) + ' тг' },
-    { label: 'Специальностей', key: u => (u.specialties || []).length },
-    { label: 'Сайт', key: u => {
+    { label: t('compare_page.min_price_year'), key: u => fmtPrice(u.price_from) + ' ' + t('common.tenge'), isPrice: true, best: minPrice },
+    { label: t('compare_page.max_price_year'), key: u => fmtPrice(u.price_to) + ' ' + t('common.tenge') },
+    { label: t('compare_page.price_4yr'), key: u => fmtPrice(u.price_from * 4) + ' ' + t('common.tenge') },
+    { label: t('compare_page.specialties_count'), key: u => (u.specialties || []).length },
+    { label: t('compare_page.website_label'), key: u => {
       const href = normalizeWebsiteUrl(u.website);
       return href
         ? `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${formatWebsiteLabel(u.website)}</a>`
@@ -571,7 +572,7 @@ function renderCompareTable(unis, container) {
     }},
   ];
 
-  const headers = unis.map(u => `<th><div class="compare-uni-head">${u.name}</div></th>`).join('');
+  const headers = unis.map(u => `<th><div class="compare-uni-head">${trRu(u.name)}</div></th>`).join('');
   const trs = rows.map(row => {
     const cells = unis.map(u => {
       const val = row.key(u);
@@ -585,18 +586,18 @@ function renderCompareTable(unis, container) {
 
   container.innerHTML = `
     <div class="compare-header-actions">
-      <h2 class="section-title" style="flex:1">Сравнение</h2>
-      <button class="btn btn-outline btn-clear" onclick="clearCompare()">Очистить</button>
-      <button class="btn btn-ghost" onclick="navigate('home')">+ Добавить</button>
+      <h2 class="section-title" style="flex:1">${t('compare_page.title')}</h2>
+      <button class="btn btn-outline btn-clear" onclick="clearCompare()">${t('compare_page.clear')}</button>
+      <button class="btn btn-ghost" onclick="navigate('home')">${t('compare_page.add_more')}</button>
     </div>
     <div class="compare-table-wrap">
       <table class="compare-table">
-        <thead><tr><th>Параметр</th>${headers}</tr></thead>
+        <thead><tr><th>${t('compare_page.param')}</th>${headers}</tr></thead>
         <tbody>${trs}</tbody>
       </table>
     </div>
     <div style="margin-top:24px;padding:20px;background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius-md)">
-      <p style="font-size:13px;color:var(--text-secondary)"><strong style="color:var(--accent)">Совет по финансам:</strong> разница в стоимости за 4 года между выбранными вузами составляет <strong style="color:var(--text)">${fmtPrice((Math.max(...unis.map(u=>u.price_to)) - Math.min(...unis.map(u=>u.price_from))) * 4)} тг</strong>. Учитывайте это при планировании бюджета.</p>
+      <p style="font-size:13px;color:var(--text-secondary)"><strong style="color:var(--accent)">${t('compare_page.finance_advice')}</strong> ${t('compare_page.price_diff')} <strong style="color:var(--text)">${fmtPrice((Math.max(...unis.map(u=>u.price_to)) - Math.min(...unis.map(u=>u.price_from))) * 4)} ${t('common.tenge')}</strong>. ${t('compare_page.budget_tip')}</p>
     </div>`;
 }
 
@@ -620,7 +621,7 @@ async function loadUniversityDetail(id) {
     const u = await res.json();
     renderUniversityDetail(u, content);
   } catch (e) {
-    content.innerHTML = `<div class="loading-state"><p style="color:var(--red)">Ошибка загрузки</p><button class="btn btn-outline" onclick="navigate('home')">На главную</button></div>`;
+    content.innerHTML = `<div class="loading-state"><p style="color:var(--red)">${t('error.load_error')}</p><button class="btn btn-outline" onclick="navigate('home')">${t('error.go_home')}</button></div>`;
   }
 }
 
@@ -660,8 +661,8 @@ function renderUniversityDetail(u, container) {
 
   const specCats = Object.entries(byCategory).map(([cat, names]) => `
     <div>
-      <div class="spec-category-name">${cat}</div>
-      <div class="spec-tags">${names.map(n => `<span class="spec-tag" onclick="showProfessionAnalysis('${n.replace(/'/g, "\\'")}')">${n}</span>`).join('')}</div>
+      <div class="spec-category-name">${trRu(cat)}</div>
+      <div class="spec-tags">${names.map(n => `<span class="spec-tag" onclick="showProfessionAnalysis('${n.replace(/'/g, "\\'")}')">${trRu(n)}</span>`).join('')}</div>
     </div>
   `).join('');
 
@@ -672,7 +673,7 @@ function renderUniversityDetail(u, container) {
   // Форматирование языков
   const languagesHTML = languages.length ? `
     <div class="info-block">
-      <div class="info-block-title">${getSVGIcon('globe')} Языки обучения</div>
+      <div class="info-block-title">${getSVGIcon('globe')} ${t('uni_detail_page.languages')}</div>
       <div class="tags-list">${languages.map(lang => `<span class="tag-pill">${lang}</span>`).join('')}</div>
     </div>
   ` : '';
@@ -680,7 +681,7 @@ function renderUniversityDetail(u, container) {
   // Форматирование аккредитаций
   const accreditationsHTML = accreditations.length ? `
     <div class="info-block">
-      <div class="info-block-title">${getSVGIcon('checkmark')} Аккредитации</div>
+      <div class="info-block-title">${getSVGIcon('checkmark')} ${t('uni_detail_page.accreditations')}</div>
       <div class="tags-list">${accreditations.map(acc => `<span class="tag-pill">${acc}</span>`).join('')}</div>
     </div>
   ` : '';
@@ -688,23 +689,23 @@ function renderUniversityDetail(u, container) {
   // Информация об общежитии
   const dormitoryHTML = `
     <div class="info-block">
-      <div class="info-block-title">${getSVGIcon('building')} Общежитие</div>
+      <div class="info-block-title">${getSVGIcon('building')} ${t('uni_detail_page.dormitory')}</div>
       <div class="info-block-content">
         ${u.has_dorm ? `
           <div class="info-row">
-            <span>Наличие:</span>
-            <span style="color: var(--success);">✓ Есть</span>
+            <span>${t('uni_detail_page.available')}</span>
+            <span style="color: var(--success);">${t('uni_detail_page.yes')}</span>
           </div>
           ${u.dorm_price ? `
             <div class="info-row">
-              <span>Цена в год:</span>
-              <span>${fmtPrice(u.dorm_price)} тг</span>
+              <span>${t('uni_detail_page.price_year')}</span>
+              <span>${fmtPrice(u.dorm_price)} ${t('common.tenge')}</span>
             </div>
           ` : ''}
         ` : `
           <div class="info-row">
-            <span>Наличие:</span>
-            <span style="color: #999;">✗ Нет</span>
+            <span>${t('uni_detail_page.available')}</span>
+            <span style="color: #999;">${t('uni_detail_page.no')}</span>
           </div>
         `}
       </div>
@@ -714,10 +715,10 @@ function renderUniversityDetail(u, container) {
   // Средняя зарплата выпускников
   const salaryHTML = u.avg_salary ? `
     <div class="info-block">
-      <div class="info-block-title">${getSVGIcon('money')} Средняя зарплата выпускников</div>
+      <div class="info-block-title">${getSVGIcon('money')} ${t('uni_detail_page.avg_salary')}</div>
       <div class="info-block-content">
-        <div class="salary-amount">${fmtPrice(u.avg_salary)} тг</div>
-        <div class="salary-note">в месяц (ориентировочно)</div>
+        <div class="salary-amount">${fmtPrice(u.avg_salary)} ${t('common.tenge')}</div>
+        <div class="salary-note">${t('uni_detail_page.per_month')}</div>
       </div>
     </div>
   ` : '';
@@ -725,10 +726,10 @@ function renderUniversityDetail(u, container) {
   // Проходной балл ЕНТ
   const entHTML = u.ent_threshold ? `
     <div class="info-block">
-      <div class="info-block-title">${getSVGIcon('target')} Проходной балл ЕНТ</div>
+      <div class="info-block-title">${getSVGIcon('target')} ${t('uni_detail_page.ent_score')}</div>
       <div class="info-block-content">
         <div class="ent-score">${u.ent_threshold}</div>
-        <div class="ent-note">минимальный порог для поступления</div>
+        <div class="ent-note">${t('uni_detail_page.ent_note')}</div>
       </div>
     </div>
   ` : '';
@@ -736,16 +737,16 @@ function renderUniversityDetail(u, container) {
   // Стипендии и гранты (плейсхолдер, можно заполнить из API)
   const scholarshipsHTML = u.grants ? `
     <div class="info-block">
-      <div class="info-block-title">${getSVGIcon('graduation')} Стипендии и гранты</div>
+      <div class="info-block-title">${getSVGIcon('graduation')} ${t('uni_detail_page.scholarships')}</div>
       <div class="info-block-content">
         <div style="color: var(--text-secondary);">
-          Доступны различные программы финансирования, включая:
+          ${t('uni_detail_page.fin_programs')}
         </div>
         <ul class="grants-list">
-          <li>Государственные образовательные гранты</li>
-          <li>Именные стипендии университета</li>
-          <li>Программа Болашак</li>
-          <li>Корпоративные гранты</li>
+          <li>${t('uni_detail_page.gov_grants')}</li>
+          <li>${t('uni_detail_page.named_scholarships')}</li>
+          <li>${t('uni_detail_page.bolashak')}</li>
+          <li>${t('uni_detail_page.corp_grants')}</li>
         </ul>
       </div>
     </div>
@@ -756,7 +757,7 @@ function renderUniversityDetail(u, container) {
     <div class="info-block">
       <div class="info-block-title">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-        Контакты приемной комиссии
+        ${t('uni_detail_page.contacts_title')}
       </div>
       <div class="info-block-content">
         ${u.admission_phone ? u.admission_phone.split('\n').map((ph, i) => `
@@ -764,7 +765,7 @@ function renderUniversityDetail(u, container) {
             ${i === 0 ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>` : '<span style="width:14px;display:inline-block"></span>'}
             <a href="tel:${ph.replace(/[\s\-\(\)]/g,'')}" style="color: var(--primary)">${ph}</a>
           </div>
-        `).join('') : '<div style="color: #999;">Контакты не указаны</div>'}
+        `).join('') : `<div style="color: #999;">${t('uni_detail_page.no_contacts')}</div>`}
         ${u.admission_email ? `
           <div class="info-row info-contact-row">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
@@ -785,41 +786,41 @@ function renderUniversityDetail(u, container) {
     <div class="uni-detail">
       <div style="margin-bottom:20px">
         <button class="btn btn-ghost btn-sm" onclick="navigate('home')">
-          ← Все вузы
+          ${t('uni_detail_page.all_unis')}
         </button>
       </div>
       <div class="uni-detail-hero">
         <div>
           <div class="detail-badges">
             ${qsBadge}
-            <span class="detail-badge badge-city">${u.city_name || 'Алматы'}</span>
-            ${u.founded ? `<span class="detail-badge badge-city">Основан в ${u.founded}</span>` : ''}
+            <span class="detail-badge badge-city">${trRu(u.city_name) || 'Алматы'}</span>
+            ${u.founded ? `<span class="detail-badge badge-city">${t('compare_page.founded')} ${u.founded}</span>` : ''}
           </div>
-          <h1 class="detail-title">${u.name}</h1>
-          <div class="detail-short">${u.short_name || ''}</div>
+          <h1 class="detail-title">${trRu(u.name)}</h1>
+          <div class="detail-short">${trRu(u.short_name) || ''}</div>
           <p class="detail-desc">${u.description || ''}</p>
           <div class="detail-actions">
-            ${normalizeWebsiteUrl(u.website) ? `<a href="${normalizeWebsiteUrl(u.website)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Официальный сайт</a>` : ''}
-            <button class="btn btn-ghost" onclick="addToCompareAndGo(${u.id})">Добавить в сравнение</button>
-            <button class="btn btn-ghost" onclick="navigate('advisor')">Спросить ИИ</button>
+            ${normalizeWebsiteUrl(u.website) ? `<a href="${normalizeWebsiteUrl(u.website)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">${t('uni_detail_page.official_site')}</a>` : ''}
+            <button class="btn btn-ghost" onclick="addToCompareAndGo(${u.id})">${t('uni_detail_page.add_compare')}</button>
+            <button class="btn btn-ghost" onclick="navigate('advisor')">${t('uni_detail_page.ask_ai')}</button>
           </div>
         </div>
         <div>
           <div class="detail-card">
-            <div class="detail-card-title">Стоимость обучения 2025–2026</div>
-            <div class="detail-price-main">${fmtPrice(u.price_from)} тг</div>
-            <div class="detail-price-note">минимальная стоимость в год</div>
+            <div class="detail-card-title">${t('uni_detail_page.price_title')}</div>
+            <div class="detail-price-main">${fmtPrice(u.price_from)} ${t('common.tenge')}</div>
+            <div class="detail-price-note">${t('uni_detail_page.min_price_note')}</div>
             <div class="detail-stat-row">
-              <span class="detail-stat-label">Максимум/год</span>
-              <span class="detail-stat-val">${fmtPrice(u.price_to)} тг</span>
+              <span class="detail-stat-label">${t('uni_detail_page.max_year')}</span>
+              <span class="detail-stat-val">${fmtPrice(u.price_to)} ${t('common.tenge')}</span>
             </div>
             <div class="detail-price-total">
-              <div class="detail-price-total-label">За 4 года обучения</div>
-              <div class="detail-price-total-val">${fmtPrice(qs4)} — ${fmtPrice(qsMax4)} тг</div>
+              <div class="detail-price-total-label">${t('uni_detail_page.four_years')}</div>
+              <div class="detail-price-total-val">${fmtPrice(qs4)} — ${fmtPrice(qsMax4)} ${t('common.tenge')}</div>
             </div>
             ${u.students_count ? `
               <div class="detail-stat-row" style="margin-top:16px">
-                <span class="detail-stat-label">Студентов</span>
+                <span class="detail-stat-label">${t('uni_detail_page.students_count')}</span>
                 <span class="detail-stat-val">${u.students_count.toLocaleString('ru')}</span>
               </div>` : ''}
             ${u.qs_world ? `
@@ -848,7 +849,7 @@ function renderUniversityDetail(u, container) {
 
       ${specCats ? `
         <div class="detail-specialties-section">
-          <h2 class="detail-specialties-title">${getSVGIcon('book')} Факультеты и специальности</h2>
+          <h2 class="detail-specialties-title">${getSVGIcon('book')} ${t('uni_detail_page.faculties')}</h2>
           <div class="specialties-by-category">${specCats}</div>
         </div>` : ''}
     </div>`;
@@ -859,9 +860,9 @@ function addToCompareAndGo(id) {
     if (state.compareList.length < 3) {
       state.compareList.push(id);
       updateCompareBadge();
-      showToast('Вуз добавлен в сравнение', 'success');
+      showToast(t('toast.added_compare'), 'success');
     } else {
-      showToast('Максимум 3 вуза');
+      showToast(t('toast.max_3'));
     }
   }
   navigate('compare');
@@ -896,13 +897,14 @@ async function sendMessage() {
       body: JSON.stringify({
         message: text,
         history: state.chatHistory.slice(-20),
+        lang: currentLang || 'ru',
       })
     });
     const data = await res.json();
     removeTyping(typingId);
 
     if (!data.success) {
-      appendMessage('ai', `Ошибка: ${data.error || 'Unknown error'}`);
+      appendMessage('ai', `${t('error.load_error')}: ${data.error || 'Unknown error'}`);
     } else {
       // Show AI answer
       if (data.intent === 'admission' && data.admission && data.admission.type === 'result') {
@@ -924,7 +926,7 @@ async function sendMessage() {
   } catch (e) {
     removeTyping(typingId);
     console.error('[Chat Error]', e);
-    appendMessage('ai', 'Не удалось подключиться к серверу. Убедитесь, что backend запущен.');
+    appendMessage('ai', t('error.server_offline'));
   }
 
   document.getElementById('chat-send').disabled = false;
@@ -939,43 +941,43 @@ function renderMatches(matches) {
   let html = `
   <div class="chat-rec-header">
     <div class="chat-rec-title">
-      📋 Рекомендуемые университеты (${matches.length})
+      📋 ${t('chat_page.recommended')} (${matches.length})
     </div>
     <div class="chat-rec-grid">
   `;
 
   matches.slice(0, 5).forEach((u, idx) => {
-    const languages = (u.languages || []).join(', ') || 'Не указано';
+    const languages = (u.languages || []).join(', ') || t('chat_page.not_specified');
     const specs = (u.specialties || []).map(s => typeof s === 'string' ? s : s.name || s.category).filter(Boolean).slice(0, 3).join(', ') || 'N/A';
-    const qs = u.qs_world ? `QS World: #${u.qs_world}` : (u.qs_asia ? `QS Asia: #${u.qs_asia}` : 'Рейтинг не указан');
-    const priceRange = `${(u.price_from/1000000).toFixed(2)}–${(u.price_to/1000000).toFixed(2)}M тг`;
+    const qs = u.qs_world ? `QS World: #${u.qs_world}` : (u.qs_asia ? `QS Asia: #${u.qs_asia}` : t('chat_page.no_ranking'));
+    const priceRange = `${(u.price_from/1000000).toFixed(2)}–${(u.price_to/1000000).toFixed(2)}M ${t('common.tenge')}`;
     
     html += `
     <div class="chat-rec-card" onclick="navigate('university', ${u.id})">
       <div class="chat-rec-head">
         <div>
-          <div class="chat-rec-uni-name">${u.short_name}</div>
-          <div class="chat-rec-uni-full">${u.name}</div>
+          <div class="chat-rec-uni-name">${trRu(u.short_name)}</div>
+          <div class="chat-rec-uni-full">${trRu(u.name)}</div>
         </div>
         <div class="chat-rec-badge">${qs}</div>
       </div>
       <div class="chat-rec-details">
         <div>
-          <div class="chat-rec-label">Стоимость</div>
-          <div class="chat-rec-value-accent">💰 ${priceRange}/год</div>
+          <div class="chat-rec-label">${t('chat_page.cost')}</div>
+          <div class="chat-rec-value-accent">💰 ${priceRange}/${t('chat_page.year')}</div>
         </div>
         <div>
-          <div class="chat-rec-label">Языки обучения</div>
+          <div class="chat-rec-label">${t('chat_page.study_lang')}</div>
           <div class="chat-rec-value">🌐 ${languages}</div>
         </div>
         <div class="chat-rec-full">
-          <div class="chat-rec-label">Специальности</div>
+          <div class="chat-rec-label">${t('chat_page.specs')}</div>
           <div class="chat-rec-value">📚 ${specs}${(u.specialties || []).length > 3 ? '...' : ''}</div>
         </div>
       </div>
       <div class="chat-rec-actions">
-        <button class="chat-rec-btn-primary" onclick="event.stopPropagation(); navigate('university', ${u.id})">Подробнее</button>
-        <button class="chat-rec-btn-ghost" onclick="event.stopPropagation(); toggleFavorite(${u.id})">${state.favoriteList?.includes(u.id) ? '♥ В избранном' : '♡ В избранное'}</button>
+        <button class="chat-rec-btn-primary" onclick="event.stopPropagation(); navigate('university', ${u.id})">${t('admission_page.uni_details')}</button>
+        <button class="chat-rec-btn-ghost" onclick="event.stopPropagation(); toggleFavorite(${u.id})">${state.favoriteList?.includes(u.id) ? t('chat_page.in_fav') : t('chat_page.add_fav')}</button>
       </div>
     </div>
     `;
@@ -992,14 +994,19 @@ function renderMatches(matches) {
 /**
  * Render admission prediction cards inside chat bubble
  */
+function escapeAdmissionHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function renderAdmissionChatCards(matches, input) {
   if (!matches || matches.length === 0) return '';
 
   let html = `
   <div class="chat-admission-cards">
     <div class="chat-admission-header">
-      <span class="chat-admission-badge">🎯 Прогноз поступления</span>
-      <span class="chat-admission-input">ЕНТ ${input?.ent || '—'} · ${input?.specialty || '—'}</span>
+      <span class="chat-admission-badge">${t('chat_page.admission_badge')}</span>
+      <span class="chat-admission-input">${t('admission_page.ent_label').replace(':','')} ${input?.ent || '—'} · ${input?.specialty || '—'}</span>
     </div>
   `;
 
@@ -1012,7 +1019,7 @@ function renderAdmissionChatCards(matches, input) {
         <div>
           <span class="chat-admission-rank">${rankIcon}</span>
           <span class="chat-admission-uni">${escapeAdmissionHtml(m.university)}</span>
-          <span class="chat-admission-name">${escapeAdmissionHtml(m.name || '')}</span>
+          <span class="chat-admission-name">${escapeAdmissionHtml(trRu(m.name) || '')}</span>
         </div>
         <div class="chat-admission-chance ${barClass}">${m.chance}%</div>
       </div>
@@ -1104,8 +1111,21 @@ function usePrompt(btn) {
 // ─── HELPERS ─────────────────────────────────
 function fmtPrice(n) {
   if (!n) return '—';
-  if (n >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + ' млн';
-  return (n / 1000).toFixed(0) + ' тыс';
+  if (n >= 1000000) return (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1) + ' ' + t('common.million');
+  return (n / 1000).toFixed(0) + ' ' + t('common.thousand');
+}
+
+function trRu(name) {
+  if (!name) return name || '';
+  const lang = window.currentLanguage || 'ru';
+  if (lang === 'ru') return name;
+  const db = window.translations?.[lang]?.db_data;
+  if (!db) return name;
+  if (db.uni_short?.[name]) return db.uni_short[name];
+  if (db.uni_full?.[name]) return db.uni_full[name];
+  if (db.spec?.[name]) return db.spec[name];
+  if (db.city?.[name]) return db.city[name];
+  return name;
 }
 
 function normalizeWebsiteUrl(url) {
@@ -1349,7 +1369,7 @@ function showAdmissionLoading() {
   resultsEl.innerHTML = `
     <div class="loading-state">
       <div class="spinner"></div>
-      <p>Рассчитываем ваши шансы...</p>
+      <p>${t('admission_page.loading')}</p>
     </div>
   `;
 }
@@ -1359,7 +1379,7 @@ function showAdmissionError(message) {
   resultsEl.innerHTML = `
     <div class="tool-card" style="border: 1px solid var(--red, #ef4444);">
       <p style="color: var(--red, #ef4444); margin: 0;">
-        <strong>⚠ Ошибка:</strong> ${escapeHtml(message)}
+        <strong>⚠ ${t('admission_page.error_prefix')}</strong> ${escapeHtml(message)}
       </p>
     </div>
   `;
@@ -1369,7 +1389,7 @@ function showAdmissionEmpty(message) {
   const resultsEl = document.getElementById('admission-results');
   resultsEl.innerHTML = `
     <div class="tool-card empty-state">
-      <p>${escapeHtml(message || 'Подходящих вузов не найдено')}</p>
+      <p>${escapeHtml(message || t('admission_page.not_found'))}</p>
     </div>
   `;
 }
@@ -1390,15 +1410,15 @@ async function calculateAdmissionChance() {
 
   // Валидация
   if (!entScore || entScore < 0 || entScore > 140) {
-    showToast('ЕНТ должен быть от 0 до 140', 'warning');
+    showToast(t('admission_page.ent_must_be'), 'warning');
     return;
   }
   if (!gpa || gpa < 0 || gpa > 5) {
-    showToast('GPA должен быть от 0 до 5', 'warning');
+    showToast(t('admission_page.gpa_must_be'), 'warning');
     return;
   }
   if (!specialtyId) {
-    showToast('Выберите специальность', 'warning');
+    showToast(t('admission_page.choose_spec'), 'warning');
     return;
   }
 
@@ -1426,7 +1446,7 @@ async function calculateAdmissionChance() {
     const res = await fetch(`${API}/admission/calculate`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...payload, lang: currentLang || 'ru' }),
     });
 
     const result = await res.json();
@@ -1439,7 +1459,7 @@ async function calculateAdmissionChance() {
 
     // Если нет совпадений
     if (!result.matches || result.matches.length === 0) {
-      showAdmissionEmpty('К сожалению, вузов, соответствующих вашим критериям, не найдено. Попробуйте изменить параметры.');
+      showAdmissionEmpty(t('admission_page.no_results_msg'));
       return;
     }
 
@@ -1456,7 +1476,7 @@ async function calculateAdmissionChance() {
 
   } catch (err) {
     console.error('Admission calculate error:', err);
-    showAdmissionError('Сервер недоступен. Убедитесь, что backend запущен.');
+    showAdmissionError(t('admission_page.server_error'));
   } finally {
     btn.disabled = false;
   }
@@ -1473,19 +1493,19 @@ function renderAdmissionResults(result, input) {
   }
 
   const specialtyName = getSpecialtyName(input.specialtyId);
-  const cityName = input.cityId ? getCityName(input.cityId) : 'все города';
+  const cityName = input.cityId ? getCityName(input.cityId) : t('admission_page.all_cities');
 
   let summaryHtml = `
     <div class="admission-summary tool-card">
-      <h3 class="tool-card-title">✓ Результаты расчета</h3>
+      <h3 class="tool-card-title">✓ ${t('admission_page.results')}</h3>
       <p class="admission-summary-text">
-        <strong>ЕНТ:</strong> ${input.entScore} · 
-        <strong>Специальность:</strong> ${escapeHtml(specialtyName)}
-        ${input.budgetMax ? ` · <strong>Бюджет:</strong> до ${(input.budgetMax / 1000000).toFixed(1)} млн тг/год` : ''}
+        <strong>${t('admission_page.ent_label')}</strong> ${input.entScore} · 
+        <strong>${t('admission_page.spec_label')}</strong> ${escapeHtml(specialtyName)}
+        ${input.budgetMax ? ` · <strong>${t('admission_page.budget_label')}</strong> до ${(input.budgetMax / 1000000).toFixed(1)} ${t('admission_page.budget_suffix')}` : ''}
       </p>
       <p class="admission-summary-note">
-        Найдено <strong>${matches.length}</strong> вузов. 
-        Расчет основан на ЕНТ, GPA, бюджете, языке обучения и потребности в общежитии.
+        ${t('admission_page.found')} <strong>${matches.length}</strong> ${t('admission_page.found_unis')} 
+        ${t('admission_page.calc_note')}
       </p>
   `;
 
@@ -1535,8 +1555,8 @@ function renderAdmissionCard(match, index) {
       <div class="admission-card-head">
         <div>
           <span class="admission-rank">#${index + 1}</span>
-          <h4 class="admission-uni-name">${escapeHtml(universityName)}</h4>
-          <p class="admission-uni-full" style="font-size: 0.9rem; color: var(--gray, #666);">${escapeHtml(universityCity)}</p>
+          <h4 class="admission-uni-name">${escapeHtml(trRu(universityName))}</h4>
+          <p class="admission-uni-full" style="font-size: 0.9rem; color: var(--gray, #666);">${escapeHtml(trRu(universityCity))}</p>
         </div>
         <div class="admission-chance-wrap">
           <div class="admission-chance-value ${barClass}">${chancePercent}%</div>
@@ -1545,11 +1565,11 @@ function renderAdmissionCard(match, index) {
       </div>
 
       <div class="admission-card-confidence" style="margin: 8px 0; font-size: 0.85rem; color: var(--gray, #666);">
-        <strong>Надежность:</strong> ${escapeHtml(confidenceLevel || 'средняя')}
+        <strong>${t('admission_page.reliability')}</strong> ${escapeHtml(confidenceLevel || t('admission_page.reliability_mid'))}
       </div>
 
       <div class="admission-card-specialty" style="margin: 8px 0; font-size: 0.9rem; color: var(--blue, #3b82f6);">
-        <strong>Специальность:</strong> ${escapeHtml(specialtyName)}
+        <strong>${t('admission_page.spec_label')}</strong> ${escapeHtml(specialtyName)}
       </div>
 
       <ul class="admission-reasons" style="margin: 12px 0; padding-left: 20px; list-style: none;">
@@ -1560,7 +1580,7 @@ function renderAdmissionCard(match, index) {
 
       <div class="admission-card-actions" style="margin-top: 12px; display: flex; gap: 8px;">
         <button class="btn btn-sm btn-detail" onclick="navigate('university', ${universityId})" style="flex: 1;">
-          Подробнее о вузе
+          ${t('admission_page.uni_details')}
         </button>
       </div>
     </article>
@@ -1581,11 +1601,11 @@ function renderExplanationBlock(explanation) {
   } = explanation;
 
   const strategyLabel = {
-    'safe': '✓ Безопасный вариант',
-    'target': '◉ Целевой вариант',
-    'ambitious': '▲ Амбициозный вариант',
-    'mixed': '✓ Комбинированная стратегия'
-  }[strategy] || 'Стратегия';
+    'safe': t('admission_page.safe_strategy'),
+    'target': t('admission_page.target_strategy'),
+    'ambitious': t('admission_page.ambitious_strategy'),
+    'mixed': t('admission_page.mixed_strategy')
+  }[strategy] || t('admission_page.strategy_label');
 
   const strategyClass = {
     'safe': 'explanation-safe',
@@ -1596,19 +1616,19 @@ function renderExplanationBlock(explanation) {
 
   let html = `
     <div class="ai-explanation ${strategyClass}" style="margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--bg-light, #f9fafb); border-left: 4px solid ${getStrategyColor(strategy)};">
-      ${fallback ? '<p style="font-size: 0.8rem; color: var(--gray, #999); margin: 0 0 8px 0;">💡 Шаблонное объяснение (AI недоступен)</p>' : '<p style="font-size: 0.8rem; color: var(--gray, #999); margin: 0 0 8px 0;">🤖 AI-объяснение</p>'}
+      ${fallback ? `<p style="font-size: 0.8rem; color: var(--gray, #999); margin: 0 0 8px 0;">${t('admission_page.template_explain')}</p>` : `<p style="font-size: 0.8rem; color: var(--gray, #999); margin: 0 0 8px 0;">${t('admission_page.ai_explain')}</p>`}
       
       <p style="font-weight: 500; margin: 0 0 8px 0; color: var(--text);">${escapeHtml(summary || '')}</p>
       
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; font-size: 0.9rem;">
         <div>
-          <strong style="color: var(--green, #10b981);">✓ Плюсы:</strong>
+          <strong style="color: var(--green, #10b981);">${t('admission_page.pros')}</strong>
           <ul style="margin: 4px 0 0 16px; padding: 0; list-style: none;">
             ${strengths.slice(0, 3).map(s => `<li>• ${escapeHtml(s)}</li>`).join('')}
           </ul>
         </div>
         <div>
-          <strong style="color: var(--orange, #f59e0b);">⚠ Риски:</strong>
+          <strong style="color: var(--orange, #f59e0b);">${t('admission_page.risks')}</strong>
           <ul style="margin: 4px 0 0 16px; padding: 0; list-style: none;">
             ${risks.slice(0, 3).map(r => `<li>• ${escapeHtml(r)}</li>`).join('')}
           </ul>
@@ -1616,12 +1636,12 @@ function renderExplanationBlock(explanation) {
       </div>
 
       <div style="margin-top: 12px;">
-        <strong style="color: var(--blue, #3b82f6);">Стратегия:</strong> ${escapeHtml(strategyLabel)}
+        <strong style="color: var(--blue, #3b82f6);">${t('admission_page.strategy_heading')}</strong> ${escapeHtml(strategyLabel)}
       </div>
 
       ${tips.length > 0 ? `
       <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border, #e5e7eb);">
-        <strong style="color: var(--purple, #8b5cf6);">💡 Советы:</strong>
+        <strong style="color: var(--purple, #8b5cf6);">${t('admission_page.tips_heading')}</strong>
         <ul style="margin: 4px 0 0 16px; padding: 0; list-style: none;">
           ${tips.slice(0, 3).map(t => `<li>• ${escapeHtml(t)}</li>`).join('')}
         </ul>
@@ -1652,7 +1672,7 @@ function getChanceBarClass(chance) {
 
 function getSpecialtyName(specialtyId) {
   const opt = Array.from(document.getElementById('admit-specialty').options).find(o => o.value == specialtyId);
-  return opt ? opt.textContent : 'Неизвестная специальность';
+  return opt ? opt.textContent : t('admission_page.unknown_spec');
 }
 
 function getCityName(cityId) {
@@ -1698,75 +1718,75 @@ async function saveAdmissionHistory(input, matches) {
 
 const CAREER_QUESTIONS = [
   {
-    q: 'Что вам больше всего нравится делать?',
+    q: t('career_questions.q1'),
     opts: [
-      { text: 'Решать логические задачи и писать код', tags: ['IT'] },
-      { text: 'Помогать людям и лечить болезни', tags: ['Медицина'] },
-      { text: 'Анализировать данные и управлять финансами', tags: ['Экономика'] },
-      { text: 'Общаться, переговоры и международные дела', tags: ['Гуманитарные'] },
+      { text: t('career_questions.q1_o1'), tags: ['IT'] },
+      { text: t('career_questions.q1_o2'), tags: ['Медицина'] },
+      { text: t('career_questions.q1_o3'), tags: ['Экономика'] },
+      { text: t('career_questions.q1_o4'), tags: ['Гуманитарные'] },
     ]
   },
   {
-    q: 'Какой предмет в школе вам давался лучше всего?',
+    q: t('career_questions.q2'),
     opts: [
-      { text: 'Математика и физика', tags: ['IT', 'Инженерия'] },
-      { text: 'Биология и химия', tags: ['Медицина', 'Естественные науки'] },
-      { text: 'Экономика и история', tags: ['Экономика', 'Право'] },
-      { text: 'Языки и литература', tags: ['Гуманитарные', 'Образование'] },
+      { text: t('career_questions.q2_o1'), tags: ['IT', 'Инженерия'] },
+      { text: t('career_questions.q2_o2'), tags: ['Медицина', 'Естественные науки'] },
+      { text: t('career_questions.q2_o3'), tags: ['Экономика', 'Право'] },
+      { text: t('career_questions.q2_o4'), tags: ['Гуманитарные', 'Образование'] },
     ]
   },
   {
-    q: 'Где вы видите себя через 10 лет?',
+    q: t('career_questions.q3'),
     opts: [
-      { text: 'В IT-компании или своём стартапе', tags: ['IT'] },
-      { text: 'Врачом или учёным', tags: ['Медицина'] },
-      { text: 'Бизнесменом или финансовым директором', tags: ['Экономика'] },
-      { text: 'Дипломатом, юристом или журналистом', tags: ['Право', 'Гуманитарные'] },
+      { text: t('career_questions.q3_o1'), tags: ['IT'] },
+      { text: t('career_questions.q3_o2'), tags: ['Медицина'] },
+      { text: t('career_questions.q3_o3'), tags: ['Экономика'] },
+      { text: t('career_questions.q3_o4'), tags: ['Право', 'Гуманитарные'] },
     ]
   },
   {
-    q: 'Ваш бюджет на обучение в год:',
+    q: t('career_questions.q4'),
     opts: [
-      { text: 'До 1 млн тг — ищу бюджетный вариант', budget: 1000000, tags: [] },
-      { text: '1–2 млн тг', budget: 2000000, tags: [] },
-      { text: '2–3 млн тг', budget: 3000000, tags: [] },
-      { text: 'Более 3 млн тг или есть грант', budget: 5000000, tags: [] },
+      { text: t('career_questions.q4_o1'), budget: 1000000, tags: [] },
+      { text: t('career_questions.q4_o2'), budget: 2000000, tags: [] },
+      { text: t('career_questions.q4_o3'), budget: 3000000, tags: [] },
+      { text: t('career_questions.q4_o4'), budget: 5000000, tags: [] },
     ]
   },
   {
-    q: 'Как вы предпочитаете учиться?',
+    q: t('career_questions.q5'),
     opts: [
-      { text: 'Практические проекты и лаборатории', tags: ['IT', 'Инженерия', 'Медицина'] },
-      { text: 'Теория, исследования, научные работы', tags: ['Естественные науки', 'Гуманитарные'] },
-      { text: 'Кейсы, бизнес-симуляции, дебаты', tags: ['Экономика', 'Право'] },
-      { text: 'Общение с людьми, командная работа', tags: ['Образование', 'Гуманитарные'] },
+      { text: t('career_questions.q5_o1'), tags: ['IT', 'Инженерия', 'Медицина'] },
+      { text: t('career_questions.q5_o2'), tags: ['Естественные науки', 'Гуманитарные'] },
+      { text: t('career_questions.q5_o3'), tags: ['Экономика', 'Право'] },
+      { text: t('career_questions.q5_o4'), tags: ['Образование', 'Гуманитарные'] },
     ]
   },
   {
-    q: 'Что для вас важнее в будущей карьере?',
+    q: t('career_questions.q6'),
     opts: [
-      { text: 'Высокая зарплата', tags: ['IT', 'Медицина', 'Экономика'] },
-      { text: 'Стабильность и статус', tags: ['Право', 'Государственная служба'] },
-      { text: 'Возможность путешествовать и работать за рубежом', tags: ['Гуманитарные', 'Экономика'] },
-      { text: 'Польза обществу и людям', tags: ['Образование', 'Медицина'] },
+      { text: t('career_questions.q6_o1'), tags: ['IT', 'Медицина', 'Экономика'] },
+      { text: t('career_questions.q6_o2'), tags: ['Право', 'Государственная служба'] },
+      { text: t('career_questions.q6_o3'), tags: ['Гуманитарные', 'Экономика'] },
+      { text: t('career_questions.q6_o4'), tags: ['Образование', 'Медицина'] },
     ]
   },
   {
-    q: 'Насколько важен международный рейтинг вуза?',
+    q: t('career_questions.q7'),
     opts: [
-      { text: 'Очень важен — хочу диплом мирового уровня', prestige: 'high', tags: [] },
-      { text: 'Важен, но не первостепенен', prestige: 'medium', tags: [] },
-      { text: 'Главное — специальность, не рейтинг', prestige: 'low', tags: [] },
-      { text: 'Важна практика и связи с работодателями', prestige: 'practical', tags: [] },
+      { text: t('career_questions.q7_o1'), prestige: 'high', tags: [] },
+      { text: t('career_questions.q7_o2'), prestige: 'medium', tags: [] },
+      { text: t('career_questions.q7_o3'), prestige: 'low', tags: [] },
+      { text: t('career_questions.q7_o4'), prestige: 'practical', tags: [] },
     ]
   },
   {
-    q: 'Вы уже знаете, чем хотите заниматься?',
+    q: t('career_questions.q8'),
     opts: [
-      { text: 'Да, чётко определился(ась)', tags: [] },
-      { text: 'Примерно понимаю направление', tags: [] },
-      { text: 'Нет, ещё в поиске', tags: [] },
-      { text: 'Хочу попробовать несколько направлений', tags: [] },
+      { text: t('career_questions.q8_o1'), tags: [] },
+      { text: t('career_questions.q8_o2'), tags: [] },
+      { text: t('career_questions.q8_o3'), tags: [] },
+      { text: t('career_questions.q8_o4'), tags: [] },
     ]
   },
 ];
@@ -1804,11 +1824,11 @@ function renderCareerQuestion() {
   const pct = (careerState.current / total * 100).toFixed(0);
 
   document.getElementById('career-progress-fill').style.width = pct + '%';
-  document.getElementById('career-progress-text').textContent = `Вопрос ${careerState.current + 1} из ${total}`;
+  document.getElementById('career-progress-text').textContent = `${t('career_page_js.question_of')} ${careerState.current + 1} ${t('career_page_js.of')} ${total}`;
 
   document.getElementById('career-question-wrap').innerHTML = `
     <div class="career-question-card">
-      <div class="career-q-num">Вопрос ${careerState.current + 1}</div>
+      <div class="career-q-num">${t('career_page_js.question_of')} ${careerState.current + 1}</div>
       <div class="career-q-text">${q.q}</div>
       <div class="career-options">
         ${q.opts.map((opt, i) => `
@@ -1878,19 +1898,19 @@ async function showCareerResult() {
   if (!recommendedUnis.length) recommendedUnis = unis.slice(0, 3).map(u => ({ ...u, score: 1 }));
 
   const catLabels = {
-    'IT': 'Информационные технологии',
-    'Медицина': 'Медицина и здравоохранение',
-    'Экономика': 'Экономика и бизнес',
-    'Право': 'Юриспруденция',
-    'Инженерия': 'Инженерия',
-    'Гуманитарные': 'Гуманитарные науки',
-    'Образование': 'Педагогика',
-    'Естественные науки': 'Естественные науки',
+    'IT': t('career_questions.cat_it'),
+    'Медицина': t('career_questions.cat_medicine'),
+    'Экономика': t('career_questions.cat_economics'),
+    'Право': t('career_questions.cat_law'),
+    'Инженерия': t('career_questions.cat_engineering'),
+    'Гуманитарные': t('career_questions.cat_humanities'),
+    'Образование': t('career_questions.cat_education'),
+    'Естественные науки': t('career_questions.cat_natural'),
   };
 
   if (typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
     Auth.saveTestResult('career_test', recommendedUnis.length, 4, {
-      summary: `Направления: ${topCats.join(', ')}`,
+      summary: `${t('career_questions.summary_prefix')} ${topCats.join(', ')}`,
       topCategories: topCats,
       recommendedIds: recommendedUnis.map(u => u.id),
       budget: careerState.budget
@@ -1902,12 +1922,12 @@ async function showCareerResult() {
       <div class="career-result-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       </div>
-      <h2 class="career-result-title">Ваш профиль готов</h2>
-      <p class="career-result-sub">На основе ваших ответов мы определили подходящие направления и университеты</p>
+      <h2 class="career-result-title">${t('career_page_js.profile_ready')}</h2>
+      <p class="career-result-sub">${t('career_page_js.profile_desc')}</p>
     </div>
 
     <div class="career-cats">
-      <h3 class="career-section-label">Рекомендуемые направления</h3>
+      <h3 class="career-section-label">${t('career_page_js.rec_directions')}</h3>
       <div class="career-cats-list">
         ${topCats.map((cat, i) => `
           <div class="career-cat-item ${i === 0 ? 'career-cat-top' : ''}">
@@ -1919,16 +1939,16 @@ async function showCareerResult() {
     </div>
 
     <div class="career-unis">
-      <h3 class="career-section-label">Подходящие университеты</h3>
+      <h3 class="career-section-label">${t('career_page_js.matching_unis')}</h3>
       <div class="career-unis-grid">
         ${recommendedUnis.map((u, i) => `
           <div class="career-uni-card ${i === 0 ? 'career-uni-top' : ''}">
-            ${i === 0 ? '<div class="career-uni-badge">Лучший выбор</div>' : ''}
-            <div class="career-uni-name">${u.short_name || u.name}</div>
-            <div class="career-uni-fullname">${u.name}</div>
-            <div class="career-uni-price">от ${fmtPrice(u.price_from)} тг/год</div>
+            ${i === 0 ? `<div class="career-uni-badge">${t('career_page_js.best_choice')}</div>` : ''}
+            <div class="career-uni-name">${trRu(u.short_name) || trRu(u.name)}</div>
+            <div class="career-uni-fullname">${trRu(u.name)}</div>
+            <div class="career-uni-price">${t('career_page_js.from_price')} ${fmtPrice(u.price_from)} ${t('career_page_js.tenge_year')}</div>
             ${u.qs_world ? `<div class="career-uni-qs">QS World #${u.qs_world}</div>` : ''}
-            <button class="btn btn-sm btn-detail" style="margin-top:12px" onclick="navigate('university', ${u.id})">Подробнее</button>
+            <button class="btn btn-sm btn-detail" style="margin-top:12px" onclick="navigate('university', ${u.id})">${t('admission_page.uni_details')}</button>
           </div>
         `).join('')}
       </div>
@@ -1939,9 +1959,9 @@ async function showCareerResult() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6M12 18h.01"/></svg>
       </div>
       <div>
-        <strong>Финансовый совет:</strong> при вашем бюджете до <strong>${fmtPrice(careerState.budget)} тг/год</strong>
-        за 4 года вы потратите от <strong>${fmtPrice(recommendedUnis[0]?.price_from * 4)} тг</strong>.
-        Используйте наш <a href="#" onclick="navigate('tips')" style="color:var(--accent);text-decoration:underline">калькулятор</a> чтобы рассчитать окупаемость.
+        <strong>${t('career_page_js.finance_advice')}</strong> ${t('career_page_js.budget_up_to')} <strong>${fmtPrice(careerState.budget)} ${t('career_page_js.tenge_year')}</strong>
+        ${t('career_page_js.spent_4yr')} <strong>${fmtPrice(recommendedUnis[0]?.price_from * 4)} ${t('common.tenge')}</strong>.
+        <a href="#" onclick="navigate('tips')" style="color:var(--accent);text-decoration:underline">${t('career_page_js.calculator')}</a> ${t('career_page_js.calc_roi')}
       </div>
     </div>
   `;
@@ -1963,7 +1983,7 @@ async function loadGrants() {
     renderGrants(allGrants);
     initGrantMatching();
   } catch(e) {
-    if(grid) grid.innerHTML = '<div class="loading-state"><p>Ошибка загрузки</p></div>';
+    if(grid) grid.innerHTML = `<div class="loading-state"><p>${t('grants_page_js.load_error')}</p></div>`;
   }
 }
 
@@ -1977,9 +1997,9 @@ function filterGrants(type, btn) {
 function renderGrants(grants) {
   const grid = document.getElementById('grants-grid');
   if (!grid) return;
-  if (!grants.length) { grid.innerHTML = '<div class="loading-state"><p>Нет грантов в этой категории</p></div>'; return; }
+  if (!grants.length) { grid.innerHTML = `<div class="loading-state"><p>${t('grants_page_js.no_grants_category')}</p></div>`; return; }
 
-  const typeLabels = { government: 'Государственный', regional: 'Региональный', corporate: 'Корпоративный', university: 'Вузовский' };
+  const typeLabels = { government: t('grants_page_js.type_government'), regional: t('grants_page_js.type_regional'), corporate: t('grants_page_js.type_corporate'), university: t('grants_page_js.type_university') };
   const typeColors = { government: 'accent', regional: 'gold', corporate: 'blue', university: 'purple' };
 
   grid.innerHTML = grants.map(g => `
@@ -1991,7 +2011,7 @@ function renderGrants(grants) {
       <h3 class="grant-name">${g.name}</h3>
       <p class="grant-desc">${g.description}</p>
       <div class="grant-requirements">
-        <div class="grant-req-title">Требования:</div>
+        <div class="grant-req-title">${t('grants_page_js.requirements')}</div>
         <ul class="grant-req-list">
           ${(g.requirements || []).map(r => `<li>${r}</li>`).join('')}
         </ul>
@@ -1999,9 +2019,9 @@ function renderGrants(grants) {
       <div class="grant-footer">
         <div class="grant-deadline">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Дедлайн: ${g.deadline}
+          ${t('grants_page_js.deadline')} ${g.deadline}
         </div>
-        ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">Подробнее</a>` : ''}
+        ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">${t('grants_page_js.more_details')}</a>` : ''}
       </div>
     </div>
   `).join('');
@@ -2067,7 +2087,7 @@ function showProfessionAnalysis(name) {
   const demandColor = demandColors[data.demand] || 'var(--text-muted)';
 
   document.getElementById('profession-modal-content').innerHTML = `
-    <div class="prof-badge">AI Анализ профессии</div>
+    <div class="prof-badge">${t('prof_page.ai_analysis')}</div>
     <div class="prof-title">${data.title}</div>
     <div class="prof-subtitle">${name}</div>
     <div class="prof-grid">
@@ -2075,27 +2095,27 @@ function showProfessionAnalysis(name) {
         <div class="prof-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
-        <div class="prof-card-label">Средняя зарплата</div>
+        <div class="prof-card-label">${t('prof_page.avg_salary')}</div>
         <div class="prof-card-val">${data.salary}</div>
       </div>
       <div class="prof-card">
         <div class="prof-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </div>
-        <div class="prof-card-label">Рост рынка</div>
+        <div class="prof-card-label">${t('prof_page.market_growth')}</div>
         <div class="prof-card-val" style="color:${data.growth !== '—' ? '#52b788' : 'var(--text-muted)'}">${data.growth}</div>
       </div>
       <div class="prof-card">
         <div class="prof-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
-        <div class="prof-card-label">Спрос</div>
-        <div class="prof-card-val" style="color:${demandColor}">${data.demand}</div>
+        <div class="prof-card-label">${t('prof_page.demand')}</div>
+        <div class="prof-card-val" style="color:${demandColor}">${t('demand_labels.' + data.demand) || data.demand}</div>
       </div>
     </div>
     <div class="prof-note">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      Данные основаны на анализе рынка труда Казахстана и международных тенденций 2025–2026 гг.
+      ${t('prof_page.disclaimer')}
     </div>
   `;
   openModal('modal-profession');
@@ -2112,7 +2132,7 @@ function initGrantMatching() {
   [...names].sort().forEach(n => {
     const opt = document.createElement('option');
     opt.value = n;
-    opt.textContent = n;
+    opt.textContent = trRu(n);
     sel.appendChild(opt);
   });
 }
@@ -2123,7 +2143,7 @@ function runGrantMatching() {
   const resultEl = document.getElementById('grant-ai-result');
 
   if (!ent || !spec) {
-    showToast('Введите балл ЕНТ и выберите специальность');
+    showToast(t('admission_page.ent_must_be') + ' / ' + t('admission_page.choose_spec'));
     return;
   }
 
@@ -2140,9 +2160,9 @@ function runGrantMatching() {
 
   const demandHTML = hasDemand ? `
     <div class="gm-demand">
-      <span>Спрос на рынке: <strong style="color:${demandColors[hasDemand.demand] || 'var(--text)'}">${hasDemand.demand}</strong></span>
-      <span>Рост: <strong style="color:#52b788">${hasDemand.growth}</strong></span>
-      <span>Средняя зарплата: <strong>${hasDemand.salary}</strong></span>
+      <span>${t('grants_page_js.demand_label')} <strong style="color:${demandColors[hasDemand.demand] || 'var(--text)'}">${hasDemand.demand}</strong></span>
+      <span>${t('grants_page_js.growth_label')} <strong style="color:#52b788">${hasDemand.growth}</strong></span>
+      <span>${t('grants_page_js.salary_label')} <strong>${hasDemand.salary}</strong></span>
     </div>
   ` : '';
 
@@ -2152,7 +2172,7 @@ function runGrantMatching() {
     resultEl.innerHTML = `
       <div class="gm-empty">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <span>Для специальности <strong>${spec}</strong> подходящих грантов пока не найдено.</span>
+        <span>${t('grants_page_js.for_spec')} <strong>${spec}</strong> ${t('grants_page_js.not_found_yet')}</span>
       </div>
     `;
     return;
@@ -2161,7 +2181,7 @@ function runGrantMatching() {
   resultEl.innerHTML = `
     <div class="gm-header">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span>ИИ подобрал <strong>${matched.length}</strong> грант${matched.length !== 1 ? 'ов' : ''} для вас</span>
+      <span>${t('grants_page_js.ai_grants')} <strong>${matched.length}</strong> ${t('grants_page_js.grants_for_you')}</span>
     </div>
     ${demandHTML}
     <div class="gm-list">
@@ -2170,9 +2190,9 @@ function runGrantMatching() {
           <div class="gm-check">✓</div>
           <div class="gm-info">
             <div class="gm-name">${g.name}</div>
-            <div class="gm-meta">${g.type === 'university' ? 'Вузовский' : g.type} · ${g.amount}</div>
+            <div class="gm-meta">${g.type === 'university' ? t('grants_page_js.type_university') : g.type} · ${g.amount}</div>
           </div>
-          ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">Подробнее</a>` : ''}
+          ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">${t('grants_page_js.more_details')}</a>` : ''}
         </div>
       `).join('')}
     </div>
@@ -2219,11 +2239,11 @@ async function loadMap() {
     const marker = L.marker([u.lat, u.lng], { icon: greenIcon }).addTo(mapInstance);
     marker.bindPopup(`
       <div style="font-family:sans-serif;min-width:200px;padding:4px">
-        <div style="font-weight:700;font-size:14px;margin-bottom:4px">${u.short_name}</div>
-        <div style="font-size:12px;color:#666;margin-bottom:6px">${u.name}</div>
-        <div style="font-size:13px;color:#2d6a4f;font-weight:600">от ${fmtPrice(u.price_from)} тг/год</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px">${trRu(u.short_name)}</div>
+        <div style="font-size:12px;color:#666;margin-bottom:6px">${trRu(u.name)}</div>
+        <div style="font-size:13px;color:#2d6a4f;font-weight:600">от ${fmtPrice(u.price_from)} ${t('common.tenge')}/год</div>
         ${u.qs_world ? `<div style="font-size:12px;color:#888">QS World #${u.qs_world}</div>` : ''}
-        <button onclick="navigate('university',${u.id})" style="margin-top:8px;padding:4px 10px;background:#2d6a4f;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer">Подробнее</button>
+        <button onclick="navigate('university',${u.id})" style="margin-top:8px;padding:4px 10px;background:#2d6a4f;color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer">${t('grants_page_js.more_details')}</button>
       </div>
     `);
     state.mapMarkers.push({ marker, uni: u });
@@ -2233,7 +2253,7 @@ async function loadMap() {
   // List under map
   const list = document.getElementById('map-uni-list');
   if (list) {
-    list.innerHTML = `<div class="map-legend-title">Все университеты на карте (${unis.filter(u=>u.lat).length})</div><div class="map-uni-chips" id="map-chips">${unis.filter(u=>u.lat).map(u=>`<button class="map-uni-chip" onclick="mapFlyTo(${u.lat},${u.lng},'${u.short_name}')">${u.short_name}</button>`).join('')}</div>`;
+    list.innerHTML = `<div class="map-legend-title">${t('map_page_js.all_on_map')} (${unis.filter(u=>u.lat).length})</div><div class="map-uni-chips" id="map-chips">${unis.filter(u=>u.lat).map(u=>`<button class="map-uni-chip" onclick="mapFlyTo(${u.lat},${u.lng},'${u.short_name}')">${u.short_name}</button>`).join('')}</div>`;
   }
   
   // Fit all markers in view with padding
