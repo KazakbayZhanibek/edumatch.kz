@@ -2765,7 +2765,6 @@ input, select, textarea { font-family: inherit; }
   .desktop-only     { display: none !important; }
 
   /* Compact cards */
-  .uni-description  { display: none; }
   .uni-specialties  { display: none; }
   .uni-card         { padding: 16px; }
   .uni-name         { font-size: 15px; }
