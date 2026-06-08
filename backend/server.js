@@ -41,13 +41,13 @@ app.get('/api/cities', (req, res) => {
 });
 
 app.get('/api/universities', (req, res) => {
-  try { res.json(getUniversities(req.query)); }
+  try { res.json(getUniversities({ ...req.query, lang: req.query.lang || 'ru' })); }
   catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 app.get('/api/universities/:id', (req, res) => {
   try {
-    const u = getUniversity(req.params.id);
+    const u = getUniversity(req.params.id, req.query.lang || 'ru');
     if (!u) return res.status(404).json({ error: 'Not found' });
     res.json(u);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -58,7 +58,8 @@ app.get('/api/compare', (req, res) => {
     const ids = (req.query.ids || '').split(',').map(Number).filter(Boolean);
     if (ids.length < 2) return res.status(400).json({ error: 'Min 2' });
     if (ids.length > 3) return res.status(400).json({ error: 'Max 3' });
-    res.json(ids.map(id => getUniversity(id)).filter(Boolean));
+    const lang = req.query.lang || 'ru';
+    res.json(ids.map(id => getUniversity(id, lang)).filter(Boolean));
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -68,7 +69,7 @@ app.get('/api/specialties', (req, res) => {
 });
 
 app.get('/api/grants', (req, res) => {
-  try { res.json(getGrants()); }
+  try { res.json(getGrants({ lang: req.query.lang || 'ru' })); }
   catch (err) { res.status(500).json({ error: err.message }); }
 });
 

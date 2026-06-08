@@ -8,19 +8,25 @@
 
 const { getDb } = require('./database');
 
+function pickDescription(row, lang) {
+  if (lang === 'kk' && row.description_kk) return row.description_kk;
+  if (lang === 'en' && row.description_en) return row.description_en;
+  return row.description;
+}
+
 /**
  * getUniversities({ sort, price_max, specialty, language, city_id, is_top })
  * 
  * Возвращает массив университетов с фильтрацией и сортировкой
  * Совместимо со старым API
  */
-function getUniversities({ sort, price_max, specialty, language, city_id, is_top } = {}) {
+function getUniversities({ sort, price_max, specialty, language, city_id, is_top, lang } = {}) {
   const db = getDb();
   
   let query = `
     SELECT DISTINCT
       u.id, u.name, u.short_name, u.city_id, u.qs_world, u.qs_asia,
-      u.price_from, u.price_to, u.website, u.description, u.founded,
+      u.price_from, u.price_to, u.website, u.description, u.description_kk, u.description_en, u.founded,
       u.students_count, u.languages, u.accreditations, u.has_dorm,
       u.dorm_price, u.avg_salary, u.lat, u.lng,
       u.admission_phone, u.admission_email,
@@ -124,6 +130,7 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
 
     return {
       ...u,
+      description: pickDescription(u, lang),
       languages,
       accreditations,
       specialties,
@@ -138,13 +145,13 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
  * getUniversity(id)
  * Возвращает один университет со всеми деталями
  */
-function getUniversity(id) {
+function getUniversity(id, lang) {
   const db = getDb();
   
   const stmt = db.prepare(`
     SELECT
       u.id, u.name, u.short_name, u.city_id, u.qs_world, u.qs_asia,
-      u.price_from, u.price_to, u.website, u.description, u.founded,
+      u.price_from, u.price_to, u.website, u.description, u.description_kk, u.description_en, u.founded,
       u.students_count, u.languages, u.accreditations, u.has_dorm,
       u.dorm_price, u.avg_salary, u.lat, u.lng,
       u.admission_phone, u.admission_email, u.admission_whatsapp,
@@ -186,6 +193,7 @@ function getUniversity(id) {
 
   return {
     ...u,
+    description: pickDescription(u, lang),
     languages,
     accreditations,
     specialties,
@@ -216,19 +224,23 @@ function getSpecialtyCategories() {
  * Note: Гранты могут быть связаны со специальностями.
  * Для совместимости с текущим API возвращаем specialty_ids, если они есть.
  */
-function getGrants() {
+function getGrants({ lang } = {}) {
   const db = getDb();
   
   const stmt = db.prepare(`
     SELECT
-      g.id, g.name, g.type, g.amount, g.description, g.requirements, g.deadline, g.link
+      g.id, g.name, g.name_kk, g.name_en,
+      g.type, g.amount,
+      g.description, g.description_kk, g.description_en,
+      g.requirements, g.requirements_kk, g.requirements_en,
+      g.deadline, g.link
     FROM grants g
     ORDER BY g.id ASC
   `);
 
   let grants = stmt.all();
 
-  // Постобработка: добавляем specialty_ids, если они есть
+  // Постобработка: добавляем specialty_ids, если они есть, и переводим
   grants = grants.map(g => {
     const specialtiesStmt = db.prepare(`
       SELECT specialty_id
@@ -241,7 +253,10 @@ function getGrants() {
     // Парсим JSON поля с error handling
     let requirements = [];
     try {
-      requirements = g.requirements ? JSON.parse(g.requirements) : [];
+      const reqField = lang === 'kk' && g.requirements_kk ? g.requirements_kk
+        : lang === 'en' && g.requirements_en ? g.requirements_en
+        : g.requirements;
+      requirements = reqField ? JSON.parse(reqField) : [];
     } catch (e) {
       console.warn(`Invalid requirements JSON for grant ${g.id}:`, g.requirements);
       requirements = [];
@@ -249,8 +264,18 @@ function getGrants() {
 
     const result = {
       ...g,
-      requirements
+      name: pickDescription({ description: g.name, description_kk: g.name_kk, description_en: g.name_en }, lang),
+      description: pickDescription(g, lang),
+      requirements,
     };
+
+    // Убираем лишние переводные колонки из ответа
+    delete result.name_kk;
+    delete result.name_en;
+    delete result.description_kk;
+    delete result.description_en;
+    delete result.requirements_kk;
+    delete result.requirements_en;
 
     // Если есть связанные специальности, добавляем их
     if (specialty_ids.length > 0) {

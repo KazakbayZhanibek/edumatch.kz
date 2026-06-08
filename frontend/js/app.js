@@ -246,6 +246,7 @@ async function loadUniversities() {
     if (cityId) params.set('city_id', cityId);
     if (isTop) params.set('is_top', isTop);
     if (lang) params.set('language', lang);
+    params.set('lang', window.currentLanguage || 'ru');
 
     const res = await fetch(`${API}/universities?${params}`);
     let unis = await res.json();
@@ -541,7 +542,7 @@ async function renderComparePage() {
   content.innerHTML = `<div class="loading-state"><div class="spinner"></div></div>`;
 
   try {
-    const res = await fetch(`${API}/compare?ids=${state.compareList.join(',')}`);
+    const res = await fetch(`${API}/compare?ids=${state.compareList.join(',')}&lang=${window.currentLanguage || 'ru'}`);
     const unis = await res.json();
     renderCompareTable(unis, content);
   } catch (e) {
@@ -617,7 +618,7 @@ async function loadUniversityDetail(id) {
   content.innerHTML = `<div class="loading-state"><div class="spinner"></div></div>`;
 
   try {
-    const res = await fetch(`${API}/universities/${id}`);
+    const res = await fetch(`${API}/universities/${id}?lang=${window.currentLanguage || 'ru'}`);
     const u = await res.json();
     renderUniversityDetail(u, content);
   } catch (e) {
@@ -897,7 +898,7 @@ async function sendMessage() {
       body: JSON.stringify({
         message: text,
         history: state.chatHistory.slice(-20),
-        lang: currentLang || 'ru',
+        lang: window.currentLanguage || 'ru',
       })
     });
     const data = await res.json();
@@ -1446,7 +1447,7 @@ async function calculateAdmissionChance() {
     const res = await fetch(`${API}/admission/calculate`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ ...payload, lang: currentLang || 'ru' }),
+      body: JSON.stringify({ ...payload, lang: window.currentLanguage || 'ru' }),
     });
 
     const result = await res.json();
@@ -1876,7 +1877,7 @@ async function showCareerResult() {
   // Get matching unis
   let unis = state.universities;
   if (!unis.length) {
-    const res = await fetch(`${API}/universities`);
+    const res = await fetch(`${API}/universities?lang=${window.currentLanguage || 'ru'}`);
     unis = await res.json();
   }
 
@@ -1978,7 +1979,7 @@ async function loadGrants() {
   const grid = document.getElementById('grants-grid');
   if (!grid) return;
   try {
-    const res = await fetch(`${API}/grants`);
+    const res = await fetch(`${API}/grants?lang=${window.currentLanguage || 'ru'}`);
     allGrants = await res.json();
     renderGrants(allGrants);
     initGrantMatching();
@@ -2219,7 +2220,7 @@ async function loadMap() {
     attribution: '© OpenStreetMap contributors'
   }).addTo(mapInstance);
 
-  const res = await fetch(`${API}/universities`);
+  const res = await fetch(`${API}/universities?lang=${window.currentLanguage || 'ru'}`);
   const unis = await res.json();
   state.mapUniversities = Array.isArray(unis) ? unis : [];
 
