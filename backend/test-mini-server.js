@@ -1,0 +1,10 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const { initDatabase } = require('./database');
+initDatabase();
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.post('/test', (req, res) => { console.log('Got:', req.body); res.json({ok:1}); });
+app.listen(3001, () => { console.log('OK'); process.stdout.write('READY\n'); });

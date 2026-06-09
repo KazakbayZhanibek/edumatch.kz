@@ -442,17 +442,17 @@ async function loadProfilePage() {
           <h2 class="profile-card-title">${t('profile_page.card_tests_title')} <span class="profile-count">${tests.length}</span></h2>
           ${tests.length ? `
             <div class="profile-tests-list">
-              ${tests.map(t => {
-                const data = t.result_data ? JSON.parse(t.result_data) : {};
-                const labelFn = TEST_TYPE_LABELS[t.test_type];
-                const label = typeof labelFn === 'function' ? labelFn() : t.test_type;
+              ${tests.map(test => {
+                const data = test.result_data ? JSON.parse(test.result_data) : {};
+                const labelFn = TEST_TYPE_LABELS[test.test_type];
+                const label = typeof labelFn === 'function' ? labelFn() : test.test_type;
                 return `
                   <div class="profile-test-item">
-                    <button class="profile-chat-delete" onclick="deleteTestResultItem(${t.id}, this)" title="${t('profile_page.card_saved_delete')}">✕</button>
+                    <button class="profile-chat-delete" onclick="deleteTestResultItem(${test.id}, this)" title="${t('profile_page.card_saved_delete')}">✕</button>
                     <div class="profile-test-type">${label}</div>
-                    <div class="profile-test-score">${t.score}${t.max_score ? ` / ${t.max_score}` : ''}</div>
+                    <div class="profile-test-score">${test.score}${test.max_score ? ` / ${test.max_score}` : ''}</div>
                     ${data.summary ? `<div class="profile-test-meta">${escapeHtml(data.summary)}</div>` : ''}
-                    <div class="profile-chat-date">${formatDate(t.created_at)}</div>
+                    <div class="profile-chat-date">${formatDate(test.created_at)}</div>
                   </div>
                 `;
               }).join('')}

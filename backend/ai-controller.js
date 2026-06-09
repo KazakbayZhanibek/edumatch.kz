@@ -1,11 +1,45 @@
 const { getAIAdvice } = require('./ai-service');
 const authService = require('./auth-service');
 
+// Rate limiting: store user request timestamps
+const requestLogs = new Map();
+const MAX_REQUESTS = 10; // max requests per time window
+const TIME_WINDOW = 60000; // 60 seconds
+
+function checkRateLimit(userId) {
+  const key = userId || 'anonymous';
+  const now = Date.now();
+  
+  if (!requestLogs.has(key)) {
+    requestLogs.set(key, []);
+  }
+  
+  const log = requestLogs.get(key);
+  // Remove old entries
+  const recentRequests = log.filter(t => now - t < TIME_WINDOW);
+  requestLogs.set(key, recentRequests);
+  
+  if (recentRequests.length >= MAX_REQUESTS) {
+    return false;
+  }
+  
+  recentRequests.push(now);
+  return true;
+}
+
 async function handleAIAdvice(req, res) {
   const startTime = Date.now();
 
   try {
     const { message, history } = req.body;
+
+    // Rate limiting check
+    if (!checkRateLimit(req.userId)) {
+      return res.status(429).json({
+        success: false,
+        error: 'Too many requests. Please wait a moment before sending another message.',
+      });
+    }
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({

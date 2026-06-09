@@ -33,14 +33,15 @@ function getCityId(cityName) {
 
 // Заготовки для демо-данных
 // Каждая запись: { specialty, year, universities, data_rows }
+// Названия приведены к реальным значениям в БД
 const demoData = [
-  // ========== ИНФОРМАЦИОННЫЕ ТЕХНОЛОГИИ / IT ==========
+  // ========== КОМПЬЮТЕРНЫЕ НАУКИ / IT ==========
   {
-    specialtyName: 'Информационные технологии',
+    specialtyName: 'Компьютерные науки',
     year: currentYear,
     entries: [
       {
-        universityShortName: 'KBTU',
+        universityShortName: 'КБТУ',
         cityName: 'Алматы',
         language: 'английский',
         budgetMax: 3000000,
@@ -66,7 +67,7 @@ const demoData = [
       },
       {
         universityShortName: 'ЕНУ',
-        cityName: 'Нур-Султан',
+        cityName: 'Астана',
         language: 'русский',
         budgetMax: 2200000,
         requiresDormSupport: 1,
@@ -85,7 +86,7 @@ const demoData = [
     year: currentYear,
     entries: [
       {
-        universityShortName: 'КазМУ',
+        universityShortName: 'КазНМУ',
         cityName: 'Алматы',
         language: 'казахский',
         budgetMax: 4500000,
@@ -97,8 +98,8 @@ const demoData = [
         ]
       },
       {
-        universityShortName: 'АКСУ',
-        cityName: 'Алматы',
+        universityShortName: 'СГМУ',
+        cityName: 'Семей',
         language: 'русский',
         budgetMax: 3500000,
         requiresDormSupport: null,
@@ -109,8 +110,8 @@ const demoData = [
         ]
       },
       {
-        universityShortName: 'УМПО',
-        cityName: 'Нур-Султан',
+        universityShortName: 'КазНУ',
+        cityName: 'Алматы',
         language: 'русский',
         budgetMax: 2800000,
         requiresDormSupport: 1,
@@ -124,7 +125,7 @@ const demoData = [
 
   // ========== БИЗНЕС / ЭКОНОМИКА ==========
   {
-    specialtyName: 'Бизнес',
+    specialtyName: 'Бизнес и менеджмент',
     year: currentYear,
     entries: [
       {
@@ -153,7 +154,7 @@ const demoData = [
       },
       {
         universityShortName: 'ЕНУ',
-        cityName: 'Нур-Султан',
+        cityName: 'Астана',
         language: 'русский',
         budgetMax: 2000000,
         requiresDormSupport: null,
@@ -244,9 +245,9 @@ console.log(`
 
 Данные успешно добавлены в admission_chance_stats!
 Таблица заполнена статистикой для:
-  • Информационные технологии (KBTU, КазНУ, ЕНУ)
-  • Медицина (КазМУ, АКСУ, УМПО)
-  • Бизнес (KIMEP, КазНУ, ЕНУ)
+  • Компьютерные науки (КБТУ, КазНУ, ЕНУ)
+  • Медицина (КазНМУ, СГМУ, КазНУ)
+  • Бизнес и менеджмент (KIMEP, КазНУ, ЕНУ)
 
 Все данные помечены как 'demo/manual estimate' с confidence_level 'low' или 'medium'.
 `);

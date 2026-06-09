@@ -166,10 +166,10 @@ router.post('/explain', verifyAuthOptional, async (req, res) => {
  * }
  */
 router.post('/calculate', verifyAuthOptional, async (req, res) => {
+  const lang = getLang(req);
   try {
     const input = req.body;
     const useAiExplanation = input.useAiExplanation === true;
-    const lang = getLang(req);
     
     console.log('[admission /calculate] Received request, useAiExplanation:', useAiExplanation);
     

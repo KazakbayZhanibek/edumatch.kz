@@ -204,17 +204,17 @@ function getUniversity(id, lang) {
 
 /**
  * getSpecialtyCategories()
- * Возвращает отсортированный массив уникальных категорий специальностей
+ * Возвращает массив специальностей с id, name и category для выпадающих списков
  */
 function getSpecialtyCategories() {
   const db = getDb();
   const stmt = db.prepare(`
-    SELECT DISTINCT s.category
+    SELECT DISTINCT s.id, s.name, s.category
     FROM specialties s
     JOIN university_specialties us ON s.id = us.specialty_id
-    ORDER BY s.category ASC
+    ORDER BY s.category ASC, s.name ASC
   `);
-  return stmt.all().map(row => row.category);
+  return stmt.all();
 }
 
 /**

@@ -1018,6 +1018,78 @@ input, select, textarea { font-family: inherit; }
 .chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
 .chat-disclaimer { font-size: 11px; color: var(--text-muted); margin-top: 8px; text-align: center; }
 
+/* Chat suggestions */
+.chat-suggestions {
+  margin: 16px 0;
+  padding: 12px;
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  animation: fadeInUp 0.3s ease both;
+}
+.chat-suggestions-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.chat-suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.chat-suggestion-btn {
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+.chat-suggestion-btn:hover {
+  background: var(--bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateX(4px);
+}
+.chat-suggestion-btn:active {
+  transform: translateX(2px);
+}
+
+/* Error actions (retry button) */
+.chat-error-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-outline {
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--transition);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+.btn-outline:active {
+  transform: scale(0.98);
+}
+
 /* LOADING */
 .loading-state {
   display: flex;

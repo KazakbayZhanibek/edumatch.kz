@@ -1,4 +1,4 @@
-/**
+/*
  * Admission Calculator Engine — детерминированный расчет без AI
  * 
  * Использует историческую статистику из admission_chance_stats
@@ -121,31 +121,23 @@ function findHistoricalStats(query) {
   if (cityId) {
     sql += ` AND (city_id = ? OR city_id IS NULL)`;
     params.push(cityId);
-  } else {
-    sql += ` AND city_id IS NULL`;
   }
 
   // Фильтруем по языку (если указан)
   if (language) {
     sql += ` AND (language = ? OR language IS NULL)`;
     params.push(language);
-  } else {
-    sql += ` AND language IS NULL`;
   }
 
   // Фильтруем по бюджету (если указан)
   if (budgetMax) {
     sql += ` AND (budget_max IS NULL OR budget_max >= ?)`;
     params.push(budgetMax);
-  } else {
-    sql += ` AND budget_max IS NULL`;
   }
 
   // Фильтруем по общежитию (если нужно)
   if (needsDorm) {
     sql += ` AND (requires_dorm_support IS NULL OR requires_dorm_support = 1)`;
-  } else {
-    sql += ` AND requires_dorm_support IS NULL`;
   }
 
   // Фильтруем по GPA, если есть

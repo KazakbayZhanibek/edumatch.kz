@@ -280,7 +280,7 @@ async function loadUniversities() {
 async function loadSpecialties() {
   try {
     const res = await fetch(`${API}/specialties`);
-    const cats = await res.json();
+    const specs = await res.json();
     const selects = [
       document.getElementById('filter-specialty'),
       document.getElementById('sheet-specialty')
@@ -288,10 +288,10 @@ async function loadSpecialties() {
 
     selects.forEach(sel => {
       while (sel.options.length > 1) sel.remove(1);
-      cats.forEach(cat => {
+      specs.forEach(spec => {
         const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
+        opt.value = spec.category || spec;
+        opt.textContent = spec.category || spec;
         sel.appendChild(opt);
       });
     });
@@ -347,10 +347,9 @@ async function loadSpecialties() {
     
     // Добавляем все специальности
     if (Array.isArray(specialties)) {
-      specialties.forEach((spec, idx) => {
+      specialties.forEach((spec) => {
         const opt = document.createElement('option');
-        // Spec может быть {name, id, category} или просто {name, category}
-        opt.value = spec.id || (idx + 1);
+        opt.value = spec.id;
         opt.textContent = trRu(spec.name || spec);
         specSelect.appendChild(opt);
       });
@@ -866,16 +865,29 @@ function addToCompareAndGo(id) {
 }
 
 // ─── AI ADVISOR CHAT ─────────────────────────
-async function sendMessage() {
+// Rate limiting state
+let lastMessageTime = 0;
+const MESSAGE_DELAY = 1500; // ms between messages
+
+async function sendMessage(retryMessage = null) {
   const input = document.getElementById('chat-input');
-  const text = input.value.trim();
+  let text = retryMessage || input.value.trim();
   if (!text) return;
 
-  input.value = '';
-  autoResize(input);
+  // Rate limiting check
+  const now = Date.now();
+  if (now - lastMessageTime < MESSAGE_DELAY) {
+    showToast(t('toast.wait_please') || 'Подождите немного...', 'default');
+    return;
+  }
+  lastMessageTime = now;
 
-  appendMessage('user', text);
-  state.chatHistory.push({ role: 'user', content: text });
+  if (!retryMessage) {
+    input.value = '';
+    autoResize(input);
+    appendMessage('user', text);
+    state.chatHistory.push({ role: 'user', content: text });
+  }
 
   // Typing indicator
   const typingId = appendTyping();
@@ -888,6 +900,9 @@ async function sendMessage() {
       headers['Authorization'] = `Bearer ${Auth.getToken()}`;
     }
 
+    console.log('[sendMessage] Sending request to:', `${API}/ai/advice`);
+    console.log('[sendMessage] Payload:', { message: text, history: state.chatHistory.slice(-20).length, lang: window.currentLanguage || 'ru' });
+
     const res = await fetch(`${API}/ai/advice`, {
       method: 'POST',
       headers,
@@ -895,13 +910,26 @@ async function sendMessage() {
         message: text,
         history: state.chatHistory.slice(-20),
         lang: window.currentLanguage || 'ru',
-      })
+      }),
+      timeout: 15000,
     });
+
+    console.log('[sendMessage] Response status:', res.status, res.ok);
+
+    if (!res.ok && res.status === 429) {
+      removeTyping(typingId);
+      appendMessage('ai', t('error.too_many_requests') || 'Слишком много запросов. Подождите 1 минуту.', null, null, { retryFn: () => sendMessage(text) });
+      document.getElementById('chat-send').disabled = false;
+      return;
+    }
+
     const data = await res.json();
+    console.log('[sendMessage] Response data:', data);
     removeTyping(typingId);
 
     if (!data.success) {
-      appendMessage('ai', `${t('error.load_error')}: ${data.error || 'Unknown error'}`);
+      const errorMsg = data.error || 'Unknown error';
+      appendMessage('ai', `⚠️ ${t('error.load_error')}: ${errorMsg}`, null, null, { retryFn: () => sendMessage(text) });
     } else {
       // Show AI answer
       if (data.intent === 'admission' && data.admission && data.admission.type === 'result') {
@@ -910,13 +938,122 @@ async function sendMessage() {
         appendMessage('ai', data.answer, data.matches);
       }
       state.chatHistory.push({ role: 'assistant', content: data.answer });
+      
+      // Show quick suggestions based on intent
+      showQuickSuggestions(data.intent, text);
     }
   } catch (e) {
+    console.error('[sendMessage] Error caught:', e.name, e.message, e.stack);
     removeTyping(typingId);
-    appendMessage('ai', t('error.server_offline'));
+    const isTimeout = e.name === 'AbortError' || e.message.includes('timeout');
+    const errorMsg = isTimeout 
+      ? (t('error.timeout') || 'Сервер не отвечает')
+      : (t('error.server_offline') || 'Сервер недоступен');
+    
+    appendMessage('ai', `⚠️ ${errorMsg}`, null, null, { retryFn: () => sendMessage(text) });
   }
 
   document.getElementById('chat-send').disabled = false;
+}
+
+function showQuickSuggestions(intent, userMessage) {
+  const container = document.getElementById('chat-messages');
+  
+  let suggestions = [];
+  const lang = window.currentLanguage || 'ru';
+  
+  if (lang === 'ru') {
+    if (intent === 'city' || intent === 'recommendation') {
+      suggestions = [
+        'Покажи вузы на стипендию',
+        'Какая средняя зарплата?',
+        'Есть ли общежитие?'
+      ];
+    } else if (intent === 'admission') {
+      suggestions = [
+        'Покажи другие варианты',
+        'Какие требования к ЕНТ?',
+        'Есть ли гранты?'
+      ];
+    } else if (intent === 'grant') {
+      suggestions = [
+        'Какой минимальный балл?',
+        'Есть ли ещё гранты?',
+        'Какие вузы участвуют?'
+      ];
+    } else {
+      suggestions = [
+        'Какие вузы в Алматы?',
+        'Посоветуй специальность',
+        'Сколько стоит обучение?'
+      ];
+    }
+  } else if (lang === 'kk') {
+    if (intent === 'city' || intent === 'recommendation') {
+      suggestions = [
+        'Стипендиялы университеттер',
+        'Орташа жалақы қанша?',
+        'Жатын ойы бар ма?'
+      ];
+    } else if (intent === 'admission') {
+      suggestions = [
+        'Басқа нұсқаларды көрсет',
+        'ҰБТ талаптары қандай?',
+        'Грант бар ма?'
+      ];
+    } else if (intent === 'grant') {
+      suggestions = [
+        'Ең төменгі балл қанша?',
+        'Басқа грантар бар ма?',
+        'Қандай университеттер?'
+      ];
+    } else {
+      suggestions = [
+        'Алматыдағы университеттер',
+        'Мамандықтарды ұсын',
+        'Оқу шығыны қанша?'
+      ];
+    }
+  } else {
+    if (intent === 'city' || intent === 'recommendation') {
+      suggestions = [
+        'Show universities with scholarships',
+        'What\'s the average salary?',
+        'Is there a dormitory?'
+      ];
+    } else if (intent === 'admission') {
+      suggestions = [
+        'Show other options',
+        'What are the requirements?',
+        'Are there grants?'
+      ];
+    } else if (intent === 'grant') {
+      suggestions = [
+        'What\'s the minimum score?',
+        'Are there other grants?',
+        'Which universities participate?'
+      ];
+    } else {
+      suggestions = [
+        'Universities in Almaty',
+        'Suggest a specialty',
+        'How much does it cost?'
+      ];
+    }
+  }
+
+  if (suggestions.length > 0) {
+    const suggestDiv = document.createElement('div');
+    suggestDiv.className = 'chat-suggestions';
+    suggestDiv.innerHTML = `
+      <div class="chat-suggestions-title">${lang === 'ru' ? '💡 Ещё вопросы:' : lang === 'kk' ? '💡 Қосымша сұрақтар:' : '💡 More questions:'}</div>
+      <div class="chat-suggestions-list">
+        ${suggestions.map(s => `<button class="chat-suggestion-btn" onclick="sendMessage(${JSON.stringify(s).replace(/"/g, '&quot;')})">${s}</button>`).join('')}
+      </div>
+    `;
+    container.appendChild(suggestDiv);
+    scrollChatToBottom();
+  }
 }
 
 /**
@@ -934,7 +1071,16 @@ function renderMatches(matches) {
   `;
 
   matches.slice(0, 5).forEach((u, idx) => {
-    const languages = (u.languages || []).join(', ') || t('chat_page.not_specified');
+    // Handle languages - can be array or comma-separated string
+    let languages;
+    if (Array.isArray(u.languages)) {
+      languages = u.languages.join(', ') || t('chat_page.not_specified');
+    } else if (typeof u.languages === 'string') {
+      languages = u.languages || t('chat_page.not_specified');
+    } else {
+      languages = t('chat_page.not_specified');
+    }
+    
     const specs = (u.specialties || []).map(s => typeof s === 'string' ? s : s.name || s.category).filter(Boolean).slice(0, 3).join(', ') || 'N/A';
     const qs = u.qs_world ? `QS World: #${u.qs_world}` : (u.qs_asia ? `QS Asia: #${u.qs_asia}` : t('chat_page.no_ranking'));
     const priceRange = `${(u.price_from/1000000).toFixed(2)}–${(u.price_to/1000000).toFixed(2)}M ${t('common.tenge')}`;
@@ -1034,7 +1180,7 @@ function scrollChatToBottom() {
   });
 }
 
-function appendMessage(role, text, matches = null, admission = null) {
+function appendMessage(role, text, matches = null, admission = null, options = {}) {
   const msgs = document.getElementById('chat-messages');
 
   // Remove welcome if present
@@ -1054,6 +1200,17 @@ function appendMessage(role, text, matches = null, admission = null) {
   if (admission && admission.type === 'result' && admission.matches && admission.matches.length > 0) {
     content += renderAdmissionChatCards(admission.matches, admission.input);
   }
+  
+  // Add retry button if provided
+  if (role === 'ai' && options.retryFn) {
+    const lang = window.currentLanguage || 'ru';
+    const retryText = lang === 'ru' ? '🔄 Повторить' : lang === 'kk' ? '🔄 Қайталау' : '🔄 Retry';
+    // Store the retry function in window to avoid scope issues
+    const retryId = 'retry_' + Date.now();
+    window[retryId] = options.retryFn;
+    content += `<div class="chat-error-actions" style="margin-top:12px;display:flex;gap:8px;"><button class="btn btn-sm btn-outline" onclick="window['${retryId}'](); delete window['${retryId}'];">${retryText}</button></div>`;
+  }
+  
   div.innerHTML = `<div class="chat-bubble chat-bubble-${role === 'user' ? 'user' : 'ai'} markdown-body">${content}</div>`;
   msgs.appendChild(div);
   scrollChatToBottom();

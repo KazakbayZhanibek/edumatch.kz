@@ -109,7 +109,7 @@ function getAdmissionBriefPrompt(params, prediction, lang = 'ru') {
     return tr('brief_unfortunately', lang) || 'К сожалению, не удалось рассчитать шансы по вашему запросу. Попробуйте другие параметры.';
   }
 
-  const matches = prediction.matches.slice(0, 6);
+  const matches = prediction.matches.slice(0, 12);
   const top = matches[0];
   const ent = prediction.input.ent;
 
@@ -153,7 +153,8 @@ function getAdmissionBriefPrompt(params, prediction, lang = 'ru') {
     }
     text += `${tr('brief_link', lang) || '🔗 [Подробнее о вузе] → нажмите на карточку ниже'}`;
   } else {
-    text = `${tr('brief_results', lang) || '## 🎯 Результаты для ${spec}'}`.replace('${spec}', prediction.input.specialty) + '\n\n';
+    const displaySpec = prediction.input.specialtyName || prediction.input.specialty;
+    text = `${tr('brief_results', lang) || '## 🎯 Результаты для ${spec}'}`.replace('${spec}', displaySpec) + '\n\n';
     text += `${tr('brief_ent', lang) || '**Ваш ЕНТ: ${ent} баллов**'}`.replace('${ent}', ent) + '\n';
     if (prediction.input.budget) {
       text += `${tr('brief_budget', lang) || '**Бюджет:** до ${budget}'}`.replace('${budget}', fmtBudget(prediction.input.budget, lang)) + '\n';
@@ -166,17 +167,26 @@ function getAdmissionBriefPrompt(params, prediction, lang = 'ru') {
 
     if (high.length > 0) {
       text += `${tr('brief_high', lang) || '🟢 **Высокие шансы (${count}):** '}`.replace('${count}', high.length);
-      text += high.map(m => `${m.university} (${m.chance}%)`).join(', ');
+      text += high.map(m => {
+        const price = m.price_from ? ` (${fmtBudget(m.price_from, lang)})` : '';
+        return `${m.university} (${m.chance}%)${price}`;
+      }).join(', ');
       text += '\n\n';
     }
     if (medium.length > 0) {
       text += `${tr('brief_medium', lang) || '🟡 **Реальные варианты (${count}):** '}`.replace('${count}', medium.length);
-      text += medium.map(m => `${m.university} (${m.chance}%)`).join(', ');
+      text += medium.map(m => {
+        const price = m.price_from ? ` (${fmtBudget(m.price_from, lang)})` : '';
+        return `${m.university} (${m.chance}%)${price}`;
+      }).join(', ');
       text += '\n\n';
     }
     if (low.length > 0) {
       text += `${tr('brief_low', lang) || '🔴 **Низкие шансы (${count}):** '}`.replace('${count}', low.length);
-      text += low.map(m => `${m.university} (${m.chance}%)`).join(', ');
+      text += low.map(m => {
+        const price = m.price_from ? ` (${fmtBudget(m.price_from, lang)})` : '';
+        return `${m.university} (${m.chance}%)${price}`;
+      }).join(', ');
       text += '\n\n';
     }
 

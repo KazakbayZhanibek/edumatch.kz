@@ -12,8 +12,9 @@ const SPECIALTY_MAP = {
   'Computer Science': 'Информационные технологии',
   Экономика: 'Бизнес',
   Бизнес: 'Бизнес',
+  'Бизнес и менеджмент': 'Бизнес',
   Медицина: 'Медицина',
-  Право: 'Общественные науки',
+  Право: 'Гуманитарные науки',
   Инженерия: 'Инженерия',
   Гуманитарные: 'Гуманитарные науки',
   'Гуманитарные науки': 'Гуманитарные науки',
@@ -21,6 +22,18 @@ const SPECIALTY_MAP = {
   'Естественные науки': 'Естественные науки',
   Искусство: 'Искусство',
   Туризм: 'Туризм',
+  Психология: 'Здоровье',
+  Здоровье: 'Здоровье',
+  Фармацевтика: 'Медицина',
+  'Сельское хозяйство': 'Сельское хозяйство',
+  Политология: 'Гуманитарные науки',
+  'Международные отношения': 'Гуманитарные науки',
+  Философия: 'Гуманитарные науки',
+  История: 'Гуманитарные науки',
+  Маркетинг: 'Бизнес',
+  Финансы: 'Бизнес',
+  'Бухгалтерский учет': 'Бизнес',
+  Экономика: 'Бизнес',
 };
 
 const LANG_MAP = {
@@ -165,12 +178,13 @@ function getAdmissionPrediction(params) {
   const budget = params.budget ? parseInt(params.budget, 10) : null;
   const cityId = params.cityId ? parseInt(params.cityId, 10) : null;
   const specialtyCategory = normalizeSpecialty(params.specialty);
+  const specialtyName = params.specialtyName || null;
   const language = normalizeLanguage(params.language);
   const needDorm = Boolean(params.needDorm);
   const attestat = params.attestat ? parseFloat(params.attestat) : null;
   const lang = params.lang || 'ru';
 
-  if (!ent || ent < 0 || ent > 140) {
+  if (ent === null || ent === undefined || ent < 0 || ent > 140) {
     return { success: false, error: tr('ent_too_high', lang) || 'Укажите балл ЕНТ от 0 до 140' };
   }
   if (!specialtyCategory) {
@@ -208,7 +222,7 @@ function getAdmissionPrediction(params) {
       success: true,
       matches: [],
       message: tr('no_data_specialty', lang) || 'Нет данных по этой специальности. Попробуйте другой город или направление.',
-      input: { ent, specialty: specialtyCategory, budget, language, needDorm, cityId, attestat }
+      input: { ent, specialty: specialtyCategory, specialtyName, budget, language, needDorm, cityId, attestat }
     };
   }
 
@@ -262,7 +276,14 @@ function getAdmissionPrediction(params) {
   }
 
   const allSorted = [...byUniversity.values()]
-    .sort((a, b) => b.chance - a.chance || b.score - a.score);
+    .sort((a, b) => {
+      if (params.wantsBudget) {
+        const aPrice = a.price_from || 999999999;
+        const bPrice = b.price_from || 999999999;
+        return aPrice - bPrice || b.chance - a.chance;
+      }
+      return b.chance - a.chance || b.score - a.score;
+    });
 
   const pinnedIds = [1, 32, 2];
   const matches = allSorted.slice(0, 12);
@@ -284,6 +305,7 @@ function getAdmissionPrediction(params) {
     input: {
       ent,
       specialty: specialtyCategory,
+      specialtyName,
       budget,
       language,
       needDorm,
