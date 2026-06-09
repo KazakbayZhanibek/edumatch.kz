@@ -80,7 +80,7 @@ const Auth = {
       body: JSON.stringify({ email, password, username, fullName: fullName || '' })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка регистрации');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_register'));
     this.setSession(data.user, data.token);
     await this.mergeLocalFavoritesToServer();
     return data;
@@ -92,7 +92,7 @@ const Auth = {
       body: JSON.stringify({ email, password })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка входа');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_login'));
     this.setSession(data.user, data.token);
     await this.mergeLocalFavoritesToServer();
     await this.syncFavoritesFromServer();
@@ -107,13 +107,13 @@ const Auth = {
     } catch (e) { /* ignore */ }
     this.clearSession();
     navigate('home');
-    showToast('Вы вышли из аккаунта');
+    showToast(t('profile_page.toast_logout'));
   },
 
   async getProfile() {
     const res = await this.fetch('/users/profile');
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка загрузки профиля');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_profile_load'));
     return data;
   },
 
@@ -125,7 +125,7 @@ const Auth = {
       body: JSON.stringify({ fullName, phone, bio })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка сохранения');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_profile_save'));
     if (data.user) {
       this.user = {
         ...this.user,
@@ -176,7 +176,7 @@ const Auth = {
     });
     const data = await res.json();
     if (!res.ok && !data.error?.includes('уже')) {
-      throw new Error(data.error || 'Не удалось сохранить');
+      throw new Error(data.error || t('profile_page.err_save'));
     }
     return data;
   },
@@ -186,28 +186,28 @@ const Auth = {
       method: 'DELETE'
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Не удалось удалить');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_delete'));
     return data;
   },
 
   async getSavedUniversities() {
     const res = await this.fetch('/saved-universities');
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка загрузки');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_load'));
     return data.universities || [];
   },
 
   async getChatHistory(limit = 50) {
     const res = await this.fetch(`/chat-history?limit=${limit}`);
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка загрузки истории');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_chat_load'));
     return data.messages || [];
   },
 
   async deleteChatMessage(messageId) {
     const res = await this.fetch(`/chat-history/${messageId}`, { method: 'DELETE' });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Не удалось удалить');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_delete'));
     return data;
   },
 
@@ -217,14 +217,14 @@ const Auth = {
       body: JSON.stringify({ currentPassword, newPassword })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка смены пароля');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_pw_change'));
     return data;
   },
 
   async deleteTestResult(resultId) {
     const res = await this.fetch(`/test-results/${resultId}`, { method: 'DELETE' });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Не удалось удалить');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_delete'));
     return data;
   },
 
@@ -232,7 +232,7 @@ const Auth = {
     const q = testType ? `?testType=${encodeURIComponent(testType)}` : '';
     const res = await this.fetch(`/test-results${q}`);
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка загрузки');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_load'));
     return data.results || [];
   },
 
@@ -242,7 +242,7 @@ const Auth = {
       body: JSON.stringify({ testType, score, maxScore, resultData })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка сохранения');
+    if (!res.ok) throw new Error(data.error || t('profile_page.err_profile_save'));
     return data;
   },
 
@@ -279,7 +279,7 @@ function handleRegister(e) {
     fullName: document.getElementById('reg-fullname').value.trim()
   })
     .then(() => {
-      showToast('Аккаунт создан!', 'success');
+      showToast(t('profile_page.toast_registered'), 'success');
       navigate('profile');
     })
     .catch(e => { err.textContent = e.message; })
@@ -298,7 +298,7 @@ function handleLogin(e) {
     document.getElementById('login-password').value
   )
     .then(() => {
-      showToast('Добро пожаловать!', 'success');
+      showToast(t('profile_page.toast_welcome'), 'success');
       const redirect = sessionStorage.getItem('auth_redirect') || 'home';
       sessionStorage.removeItem('auth_redirect');
       navigate(redirect);
@@ -312,10 +312,10 @@ async function loadProfilePage() {
   if (!Auth.isLoggedIn()) {
     content.innerHTML = `
       <div class="auth-prompt">
-        <p>Войдите или зарегистрируйтесь, чтобы сохранять вузы и историю.</p>
+        <p>${t('profile_page.auth_prompt')}</p>
         <div class="auth-prompt-actions">
-          <button class="btn btn-primary" onclick="navigate('login')">Войти</button>
-          <button class="btn btn-ghost" onclick="navigate('register')">Регистрация</button>
+          <button class="btn btn-primary" onclick="navigate('login')">${t('profile_page.login_btn')}</button>
+          <button class="btn btn-ghost" onclick="navigate('register')">${t('profile_page.register_btn')}</button>
         </div>
       </div>`;
     return;
@@ -332,62 +332,62 @@ async function loadProfilePage() {
     content.innerHTML = `
       <div class="profile-grid">
         <section class="profile-card">
-          <h2 class="profile-card-title">Профиль</h2>
+          <h2 class="profile-card-title">${t('profile_page.card_profile')}</h2>
           <form id="profile-form" class="auth-form" onsubmit="handleProfileSave(event)">
             <div class="form-field">
-              <label>Email</label>
+              <label>${t('profile_page.card_email')}</label>
               <input type="email" value="${profile.email}" disabled class="form-input">
             </div>
             <div class="form-field">
-              <label>Никнейм</label>
+              <label>${t('profile_page.card_nickname')}</label>
               <input type="text" value="${profile.username}" disabled class="form-input">
             </div>
             <div class="form-field">
-              <label>Имя</label>
-              <input type="text" id="profile-fullname" value="${profile.fullName || ''}" class="form-input" placeholder="Ваше имя">
+              <label>${t('profile_page.card_name')}</label>
+              <input type="text" id="profile-fullname" value="${profile.fullName || ''}" class="form-input" placeholder="${t('profile_page.card_name_placeholder')}">
             </div>
             <div class="form-field">
-              <label>Телефон</label>
+              <label>${t('profile_page.card_phone')}</label>
               <input type="tel" id="profile-phone" value="${profile.phone || ''}" class="form-input" placeholder="+7 ...">
             </div>
             <div class="form-field">
-              <label>О себе</label>
-              <textarea id="profile-bio" class="form-input" rows="3" placeholder="Кратко о целях поступления">${profile.bio || ''}</textarea>
+              <label>${t('profile_page.card_bio')}</label>
+              <textarea id="profile-bio" class="form-input" rows="3" placeholder="${t('profile_page.card_bio_placeholder')}">${profile.bio || ''}</textarea>
             </div>
             <p class="form-error" id="profile-error"></p>
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="submit" class="btn btn-primary">${t('profile_page.card_save')}</button>
           </form>
-          <button class="btn btn-ghost" style="margin-top:16px;width:100%" onclick="Auth.logout()">Выйти</button>
+          <button class="btn btn-ghost" style="margin-top:16px;width:100%" onclick="Auth.logout()">${t('profile_page.card_logout')}</button>
         </section>
 
         <section class="profile-card">
-          <h2 class="profile-card-title">Смена пароля</h2>
+          <h2 class="profile-card-title">${t('profile_page.card_password_title')}</h2>
           <form id="password-form" class="auth-form" onsubmit="handlePasswordChange(event)">
             <div class="form-field">
-              <label>Текущий пароль</label>
+              <label>${t('profile_page.card_pw_current')}</label>
               <input type="password" id="pw-current" class="form-input" required minlength="6">
             </div>
             <div class="form-field">
-              <label>Новый пароль</label>
+              <label>${t('profile_page.card_pw_new')}</label>
               <div class="pw-toggle-wrap">
                 <input type="password" id="pw-new" class="form-input" required minlength="6">
-                <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">👁</button>
+                <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="${t('profile_page.card_pw_show')}">👁</button>
               </div>
             </div>
             <div class="form-field">
-              <label>Подтвердите новый пароль</label>
+              <label>${t('profile_page.card_pw_confirm')}</label>
               <div class="pw-toggle-wrap">
                 <input type="password" id="pw-confirm" class="form-input" required minlength="6">
-                <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">👁</button>
+                <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="${t('profile_page.card_pw_show')}">👁</button>
               </div>
             </div>
             <p class="form-error" id="password-error"></p>
-            <button type="submit" class="btn btn-primary">Сменить пароль</button>
+            <button type="submit" class="btn btn-primary">${t('profile_page.card_pw_change')}</button>
           </form>
         </section>
 
         <section class="profile-card">
-          <h2 class="profile-card-title">Сохранённые вузы <span class="profile-count">${saved.length}</span></h2>
+          <h2 class="profile-card-title">${t('profile_page.card_saved_title')} <span class="profile-count">${saved.length}</span></h2>
           ${saved.length ? `
             <div class="profile-saved-list">
               ${saved.map(u => `
@@ -397,20 +397,20 @@ async function loadProfilePage() {
                     <div class="profile-saved-meta">от ${fmtPrice(u.price_from)} тг/год</div>
                   </div>
                   <div class="profile-saved-actions">
-                    <button class="btn btn-sm btn-ghost" onclick="navigate('university', ${u.university_id})">Открыть</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteSavedUniversity(${u.university_id}, this)" title="Удалить">✕</button>
+                    <button class="btn btn-sm btn-ghost" onclick="navigate('university', ${u.university_id})">${t('profile_page.card_saved_open')}</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteSavedUniversity(${u.university_id}, this)" title="${t('profile_page.card_saved_delete')}">✕</button>
                   </div>
                 </div>
               `).join('')}
             </div>
-          ` : '<p class="profile-empty">Пока нет сохранённых вузов. Нажмите ♥ на карточке.</p>'}
+          ` : `<p class="profile-empty">${t('profile_page.card_saved_empty')}</p>`}
         </section>
 
         <section class="profile-card">
-          <h2 class="profile-card-title">Настройки</h2>
+          <h2 class="profile-card-title">${t('profile_page.card_settings')}</h2>
           <form class="auth-form" onsubmit="handlePreferencesSave(event)">
             <div class="form-field">
-              <label>Язык интерфейса</label>
+              <label>${t('profile_page.card_lang_label')}</label>
               <select id="pref-lang" class="form-input">
                 <option value="ru"${(profile.preferences && profile.preferences.language === 'ru') ? ' selected' : ''}>Русский</option>
                 <option value="kk"${(profile.preferences && profile.preferences.language === 'kk') ? ' selected' : ''}>Қазақша</option>
@@ -418,36 +418,37 @@ async function loadProfilePage() {
               </select>
             </div>
             <p class="form-error" id="preferences-error"></p>
-            <button type="submit" class="btn btn-primary">Сохранить настройки</button>
+            <button type="submit" class="btn btn-primary">${t('profile_page.card_settings_save')}</button>
           </form>
         </section>
 
         <section class="profile-card profile-card-wide">
-          <h2 class="profile-card-title">История ИИ-советника <span class="profile-count">${chats.length}</span></h2>
+          <h2 class="profile-card-title">${t('profile_page.card_ai_title')} <span class="profile-count">${chats.length}</span></h2>
           ${chats.length ? `
             <div class="profile-chat-list">
               ${chats.slice(0, 15).map(c => `
                 <div class="profile-chat-item" data-chat-id="${c.id}">
-                  <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="Удалить">✕</button>
-                  <div class="profile-chat-q"><strong>Вы:</strong> ${escapeHtml(c.message.slice(0, 120))}${c.message.length > 120 ? '…' : ''}</div>
+                  <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete')}">✕</button>
+                  <div class="profile-chat-q"><strong>${t('profile_page.card_ai_you')}</strong> ${escapeHtml(c.message.slice(0, 120))}${c.message.length > 120 ? '…' : ''}</div>
                   <div class="profile-chat-a">${escapeHtml(c.response.slice(0, 200))}${c.response.length > 200 ? '…' : ''}</div>
                   <div class="profile-chat-date">${formatDate(c.created_at)}</div>
                 </div>
               `).join('')}
             </div>
-          ` : '<p class="profile-empty">Задайте вопрос в разделе «ИИ-советник» — история сохранится автоматически.</p>'}
+          ` : `<p class="profile-empty">${t('profile_page.card_ai_empty')}</p>`}
         </section>
 
         <section class="profile-card profile-card-wide">
-          <h2 class="profile-card-title">Результаты тестов <span class="profile-count">${tests.length}</span></h2>
+          <h2 class="profile-card-title">${t('profile_page.card_tests_title')} <span class="profile-count">${tests.length}</span></h2>
           ${tests.length ? `
             <div class="profile-tests-list">
               ${tests.map(t => {
                 const data = t.result_data ? JSON.parse(t.result_data) : {};
-                const label = TEST_TYPE_LABELS[t.test_type] || t.test_type;
+                const labelFn = TEST_TYPE_LABELS[t.test_type];
+                const label = typeof labelFn === 'function' ? labelFn() : t.test_type;
                 return `
                   <div class="profile-test-item">
-                    <button class="profile-chat-delete" onclick="deleteTestResultItem(${t.id}, this)" title="Удалить">✕</button>
+                    <button class="profile-chat-delete" onclick="deleteTestResultItem(${t.id}, this)" title="${t('profile_page.card_saved_delete')}">✕</button>
                     <div class="profile-test-type">${label}</div>
                     <div class="profile-test-score">${t.score}${t.max_score ? ` / ${t.max_score}` : ''}</div>
                     ${data.summary ? `<div class="profile-test-meta">${escapeHtml(data.summary)}</div>` : ''}
@@ -456,7 +457,7 @@ async function loadProfilePage() {
                 `;
               }).join('')}
             </div>
-          ` : '<p class="profile-empty">Пройдите ЕНТ-калькулятор или профориентацию — результаты появятся здесь.</p>'}
+          ` : `<p class="profile-empty">${t('profile_page.card_tests_empty')}</p>`}
         </section>
       </div>
     `;
@@ -478,7 +479,7 @@ async function deleteSavedUniversity(uniId, btn) {
       countEl.textContent = n;
       const list = document.querySelector('.profile-saved-list');
       if (n === 0 && list) {
-        list.outerHTML = '<p class="profile-empty">Пока нет сохранённых вузов. Нажмите ♥ на карточке.</p>';
+        list.outerHTML = `<p class="profile-empty">${t('profile_page.card_saved_empty')}</p>`;
       }
     }
   } catch (e) {
@@ -500,7 +501,7 @@ async function deleteChatItem(msgId, btn) {
       const n = parseInt(countEl.textContent) - 1;
       countEl.textContent = n;
       if (n === 0 && list) {
-        list.outerHTML = '<p class="profile-empty">Задайте вопрос в разделе «ИИ-советник» — история сохранится автоматически.</p>';
+        list.outerHTML = `<p class="profile-empty">${t('profile_page.card_ai_empty')}</p>`;
       }
     }
   } catch (e) {
@@ -522,7 +523,7 @@ async function deleteTestResultItem(resultId, btn) {
       const n = parseInt(countEl.textContent) - 1;
       countEl.textContent = n;
       if (n === 0 && list) {
-        list.outerHTML = '<p class="profile-empty">Пройдите ЕНТ-калькулятор или профориентацию — результаты появятся здесь.</p>';
+        list.outerHTML = `<p class="profile-empty">${t('profile_page.card_tests_empty')}</p>`;
       }
     }
   } catch (e) {
@@ -538,10 +539,10 @@ function handlePasswordChange(e) {
   const current = document.getElementById('pw-current').value;
   const newPw = document.getElementById('pw-new').value;
   const confirm = document.getElementById('pw-confirm').value;
-  if (newPw !== confirm) { err.textContent = 'Пароли не совпадают'; return; }
+  if (newPw !== confirm) { err.textContent = t('profile_page.toast_pw_mismatch'); return; }
   Auth.changePassword(current, newPw)
     .then(() => {
-      showToast('Пароль изменён', 'success');
+      showToast(t('profile_page.toast_pw_changed'), 'success');
       document.getElementById('password-form').reset();
     })
     .catch(e => { err.textContent = e.message; });
@@ -558,14 +559,14 @@ function handlePreferencesSave(e) {
     bio: document.getElementById('profile-bio').value.trim(),
     preferences: { language }
   })
-    .then(() => showToast('Настройки сохранены', 'success'))
+    .then(() => showToast(t('profile_page.toast_settings_saved'), 'success'))
     .catch(e => { err.textContent = e.message; });
 }
 
 const TEST_TYPE_LABELS = {
-  ent_calc: 'ЕНТ-калькулятор',
-  career_test: 'Профориентация',
-  admission_predict: 'Прогноз поступления',
+  ent_calc: () => t('profile_page.test_ent'),
+  career_test: () => t('profile_page.test_career'),
+  admission_predict: () => t('profile_page.test_admission'),
 };
 
 function handleProfileSave(e) {
@@ -577,7 +578,7 @@ function handleProfileSave(e) {
     phone: document.getElementById('profile-phone').value.trim(),
     bio: document.getElementById('profile-bio').value.trim()
   })
-    .then(() => showToast('Профиль сохранён', 'success'))
+    .then(() => showToast(t('profile_page.toast_profile_saved'), 'success'))
     .catch(e => { err.textContent = e.message; });
 }
 
@@ -586,7 +587,7 @@ function togglePW(btn) {
   const isPW = input.type === 'password';
   input.type = isPW ? 'text' : 'password';
   btn.textContent = isPW ? '🙈' : '👁';
-  btn.setAttribute('aria-label', isPW ? 'Скрыть пароль' : 'Показать пароль');
+  btn.setAttribute('aria-label', isPW ? t('profile_page.card_pw_hide') : t('profile_page.card_pw_show'));
 }
 
 function escapeHtml(str) {
@@ -598,7 +599,7 @@ function escapeHtml(str) {
 function formatDate(iso) {
   if (!iso) return '';
   try {
-    return new Date(iso).toLocaleString('ru-RU', {
+    return new Date(iso).toLocaleString(currentLanguage === 'kk' ? 'kk-KZ' : currentLanguage === 'en' ? 'en-US' : 'ru-RU', {
       day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
     });
   } catch (e) {
@@ -609,7 +610,7 @@ function formatDate(iso) {
 function requireAuth(targetPage) {
   if (!Auth.isLoggedIn()) {
     sessionStorage.setItem('auth_redirect', targetPage || 'profile');
-    showToast('Войдите в аккаунт');
+    showToast(t('profile_page.toast_login_required'));
     navigate('login');
     return false;
   }

@@ -17,6 +17,7 @@ const { verifyAuthOptional } = require('./auth-middleware');
 const authService = require('./auth-service');
 const { getDb } = require('./database');
 const { getExplanationForMatch } = require('./admission-explanation-service');
+const { tr, getLang } = require('./i18n');
 
 /**
  * GET /api/admission/specialties
@@ -70,6 +71,7 @@ router.post('/predict', verifyAuthOptional, (req, res) => {
       language,
       needDorm,
     } = req.body;
+    const lang = getLang(req);
 
     const result = getAdmissionPrediction({
       ent,
@@ -107,7 +109,7 @@ router.post('/predict', verifyAuthOptional, (req, res) => {
     return res.json(result);
   } catch (err) {
     console.error('[admission] predict error:', err);
-    return res.status(500).json({ success: false, error: 'Ошибка расчёта' });
+    return res.status(500).json({ success: false, error: tr('adm_calc_error', lang) || 'Ошибка расчёта' });
   }
 });
 
@@ -118,8 +120,9 @@ router.post('/predict', verifyAuthOptional, (req, res) => {
 router.post('/explain', verifyAuthOptional, async (req, res) => {
   try {
     const payload = req.body;
+    const lang = getLang(req);
     if (!payload.university_id && !payload.university) {
-      return res.status(400).json({ error: 'Нужны данные вуза' });
+      return res.status(400).json({ error: tr('adm_uni_data_needed', lang) || 'Нужны данные вуза' });
     }
 
     payload.lang = payload.lang || req.query.lang || 'ru';
@@ -166,15 +169,16 @@ router.post('/calculate', verifyAuthOptional, async (req, res) => {
   try {
     const input = req.body;
     const useAiExplanation = input.useAiExplanation === true;
+    const lang = getLang(req);
     
     console.log('[admission /calculate] Received request, useAiExplanation:', useAiExplanation);
     
     // Валидируем входные данные
     if (input.entScore === undefined) {
-      return res.status(400).json({ error: 'entScore обязателен' });
+      return res.status(400).json({ error: tr('adm_ent_required', lang) || 'entScore обязателен' });
     }
     if (input.specialtyId === undefined) {
-      return res.status(400).json({ error: 'specialtyId обязателен' });
+      return res.status(400).json({ error: tr('adm_spec_required', lang) || 'specialtyId обязателен' });
     }
 
     // Выполняем расчет (чистая логика, без AI)
@@ -221,7 +225,7 @@ router.post('/calculate', verifyAuthOptional, async (req, res) => {
     return res.json(result);
   } catch (err) {
     console.error('[admission] calculate error:', err);
-    return res.status(500).json({ error: 'Ошибка расчёта: ' + err.message });
+    return res.status(500).json({ error: (tr('adm_calc_error_msg', lang) || 'Ошибка расчёта: ') + err.message });
   }
 });
 
@@ -237,6 +241,7 @@ router.post('/calculate', verifyAuthOptional, async (req, res) => {
 router.post('/save-history', verifyAuthOptional, (req, res) => {
   try {
     const { input, matches } = req.body;
+    const lang = getLang(req);
     
     // Если не авторизован, просто возвращаем успех (local-only)
     if (!req.userId || !input || !matches || !Array.isArray(matches)) {
@@ -249,7 +254,8 @@ router.post('/save-history', verifyAuthOptional, (req, res) => {
     return res.json({ success: true, saved: true, recordsCount: Math.min(matches.length, 5) });
   } catch (err) {
     console.error('[admission] save-history error:', err);
-    return res.status(500).json({ success: false, error: 'Ошибка сохранения' });
+    const lang = getLang(req);
+    return res.status(500).json({ success: false, error: tr('adm_save_error', lang) || 'Ошибка сохранения' });
   }
 });
 

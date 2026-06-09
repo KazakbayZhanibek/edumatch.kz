@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { getDb } = require('./database');
+const { tr } = require('./i18n');
 
 // Получить JWT секрет из переменной окружения
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
@@ -23,7 +24,7 @@ const BCRYPT_ROUNDS = 10; // Раунды хеширования пароля
  * @param {string} fullName - Полное имя (опционально)
  * @returns {object} - {success: true/false, user: {...}, error: "..."}
  */
-async function registerUser(email, password, username, fullName = '') {
+async function registerUser(email, password, username, fullName = '', lang = 'ru') {
   try {
     // Проверить, не зарегистрирован ли уже
     const existingUser = getDb().prepare(
@@ -34,8 +35,8 @@ async function registerUser(email, password, username, fullName = '') {
       return {
         success: false,
         error: existingUser.email === email 
-          ? 'Email уже зарегистрирован' 
-          : 'Никнейм уже занят'
+          ? (tr('auth_email_taken', lang) || 'Email уже зарегистрирован')
+          : (tr('auth_username_taken', lang) || 'Никнейм уже занят')
       };
     }
 
@@ -43,7 +44,7 @@ async function registerUser(email, password, username, fullName = '') {
     if (password.length < 6) {
       return {
         success: false,
-        error: 'Пароль должен быть не менее 6 символов'
+        error: tr('auth_password_short', lang) || 'Пароль должен быть не менее 6 символов'
       };
     }
 
@@ -84,7 +85,7 @@ async function registerUser(email, password, username, fullName = '') {
     console.error('Register error:', error);
     return {
       success: false,
-      error: 'Ошибка при регистрации'
+      error: tr('auth_register_error', lang) || 'Ошибка при регистрации'
     };
   }
 }
@@ -97,7 +98,7 @@ async function registerUser(email, password, username, fullName = '') {
  * @param {string} password - Пароль
  * @returns {object} - {success: true/false, user: {...}, token: "..."}
  */
-async function loginUser(email, password) {
+async function loginUser(email, password, lang = 'ru') {
   try {
     // Найти пользователя
     const user = getDb().prepare(
@@ -107,7 +108,7 @@ async function loginUser(email, password) {
     if (!user) {
       return {
         success: false,
-        error: 'Пользователь не найден'
+        error: tr('auth_user_not_found', lang) || 'Пользователь не найден'
       };
     }
 
@@ -117,7 +118,7 @@ async function loginUser(email, password) {
     if (!isPasswordValid) {
       return {
         success: false,
-        error: 'Неверный пароль'
+        error: tr('auth_wrong_password', lang) || 'Неверный пароль'
       };
     }
 
@@ -144,7 +145,7 @@ async function loginUser(email, password) {
     console.error('Login error:', error);
     return {
       success: false,
-      error: 'Ошибка при входе'
+      error: tr('auth_login_error', lang) || 'Ошибка при входе'
     };
   }
 }
@@ -253,7 +254,7 @@ function getUserProfile(userId) {
  * @param {object} data - {fullName, phone, bio, preferences}
  * @returns {object} - {success: true/false, user: {...}, error: "..."}
  */
-function updateUserProfile(userId, data) {
+function updateUserProfile(userId, data, lang = 'ru') {
   try {
     const { fullName, phone, bio, preferences } = data;
 
@@ -279,7 +280,7 @@ function updateUserProfile(userId, data) {
     console.error('Update profile error:', error);
     return {
       success: false,
-      error: 'Ошибка при обновлении профиля'
+      error: tr('auth_profile_update_error', lang) || 'Ошибка при обновлении профиля'
     };
   }
 }
@@ -314,7 +315,7 @@ function getSavedUniversities(userId) {
  * @param {string} note - Заметка (опционально)
  * @returns {object} - {success: true/false, error: "..."}
  */
-function saveUniversity(userId, universityId, note = '') {
+function saveUniversity(userId, universityId, note = '', lang = 'ru') {
   try {
     // Проверить, не сохранён ли уже
     const existing = getDb().prepare(
@@ -324,7 +325,7 @@ function saveUniversity(userId, universityId, note = '') {
     if (existing) {
       return {
         success: false,
-        error: 'Вуз уже добавлен в избранное'
+        error: tr('auth_uni_already_saved', lang) || 'Вуз уже добавлен в избранное'
       };
     }
 
@@ -338,7 +339,7 @@ function saveUniversity(userId, universityId, note = '') {
     console.error('Save university error:', error);
     return {
       success: false,
-      error: 'Ошибка при сохранении'
+      error: tr('auth_save_error', lang) || 'Ошибка при сохранении'
     };
   }
 }
@@ -349,7 +350,7 @@ function saveUniversity(userId, universityId, note = '') {
  * @param {number} savedUniversityId - ID сохранённого вуза
  * @returns {object} - {success: true/false, error: "..."}
  */
-function removeSavedUniversity(userId, savedUniversityId) {
+function removeSavedUniversity(userId, savedUniversityId, lang = 'ru') {
   try {
     const result = getDb().prepare(
       'DELETE FROM saved_universities WHERE id = ? AND user_id = ?'
@@ -358,7 +359,7 @@ function removeSavedUniversity(userId, savedUniversityId) {
     if (result.changes === 0) {
       return {
         success: false,
-        error: 'Вуз не найден'
+        error: tr('auth_uni_not_found', lang) || 'Вуз не найден'
       };
     }
 
@@ -367,7 +368,7 @@ function removeSavedUniversity(userId, savedUniversityId) {
     console.error('Remove saved university error:', error);
     return {
       success: false,
-      error: 'Ошибка при удалении'
+      error: tr('auth_delete_error', lang) || 'Ошибка при удалении'
     };
   }
 }
@@ -375,14 +376,14 @@ function removeSavedUniversity(userId, savedUniversityId) {
 /**
  * Удалить сохранённый вуз по ID университета
  */
-function removeSavedUniversityByUniversityId(userId, universityId) {
+function removeSavedUniversityByUniversityId(userId, universityId, lang = 'ru') {
   try {
     const result = getDb().prepare(
       'DELETE FROM saved_universities WHERE university_id = ? AND user_id = ?'
     ).run(universityId, userId);
 
     if (result.changes === 0) {
-      return { success: false, error: 'Вуз не найден в избранном' };
+      return { success: false, error: tr('auth_uni_not_in_fav', lang) || 'Вуз не найден в избранном' };
     }
 
     return { success: true };
@@ -442,17 +443,17 @@ function saveChatMessage(userId, message, response, context = null) {
  * @param {string} newPassword - Новый пароль
  * @returns {object} - {success: true/false, error: "..."}
  */
-async function changePassword(userId, currentPassword, newPassword) {
+async function changePassword(userId, currentPassword, newPassword, lang = 'ru') {
   try {
     if (newPassword.length < 6) {
-      return { success: false, error: 'Новый пароль должен быть не менее 6 символов' };
+      return { success: false, error: tr('auth_new_pw_short', lang) || 'Новый пароль должен быть не менее 6 символов' };
     }
 
     const user = getDb().prepare('SELECT password_hash FROM users WHERE id = ?').get(userId);
-    if (!user) return { success: false, error: 'Пользователь не найден' };
+    if (!user) return { success: false, error: tr('auth_user_not_found', lang) || 'Пользователь не найден' };
 
     const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
-    if (!isMatch) return { success: false, error: 'Текущий пароль неверен' };
+    if (!isMatch) return { success: false, error: tr('auth_current_pw_wrong', lang) || 'Текущий пароль неверен' };
 
     const newHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
     getDb().prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(newHash, userId);
@@ -460,7 +461,7 @@ async function changePassword(userId, currentPassword, newPassword) {
     return { success: true };
   } catch (error) {
     console.error('Change password error:', error);
-    return { success: false, error: 'Ошибка при смене пароля' };
+    return { success: false, error: tr('auth_pw_change_error', lang) || 'Ошибка при смене пароля' };
   }
 }
 
@@ -470,14 +471,14 @@ async function changePassword(userId, currentPassword, newPassword) {
  * @param {number} resultId - ID результата
  * @returns {object} - {success: true/false, error: "..."}
  */
-function deleteTestResult(userId, resultId) {
+function deleteTestResult(userId, resultId, lang = 'ru') {
   try {
     const result = getDb().prepare(
       'DELETE FROM test_results WHERE id = ? AND user_id = ?'
     ).run(resultId, userId);
 
     if (result.changes === 0) {
-      return { success: false, error: 'Результат не найден' };
+      return { success: false, error: tr('auth_result_not_found', lang) || 'Результат не найден' };
     }
 
     return { success: true };
@@ -493,14 +494,14 @@ function deleteTestResult(userId, resultId) {
  * @param {number} messageId - ID сообщения
  * @returns {object} - {success: true/false, error: "..."}
  */
-function deleteChatMessage(userId, messageId) {
+function deleteChatMessage(userId, messageId, lang = 'ru') {
   try {
     const result = getDb().prepare(
       'DELETE FROM chat_history WHERE id = ? AND user_id = ?'
     ).run(messageId, userId);
 
     if (result.changes === 0) {
-      return { success: false, error: 'Сообщение не найдено' };
+      return { success: false, error: tr('auth_msg_not_found', lang) || 'Сообщение не найдено' };
     }
 
     return { success: true };

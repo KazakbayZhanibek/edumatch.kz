@@ -2,7 +2,9 @@
    EDUMATCH KZ — APP LOGIC
    ============================================= */
 
-const API = 'http://localhost:3000/api';
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3000/api'
+  : '/api';
 
 // ─── STATE ───────────────────────────────────
 const state = window.state = {
@@ -152,6 +154,7 @@ function initTheme() {
 
 function initLanguage() {
   const lang = window.currentLanguage || 'ru';
+  document.documentElement.lang = lang;
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.remove('active');
   });
@@ -322,12 +325,9 @@ async function loadCities() {
  */
 async function loadSpecialties() {
   try {
-    console.log('Loading specialties from API...');
     const res = await fetch(`${API}/specialties`);
-    console.log('Response status:', res.status);
     
     if (!res.ok) {
-      console.error('API error:', res.statusText);
       return;
     }
     
@@ -337,11 +337,8 @@ async function loadSpecialties() {
     
     const specSelect = document.getElementById('admit-specialty');
     if (!specSelect) {
-      console.warn('Specialty select element not found');
       return;
     }
-    
-    console.log(`Adding ${Array.isArray(specialties) ? specialties.length : 0} specialties to select`);
     
     // Сохраняем placeholder
     while (specSelect.options.length > 1) {
@@ -358,9 +355,8 @@ async function loadSpecialties() {
         specSelect.appendChild(opt);
       });
     }
-    console.log('Specialties loaded successfully');
   } catch (e) { 
-    console.error('Failed to load specialties:', e);
+    // silent
   }
 }
 
@@ -914,19 +910,9 @@ async function sendMessage() {
         appendMessage('ai', data.answer, data.matches);
       }
       state.chatHistory.push({ role: 'assistant', content: data.answer });
-
-      // Log metadata
-      console.log('[AI Response]', {
-        intent: data.intent,
-        confidence: data.metadata.confidence,
-        fallback: data.metadata.fallback,
-        universities_analyzed: data.metadata.universities_analyzed,
-        took_ms: data.metadata.took_ms,
-      });
     }
   } catch (e) {
     removeTyping(typingId);
-    console.error('[Chat Error]', e);
     appendMessage('ai', t('error.server_offline'));
   }
 

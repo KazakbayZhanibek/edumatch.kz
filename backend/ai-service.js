@@ -11,26 +11,59 @@ const INTENT_PATTERNS = [
       /(?:поступ|шанс|пройд|вероятност|могу ли я|получу ли).*/i,
       /(?:ент|бал[а-я]*)\s*:?\s*\d{2,3}/i,
       /\d{2,3}\s*(?:бал[а-я]*)(?:\s*ент)?/i,
+      // KK patterns
+      /(?:түсу|мүмкіндік|өту|ықтималдық|ала аламын|түсе аламын).*/i,
+      /(?:ұбт|балл)\s*:?\s*\d{2,3}/i,
+      /\d{2,3}\s*(?:балл)(?:\s*ұбт)?/i,
+      // EN patterns
+      /(?:admit|chance|pass|probability|can i get|will i get).*/i,
+      /(?:unt|ent|score)\s*:?\s*\d{2,3}/i,
+      /\d{2,3}\s*(?:points?)(?:\s*(?:unt|ent))?/i,
     ],
-    keywords: ['поступ','шанс','пройду','вероятность','ент','проходной','грант'],
+    keywords: ['поступ','шанс','пройду','вероятность','ент','проходной','грант',
+               'түсу','мүмкіндік','өту','ықтималдық','ұбт','грант',
+               'admit','chance','pass','probability','unt','ent','grant'],
   },
   {
     name: 'comparison',
-    patterns: [/сравн/i, /отличи/i, /разниц/i, /\s+vs\s+/i, /\bили\b.*\b(?:и|или)\b.*\b(?:вуз|университет)/i],
-    keywords: ['сравни','отличие','разница','vs'],
+    patterns: [
+      /сравн/i, /отличи/i, /разниц/i, /\s+vs\s+/i, /\bили\b.*\b(?:и|или)\b.*\b(?:вуз|университет)/i,
+      // KK
+      /салыстыр/i, /айырмашылық/i, /өзгешелік/i,
+      // EN
+      /compar/i, /differen/i, /\bvs\b/i,
+    ],
+    keywords: ['сравни','отличие','разница','vs',
+               'салыстыр','айырмашылық','өзгешелік',
+               'compare','difference','versus'],
   },
   {
     name: 'grant',
-    patterns: [/грант/i, /стипенди/i, /бесплатно/i, /гос.грант/i],
-    keywords: ['грант','стипенди','бесплатно','государственный грант'],
+    patterns: [/грант/i, /стипенди/i, /бесплатно/i, /гос.грант/i,
+      // KK
+      /грант/i, /стипендия/i, /тегін/i, /мемлекеттік грант/i,
+      // EN
+      /grant/i, /scholarship/i, /free tuition/i, /government grant/i,
+    ],
+    keywords: ['грант','стипенди','бесплатно','государственный грант',
+               'грант','стипендия','тегін','мемлекеттік грант',
+               'grant','scholarship','free','government'],
   },
   {
     name: 'recommendation',
     patterns: [
       /(?:рекомендуй|посоветуй|подбери|какой вуз|какие университет|лучший вуз|посоветуйте)/i,
       /(?:интересует|хочу|ищу).*(?:вуз|университет|специальность|направление)/i,
+      // KK
+      /(?:ұсын|кеңес бер|таңда|қай университет|қандай университет|жәй университет|ұсыныңыз)/i,
+      /(?:қызықтырады|қаламын|іздеймін).*(?:университет|мамандық|бағыт)/i,
+      // EN
+      /(?:recommend|suggest|advise|which uni|which university|best uni|best university)/i,
+      /(?:interested in|want|looking for).*(?:university|specialty|major)/i,
     ],
-    keywords: ['рекомендуй','посоветуй','подбери','какой','лучший','интересует'],
+    keywords: ['рекомендуй','посоветуй','подбери','какой','лучший','интересует',
+               'ұсын','кеңес бер','таңда','қай','жәй','қызықтырады',
+               'recommend','suggest','which','best','interested'],
   },
 ];
 
@@ -42,7 +75,7 @@ function classifyIntent(message) {
     if (intent.name === 'admission') {
       if (intent.patterns.some(p => p.test(q))) return 'admission';
       const kw = intent.keywords.some(k => q.includes(k));
-      if (kw && (/\d{2,3}/.test(q) || q.includes('вуз') || q.includes('университет'))) return 'admission';
+      if (kw && (/\d{2,3}/.test(q) || q.includes('вуз') || q.includes('университет') || q.includes('университет') || q.includes('university'))) return 'admission';
       continue;
     }
     if (intent.patterns.some(p => p.test(q))) return intent.name;
@@ -122,6 +155,7 @@ function parseAdmissionQuery(message) {
 
   if (!result.specialty) {
     const specMap = {
+      // RU
       'it': 'Информационные технологии',
       'айти': 'Информационные технологии',
       'программирование': 'Информационные технологии',
@@ -153,23 +187,68 @@ function parseAdmissionQuery(message) {
       'искусство': 'Искусство',
       'дизайн': 'Искусство',
       'туризм': 'Туризм',
+      // KK
+      'ақпараттық технологиялар': 'Информационные технологии',
+      'бағдарламалау': 'Информационные технологии',
+      'бағдарламашы': 'Информационные технологии',
+      'медицина': 'Медицина',
+      'дәрігер': 'Медицина',
+      'экономика': 'Бизнес',
+      'бизнес': 'Бизнес',
+      'қаржы': 'Бизнес',
+      'менеджмент': 'Бизнес',
+      'маркетинг': 'Бизнес',
+      'құқық': 'Общественные науки',
+      'заңгер': 'Общественные науки',
+      'инженерия': 'Инженерия',
+      'инженер': 'Инженерия',
+      'гуманитарлық': 'Гуманитарные науки',
+      'психология': 'Гуманитарные науки',
+      'білім': 'Образование',
+      'педагог': 'Образование',
+      'мұғалім': 'Образование',
+      'өнер': 'Искусство',
+      'дизайн': 'Искусство',
+      'туризм': 'Туризм',
+      // EN
+      'information technology': 'Информационные технологии',
+      'programming': 'Информационные технологии',
+      'developer': 'Информационные технологии',
+      'medicine': 'Медицина',
+      'doctor': 'Медицина',
+      'economics': 'Бизнес',
+      'business': 'Бизнес',
+      'finance': 'Бизнес',
+      'management': 'Бизнес',
+      'marketing': 'Бизнес',
+      'law': 'Общественные науки',
+      'lawyer': 'Общественные науки',
+      'engineering': 'Инженерия',
+      'engineer': 'Инженерия',
+      'humanities': 'Гуманитарные науки',
+      'psychology': 'Гуманитарные науки',
+      'education': 'Образование',
+      'teacher': 'Образование',
+      'art': 'Искусство',
+      'design': 'Искусство',
+      'tourism': 'Туризм',
     };
     for (const [key, val] of Object.entries(specMap)) {
       if (q.includes(key)) { result.specialty = val; break; }
     }
   }
 
-  const budgetMatch = q.match(/(\d+(?:\.\d+)?)\s*(?:млн|миллион)/i);
+  const budgetMatch = q.match(/(\d+(?:\.\d+)?)\s*(?:млн|миллион|млн|миллион)/i);
   if (budgetMatch) result.budget = Math.round(parseFloat(budgetMatch[1]) * 1000000);
 
-  const budgetThous = q.match(/(\d+)\s*(?:тыс|k)\s*(?:тг|тенге)?/i);
+  const budgetThous = q.match(/(\d+)\s*(?:тыс|k|мың)\s*(?:тг|тенге)?/i);
   if (budgetThous) result.budget = parseInt(budgetThous[1], 10) * 1000;
 
-  if (q.includes('английск') || q.includes('english')) result.language = 'Английский';
-  else if (q.includes('казахск') || q.includes('казах')) result.language = 'Казахский';
-  else if (q.includes('русск') || q.includes('рус')) result.language = 'Русский';
+  if (q.includes('английск') || q.includes('english') || q.includes('ағылшын')) result.language = 'Английский';
+  else if (q.includes('казахск') || q.includes('казах') || q.includes('қазақ')) result.language = 'Казахский';
+  else if (q.includes('русск') || q.includes('рус') || q.includes('орыс')) result.language = 'Русский';
 
-  result.needDorm = q.includes('общежитие') || q.includes('проживан');
+  result.needDorm = q.includes('общежитие') || q.includes('проживан') || q.includes('жатақхана') || q.includes('dormitory');
 
   return result;
 }

@@ -4,6 +4,7 @@
  */
 
 const authService = require('./auth-service');
+const { tr, getLang } = require('./i18n');
 
 /**
  * Middleware для проверки аутентификации
@@ -13,10 +14,11 @@ const authService = require('./auth-service');
 function verifyAuth(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
+    const lang = getLang(req);
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
-        error: 'Токен не найден'
+        error: tr('auth_token_missing', lang) || 'Токен не найден'
       });
     }
 
@@ -27,7 +29,7 @@ function verifyAuth(req, res, next) {
 
     if (!validation.valid) {
       return res.status(401).json({
-        error: 'Токен недействителен или истёк'
+        error: tr('auth_token_invalid', lang) || 'Токен недействителен или истёк'
       });
     }
 
@@ -36,7 +38,7 @@ function verifyAuth(req, res, next) {
 
     if (!verification.valid) {
       return res.status(401).json({
-        error: 'Токен поддельный или истёк'
+        error: tr('auth_token_fake', lang) || 'Токен поддельный или истёк'
       });
     }
 
@@ -47,7 +49,8 @@ function verifyAuth(req, res, next) {
     next();
   } catch (error) {
     console.error('Auth middleware error:', error);
-    return res.status(500).json({ error: 'Ошибка проверки токена' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_token_check_error', lang) || 'Ошибка проверки токена' });
   }
 }
 
@@ -88,6 +91,7 @@ function verifyAuthOptional(req, res, next) {
  */
 function verifyOwnership(req, res, next) {
   try {
+    const lang = getLang(req);
     // Пример: проверить, что пользователь пытается получить свой профиль
     // Использование: router.get('/users/:id/profile', verifyAuth, verifyOwnership, handler)
 
@@ -96,14 +100,15 @@ function verifyOwnership(req, res, next) {
 
     if (requestedUserId && parseInt(requestedUserId) !== currentUserId) {
       return res.status(403).json({
-        error: 'У вас нет доступа к этому ресурсу'
+        error: tr('auth_no_access', lang) || 'У вас нет доступа к этому ресурсу'
       });
     }
 
     next();
   } catch (error) {
     console.error('Ownership check error:', error);
-    return res.status(500).json({ error: 'Ошибка проверки прав доступа' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_access_check_error', lang) || 'Ошибка проверки прав доступа' });
   }
 }
 
@@ -113,19 +118,21 @@ function verifyOwnership(req, res, next) {
  */
 function verifyAdmin(req, res, next) {
   try {
+    const lang = getLang(req);
     // TODO: Добавить проверку is_admin в таблицу users
     const isAdmin = req.isAdmin; // Получать из БД
 
     if (!isAdmin) {
       return res.status(403).json({
-        error: 'Требуются права администратора'
+        error: tr('auth_admin_required', lang) || 'Требуются права администратора'
       });
     }
 
     next();
   } catch (error) {
     console.error('Admin check error:', error);
-    return res.status(500).json({ error: 'Ошибка проверки прав администратора' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_admin_check_error', lang) || 'Ошибка проверки прав администратора' });
   }
 }
 

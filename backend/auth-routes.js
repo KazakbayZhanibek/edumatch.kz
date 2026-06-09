@@ -7,6 +7,7 @@ const express = require('express');
 const router = express.Router();
 const authService = require('./auth-service');
 const { verifyAuth } = require('./auth-middleware');
+const { tr, getLang } = require('./i18n');
 
 // ==================== AUTH ENDPOINTS ====================
 
@@ -18,11 +19,12 @@ const { verifyAuth } = require('./auth-middleware');
 router.post('/register', async (req, res) => {
   try {
     const { email, password, username, fullName } = req.body;
+    const lang = getLang(req);
 
     // Валидация
     if (!email || !password || !username) {
       return res.status(400).json({
-        error: 'Email, пароль и никнейм обязательны'
+        error: tr('auth_fields_required', lang) || 'Email, пароль и никнейм обязательны'
       });
     }
 
@@ -30,18 +32,18 @@ router.post('/register', async (req, res) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
-        error: 'Неверный формат email'
+        error: tr('auth_invalid_email', lang) || 'Неверный формат email'
       });
     }
 
     // Валидация username
     if (username.length < 3 || username.length > 20) {
       return res.status(400).json({
-        error: 'Никнейм должен быть от 3 до 20 символов'
+        error: tr('auth_username_length', lang) || 'Никнейм должен быть от 3 до 20 символов'
       });
     }
 
-    const result = await authService.registerUser(email, password, username, fullName);
+    const result = await authService.registerUser(email, password, username, fullName, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -54,7 +56,7 @@ router.post('/register', async (req, res) => {
     });
   } catch (error) {
     console.error('Register error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -66,14 +68,15 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    const lang = getLang(req);
 
     if (!email || !password) {
       return res.status(400).json({
-        error: 'Email и пароль обязательны'
+        error: tr('auth_email_password_required', lang) || 'Email и пароль обязательны'
       });
     }
 
-    const result = await authService.loginUser(email, password);
+    const result = await authService.loginUser(email, password, lang);
 
     if (!result.success) {
       return res.status(401).json({ error: result.error });
@@ -86,7 +89,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -98,21 +101,23 @@ router.post('/login', async (req, res) => {
 router.post('/logout', verifyAuth, (req, res) => {
   try {
     const token = req.headers.authorization?.replace('Bearer ', '');
+    const lang = getLang(req);
 
     if (!token) {
-      return res.status(400).json({ error: 'Токен не найден' });
+      return res.status(400).json({ error: tr('auth_token_not_found', lang) || 'Токен не найден' });
     }
 
     const deleted = authService.deleteToken(token);
 
     if (!deleted) {
-      return res.status(400).json({ error: 'Ошибка при выходе' });
+      return res.status(400).json({ error: tr('auth_logout_error', lang) || 'Ошибка при выходе' });
     }
 
     return res.json({ success: true });
   } catch (error) {
     console.error('Logout error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -124,10 +129,11 @@ router.post('/logout', verifyAuth, (req, res) => {
 router.post('/verify', verifyAuth, (req, res) => {
   try {
     const userId = req.userId;
+    const lang = getLang(req);
     const user = authService.getUserProfile(userId);
 
     if (!user) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
+      return res.status(404).json({ error: tr('auth_user_not_found_route', lang) || 'Пользователь не найден' });
     }
 
     return res.json({
@@ -141,7 +147,8 @@ router.post('/verify', verifyAuth, (req, res) => {
     });
   } catch (error) {
     console.error('Verify error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -154,10 +161,11 @@ router.post('/verify', verifyAuth, (req, res) => {
  */
 router.get('/profile', verifyAuth, (req, res) => {
   try {
+    const lang = getLang(req);
     const user = authService.getUserProfile(req.userId);
 
     if (!user) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
+      return res.status(404).json({ error: tr('auth_user_not_found_route', lang) || 'Пользователь не найден' });
     }
 
     return res.json({
@@ -173,7 +181,8 @@ router.get('/profile', verifyAuth, (req, res) => {
     });
   } catch (error) {
     console.error('Get profile error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -186,13 +195,14 @@ router.get('/profile', verifyAuth, (req, res) => {
 router.put('/profile', verifyAuth, (req, res) => {
   try {
     const { fullName, phone, bio, preferences } = req.body;
+    const lang = getLang(req);
 
     const result = authService.updateUserProfile(req.userId, {
       fullName,
       phone,
       bio,
       preferences
-    });
+    }, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -204,7 +214,7 @@ router.put('/profile', verifyAuth, (req, res) => {
     });
   } catch (error) {
     console.error('Update profile error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -226,7 +236,8 @@ router.get('/saved-universities', verifyAuth, (req, res) => {
     });
   } catch (error) {
     console.error('Get saved universities error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -239,12 +250,13 @@ router.get('/saved-universities', verifyAuth, (req, res) => {
 router.post('/saved-universities', verifyAuth, (req, res) => {
   try {
     const { universityId, note } = req.body;
+    const lang = getLang(req);
 
     if (!universityId) {
-      return res.status(400).json({ error: 'universityId обязателен' });
+      return res.status(400).json({ error: tr('auth_university_id_required', lang) || 'universityId обязателен' });
     }
 
-    const result = authService.saveUniversity(req.userId, universityId, note);
+    const result = authService.saveUniversity(req.userId, universityId, note, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -253,7 +265,7 @@ router.post('/saved-universities', verifyAuth, (req, res) => {
     return res.status(201).json({ success: true });
   } catch (error) {
     console.error('Save university error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -263,7 +275,8 @@ router.post('/saved-universities', verifyAuth, (req, res) => {
  */
 router.delete('/saved-universities/:id', verifyAuth, (req, res) => {
   try {
-    const result = authService.removeSavedUniversity(req.userId, req.params.id);
+    const lang = getLang(req);
+    const result = authService.removeSavedUniversity(req.userId, req.params.id, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -272,7 +285,8 @@ router.delete('/saved-universities/:id', verifyAuth, (req, res) => {
     return res.json({ success: true });
   } catch (error) {
     console.error('Remove saved university error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -283,11 +297,12 @@ router.delete('/saved-universities/:id', verifyAuth, (req, res) => {
 router.delete('/saved-universities/university/:universityId', verifyAuth, (req, res) => {
   try {
     const universityId = parseInt(req.params.universityId, 10);
+    const lang = getLang(req);
     if (!universityId) {
-      return res.status(400).json({ error: 'Некорректный ID вуза' });
+      return res.status(400).json({ error: tr('auth_invalid_uni_id', lang) || 'Некорректный ID вуза' });
     }
 
-    const result = authService.removeSavedUniversityByUniversityId(req.userId, universityId);
+    const result = authService.removeSavedUniversityByUniversityId(req.userId, universityId, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -296,7 +311,8 @@ router.delete('/saved-universities/university/:universityId', verifyAuth, (req, 
     return res.json({ success: true });
   } catch (error) {
     console.error('Remove saved university by uni id error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -320,7 +336,8 @@ router.get('/chat-history', verifyAuth, (req, res) => {
     });
   } catch (error) {
     console.error('Get chat history error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -333,21 +350,23 @@ router.get('/chat-history', verifyAuth, (req, res) => {
 router.post('/chat-history', verifyAuth, (req, res) => {
   try {
     const { message, response, context } = req.body;
+    const lang = getLang(req);
 
     if (!message || !response) {
-      return res.status(400).json({ error: 'message и response обязательны' });
+      return res.status(400).json({ error: tr('auth_message_response_required', lang) || 'message и response обязательны' });
     }
 
     const saved = authService.saveChatMessage(req.userId, message, response, context);
 
     if (!saved) {
-      return res.status(400).json({ error: 'Ошибка при сохранении' });
+      return res.status(400).json({ error: tr('auth_save_error', lang) || 'Ошибка при сохранении' });
     }
 
     return res.status(201).json({ success: true });
   } catch (error) {
     console.error('Save chat message error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -358,11 +377,12 @@ router.post('/chat-history', verifyAuth, (req, res) => {
 router.delete('/chat-history/:id', verifyAuth, (req, res) => {
   try {
     const messageId = parseInt(req.params.id, 10);
+    const lang = getLang(req);
     if (!messageId) {
-      return res.status(400).json({ error: 'Некорректный ID сообщения' });
+      return res.status(400).json({ error: tr('auth_invalid_msg_id', lang) || 'Некорректный ID сообщения' });
     }
 
-    const result = authService.deleteChatMessage(req.userId, messageId);
+    const result = authService.deleteChatMessage(req.userId, messageId, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -371,7 +391,8 @@ router.delete('/chat-history/:id', verifyAuth, (req, res) => {
     return res.json({ success: true });
   } catch (error) {
     console.error('Delete chat message error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -386,12 +407,13 @@ router.delete('/chat-history/:id', verifyAuth, (req, res) => {
 router.post('/change-password', verifyAuth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
+    const lang = getLang(req);
 
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({ error: 'currentPassword и newPassword обязательны' });
+      return res.status(400).json({ error: tr('auth_current_new_pw_required', lang) || 'currentPassword и newPassword обязательны' });
     }
 
-    const result = await authService.changePassword(req.userId, currentPassword, newPassword);
+    const result = await authService.changePassword(req.userId, currentPassword, newPassword, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -400,7 +422,8 @@ router.post('/change-password', verifyAuth, async (req, res) => {
     return res.json({ success: true });
   } catch (error) {
     console.error('Change password error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -422,7 +445,8 @@ router.get('/test-results', verifyAuth, (req, res) => {
     });
   } catch (error) {
     console.error('Get test results error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -435,10 +459,11 @@ router.get('/test-results', verifyAuth, (req, res) => {
 router.post('/test-results', verifyAuth, (req, res) => {
   try {
     const { testType, score, maxScore, resultData } = req.body;
+    const lang = getLang(req);
 
     if (!testType || score === undefined || !maxScore) {
       return res.status(400).json({
-        error: 'testType, score и maxScore обязательны'
+        error: tr('auth_test_fields_required', lang) || 'testType, score и maxScore обязательны'
       });
     }
 
@@ -451,13 +476,14 @@ router.post('/test-results', verifyAuth, (req, res) => {
     );
 
     if (!saved) {
-      return res.status(400).json({ error: 'Ошибка при сохранении' });
+      return res.status(400).json({ error: tr('auth_save_error', lang) || 'Ошибка при сохранении' });
     }
 
     return res.status(201).json({ success: true });
   } catch (error) {
     console.error('Save test result error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
@@ -468,11 +494,12 @@ router.post('/test-results', verifyAuth, (req, res) => {
 router.delete('/test-results/:id', verifyAuth, (req, res) => {
   try {
     const resultId = parseInt(req.params.id, 10);
+    const lang = getLang(req);
     if (!resultId) {
-      return res.status(400).json({ error: 'Некорректный ID результата' });
+      return res.status(400).json({ error: tr('auth_invalid_result_id', lang) || 'Некорректный ID результата' });
     }
 
-    const result = authService.deleteTestResult(req.userId, resultId);
+    const result = authService.deleteTestResult(req.userId, resultId, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -481,7 +508,8 @@ router.delete('/test-results/:id', verifyAuth, (req, res) => {
     return res.json({ success: true });
   } catch (error) {
     console.error('Delete test result error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
 
