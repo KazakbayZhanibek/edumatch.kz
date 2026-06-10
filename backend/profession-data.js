@@ -444,6 +444,26 @@ function getProfessionsBySpecialty(specialtyId) {
   return PROFESSIONS.filter(p => p.specialties.includes(specialtyId));
 }
 
+const CATEGORY_TO_PROFESSIONS = {
+  'Информационные технологии': ['programmer', 'data_analyst', 'cybersecurity', 'devops', 'ai_engineer'],
+  'Медицина': ['doctor', 'pharmacist'],
+  'Бизнес': ['data_analyst', 'manager'],
+  'Инженерия': ['engineer', 'architect'],
+  'Гуманитарные науки': ['teacher', 'psychologist'],
+  'Естественные науки': ['teacher', 'data_analyst'],
+  'Здоровье': ['doctor', 'psychologist', 'pharmacist'],
+  'Образование': ['teacher'],
+  'Общественные науки': ['lawyer', 'manager'],
+  'Искусство': ['designer'],
+  'Сельское хозяйство': ['engineer'],
+  'Туризм': ['manager'],
+};
+
+function getProfessionsByCategory(category) {
+  const profIds = CATEGORY_TO_PROFESSIONS[category] || [];
+  return PROFESSIONS.filter(p => profIds.includes(p.id));
+}
+
 /**
  * Форматирует информацию о профессии для контекста LLM
  */
@@ -468,5 +488,6 @@ module.exports = {
   PROFESSIONS,
   findProfession,
   getProfessionsBySpecialty,
+  getProfessionsByCategory,
   formatProfessionForContext,
 };

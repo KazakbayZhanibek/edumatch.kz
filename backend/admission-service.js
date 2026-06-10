@@ -72,6 +72,21 @@ function scoreToChance(total) {
   return Math.max(15, Math.round(t * 0.75));
 }
 
+function portfolioType(chance) {
+  if (chance >= 75) return 'safe';
+  if (chance >= 45) return 'target';
+  return 'ambitious';
+}
+
+function portfolioLabel(type, lang = 'ru') {
+  const labels = {
+    safe: { ru: 'Безопасный', kk: 'Қауіпсіз', en: 'Safe' },
+    target: { ru: 'Целевой', kk: 'Мақсатты', en: 'Target' },
+    ambitious: { ru: 'Амбициозный', kk: 'Амбициозный', en: 'Ambitious' },
+  };
+  return labels[type]?.[lang] || labels[type]?.ru || type;
+}
+
 function recommendationLabel(chance, lang = 'ru') {
   if (chance >= 85) return tr('rec_high', lang) || 'Высокая вероятность поступления';
   if (chance >= 70) return tr('rec_good', lang) || 'Хорошие шансы, рассмотрите как основной вариант';
@@ -169,6 +184,97 @@ function buildReasons(parts, req, ent, lang = 'ru') {
   return reasons;
 }
 
+function buildScoreBreakdown(parts, req, ent, penalties, lang = 'ru') {
+  const grantGap = grantGapPenalty(ent, req.grant_min_ent);
+  const belowMin = belowMinPenalty(ent, req.min_ent);
+  const compPenalty = competitionPenalty(req.competition_level);
+
+  const factors = [
+    {
+      key: 'ent',
+      label: tr('factor_ent', lang) || 'Балл ЕНТ',
+      score: parts.ent,
+      maxScore: 40,
+      detail: ent >= req.grant_min_ent
+        ? `${ent} ≥ ${req.grant_min_ent} (грант)`
+        : ent >= req.avg_ent
+        ? `${ent} ≥ ${req.avg_ent} (ср.)`
+        : ent >= req.min_ent
+        ? `${ent} ≥ ${req.min_ent} (мин.)`
+        : `${ent} < ${req.min_ent}`,
+      impact: grantGap > 0 ? `−${grantGap} грант` : belowMin > 0 ? `−${belowMin} мин.` : '',
+    },
+    {
+      key: 'budget',
+      label: tr('factor_budget', lang) || 'Бюджет',
+      score: parts.budget,
+      maxScore: 15,
+      detail: parts.budget >= 12
+        ? tr('factor_budget_ok', lang) || 'Цена в бюджете'
+        : parts.budget < 0
+        ? tr('factor_budget_over', lang) || 'Цена выше бюджета'
+        : tr('factor_budget_near', lang) || 'Цена рядом с бюджетом',
+      impact: parts.budget < 0 ? `${parts.budget}` : '',
+    },
+    {
+      key: 'lang',
+      label: tr('factor_lang', lang) || 'Язык обучения',
+      score: parts.lang,
+      maxScore: 10,
+      detail: parts.lang >= 10
+        ? tr('factor_lang_ok', lang) || 'Язык совпадает'
+        : tr('factor_lang_bad', lang) || 'Язык не подтверждён',
+      impact: '',
+    },
+    {
+      key: 'dorm',
+      label: tr('factor_dorm', lang) || 'Общежитие',
+      score: parts.dorm,
+      maxScore: 10,
+      detail: parts.dorm >= 10
+        ? tr('factor_dorm_ok', lang) || 'Есть общежитие'
+        : parts.dorm < 0
+        ? tr('factor_dorm_bad', lang) || 'Нет общежития'
+        : tr('factor_dorm_na', lang) || 'Не указано',
+      impact: parts.dorm < 0 ? `${parts.dorm}` : '',
+    },
+    {
+      key: 'spec',
+      label: tr('factor_spec', lang) || 'Специальность',
+      score: parts.spec,
+      maxScore: 28,
+      detail: tr('factor_spec_detail', lang) || `Конкурс: ${req.competition_level || 3}/5`,
+      impact: '',
+    },
+    {
+      key: 'attestat',
+      label: tr('factor_attestat', lang) || 'Аттестат',
+      score: parts.attestat,
+      maxScore: 5,
+      detail: parts.attestat >= 4 ? '4.0+' : parts.attestat > 0 ? `${parts.attestat}` : '—',
+      impact: '',
+    },
+  ];
+
+  const totalPenalty = grantGap + belowMin + compPenalty;
+  if (totalPenalty > 0) {
+    factors.push({
+      key: 'penalty',
+      label: tr('factor_penalty', lang) || 'Штрафы',
+      score: -totalPenalty,
+      maxScore: 0,
+      detail: [
+        grantGap > 0 ? `−${grantGap} грант` : '',
+        belowMin > 0 ? `−${belowMin} мин.` : '',
+        compPenalty > 0 ? `−${compPenalty} конкурс` : '',
+      ].filter(Boolean).join(', ') || '—',
+      impact: `−${totalPenalty}`,
+    });
+  }
+
+  return factors;
+}
+
 /**
  * @param {object} params
  * @returns {object}
@@ -252,6 +358,8 @@ function getAdmissionPrediction(params) {
 
     const existing = byUniversity.get(row.university_id);
     if (!existing || total > existing.score) {
+      const scoreBreakdown = buildScoreBreakdown(parts, row, ent, penalties, lang);
+      const portfolio = portfolioType(chance);
       byUniversity.set(row.university_id, {
         university_id: row.university_id,
         university: row.short_name,
@@ -262,8 +370,11 @@ function getAdmissionPrediction(params) {
         qs_world: row.qs_world,
         chance,
         score: total,
+        portfolio,
+        portfolioLabel: portfolioLabel(portfolio, lang),
         recommendation: recommendationLabel(chance, lang),
         reasons,
+        scoreBreakdown,
         requirement: {
           min_ent: row.min_ent,
           avg_ent: row.avg_ent,
@@ -299,9 +410,48 @@ function getAdmissionPrediction(params) {
   matches.sort((a, b) => b.chance - a.chance || b.score - a.score);
   if (matches.length > 15) matches.length = 15;
 
+  const whatIf = [];
+  if (ent < 140) {
+    const increments = [5, 10, 15].filter(d => ent + d <= 140);
+    const top3 = matches.slice(0, 3);
+    for (const delta of increments) {
+      const scenario = { ent: ent + delta, universities: [] };
+      for (const match of top3) {
+        const row = candidates.find(c => c.university_id === match.university_id && c.specialty_name === match.specialty_name);
+        if (!row) continue;
+        const newEnt = ent + delta;
+        const newParts = {
+          ent: scoreEnt(newEnt, row),
+          budget: scoreBudget(budget, row.price_from, row.price_to),
+          lang: scoreLanguage(language, row.languages ? JSON.parse(row.languages) : []),
+          langMax: language ? 10 : 5,
+          dorm: scoreDorm(needDorm, row.has_dorm === 1),
+          spec: scoreSpecialty(true, row.competition_level),
+          attestat: scoreAttestat(attestat),
+        };
+        const newPenalties = grantGapPenalty(newEnt, row.grant_min_ent)
+          + belowMinPenalty(newEnt, row.min_ent)
+          + competitionPenalty(row.competition_level);
+        const newTotal = Math.max(0, Math.min(100,
+          newParts.ent + newParts.budget + newParts.lang + newParts.dorm + newParts.spec + newParts.attestat - newPenalties
+        ));
+        const newChance = scoreToChance(newTotal);
+        if (newChance > match.chance) {
+          scenario.universities.push({
+            university: match.university,
+            from: match.chance,
+            to: newChance,
+          });
+        }
+      }
+      if (scenario.universities.length > 0) whatIf.push(scenario);
+    }
+  }
+
   return {
     success: true,
     matches,
+    whatIf,
     input: {
       ent,
       specialty: specialtyCategory,

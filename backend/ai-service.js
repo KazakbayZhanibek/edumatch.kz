@@ -68,7 +68,7 @@ const INTENT_PATTERNS = [
     ],
     keywords: ['город','какой город','в каком','где лучше','где поступить','лучший город',
                'қала','қай қалада','жақсы қала','оқу үшін қала',
-               'city','which city','best city','where to study'],
+               'which city','best city','where to study'],
   },
   {
     name: 'admission',
@@ -164,7 +164,7 @@ const INTENT_PATTERNS = [
     ],
     keywords: ['город','какой город','в каком','где лучше','где поступить','лучший город',
                'қала','қай қалада','жақсы қала','оқу үшін қала',
-               'city','which city','best city','where to study'],
+               'which city','best city','where to study'],
   },
 ];
 
@@ -173,7 +173,7 @@ function classifyIntent(message) {
   if (!q) return 'general';
 
   // Приветствия и короткие фразы → general с заготовленным ответом
-  if (/^(привет|здравствуй|سلام|hello|hi|hey|приветик|добрый|добрый день|добрый вечер|доброе утро|здорово|йо|йоу|хай|здаров|йо|хай|здрасьте|здарова|хелло|хэлло|hey|hello)$/i.test(q)) {
+  if (/^(?:привет|здравствуй|سلام|hello|hi|hey|приветик|добрый|добрый день|добрый вечер|доброе утро|здорово|йо|йоу|хай|здаров|хай|здрасьте|здарова|хелло|хэлло)(?:[!?.，。]+)?$/i.test(q)) {
     return 'greeting';
   }
   if (/^(что (?:ты )?умеешь|чем (?:ты )?поможешь|что (?:ты )?можешь|помощь|help|что делать|как пользоваться)/i.test(q)) {
@@ -197,9 +197,24 @@ function classifyIntent(message) {
   }
 
   // Сначала проверяем специальные случаи
+  // Онбординг для неопределившихся
+  if (/(?:не знаю что выбрать|помоги определиться|не могу выбрать|что выбрать|не определился|помоги с выбором|какой вуз выбрать|не знаю куда)/i.test(q)) {
+    return 'onboarding';
+  }
+
+  // Дедлайны и сроки
+  if (/(?:дедлайн|сроки|когда подавать|когда регистрация|сроки подачи|когда ент|сроки ент|календарь|план действий|что делать дальше|чеклист)/i.test(q)) {
+    return 'deadlines';
+  }
+
   // "список вузов", "какие вузы", "дай список", "помоги выбрать" → recommendation
   if (/(?:список|дай список|перечень|назови|помоги выбрать|выбрать вуз|выбрать университет)/i.test(q)) {
     return 'recommendation';
+  }
+
+  // Вопросы не по теме → general (чтобы "какая погода" не ловилось как recommendation из-за fuzzy "какая"→"какой")
+  if (/(?:погод|дат|врем|число|месяц|год|сегодня|завтра|вчера|который час)/i.test(q)) {
+    return 'general';
   }
 
   // Проверяем profession ДО city (чтобы "кем работать с IT" не ловилось как city из-за fuzzy "it" → "city")
@@ -230,6 +245,40 @@ function classifyIntent(message) {
   }
 
   return 'general';
+}
+
+function extractParamsFromHistory(history) {
+  if (!history || !Array.isArray(history) || history.length === 0) return {};
+  const params = {};
+  for (const msg of history) {
+    const text = (msg.content || msg.text || '').toLowerCase();
+    if (params.ent === undefined) {
+      const entMatch = text.match(/(?:е?нт|бал[а-я]*)\s*:?\s*(\d{1,3})/i)
+        || text.match(/(\d{1,3})\s*(?:бал[а-я]*)(?:\s*ент)?/i)
+        || text.match(/(?:ent|unt|score)\s*:?\s*(\d{1,3})/i);
+      if (entMatch) {
+        const ent = parseInt(entMatch[1], 10);
+        if (ent >= 0 && ent <= 140) params.ent = ent;
+      }
+    }
+    if (params.budget === undefined) {
+      const budgetMatch = text.match(/(?:бюджет|цен[ауе]|стоимост|максимум|до)\s*:?\s*(\d[\d\s]*(?:\d\s*)?₸?)/i)
+        || text.match(/(\d[\d\s]*(?:000|₸))\s*(?:тенге|₸)?/i);
+      if (budgetMatch) {
+        const budget = parseInt(budgetMatch[1].replace(/\s/g, ''), 10);
+        if (budget > 0 && budget < 10000000) params.budget = budget;
+      }
+    }
+    if (params.language === undefined) {
+      if (/(?:на|по|учить|учеба)\s+(?:английском|англ)/i.test(text)) params.language = 'english';
+      else if (/(?:на|по|учить|учеба)\s+(?:русском|русск)/i.test(text)) params.language = 'russian';
+      else if (/(?:на|по|учить|учеба)\s+(?:казахском|казах|қазақ)/i.test(text)) params.language = 'kazakh';
+    }
+    if (params.needDorm === undefined) {
+      if (/общежит/i.test(text)) params.needDorm = true;
+    }
+  }
+  return params;
 }
 
 function parseAdmissionQuery(message) {
@@ -945,7 +994,7 @@ function handleProfessionQuery(msg, lang = 'ru') {
 
   return {
     answer: text,
-    matches: universities.slice(0, 5),
+    matches: [],
     usedData: { profession: profession.id, universities_count: universities.length },
     fallback: false,
     confidence: 0.9,
@@ -1911,7 +1960,22 @@ async function callOpenRouter(systemPrompt, userMessage, history) {
 
 async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
   const startTime = Date.now();
-  const params = parseAdmissionQuery(msg);
+  const parsed = parseAdmissionQuery(msg);
+  const historyParams = extractParamsFromHistory(history);
+
+  const params = {
+    ent: parsed.ent ?? historyParams.ent ?? null,
+    university_id: parsed.university_id ?? historyParams.university_id ?? null,
+    specialty: parsed.specialty ?? historyParams.specialty ?? null,
+    budget: parsed.budget ?? historyParams.budget ?? null,
+    language: parsed.language ?? historyParams.language ?? null,
+    needDorm: parsed.needDorm ?? historyParams.needDorm ?? null,
+    attestat: parsed.attestat ?? historyParams.attestat ?? null,
+    cityId: parsed.cityId ?? historyParams.cityId ?? null,
+  };
+
+  const usedHistory = historyParams.ent !== undefined && parsed.ent === null
+    || historyParams.specialty !== undefined && parsed.specialty === null;
 
   // Проверка на слишком высокий ЕНТ (141+ или 1000+)
   const hasEntNumber = /(?:ент|бал[а-я]*)\s*:?\s*(\d{3,})\b/i.test(msg) ||
@@ -2120,7 +2184,19 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
     }
   }
 
-  const answer = getAdmissionBriefPrompt(params, { ...prediction, matches: filtered });
+  let answer = getAdmissionBriefPrompt(params, { ...prediction, matches: filtered });
+
+  if (usedHistory) {
+    const used = [];
+    if (parsed.ent === null && historyParams.ent !== undefined) used.push(`ЕНТ ${historyParams.ent}`);
+    if (parsed.budget === null && historyParams.budget !== undefined) used.push(`бюджет ${historyParams.budget.toLocaleString()}₸`);
+    if (parsed.language === null && historyParams.language !== undefined) used.push(`язык ${historyParams.language}`);
+    if (parsed.needDorm === null && historyParams.needDorm) used.push('общежитие');
+    if (used.length > 0) {
+      const prefix = (tr('remembered_prefix', lang) || '📌 Использую из предыдущего сообщения: ') + used.join(', ') + '\n\n';
+      answer = prefix + answer;
+    }
+  }
 
   return {
     answer,
@@ -2140,6 +2216,7 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
       params,
       matches: filtered.slice(0, 8),
       input: prediction.input,
+      whatIf: prediction.whatIf || [],
     },
   };
 }
@@ -2155,6 +2232,118 @@ async function getAIAdvice(userMessage, history = [], lang = 'ru') {
   if (msg.length < 3) {
     throw new Error('Message too short');
   }
+
+function handleDeadlinesQuery(lang = 'ru') {
+  const startTime = Date.now();
+
+  const deadlines = {
+    ru: {
+      title: '📅 Календарь поступления 2025-2026',
+      items: [
+        { date: 'Февраль–Март', event: 'Подготовка к ЕНТ', desc: 'Регистрация на курсы, сбор документов' },
+        { date: '1 Мая', event: 'Регистрация на ЕНТ', desc: 'Подача заявки через testcenter.kz' },
+        { date: '1–20 Июня', event: 'Сдача ЕНТ', desc: 'Основная волна, июнь-июль' },
+        { date: '1–25 Июля', event: 'Подача документов', desc: 'Электронная подача через Egov/KZ' },
+        { date: '5–10 Августа', event: 'Зачисление', desc: 'Объявление результатов конкурса' },
+        { date: '15–25 Августа', event: 'Оплата обучения', desc: 'Для зачисленных на платное' },
+        { date: '1 Сентября', event: 'Начало занятий', desc: 'Торжественная линейка' },
+      ],
+    },
+    kk: {
+      title: '📅 Тіркеу күнтізбесі 2025-2026',
+      items: [
+        { date: 'Ақпан–Наурыз', event: 'ҰБТ-ға дайындық', desc: 'Курстарға тіркеу, құжаттар жинау' },
+        { date: '1 Мамыр', event: 'ҰБТ-ға тіркеу', desc: 'testcenter.kz арқылы өтініш беру' },
+        { date: '1–20 Маусым', event: 'ҰБТ тапсыру', desc: 'Негізгі толқын' },
+        { date: '1–25 Шілде', event: 'Құжаттар тапсыру', desc: 'Egov/KZ арқылы электронды тапсыру' },
+        { date: '5–10 Тамыз', event: 'Қабылдау', desc: 'Конкурс нәтижелерін жариялау' },
+        { date: '15–25 Тамыз', event: 'Оқу ақысын төлеу', desc: 'Ақылы бөлімге қабылдағандар үшін' },
+        { date: '1 Қыркүйек', event: 'Сабақтардың басталуы', desc: 'Салтанатты жиын' },
+      ],
+    },
+    en: {
+      title: '📅 Admission Calendar 2025-2026',
+      items: [
+        { date: 'Feb–Mar', event: 'ENT Preparation', desc: 'Course registration, document collection' },
+        { date: 'May 1', event: 'ENT Registration', desc: 'Apply via testcenter.kz' },
+        { date: 'Jun 1–20', event: 'ENT Exam', desc: 'Main wave' },
+        { date: 'Jul 1–25', event: 'Document Submission', desc: 'Electronic submission via Egov/KZ' },
+        { date: 'Aug 5–10', event: 'Enrollment', desc: 'Competition results announced' },
+        { date: 'Aug 15–25', event: 'Tuition Payment', desc: 'For paid enrollment' },
+        { date: 'Sep 1', event: 'Classes Begin', desc: 'Opening ceremony' },
+      ],
+    },
+  };
+
+  const cal = deadlines[lang] || deadlines.ru;
+  let text = `## ${cal.title}\n\n`;
+  cal.items.forEach(item => {
+    text += `**${item.date}** — ${item.event}\n`;
+    text += `   ${item.desc}\n\n`;
+  });
+  text += `---\n💡 *Даты могут отличаться в зависимости от вуза. Уточняйте на официальном сайте.*`;
+
+  return {
+    answer: text,
+    matches: [],
+    usedData: {},
+    fallback: false,
+    confidence: 0.95,
+    took_ms: Date.now() - startTime,
+    intent: 'deadlines',
+  };
+}
+
+function handleOnboardingQuery(msg, history, lang = 'ru') {
+  const startTime = Date.now();
+  const parsed = parseAdmissionQuery(msg);
+  const historyParams = extractParamsFromHistory(history);
+
+  const params = {
+    ent: parsed.ent ?? historyParams.ent ?? null,
+    specialty: parsed.specialty ?? historyParams.specialty ?? null,
+    cityId: parsed.cityId ?? historyParams.cityId ?? null,
+    budget: parsed.budget ?? historyParams.budget ?? null,
+  };
+
+  const missing = [];
+  if (!params.ent) missing.push('ент');
+  if (!params.specialty) missing.push('направление');
+  if (!params.cityId) missing.push('город');
+
+  if (missing.length === 0) {
+    return handleRecommendationQuery(msg, lang);
+  }
+
+  const questions = [];
+  if (!params.ent) {
+    questions.push('🎯 Сколько баллов ЕНТ вы набрали (или планируете набрать)?');
+  }
+  if (!params.specialty) {
+    questions.push('📚 Какая специальность интересует? (IT, медицина, бизнес, инженерия...)');
+  }
+  if (!params.cityId) {
+    questions.push('🏙 В каком городе хотите учиться? (Алматы, Астана, Шымкент...)');
+  }
+  if (!params.budget) {
+    questions.push('💰 какой максимальный бюджет на год обучения? (или "бюджет" если на грант)');
+  }
+
+  let answer = `Не знаете что выбрать? Не страшно! Давайте определимся шаг за шагом.\n\n`;
+  answer += `Ответьте на несколько вопросов, и я подберу лучшие вузы для вас:\n\n`;
+  questions.forEach((q, i) => { answer += `${i + 1}. ${q}\n`; });
+  answer += `\nМожете ответить сразу на все или по одному. Например: *"ЕНТ 105, IT, Алматы"*`;
+
+  return {
+    answer,
+    matches: [],
+    usedData: { onboarding_step: questions.length, params },
+    fallback: false,
+    confidence: 0.9,
+    took_ms: Date.now() - startTime,
+    intent: 'onboarding',
+  };
+}
 
   // Отклоняем чистые числа (не как часть запроса)
   if (/^\d+$/.test(msg)) {
@@ -2203,6 +2392,16 @@ async function getAIAdvice(userMessage, history = [], lang = 'ru') {
   if (intent === 'recommendation') {
     console.log('[ai-service] Routing to recommendation handler');
     return handleRecommendationQuery(msg, lang);
+  }
+
+  if (intent === 'onboarding') {
+    console.log('[ai-service] Routing to onboarding handler');
+    return handleOnboardingQuery(msg, history, lang);
+  }
+
+  if (intent === 'deadlines') {
+    console.log('[ai-service] Routing to deadlines handler');
+    return handleDeadlinesQuery(lang);
   }
 
   // Приветствие — заготовленный ответ без LLM
@@ -2304,7 +2503,7 @@ async function getAIAdvice(userMessage, history = [], lang = 'ru') {
     console.error('[ai-service] LLM call failed:', err.message);
     return {
       answer: tr('llm_error', lang) || 'Извините, произошла ошибка. Попробуйте позже.',
-      matches: universities.slice(0, 3),
+      matches: [],
       usedData: {
         universities_count: universities.length,
         grants_count: grants.length,
@@ -2320,7 +2519,7 @@ async function getAIAdvice(userMessage, history = [], lang = 'ru') {
 
   return {
     answer: aiResponse.text,
-    matches: universities.slice(0, 5),
+    matches: [],
     usedData: {
       universities_count: universities.length,
       grants_count: grants.length,

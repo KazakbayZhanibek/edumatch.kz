@@ -1132,7 +1132,7 @@ function escapeAdmissionHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function renderAdmissionChatCards(matches, input) {
+function renderAdmissionChatCards(matches, input, whatIf) {
   if (!matches || matches.length === 0) return '';
 
   let html = `
@@ -1146,6 +1146,7 @@ function renderAdmissionChatCards(matches, input) {
   matches.slice(0, 5).forEach((m, idx) => {
     const barClass = m.chance >= 80 ? 'chance-high' : m.chance >= 60 ? 'chance-mid' : 'chance-low';
     const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+    const portfolioClass = m.portfolio === 'safe' ? 'portfolio-safe' : m.portfolio === 'target' ? 'portfolio-target' : 'portfolio-ambitious';
     html += `
     <div class="chat-admission-card" onclick="navigate('university', ${m.university_id})">
       <div class="chat-admission-card-head">
@@ -1159,7 +1160,30 @@ function renderAdmissionChatCards(matches, input) {
       <div class="chat-admission-bar">
         <div class="chat-admission-fill ${barClass}" style="width:${m.chance}%"></div>
       </div>
-      <div class="chat-admission-rec">${escapeAdmissionHtml(m.recommendation)}</div>
+      <div class="chat-admission-meta">
+        <span class="portfolio-badge ${portfolioClass}">${escapeAdmissionHtml(m.portfolioLabel || '')}</span>
+        <span class="chat-admission-rec">${escapeAdmissionHtml(m.recommendation)}</span>
+      </div>`;
+
+    if (m.scoreBreakdown && m.scoreBreakdown.length > 0) {
+      html += `<div class="score-breakdown">`;
+      m.scoreBreakdown.forEach(f => {
+        const pct = f.maxScore > 0 ? Math.max(0, Math.min(100, (f.score / f.maxScore) * 100)) : 0;
+        const barColor = f.score < 0 ? 'score-negative' : pct >= 70 ? 'score-good' : pct >= 40 ? 'score-mid' : 'score-low';
+        html += `
+        <div class="score-factor">
+          <div class="score-factor-label">${escapeAdmissionHtml(f.label)}</div>
+          <div class="score-factor-bar-wrap">
+            <div class="score-factor-bar ${barColor}" style="width:${f.maxScore > 0 ? pct : 0}%"></div>
+          </div>
+          <div class="score-factor-value">${f.score >= 0 ? '+' : ''}${f.score}/${f.maxScore}</div>
+          <div class="score-factor-detail">${escapeAdmissionHtml(f.detail)}${f.impact ? ' ' + escapeAdmissionHtml(f.impact) : ''}</div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    html += `
       <ul class="chat-admission-reasons">
         ${(m.reasons || []).slice(0, 3).map(r => {
           const icon = r.type === 'positive' ? '✓' : r.type === 'negative' ? '✗' : '•';
@@ -1169,6 +1193,17 @@ function renderAdmissionChatCards(matches, input) {
       </ul>
     </div>`;
   });
+
+  if (whatIf && whatIf.length > 0) {
+    html += `<div class="chat-whatif">`;
+    html += `<div class="chat-whatif-title">📈 ${t('chat_page.what_if_title') || 'Что если ЕНТ вырастет?'}</div>`;
+    whatIf.forEach(scenario => {
+      html += `<div class="chat-whatif-item"><strong>+${scenario.ent - input.ent} ЕНТ (${scenario.ent}):</strong> `;
+      html += scenario.universities.map(u => `${escapeAdmissionHtml(u.university)} ${u.from}%→${u.to}%`).join(', ');
+      html += `</div>`;
+    });
+    html += `</div>`;
+  }
 
   html += `</div>`;
   return html;
@@ -1198,7 +1233,7 @@ function appendMessage(role, text, matches = null, admission = null, options = {
   }
   // Render admission prediction cards in chat
   if (admission && admission.type === 'result' && admission.matches && admission.matches.length > 0) {
-    content += renderAdmissionChatCards(admission.matches, admission.input);
+    content += renderAdmissionChatCards(admission.matches, admission.input, admission.whatIf);
   }
   
   // Add retry button if provided

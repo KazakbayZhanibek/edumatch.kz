@@ -199,6 +199,23 @@ function getAdmissionBriefPrompt(params, prediction, lang = 'ru') {
     }
   }
 
+  if (prediction.input.specialty) {
+    try {
+      const { getProfessionsByCategory } = require('./profession-data');
+      const professions = getProfessionsByCategory(prediction.input.specialty);
+      if (professions.length > 0) {
+        const prof = professions[0];
+        const salary = prof.salary;
+        const title = prof.title[lang] || prof.title.ru;
+        const demand = prof.demandLevel[lang] || prof.demandLevel.ru;
+        text += `\n---\n`;
+        text += `💼 **${title}** — ${(prof.description[lang] || prof.description.ru).substring(0, 100)}...\n`;
+        text += `💰 Зарплата: ${salary.min.toLocaleString()} — ${salary.max.toLocaleString()}₸ (ср. ${salary.avg.toLocaleString()}₸)\n`;
+        text += `📊 Спрос: ${demand}\n`;
+      }
+    } catch (e) {}
+  }
+
   return text;
 }
 
