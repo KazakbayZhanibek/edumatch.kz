@@ -14,9 +14,11 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "better-sqlite3": "^12.10.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.0",
     "node-fetch": "^3.3.2"
   }

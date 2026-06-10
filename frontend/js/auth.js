@@ -406,6 +406,11 @@ async function loadProfilePage() {
           ` : `<p class="profile-empty">${t('profile_page.card_saved_empty')}</p>`}
         </section>
 
+        <section class="profile-card profile-card-wide">
+          <h2 class="profile-card-title">📋 ${t('tracker.title') || 'Мои заявки'} <span class="profile-count" id="tracker-count"></span></h2>
+          <div id="profile-tracker-content"></div>
+        </section>
+
         <section class="profile-card">
           <h2 class="profile-card-title">${t('profile_page.card_settings')}</h2>
           <form class="auth-form" onsubmit="handlePreferencesSave(event)">
@@ -461,9 +466,64 @@ async function loadProfilePage() {
         </section>
       </div>
     `;
+
+    // Рендер трекера в профиле
+    renderProfileTracker();
+
   } catch (e) {
     content.innerHTML = `<p class="form-error">${e.message}</p>`;
   }
+}
+
+function renderProfileTracker() {
+  const container = document.getElementById('profile-tracker-content');
+  const countEl = document.getElementById('tracker-count');
+  if (!container) return;
+
+  loadTracker();
+  if (countEl) countEl.textContent = state.trackerList.length || '';
+
+  if (state.trackerList.length === 0) {
+    container.innerHTML = `<p class="profile-empty">${t('tracker.empty_desc') || 'Добавляйте вузы из результатов поступления, чтобы отслеживать статус заявок'}</p>
+    <button class="btn btn-primary btn-sm" onclick="navigate('advisor')">${t('tracker.go_advisor') || 'Перейти к советнику'}</button>`;
+    return;
+  }
+
+  const grouped = {};
+  state.trackerList.forEach(item => {
+    if (!grouped[item.status]) grouped[item.status] = [];
+    grouped[item.status].push(item);
+  });
+
+  let html = '';
+  const statusOrder = ['collecting', 'submitted', 'waiting', 'accepted', 'enrolled', 'rejected'];
+  statusOrder.forEach(status => {
+    const items = grouped[status];
+    if (!items || items.length === 0) return;
+    const s = TRACKER_STATUSES[status];
+    html += `<div class="tracker-group">
+      <div class="tracker-group-header" style="border-left: 3px solid ${s.color}">
+        <span>${s.icon} ${s.label}</span>
+        <span class="tracker-group-count">${items.length}</span>
+      </div>`;
+    items.forEach(item => {
+      html += `<div class="tracker-card" data-id="${item.id}">
+        <div class="tracker-card-head">
+          <span class="tracker-card-name" onclick="navigate('university', ${item.university_id})">${escapeAdmissionHtml(item.name)}</span>
+          <button class="tracker-card-remove" onclick="removeFromTracker(${item.id}); renderProfileTracker();" title="Удалить">×</button>
+        </div>
+        <div class="tracker-card-status">
+          ${Object.entries(TRACKER_STATUSES).map(([key, val]) =>
+            `<button class="tracker-status-btn ${key === status ? 'active' : ''}" style="--status-color: ${val.color}" onclick="updateTrackerStatus(${item.id}, '${key}'); renderProfileTracker();" title="${val.label}">${val.icon}</button>`
+          ).join('')}
+        </div>
+        <input class="tracker-card-notes" placeholder="${t('tracker.notes_placeholder') || 'Заметки...'}" value="${escapeAdmissionHtml(item.notes || '')}" onchange="updateTrackerNotes(${item.id}, this.value)">
+      </div>`;
+    });
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
 }
 
 async function deleteSavedUniversity(uniId, btn) {
@@ -559,7 +619,10 @@ function handlePreferencesSave(e) {
     bio: document.getElementById('profile-bio').value.trim(),
     preferences: { language }
   })
-    .then(() => showToast(t('profile_page.toast_settings_saved'), 'success'))
+    .then(() => {
+      showToast(t('profile_page.toast_settings_saved'), 'success');
+      setLanguage(language);
+    })
     .catch(e => { err.textContent = e.message; });
 }
 

@@ -11,10 +11,85 @@ const state = window.state = {
   universities: [],
   compareList: [],   // array of ids (max 3)
   favoriteList: [],  // array of ids (from localStorage)
+  trackerList: [],   // array of {id, university_id, name, status, added_at, notes}
   chatHistory: [],
   admissionLastResult: null,
   currentPage: 'home',
 };
+
+// ─── TRACKER (localStorage) ──────────────────
+function loadTracker() {
+  try {
+    const saved = localStorage.getItem('edumatch_tracker');
+    state.trackerList = saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    state.trackerList = [];
+  }
+}
+
+function saveTracker() {
+  localStorage.setItem('edumatch_tracker', JSON.stringify(state.trackerList));
+}
+
+function addToTracker(university) {
+  if (state.trackerList.some(t => t.university_id === university.id)) return false;
+  state.trackerList.push({
+    id: Date.now(),
+    university_id: university.id,
+    name: university.short_name || university.name,
+    status: 'collecting',
+    added_at: new Date().toISOString(),
+    notes: '',
+  });
+  saveTracker();
+  return true;
+}
+
+function removeFromTracker(id) {
+  state.trackerList = state.trackerList.filter(t => t.id !== id);
+  saveTracker();
+}
+
+function updateTrackerStatus(id, status) {
+  const item = state.trackerList.find(t => t.id === id);
+  if (item) {
+    item.status = status;
+    saveTracker();
+  }
+}
+
+function updateTrackerNotes(id, notes) {
+  const item = state.trackerList.find(t => t.id === id);
+  if (item) {
+    item.notes = notes;
+    saveTracker();
+  }
+}
+
+const TRACKER_STATUSES = {
+  collecting: { icon: '📋', label: 'Собираю документы', color: '#3b82f6' },
+  submitted: { icon: '📤', label: 'Подал заявку', color: '#f59e0b' },
+  waiting: { icon: '⏳', label: 'Жду ответа', color: '#8b5cf6' },
+  accepted: { icon: '✅', label: 'Зачислен', color: '#22c55e' },
+  rejected: { icon: '❌', label: 'Не прошёл', color: '#ef4444' },
+  enrolled: { icon: '🎓', label: 'Оплачиваю', color: '#06b6d4' },
+};
+
+function handleTrackerAdd(universityId, universityName) {
+  const existing = state.trackerList.find(t => t.university_id === universityId);
+  if (existing) {
+    navigate('profile');
+    return;
+  }
+  addToTracker({ id: universityId, short_name: universityName, name: universityName });
+  showToast(`✓ ${universityName} добавлен в трекер`);
+  document.querySelectorAll('.tracker-add-btn').forEach(btn => {
+    if (btn.onclick && btn.onclick.toString().includes(universityId)) {
+      btn.classList.add('added');
+      btn.textContent = t('tracker.added') || '✓ В трекере';
+    }
+  });
+}
 
 // ─── FAVORITES (localStorage) ────────────────
 function loadFavorites() {
@@ -137,6 +212,11 @@ function navigate(page, param) {
     initAdmissionPage();
   }
 }
+
+// ─── TRACKER PAGE ────────────────────────────
+// ─── PROFILE PAGE ─────────────────────────
+// loadProfilePage() определён в auth.js
+// Здесь только вспомогательные функции для профиля
 
 // ─── THEME ───────────────────────────────────
 function toggleTheme() {
@@ -848,7 +928,50 @@ function renderUniversityDetail(u, container) {
           <h2 class="detail-specialties-title">${getSVGIcon('book')} ${t('uni_detail_page.faculties')}</h2>
           <div class="specialties-by-category">${specCats}</div>
         </div>` : ''}
+
+      <div id="reviews-section" class="detail-specialties-section">
+        <h2 class="detail-specialties-title">💬 Отзывы студентов</h2>
+        <div id="reviews-content"><div class="loading-state"><div class="spinner"></div></div></div>
+      </div>
     </div>`;
+
+  loadReviews(u.id);
+}
+
+async function loadReviews(universityId) {
+  const container = document.getElementById('reviews-content');
+  if (!container) return;
+  try {
+    const res = await fetch(`${API}/universities/${universityId}/reviews`);
+    const data = await res.json();
+    if (!data.reviews || data.reviews.length === 0) {
+      container.innerHTML = `<p style="color:var(--text2)">Пока нет отзывов. Будьте первым!</p>`;
+      return;
+    }
+    const avgRating = data.stats?.avg_rating ? Number(data.stats.avg_rating).toFixed(1) : '—';
+    const starStr = (r) => '★'.repeat(r) + '☆'.repeat(5 - r);
+    let html = `<div class="reviews-summary">
+      <span class="reviews-avg">⭐ ${avgRating}</span>
+      <span class="reviews-count">${data.stats.count} отзывов</span>
+    </div>
+    <div class="reviews-list">`;
+    data.reviews.forEach(r => {
+      html += `<div class="review-card">
+        <div class="review-head">
+          <span class="review-name">${escapeAdmissionHtml(r.user_name)}</span>
+          <span class="review-stars">${starStr(r.rating)}</span>
+          <span class="review-meta">${escapeAdmissionHtml(r.faculty || '')} ${r.study_year ? '· ' + escapeAdmissionHtml(r.study_year) : ''}</span>
+        </div>
+        ${r.pros ? `<div class="review-pros"><strong>👍 Плюсы:</strong> ${escapeAdmissionHtml(r.pros)}</div>` : ''}
+        ${r.cons ? `<div class="review-cons"><strong>👎 Минусы:</strong> ${escapeAdmissionHtml(r.cons)}</div>` : ''}
+        ${r.comment ? `<div class="review-comment">${escapeAdmissionHtml(r.comment)}</div>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+    container.innerHTML = html;
+  } catch (e) {
+    container.innerHTML = `<p style="color:var(--red)">Ошибка загрузки отзывов</p>`;
+  }
 }
 
 function addToCompareAndGo(id) {
@@ -1132,14 +1255,15 @@ function escapeAdmissionHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function renderAdmissionChatCards(matches, input, whatIf) {
+function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
   if (!matches || matches.length === 0) return '';
 
+  const yearLabel = academicYear ? ` · ${t('common.data_year') || 'Данные за'} ${academicYear}` : '';
   let html = `
   <div class="chat-admission-cards">
     <div class="chat-admission-header">
       <span class="chat-admission-badge">${t('chat_page.admission_badge')}</span>
-      <span class="chat-admission-input">${t('admission_page.ent_label').replace(':','')} ${input?.ent || '—'} · ${input?.specialty || '—'}</span>
+      <span class="chat-admission-input">${t('admission_page.ent_label').replace(':','')} ${input?.ent || '—'} · ${input?.specialty || '—'}${yearLabel}</span>
     </div>
   `;
 
@@ -1163,6 +1287,7 @@ function renderAdmissionChatCards(matches, input, whatIf) {
       <div class="chat-admission-meta">
         <span class="portfolio-badge ${portfolioClass}">${escapeAdmissionHtml(m.portfolioLabel || '')}</span>
         <span class="chat-admission-rec">${escapeAdmissionHtml(m.recommendation)}</span>
+        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === m.university_id) ? 'added' : ''}" onclick="event.stopPropagation(); handleTrackerAdd(${m.university_id}, '${escapeAdmissionHtml(m.university)}')">${state.trackerList.some(t => t.university_id === m.university_id) ? (t('tracker.added') || '✓ В трекере') : (t('tracker.add_to_tracker') || 'В трекер')}</button>
       </div>`;
 
     if (m.scoreBreakdown && m.scoreBreakdown.length > 0) {
@@ -1233,7 +1358,7 @@ function appendMessage(role, text, matches = null, admission = null, options = {
   }
   // Render admission prediction cards in chat
   if (admission && admission.type === 'result' && admission.matches && admission.matches.length > 0) {
-    content += renderAdmissionChatCards(admission.matches, admission.input, admission.whatIf);
+    content += renderAdmissionChatCards(admission.matches, admission.input, admission.whatIf, admission.academicYear);
   }
   
   // Add retry button if provided
@@ -1393,6 +1518,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initLanguage();
   loadFavorites();
+  loadTracker();
   if (typeof Auth !== 'undefined') Auth.init();
   loadSpecialties();
   loadCities();

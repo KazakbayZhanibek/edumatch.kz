@@ -3773,3 +3773,212 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
   .admission-card-head { flex-direction: column; }
   .admission-chance-wrap { text-align: left; }
 }
+/* --- TRACKER --------------------------------- */
+.tracker-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.tracker-header h2 { margin: 0; font-size: 1.5rem; }
+.tracker-count {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 99px;
+}
+.tracker-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text2);
+}
+.tracker-empty-icon { font-size: 3rem; margin-bottom: 12px; }
+.tracker-empty h3 { margin: 0 0 8px; color: var(--text); }
+.tracker-empty p { margin: 0 0 20px; }
+.tracker-group { margin-bottom: 20px; }
+.tracker-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  background: var(--bg2);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+.tracker-group-count {
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+}
+.tracker-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 8px;
+  transition: box-shadow .2s;
+}
+.tracker-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+.tracker-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.tracker-card-name {
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color .2s;
+}
+.tracker-card-name:hover { text-decoration-color: var(--accent); }
+.tracker-card-remove {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text2);
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.tracker-card-remove:hover { color: #ef4444; }
+.tracker-card-status {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.tracker-status-btn {
+  background: var(--bg2);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all .15s;
+  flex: 1;
+}
+.tracker-status-btn:hover { border-color: var(--status-color); }
+.tracker-status-btn.active {
+  border-color: var(--status-color);
+  background: color-mix(in srgb, var(--status-color) 15%, var(--bg));
+}
+.tracker-card-notes {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  color: var(--text);
+  resize: none;
+}
+.tracker-card-notes::placeholder { color: var(--text2); }
+.tracker-card-notes:focus { outline: none; border-color: var(--accent); }
+
+/* --- TRACKER ADD BUTTON (in admission cards) -- */
+.tracker-add-btn {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.tracker-add-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.tracker-add-btn.added {
+  background: #22c55e;
+  color: #fff;
+  border-color: #22c55e;
+}
+
+/* --- REVIEWS ---------------------------------- */
+.reviews-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: var(--bg2);
+  border-radius: 10px;
+}
+.reviews-avg { font-size: 1.3rem; font-weight: 700; color: var(--text); }
+.reviews-count { color: var(--text2); font-size: 0.9rem; }
+.reviews-list { display: flex; flex-direction: column; gap: 12px; }
+.review-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+.review-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.review-name { font-weight: 600; color: var(--text); }
+.review-stars { color: #f59e0b; font-size: 0.9rem; }
+.review-meta { color: var(--text2); font-size: 0.8rem; margin-left: auto; }
+.review-pros, .review-cons, .review-comment {
+  font-size: 0.88rem;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+.review-pros { color: #22c55e; }
+.review-cons { color: #ef4444; }
+
+/* --- PROFILE -------------------------------- */
+.profile-section {
+  margin-bottom: 32px;
+}
+.profile-section-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.profile-empty {
+  color: var(--text2);
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+.profile-favorites {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.profile-fav-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: box-shadow .2s;
+}
+.profile-fav-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+.profile-fav-name { font-weight: 600; color: var(--accent); font-size: 0.9rem; }
+.profile-fav-city { color: var(--text2); font-size: 0.8rem; flex: 1; }
+.profile-fav-remove {
+  background: none; border: none; color: var(--text2);
+  font-size: 1.1rem; cursor: pointer; padding: 0 2px; line-height: 1;
+}
+.profile-fav-remove:hover { color: #ef4444; }

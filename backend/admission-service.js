@@ -448,10 +448,13 @@ function getAdmissionPrediction(params) {
     }
   }
 
+  const academicYear = candidates.length > 0 ? candidates[0].academic_year : '2025-2026';
+
   return {
     success: true,
     matches,
     whatIf,
+    academicYear,
     input: {
       ent,
       specialty: specialtyCategory,

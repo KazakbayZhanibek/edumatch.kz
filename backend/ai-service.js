@@ -60,11 +60,19 @@ const INTENT_PATTERNS = [
       /(?:вузы|университеты)\s+(?:на|по|с)\s+[\w]+\s+в\s+(?:Алмат[ые]|Астан[ае]|Шымкент[ае]?|Караганд[ае]|Актоб[ея]|Павлодар[ае]?|Уральск[ае]?|Атырау[ае]?|Актау[ае]?|Семей[ае]?|Кызылорд[ае]|Петропавловск[ае]?|Усть-Каменогорск[ае]?|Кокшетау[ае]?|Жезказган[ае]?|Каскелен[ае]?)/i,
       /(?:вуз|университет)\s+(?:в|городе)\s+(?:Алмат[ые]|Астан[ае]|Шымкент[ае]?|Караганд[ае]|Актоб[ея]|Павлодар[ае]?|Уральск[ае]?|Атырау[ае]?|Актау[ае]?|Семей[ае]?|Кызылорд[ае]|Петропавловск[ае]?|Усть-Каменогорск[ае]?|Кокшетау[ае]?|Жезказган[ае]?|Каскелен[ае]?)/i,
       // Общежитие + город
-      /(?:вузы|университеты|вуз)\s+с\s+общежитием\s+в\s+(?:Алмат[ые]|Астан[ае]|Шымкент[ае]?|Караганд[ае]|Актоб[ея]|Павлодар[ае]?|Уральск[ае]?|Атырау[ае]?|Актау[ае]?|Семей[ае]?|Кызылорд[ае]|Петропавловск[ае]?|Усть-Каменогорск[ае]?|Кокшетау[ае]?|Жезказган[ае]?|Каскелен[ае]?)/i,
+      /(?:вузы|университеты|вуз)\s+с\s+общежитием\s+(?:в|городе|города)?\s*(?:Алмат[ые]|Астан[ае]|Шымкент[ае]?|Караганд[ае]|Актоб[ея]|Павлодар[ае]?|Уральск[ае]?|Атырау[ае]?|Актау[ае]?|Семей[ае]?|Кызылорд[ае]|Петропавловск[ае]?|Усть-Каменогорск[ае]?|Кокшетау[ае]?|Жезказган[ае]?|Каскелен[ае]?)/i,
+      // Родительный падеж города: "вузы Шымкента", "вузы Алматы"
+      /(?:вузы|университеты|вуз)\s+(?:Алмат[ы]|Астан[ы]|Шымкент[а]?|Караганд[ы]|Актоб[и]|Павлодар[а]?|Уральск[а]?|Атырау[а]?|Актау[а]?|Семей[а]?|Кызылорд[ы]|Петропавловск[а]?|Усть-Каменогорск[а]?|Кокшетау[а]?|Жезказган[а]?|Каскелен[а]?)/i,
+      /(?:вузы|университеты|вуз)\s+\S+\s+(?:в|городе|города)?\s*(?:Алмат[ые]|Астан[ае]|Шымкент[ае]?|Караганд[ае]|Актоб[ея]|Павлодар[ае]?|Уральск[ае]?|Атырау[ае]?|Актау[ае]?|Семей[ае]?|Кызылорд[ае]|Петропавловск[ае]?|Усть-Каменогорск[ае]?|Кокшетау[ае]?|Жезказган[ае]?|Каскелен[ае]?)/i,
       // KK
       /(?:қала|қай қалада|қалада|қалаға|қала бойынша|жақсы қала|оқу үшін қала)/i,
+      // KK city + university
+      /(?:Алматыдағы|Астанадағы|Шымкенттегі|Қарағандыдағы|Ақтөбедегі|Павлодардағы|Атыраудағы|Семейдегі|Қызылордадағы|Петропавловсктегі|Көкшетаудағы|Жезқазғандағы|Өскемендегі|Түркестандегі|Ақтаудағы|Уральсктегі)\s+(?:универ|мектеп|жоғары)/i,
       // EN
       /(?:which city|what city|best city|city for study|city for student|where to study|city to apply)/i,
+      // EN city + university
+      /(?:what|which)\s+(?:universities|unis|colleges|schools)\s+(?:are\s+)?(?:in|of|at)\s+\w+/i,
+      /(?:universities|unis|colleges)\s+in\s+(?:almaty|astana|shymkent|karagandy|aktobe|pavlodar|atyrau|semey|kyzylorda|kokshetau|oral|aktau)/i,
     ],
     keywords: ['город','какой город','в каком','где лучше','где поступить','лучший город',
                'қала','қай қалада','жақсы қала','оқу үшін қала',
@@ -119,6 +127,38 @@ const INTENT_PATTERNS = [
                'grant','scholarship','free','government'],
   },
   {
+    name: 'uni_info',
+    patterns: [
+      // Конкретные вопросы по вузам
+      /(?:сколько стоит|стоимость|цена|оплата|учиться).*(?:в|у)\s+(?:кбт|казну|ну|ену|муит|кимэп|туран|сд)/i,
+      /(?:общежитие|проживание|жильё|жилье).*(?:в|у)\s+(?:кбт|казну|ну|ену|муит|кимэп|туран|сд)/i,
+      /(?:рейтинг|ранг|место|позиция|qs|rating).*(?:вуз|универ|кбт|казну|ну|ену)/i,
+      /(?:какие документ|документы|пакет|как поступить|как подавать|процедур).*(?:вуз|универ|кбт|казну|ну|ену)/i,
+      /(?:средний балл|проходной балл|минимальный балл|порог|ент|балл).*(?:в|у)\s+(?:кбт|казну|ну|ену|муит|кимэп)/i,
+      // Обобщённые вопросы "сколько стоит обучение", "какие документы нужны", "есть ли общежитие"
+      /(?:сколько стоит|стоимость|цена|оплата).*(?:обучен|учёб|учеб)/i,
+      /(?:какие документ|документы|пакет).*(?:нужн|треб|поступ|подав)/i,
+      /(?:есть ли|имеется ли|есть\s+общежитие)/i,
+      /(?:рейтинг|ранг|место|позиция|qs|rating)\s+(?:вуза|университета|вуз|университет)?/i,
+      /(?:средний балл|проходной|минимальный|порог)\s+(?:ент|балл)?/i,
+      // KK
+      /(?:қанша тұрады|бағасы|оқу ақысы).*(?:у|аралығында|мектебінде)/i,
+      /(?:жатақхана|тұру).*(?:у|аралығында)/i,
+      // EN
+      /(?:how much|cost|price|tuition|fee).*(?:at|in|of|does)\s+\w+/i,
+      /(?:how much does|how much is|what is the cost|what is the price)\s+\w+/i,
+      /(?:dormitory|accommodation|dorm).*(?:at|in|of)\s+\w+/i,
+      /(?:ranking|rating|qs|position).*(?:university|institute)/i,
+    ],
+    keywords: ['сколько стоит обучение','стоимость обучения','цена обучения',
+               'какие документы нужны','документы для поступления','как поступить',
+               'есть ли общежитие','общежитие есть ли',
+               'рейтинг вуза','рейтинг университета',
+               'средний балл ент','проходной балл',
+               'қанша тұрады','бағасы','жатақхана',
+               'how much does it cost','how much','what is the cost','what is the price','dormitory'],
+  },
+  {
     name: 'profession',
     patterns: [
       /(?:хочу стать|кем быть|профессия|работа|карьера|будущая профессия)/i,
@@ -149,7 +189,7 @@ const INTENT_PATTERNS = [
       /(?:recommend|suggest|advise|which uni|which university|best uni|best university)/i,
       /(?:interested in|want|looking for).*(?:university|specialty|major)/i,
     ],
-    keywords: ['рекомендуй','посоветуй','подбери','какой','лучший','интересует',
+    keywords: ['рекомендуй','посоветуй','подбери','лучший','интересует',
                'ұсын','кеңес бер','таңда','қай','жәй','қызықтырады',
                'recommend','suggest','which','best','interested'],
   },
@@ -166,6 +206,35 @@ const INTENT_PATTERNS = [
                'қала','қай қалада','жақсы қала','оқу үшін қала',
                'which city','best city','where to study'],
   },
+  {
+    name: 'uni_info',
+    patterns: [
+      // Вопросы о конкретном вузе
+      /(?:сколько стоит|цена|стоимость|оплат|бюджет).*(?:вуз|университет|КБТУ|КазНУ|НУ|ЕНУ|МУИТ|КИМЭП|СДУ|АТУ|КАД|ГУК|КазГУ|КазНМУ|КазНПУ|КазЭУ|КазХУ|КазНАУ|КИСО)/i,
+      /(?:вуз|университет|КБТУ|КазНУ|НУ|ЕНУ|МУИТ|КИМЭП|СДУ|АТУ|КАД|ГУК|КазГУ|КазНМУ|КазНПУ|КазЭУ|КазХУ|КазНАУ|КИСО).*(?:сколько стоит|цена|стоимость|оплат|бюджет)/i,
+      /(?:общежитие|общага|проживан).*(?:вуз|университет|КБТУ|КазНУ|НУ|ЕНУ|МУИТ|КИМЭП|СДУ)/i,
+      /(?:вуз|университет|КБТУ|КазНУ|НУ|ЕНУ|МУИТ|КИМЭП|СДУ).*(?:общежитие|общага|проживан)/i,
+      /(?:рейтинг|ранг|место|позиция|position|ranking|qs|ranking).*(?:вуз|университет|КБТУ|КазНУ|НУ|ЕНУ)/i,
+      /(?:вуз|университет|КБТУ|КазНУ|НУ|ЕНУ).*(?:рейтинг|ранг|место|позиция)/i,
+      /(?:средний балл|минимальный балл|проходной|порог|ЕНТ).*(?:в|унит|университет)/i,
+      /(?:в|унит|университет).*(?:средний балл|минимальный балл|проходной|порог|ЕНТ)/i,
+      // Документы
+      /(?:какие документ|какие бумаг|список документов|пакет документов|что подавать|что нужно для поступления)/i,
+      /(?:документы для поступления|бумаги для поступления|как поступить|процедура поступления)/i,
+      // Общие вопросы о вузе
+      /(?:что за вуз|расскажи о|tell me about|какой вуз| Information о)/i,
+      /(?:выбери вуз|помоги выбрать|какой выбрать|какой лучше выбрать)/i,
+      // KK
+      /(?:қанша тұрады|бағасы|ӛнеркәсіп|жатақхана|рейтинг|орын)/i,
+      // EN
+      /(?:how much|cost|price|tuition|dormitory|dorm|ranking|position|rating).*(?:university|uni|KBTU|KazNU|NU|ENU)/i,
+      /(?:university|uni|KBTU|KazNU|NU|ENU).*(?:how much|cost|price|tuition|dormitory|dorm|ranking)/i,
+    ],
+    keywords: ['сколько стоит','цена','стоимость','общежитие','рейтинг','средний балл','проходной',
+               'документы','как поступить','расскажи о','что за вуз',
+               'қанша тұрады','бағасы','жатақхана','рейтинг',
+               'how much','cost','price','tuition','dormitory','ranking'],
+  },
 ];
 
 function classifyIntent(message) {
@@ -173,17 +242,53 @@ function classifyIntent(message) {
   if (!q) return 'general';
 
   // Приветствия и короткие фразы → general с заготовленным ответом
-  if (/^(?:привет|здравствуй|سلام|hello|hi|hey|приветик|добрый|добрый день|добрый вечер|доброе утро|здорово|йо|йоу|хай|здаров|хай|здрасьте|здарова|хелло|хэлло)(?:[!?.，。]+)?$/i.test(q)) {
+  if (/^(?:привет|здравствуй|سلام|hello|hi|hey|приветик|добрый|добрый день|добрый вечер|доброе утро|здорово|йо|йоу|хай|здаров|хай|здрасьте|здарова|хелло|хэлло|сәлеметсіз бе|сәлем|сәлеметсің бе|сәлеметсізбе|assalamu alaikum|саған сәлем|жәрекем)(?:[!?.，。]+)?$/i.test(q)) {
     return 'greeting';
   }
-  if (/^(что (?:ты )?умеешь|чем (?:ты )?поможешь|что (?:ты )?можешь|помощь|help|что делать|как пользоваться)/i.test(q)) {
+  if (/^(?:что (?:ты )?умеешь|чем (?:ты )?поможешь|что (?:ты )?можешь|помощь|help|что делать|как пользоваться|көмек|не істей аламын|қалай пайдалану|қандай мүмкіндіктер)(?:[!?.，。]+)?$/i.test(q)) {
     return 'help';
+  }
+
+  // Проверяем comparison ДО uni_info (чтобы "сравни стоимость КБТУ и МУИТ" не ловилось как uni_info)
+  const compCheck = INTENT_PATTERNS.find(i => i.name === 'comparison');
+  if (compCheck && compCheck.patterns.some(p => p.test(q))) {
+    return 'comparison';
+  }
+
+  // Сильные маркеры admission ДО recommendation (чтобы "Хочу поступить" не ловилось как recommendation)
+  // Но НЕ "документы для поступления" — это uni_info
+  if (/(?:поступ|шанс|поступлю)/i.test(q) && !/документ/i.test(q) && !/мне\s+\d+\s+лет/i.test(q)) {
+    return 'admission';
+  }
+
+  // Проверяем recommendation ДО uni_info (чтобы "подбери вуз" не ловилось как uni_info)
+  const recCheck = INTENT_PATTERNS.find(i => i.name === 'recommendation');
+  if (recCheck && recCheck.patterns.some(p => p.test(q))) {
+    return 'recommendation';
   }
 
   // Проверяем grant ДО city (чтобы "гранты в [город]" не ловилось как city)
   const grantCheck = INTENT_PATTERNS.find(i => i.name === 'grant');
   if (grantCheck && (grantCheck.patterns.some(p => p.test(q)) || grantCheck.keywords.some(k => q.includes(k)))) {
-    return 'grant';
+    // Но не ловим вопросы-объяснения: "как работает", "объясни", "что такое"
+    if (!/(?:как работает|объясни|что такое|объясн|расскажи|что значит)/i.test(q)) {
+      return 'grant';
+    }
+  }
+
+  // Проверяем uni_info ДО city (чтобы "средний балл в КБТУ" не ловилось как city)
+  const uniInfoCheck = INTENT_PATTERNS.find(i => i.name === 'uni_info');
+  if (uniInfoCheck && (uniInfoCheck.patterns.some(p => p.test(q)) || uniInfoCheck.keywords.some(k => q.includes(k)))) {
+    // Не ловим вопросы-объяснения: "как работает", "объясни", "что такое"
+    if (/(?:как работает|объясни|что такое|объясн|расскажи|что значит)/i.test(q)) {
+      // пропускаем, чтобы упало в general
+    }
+    // Не ловим обобщённые вопросы "в Казахстане", "в стране" — без конкретного вуза
+    else if (/(?:в\s+казахстан|в\s+стране|в\s+рк|во\s+всех|общий)/i.test(q) && !/(?:\bкбт|\bказну|\bну\b|\bену|\bмуит|\bкимэп|\bтуран|\bсд\b|\bкараганд|\bактоб|\bпавлодар|\bатырау|\bактау|\bсемей|\bкызылорд|\bпетропавл|\bусть-камен|\bкокшетау|\bжезказган)/i.test(q)) {
+      // пропускаем
+    } else {
+      return 'uni_info';
+    }
   }
 
   // Проверяем city intent — "какие вузы/универы в [город]"
@@ -217,6 +322,22 @@ function classifyIntent(message) {
     return 'general';
   }
 
+  // Возраст, документы, общие вопросы без ЕНТ/вуза → general (ДО admission)
+  if (/(?:мне\s+\d+\s+лет|возраст|сколько\s+лет|поступить\s+без\s+ент|без\s+ент|принимают\s+без)/i.test(q)) {
+    return 'general';
+  }
+
+  // Проверяем admission ДО profession (чтобы "мои шансы в КБТУ на программиста" не ловилось как profession)
+  const admCheck = INTENT_PATTERNS.find(i => i.name === 'admission');
+  if (admCheck && admCheck.patterns.some(p => p.test(q))) {
+    return 'admission';
+  }
+
+  // Вопросы-объяснения ("объясни как работает", "что такое") → general ДО profession (чтобы "объясни как работает система грантов" не ловилось как profession из-за "работа")
+  if (/(?:как работает|объясни|что такое|объясн|расскажи|что значит)/i.test(q)) {
+    return 'general';
+  }
+
   // Проверяем profession ДО city (чтобы "кем работать с IT" не ловилось как city из-за fuzzy "it" → "city")
   const profCheck = INTENT_PATTERNS.find(i => i.name === 'profession');
   if (profCheck && profCheck.patterns.some(p => p.test(q))) {
@@ -236,10 +357,16 @@ function classifyIntent(message) {
       if (kw && (/\d{2,3}/.test(q) || q.includes('вуз') || q.includes('университет') || q.includes('university'))) return 'admission';
       continue;
     }
-    if (intent.patterns.some(p => p.test(q))) return intent.name;
+    // uni_info проверяется ДО цикла — пропускаем дубли
+    if (intent.name === 'uni_info') {
+      continue;
+    }
+    if (intent.patterns.some(p => p.test(q))) {
+      return intent.name;
+    }
     
-    // Fuzzy match keywords for better accuracy
-    if (intent.keywords.some(k => q.includes(k)) || fuzzyMatch(q, intent.keywords, 2)) {
+    // Fuzzy match keywords for better accuracy (only if words are similar length)
+    if (intent.keywords.some(k => q.includes(k))) {
       return intent.name;
     }
   }
@@ -915,6 +1042,31 @@ function handleProfessionQuery(msg, lang = 'ru') {
       }
     }
 
+    // Если спрашивают про зарплату в целом — покажем все профессии
+    if (/(?:зарплат|оклад|salary|жалақы)/i.test(qLower)) {
+      const { PROFESSIONS: allProfs } = require('./profession-data');
+      let text = lang === 'kk' ? '💰 **Мамандықтар бойынша орташа жалақы:**\n\n'
+        : lang === 'en' ? '💰 **Average salaries by profession:**\n\n'
+        : '💰 **Средняя зарплата по профессиям:**\n\n';
+      allProfs.forEach(p => {
+        const title = p.title[lang] || p.title.ru;
+        const s = p.salary;
+        text += `• **${title}**: ${s.min?.toLocaleString()} — ${s.max?.toLocaleString()}₸ (ср. ${s.avg?.toLocaleString()}₸)\n`;
+      });
+      text += lang === 'kk' ? '\nНазар аударыңыз: нақты жалақы тәжірибе мен компанияға байланысты.\nЖазыңыз: «Программист жалақысы» — нақтырақ ақпарат аласыз.'
+        : lang === 'en' ? '\nNote: actual salary depends on experience and company.\nType a profession name (e.g. "Programmer") for details.'
+        : '\nОбратите внимание: реальная зарплата зависит от опыта и компании.\nНапишите название профессии (например, "Программист") для подробностей.';
+      return {
+        answer: text,
+        matches: [],
+        usedData: { salary_overview: true },
+        fallback: false,
+        confidence: 0.7,
+        took_ms: Date.now() - startTime,
+        intent: 'profession',
+      };
+    }
+
     return {
       answer: tr('prof_not_found', lang) || 'Я не нашёл такую профессию. Попробуйте:\n• Психолог\n• Программист\n• Врач\n• Экономист\n• Юрист\n• Дизайнер\n• Учитель\n• Инженер\n• Маркетолог\n• Фармацевт',
       matches: [],
@@ -1000,6 +1152,134 @@ function handleProfessionQuery(msg, lang = 'ru') {
     confidence: 0.9,
     took_ms: Date.now() - startTime,
     intent: 'profession',
+  };
+}
+
+// ==================== UNI INFO HANDLER ====================
+
+function handleUniInfoQuery(msg, lang = 'ru') {
+  const startTime = Date.now();
+  const db = getDb();
+  const q = msg.toLowerCase();
+
+  // Ищем упоминание конкретного вуза
+  const uniAliases = {
+    'кбту': 'КБТУ', 'казну': 'КазНУ', 'назарбаев': 'НУ',
+    'ену': 'ЕНУ', 'муит': 'МУИТ', 'кимэп': 'KIMEP', 'kimep': 'KIMEP',
+    'усд': 'УСД', 'сду': 'УСД', 'atu': 'АТУ', 'казнму': 'КазНМУ',
+    'туран-астана': 'Туран-Астана', 'туран': 'Туран',
+    'мгу': 'МГУ', 'кгт': 'КГТУ', 'каргт': 'КарГТУ', 'кен': 'СКГУ',
+  };
+
+  let foundUni = null;
+  for (const [alias, name] of Object.entries(uniAliases)) {
+    if (q.includes(alias)) {
+      foundUni = db.prepare('SELECT * FROM universities WHERE short_name = ? OR name LIKE ?').get(name, `%${name}%`);
+      break;
+    }
+  }
+
+  // Если не нашли по алиасу, пробуем найти по ключевым словам
+  if (!foundUni) {
+    const allUnis = db.prepare('SELECT * FROM universities').all();
+    for (const u of allUnis) {
+      const shortLower = (u.short_name || '').toLowerCase();
+      const nameLower = (u.name || '').toLowerCase();
+      if (shortLower && q.includes(shortLower)) { foundUni = u; break; }
+      if (nameLower && nameLower.length > 5 && q.includes(nameLower.substring(0, 8))) { foundUni = u; break; }
+    }
+  }
+
+  if (!foundUni) {
+    return {
+      answer: tr('uni_info_not_found', lang) || 'Не удалось найти конкретный университет. Укажите название, например: «Сколько стоит обучение в КБТУ?»',
+      matches: [],
+      usedData: {},
+      fallback: false,
+      confidence: 0.5,
+      took_ms: Date.now() - startTime,
+      intent: 'uni_info',
+    };
+  }
+
+  // Определяем что именно спрашивают
+  const isPrice = /сколько стоит|цена|стоимость|оплат|бюджет|қанша тұрады|бағасы|cost|price|tuition/i.test(q);
+  const isDorm = /общежитие|общага|проживан|жатақхана|dormitory|dorm/i.test(q);
+  const isRanking = /рейтинг|ранг|место|позиция|qs|ranking|position|rating/i.test(q);
+  const isEnt = /средний балл|минимальный балл|проходной|порог|ент|балл/i.test(q);
+  const isDocs = /документ|бумаг|пакет|поступ|процедур|как поступить|подавать/i.test(q);
+
+  // Парсим JSON поля
+  const languages = foundUni.languages ? (typeof foundUni.languages === 'string' ? JSON.parse(foundUni.languages) : foundUni.languages) : [];
+
+  let text = `## ${foundUni.short_name || foundUni.name}\n\n`;
+
+  if (isPrice) {
+    text += `### 💰 Стоимость обучения\n`;
+    text += `• От **${foundUni.price_from?.toLocaleString() || '—'}** до **${foundUni.price_to?.toLocaleString() || '—'}** тг/год\n`;
+    if (foundUni.dorm_price) text += `• Общежитие: **${foundUni.dorm_price.toLocaleString()}** тг/год\n`;
+    text += `\n`;
+  } else if (isDorm) {
+    text += `### 🏠 Общежитие\n`;
+    text += foundUni.has_dorm
+      ? `✅ Общежитие есть\n${foundUni.dorm_price ? `💰 Стоимость: **${foundUni.dorm_price.toLocaleString()}** тг/год\n` : ''}`
+      : `❌ Общежития нет\n`;
+    text += `\n`;
+  } else if (isRanking) {
+    text += `### 🏆 Рейтинг\n`;
+    if (foundUni.qs_world) text += `• QS World: **#${foundUni.qs_world}**\n`;
+    if (foundUni.qs_asia) text += `• QS Asia: **#${foundUni.qs_asia}**\n`;
+    if (!foundUni.qs_world && !foundUni.qs_asia) text += `• Рейтинг QS не указан\n`;
+    text += `\n`;
+  } else if (isEnt) {
+    text += `### 📊 ЕНТ пороги\n`;
+    const reqs = db.prepare('SELECT s.name, ar.min_ent, ar.avg_ent, ar.grant_min_ent FROM admission_requirements ar JOIN specialties s ON ar.specialty_id = s.id WHERE ar.university_id = ? ORDER BY ar.grant_min_ent DESC LIMIT 10').all(foundUni.id);
+    if (reqs.length > 0) {
+      reqs.forEach(r => {
+        text += `• **${r.name}**: мин. ${r.min_ent}, ср. ${r.avg_ent}, грант ${r.grant_min_ent}\n`;
+      });
+    } else {
+      text += `• Данные по ЕНТ пока не загружены\n`;
+    }
+    text += `\n`;
+  } else if (isDocs) {
+    text += `### 📄 Документы для поступления\n`;
+    text += `1. Аттестат о среднем образовании\n`;
+    text += `2. Результаты ЕНТ (если требуются)\n`;
+    text += `3. Паспорт (или свидетельство о рождении)\n`;
+    text += `4. Фотографии 3×4 (6 шт.)\n`;
+    text += `5. Медицинская справка\n`;
+    text += `6. Документы, подтверждающие льготы (если есть)\n\n`;
+    text += `📅 **Сроки подачи:** июль–август\n`;
+    text += `🌐 Подача онлайн: **egov.kz**\n`;
+    text += `\n⚠️ Точный список уточняйте на сайте вуза.\n`;
+  } else {
+    // Общая информация
+    text += `📍 Город: ${foundUni.city_name || '—'}\n`;
+    if (foundUni.founded) text += `📅 Основан: ${foundUni.founded}\n`;
+    if (foundUni.students_count) text += `👥 Студентов: ${foundUni.students_count.toLocaleString()}\n`;
+    text += `💰 Стоимость: ${foundUni.price_from?.toLocaleString() || '—'} – ${foundUni.price_to?.toLocaleString() || '—'} тг/год\n`;
+    if (foundUni.has_dorm) text += `🏠 Общежитие: ✅ (${foundUni.dorm_price?.toLocaleString() || '—'} тг/год)\n`;
+    if (languages.length) text += `🌐 Языки: ${languages.join(', ')}\n`;
+    if (foundUni.qs_world) text += `🏆 QS World: #${foundUni.qs_world}\n`;
+    if (foundUni.qs_asia) text += `🏆 QS Asia: #${foundUni.qs_asia}\n`;
+    if (foundUni.website) text += `🌐 Сайт: ${foundUni.website}\n`;
+    text += `\n`;
+    // Специальности
+    const specs = db.prepare('SELECT s.name FROM university_specialties us JOIN specialties s ON us.specialty_id = s.id WHERE us.university_id = ? LIMIT 8').all(foundUni.id);
+    if (specs.length > 0) {
+      text += `📚 **Направления:** ${specs.map(s => s.name).join(', ')}\n`;
+    }
+  }
+
+  return {
+    answer: text,
+    matches: [foundUni],
+    usedData: { university: foundUni.short_name },
+    fallback: false,
+    confidence: 0.95,
+    took_ms: Date.now() - startTime,
+    intent: 'uni_info',
   };
 }
 
@@ -1870,7 +2150,7 @@ function retrieveRelevantGrants(specialties, universities_ids) {
 
 function formatUniversitiesForContext(universities) {
   return universities.map(u => {
-    const langs = (u.languages || []).join(', ');
+    const langs = u.languages ? (typeof u.languages === 'string' ? JSON.parse(u.languages) : u.languages).join(', ') : '—';
     const unique_specs = [...new Set((u.specialties || []).map(s => s.category))];
     const specs = unique_specs.slice(0, 3).join(', ');
     const dorm_info = u.has_dorm ? ` + общежитие ${u.dorm_price}тг/мес` : '';
@@ -2096,7 +2376,7 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
           });
           text += `\n${tr('overview_hint', lang) || '💡 Напишите вуз и направление для точного расчёта.\nНапример: *"Мои шансы в КБТУ на IT"*'}`;
 
-          return {
+    return {
             answer: text,
             matches: [],
             usedData: { universities_count: totalCount, grants_count: 0, extraction_params: params, admission_result: null },
@@ -2217,6 +2497,7 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
       matches: filtered.slice(0, 8),
       input: prediction.input,
       whatIf: prediction.whatIf || [],
+      academicYear: prediction.academicYear || '2025-2026',
     },
   };
 }
@@ -2315,24 +2596,43 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
     return handleRecommendationQuery(msg, lang);
   }
 
-  const questions = [];
-  if (!params.ent) {
-    questions.push('🎯 Сколько баллов ЕНТ вы набрали (или планируете набрать)?');
-  }
-  if (!params.specialty) {
-    questions.push('📚 Какая специальность интересует? (IT, медицина, бизнес, инженерия...)');
-  }
-  if (!params.cityId) {
-    questions.push('🏙 В каком городе хотите учиться? (Алматы, Астана, Шымкент...)');
-  }
-  if (!params.budget) {
-    questions.push('💰 какой максимальный бюджет на год обучения? (или "бюджет" если на грант)');
-  }
+  const texts = {
+    ru: {
+      intro: 'Не знаете что выбрать? Не страшно! Давайте определимся шаг за шагом.\n\nОтветьте на несколько вопросов, и я подберу лучшие вузы для вас:\n',
+      outro: '\nМожете ответить сразу на все или по одному. Например: *"ЕНТ 105, IT, Алматы"*',
+      ent: '🎯 Сколько баллов ЕНТ вы набрали (или планируете набрать)?',
+      spec: '📚 Какая специальность интересует? (IT, медицина, бизнес, инженерия...)',
+      city: '🏙 В каком городе хотите учиться? (Алматы, Астана, Шымкент...)',
+      budget: '💰 какой максимальный бюджет на год обучения? (или "бюджет" если на грант)',
+    },
+    kk: {
+      intro: 'Не таңдауға болмайтынын білмейсіз бе? Әлем емес! Қадам бойынша анықтайық.\n\nБірнеше сұраққа жауап беріңіз, мен сізге ең жақсы университеттерді таңдаймын:\n',
+      outro: '\nБарлығына бірден немесе бір-бірден жауап бере аласыз. Мысалы: *"ЕНТ 105, IT, Алматы"*',
+      ent: '🎯 ЕНТ-ден неше ұпай алдыңыз ( немесе жоспарлап тұрсыз)?',
+      spec: '📚 Қандай мамандық қызықтырады? (IT, медицина, бизнес, инженерия...)',
+      city: '🏙 Қай қалада оқығыңыз келеді? (Алматы, Астана, Шымкент...)',
+      budget: '💰 Оқу ақысының максималдық бюджеті қанша? (немесе "грант" болса)',
+    },
+    en: {
+      intro: "Not sure what to choose? No worries! Let's figure it out step by step.\n\nAnswer a few questions and I'll find the best universities for you:\n",
+      outro: '\nYou can answer all at once or one by one. For example: *"ENT 105, IT, Almaty"*',
+      ent: '🎯 How many ENT points did you score (or plan to)?',
+      spec: '📚 What specialty interests you? (IT, medicine, business, engineering...)',
+      city: '🏙 Which city do you want to study in? (Almaty, Astana, Shymkent...)',
+      budget: "💰 What's your maximum annual budget? (or 'grant' if seeking a scholarship)",
+    }
+  };
+  const t = texts[lang] || texts.ru;
 
-  let answer = `Не знаете что выбрать? Не страшно! Давайте определимся шаг за шагом.\n\n`;
-  answer += `Ответьте на несколько вопросов, и я подберу лучшие вузы для вас:\n\n`;
+  const questions = [];
+  if (!params.ent) questions.push(t.ent);
+  if (!params.specialty) questions.push(t.spec);
+  if (!params.cityId) questions.push(t.city);
+  if (!params.budget) questions.push(t.budget);
+
+  let answer = t.intro;
   questions.forEach((q, i) => { answer += `${i + 1}. ${q}\n`; });
-  answer += `\nМожете ответить сразу на все или по одному. Например: *"ЕНТ 105, IT, Алматы"*`;
+  answer += t.outro;
 
   return {
     answer,
@@ -2374,6 +2674,11 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
     return handleProfessionQuery(msg, lang);
   }
 
+  if (intent === 'uni_info') {
+    console.log('[ai-service] Routing to uni_info handler');
+    return handleUniInfoQuery(msg, lang);
+  }
+
   if (intent === 'city') {
     console.log('[ai-service] Routing to city handler');
     return handleCityQuery(msg, lang);
@@ -2406,8 +2711,8 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
 
   // Приветствие — заготовленный ответ без LLM
   if (intent === 'greeting') {
-    const greetings = [
-      `Привет! 👋 Я твой ИИ-советник по поступлению в вузы Казахстана.
+    const greetings = {
+      ru: `Привет! 👋 Я твой ИИ-советник по поступлению в вузы Казахстана.
 
 Могу помочь с:
 • 🎯 **Расчёт шансов** — "Мои шансы в КБТУ на программиста с ЕНТ 110"
@@ -2418,9 +2723,31 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
 • 💼 **Профессии** — "Кем работать с IT образованием?"
 
 Задавай вопрос! 😊`,
-    ];
+      kk: `Сәлем! 👋 Мен Қазақстан университеттеріне түсу бойынша СИ-кеңесшімін.
+
+Көмектесе аламын:
+• 🎯 **Мүмкіндікті есептеу** — "Менің КБТУ-ге мүмкіндігім ЕНТ 110 болғанда"
+• 🏙 **Қалалар** — "Алматыда қандай университеттер бар?"
+• 📋 **Тізімдер** — "IT бойынша университеттер тізімін бер"
+• ⚖️ **Салыстыру** — "КБТУ мен ҚазҰУ-ды салыстыр"
+• 💰 **Гранттар** — "Медицина бойынша қандай гранттар бар?"
+• 💼 **Мамандықтар** — "IT білімімен қандай жұмыс істеуге болады?"
+
+Сұрағыңды қой! 😊`,
+      en: `Hi! 👋 I'm your AI advisor for Kazakh university admissions.
+
+I can help with:
+• 🎯 **Chance calculator** — "My chances at KBTU for programmer with ENT 110"
+• 🏙 **Cities** — "What universities are in Almaty?"
+• 📋 **University lists** — "Give me a list of IT universities"
+• ⚖️ **Comparison** — "Compare KBTU and KazNU"
+• 💰 **Grants** — "What grants are available for medicine?"
+• 💼 **Careers** — "What jobs can I get with IT education?"
+
+Ask away! 😊`
+    };
     return {
-      answer: greetings[0],
+      answer: greetings[lang] || greetings.ru,
       matches: [],
       usedData: {},
       fallback: false,
@@ -2432,38 +2759,77 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
 
   // Помощь — заготовленный ответ без LLM
   if (intent === 'help') {
-    const helpText = `Вот что я умею:
+    const helpTexts = {
+      ru: `Вот что я умею:
 
 **🎯 Расчёт шансов на поступление:**
 • *"Мои шансы в КБТУ на программиста с ЕНТ 110"*
 • *"Поступлю ли я в КазНУ с ЕНТ 100?"*
-• *"В какой вуз поступить на медицину с ЕНТ 120?"*
 
 **🏙 Информация по городам:**
 • *"Какие вузы в Шымкенте?"*
-• *"Покажи вузы в Алматы на IT"*
 
 **📋 Списки вузов:**
 • *"Дай список вузов на программиста"*
-• *"Какие вузы есть в Казахстане?"*
 
 **⚖️ Сравнение вузов:**
 • *"Сравни КБТУ и КазНУ"*
-• *"Что лучше НУ или ЕНУ?"*
 
 **💰 Гранты:**
 • *"Какие гранты на IT?"*
-• *"Какие гранты на медицину?"*
 
 **💼 Профессии:**
 • *"Кем я могу работать с IT образованием?"*
-• *"Какие профессии связаны с программированием?"*
 
 **💡 Советы:**
-Я понимаю русский, казахский и английский языки. Можете задавать вопросы в свободной форме!`;
+Я понимаю русский, казахский и английский языки.`,
+      kk: `Мен не істей аламын:
 
+**🎯 Түсу мүмкіндігін есептеу:**
+• *"Менің КБТУ-ге мүмкіндігім ЕНТ 110 болғанда"*
+
+**🏙 Қалалар туралы ақпарат:**
+• *"Шымкентте қандай университеттер бар?"*
+
+**📋 Университеттер тізімі:**
+• *"Программист бойынша университеттер тізімін бер"*
+
+**⚖️ Университеттерді салыстыру:**
+• *"КБТУ мен ҚазҰУ-ды салыстыр"*
+
+**💰 Гранттар:**
+• *"IT бойынша қандай гранттар бар?"*
+
+**💼 Мамандықтар:**
+• *"IT білімімен қандай жұмыс істеуге болады?"*
+
+**💡 Кеңестер:**
+Мен қазақ, орыс және ағылшын тілдерін түсінемін.`,
+      en: `Here's what I can do:
+
+**🎯 Admission chances:**
+• *"My chances at KBTU for programmer with ENT 110"*
+
+**🏙 City info:**
+• *"What universities are in Shymkent?"*
+
+**📋 University lists:**
+• *"Give me a list of IT universities"*
+
+**⚖️ Compare:**
+• *"Compare KBTU and KazNU"*
+
+**💰 Grants:**
+• *"What grants are available for IT?"*
+
+**💼 Careers:**
+• *"What jobs can I get with IT education?"*
+
+**💡 Tips:**
+I understand Russian, Kazakh, and English.`
+    };
     return {
-      answer: helpText,
+      answer: helpTexts[lang] || helpTexts.ru,
       matches: [],
       usedData: {},
       fallback: false,
@@ -2480,7 +2846,14 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
   const dataFound = universities.length > 0;
   const confidence = Math.min(0.9, Math.max(0.3, universities.length / 8));
 
-  if (!dataFound) {
+  // Для general/university вопросов — всегда передаём контекст БД в LLM
+  let unisForContext = universities;
+  if (!dataFound && (intent === 'general' || intent === 'uni_info')) {
+    // Берём топ-8 вузов из БД как контекст для LLM
+    unisForContext = getDb().prepare('SELECT * FROM universities ORDER BY qs_world ASC NULLS LAST, price_from ASC LIMIT 8').all();
+  }
+
+  if (!dataFound && unisForContext.length === 0) {
     return {
       answer: tr('not_found_unis', lang) || `Я не нашёл университеты, соответствующие вашему запросу. Попробуйте:\n- Указать конкретный вуз или специальность\n- Уточнить бюджет\n\nВ моей базе есть информация о вузах Казахстана, 35+ специальностях и грантах.`,
       matches: [],
@@ -2492,7 +2865,7 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
     };
   }
 
-  const universitiesContext = formatUniversitiesForContext(universities.slice(0, 8));
+  const universitiesContext = formatUniversitiesForContext(unisForContext.slice(0, 8));
   const grantsContext = formatGrantsForContext(grants);
   const systemPrompt = getSystemPrompt(intent, universitiesContext, grantsContext, lang);
 
@@ -2517,6 +2890,7 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
     };
   }
 
+  logQuery(msg, intent, lang, Date.now() - startTime);
   return {
     answer: aiResponse.text,
     matches: [],
@@ -2531,6 +2905,40 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
     took_ms: Date.now() - startTime,
     intent,
   };
+}
+
+// ─── QUERY LOGGING ──────────────────────────
+function logQuery(query, intent, lang, responseTimeMs) {
+  try {
+    const db = require('./database.js').initDatabase();
+    db.prepare('INSERT INTO query_log (query, intent, lang, response_time_ms) VALUES (?, ?, ?, ?)').run(
+      query, intent || 'unknown', lang || 'ru', responseTimeMs || 0
+    );
+  } catch (e) { /* silent */ }
+}
+
+function getTopQueries(days = 7, limit = 10) {
+  try {
+    const db = require('./database.js').initDatabase();
+    return db.prepare(`
+      SELECT query, intent, COUNT(*) as count, AVG(response_time_ms) as avg_ms
+      FROM query_log
+      WHERE created_at >= datetime('now', '-' || ? || ' days')
+      GROUP BY query
+      ORDER BY count DESC
+      LIMIT ?
+    `).all(days, limit);
+  } catch (e) { return []; }
+}
+
+function getQueryStats(days = 7) {
+  try {
+    const db = require('./database.js').initDatabase();
+    const total = db.prepare("SELECT COUNT(*) as c FROM query_log WHERE created_at >= datetime('now', '-' || ? || ' days')").get(days);
+    const byIntent = db.prepare("SELECT intent, COUNT(*) as c FROM query_log WHERE created_at >= datetime('now', '-' || ? || ' days') GROUP BY intent ORDER BY c DESC").all(days);
+    const byLang = db.prepare("SELECT lang, COUNT(*) as c FROM query_log WHERE created_at >= datetime('now', '-' || ? || ' days') GROUP BY lang ORDER BY c DESC").all(days);
+    return { total: total.c, byIntent, byLang };
+  } catch (e) { return { total: 0, byIntent: [], byLang: [] }; }
 }
 
 module.exports = {

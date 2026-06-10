@@ -6,6 +6,7 @@ const translations = {
       comparison: 'Сравнение',
       advisor: 'ИИ-советник',
       admission: 'Мои шансы',
+      tracker: '📋 Заявки',
       career: 'Профориентация',
       grants: 'Гранты',
       map: 'Карта',
@@ -17,6 +18,7 @@ const translations = {
       comparison: 'Сравнение',
       advisor: 'ИИ-советник',
       admission: 'Мои шансы на поступление',
+      tracker: 'Мои заявки',
       career: 'Профориентация',
       info: 'Информация',
       grants: 'Гранты и стипендии',
@@ -209,7 +211,9 @@ const translations = {
     },
     profile: {
       title: 'Личный кабинет',
-      sub: 'Сохранённые вузы, история ИИ и результаты тестов'
+      sub: 'Избранные вузы, заявки и настройки',
+      favorites: 'Избранные вузы',
+      no_favorites: 'Пока нет избранных. Нажимайте ❤️ на странице вуза.'
     },
     profile_page: {
       auth_prompt: 'Войдите или зарегистрируйтесь, чтобы сохранять вузы и историю.',
@@ -661,10 +665,28 @@ const translations = {
     map_page_js: {
       all_on_map: 'Все университеты на карте'
     },
+    tracker: {
+      title: '📋 Мои заявки',
+      empty_title: 'Нет отслеживаемых вузов',
+      empty_desc: 'Добавляйте вузы из результатов поступления, чтобы отслеживать статус заявок',
+      go_advisor: 'Перейти к советнику',
+      notes_placeholder: 'Заметки...',
+      add_to_tracker: 'В трекер',
+      added: '✓ В трекере',
+      statuses: {
+        collecting: 'Собираю документы',
+        submitted: 'Подал заявку',
+        waiting: 'Жду ответа',
+        accepted: 'Зачислен',
+        rejected: 'Не прошёл',
+        enrolled: 'Оплачиваю'
+      }
+    },
     common: {
       million: 'млн',
       thousand: 'тыс',
-      tenge: 'тг'
+      tenge: 'тг',
+      data_year: 'Данные за'
     }
   },
   
@@ -674,6 +696,7 @@ const translations = {
       comparison: 'Салыстыру',
       advisor: 'ҚИ-кеңесші',
       admission: 'Менің мүмкіндігім',
+      tracker: '📋 Өтінімдер',
       career: 'Кәсіби бағдарлама',
       grants: 'Грантылар',
       map: 'Карта',
@@ -685,6 +708,7 @@ const translations = {
       comparison: 'Салыстыру',
       advisor: 'ҚИ-кеңесші',
       admission: 'Менің түсу мүмкіндігім',
+      tracker: 'Менің өтінімдерім',
       career: 'Кәсіби бағдарлама',
       info: 'Ақпарат',
       grants: 'Грантылар және стипендиялар',
@@ -877,7 +901,9 @@ const translations = {
     },
     profile: {
       title: 'Жеке кабинет',
-      sub: 'Сақталған университеттер, ҚИ тарихы және тест нәтижелері'
+      sub: 'Таңдалған университеттер, өтінімдер және баптаулар',
+      favorites: 'Таңдалған университеттер',
+      no_favorites: 'Әлі таңдалған жоқ. ❤️ басыңыз'
     },
     profile_page: {
       auth_prompt: 'Университеттер мен тарихты сақтау үшін кіріңіз немесе тіркеліңіз.',
@@ -1329,10 +1355,28 @@ const translations = {
     map_page_js: {
       all_on_map: 'Барлық университеттер картада'
     },
+    tracker: {
+      title: '📋 Менің өтінімдерім',
+      empty_title: 'Бақыланатын жоқ',
+      empty_desc: 'Түсу нәтижелерінен университеттерді қосыңыз',
+      go_advisor: 'Кеңесшіге өту',
+      notes_placeholder: 'Жазбалар...',
+      add_to_tracker: 'Трекерге',
+      added: '✓ Трекерде',
+      statuses: {
+        collecting: 'Құжаттар жинаудамын',
+        submitted: 'Өтінім бердім',
+        waiting: 'Жауап күтудемін',
+        accepted: 'Қабылдандым',
+        rejected: 'Өтпедім',
+        enrolled: 'Төлеудемін'
+      }
+    },
     common: {
       million: 'млн',
       thousand: 'мың',
-      tenge: 'тг'
+      tenge: 'тг',
+      data_year: 'Деректер'
     },
     db_data: {
       uni_short: {
@@ -1467,6 +1511,7 @@ const translations = {
       comparison: 'Compare',
       advisor: 'AI Advisor',
       admission: 'My Chances',
+      tracker: '📋 Applications',
       career: 'Career Guidance',
       grants: 'Grants',
       map: 'Map',
@@ -1478,6 +1523,7 @@ const translations = {
       comparison: 'Compare',
       advisor: 'AI Advisor',
       admission: 'My Admission Chances',
+      tracker: 'My Applications',
       career: 'Career Guidance',
       info: 'Information',
       grants: 'Grants & Scholarships',
@@ -1670,7 +1716,9 @@ const translations = {
     },
     profile: {
       title: 'Personal Account',
-      sub: 'Saved universities, AI history, and test results'
+      sub: 'Favorite universities, applications, and settings',
+      favorites: 'Favorite Universities',
+      no_favorites: 'No favorites yet. Click ❤️ on a university page.'
     },
     profile_page: {
       auth_prompt: 'Log in or register to save universities and history.',
@@ -2122,10 +2170,28 @@ const translations = {
     map_page_js: {
       all_on_map: 'All universities on the map'
     },
+    tracker: {
+      title: '📋 My Applications',
+      empty_title: 'No tracked universities',
+      empty_desc: 'Add universities from admission results to track application status',
+      go_advisor: 'Go to Advisor',
+      notes_placeholder: 'Notes...',
+      add_to_tracker: 'Track',
+      added: '✓ Tracking',
+      statuses: {
+        collecting: 'Gathering documents',
+        submitted: 'Application submitted',
+        waiting: 'Waiting for response',
+        accepted: 'Accepted',
+        rejected: 'Rejected',
+        enrolled: 'Paying tuition'
+      }
+    },
     common: {
       million: 'M',
       thousand: 'K',
-      tenge: 'tenge'
+      tenge: 'tenge',
+      data_year: 'Data for'
     },
     db_data: {
       uni_short: {

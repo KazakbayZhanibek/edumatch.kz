@@ -2,6 +2,33 @@
 
 ## Июнь 2026 — Major Update
 
+### 0. Актуальность базы данных
+
+**Файлы:** `backend/admission-service.js`, `backend/server.js`, `frontend/js/app.js`
+
+Добавлены колонки `academic_year` в таблицы `admission_requirements` и `grants`:
+
+| Таблица | Строк | Default |
+|---------|-------|---------|
+| admission_requirements | 463 | 2025-2026 |
+| grants | 351 | 2025-2026 |
+
+**Backend:**
+- `getAdmissionPrediction()` возвращает `academicYear`
+- Admin API:
+  - `GET /api/admin/academic-year` — текущий год
+  - `PUT /api/admin/academic-year` — обновить (body: `{year: "2026-2027"}`)
+
+**Frontend:**
+- Заголовок карточек: "ЕНТ 110 · IT · Данные за 2025-2026"
+
+**Переводы:**
+- RU: "Данные за"
+- KK: "Деректер"
+- EN: "Data for"
+
+---
+
 ### 1. Объяснение скоринга (Scoring Breakdown)
 
 **Файл:** `backend/admission-service.js`
