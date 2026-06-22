@@ -119,8 +119,9 @@ function verifyOwnership(req, res, next) {
 function verifyAdmin(req, res, next) {
   try {
     const lang = getLang(req);
-    // TODO: Добавить проверку is_admin в таблицу users
-    const isAdmin = req.isAdmin; // Получать из БД
+    const db = require('./database').getDb();
+    const user = db.prepare('SELECT is_admin FROM users WHERE id = ?').get(req.userId);
+    const isAdmin = user && user.is_admin;
 
     if (!isAdmin) {
       return res.status(403).json({
@@ -128,6 +129,7 @@ function verifyAdmin(req, res, next) {
       });
     }
 
+    req.isAdmin = true;
     next();
   } catch (error) {
     console.error('Admin check error:', error);

@@ -47,6 +47,18 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+// Input sanitization middleware — strip HTML/script tags from JSON body fields
+app.use((req, res, next) => {
+  if (req.body && typeof req.body === 'object') {
+    for (const key of Object.keys(req.body)) {
+      if (typeof req.body[key] === 'string') {
+        req.body[key] = req.body[key].replace(/<[^>]*>/g, '').trim();
+      }
+    }
+  }
+  next();
+});
+
 app.get('/api/cities', (req, res) => {
   try { res.json(getCities()); }
   catch (err) { res.status(500).json({ error: err.message }); }
@@ -199,18 +211,6 @@ app.get('/api/analytics/stats', (req, res) => {
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
-});
-
-// Input sanitization middleware — strip HTML/script tags from JSON body fields
-app.use((req, res, next) => {
-  if (req.body && typeof req.body === 'object') {
-    for (const key of Object.keys(req.body)) {
-      if (typeof req.body[key] === 'string') {
-        req.body[key] = req.body[key].replace(/<[^>]*>/g, '').trim();
-      }
-    }
-  }
-  next();
 });
 
 // Global error handler (must be after all routes)

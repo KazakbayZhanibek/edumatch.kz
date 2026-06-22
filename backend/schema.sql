@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS universities (
   price_to INTEGER NOT NULL,
   website TEXT,
   description TEXT,
+  description_kk TEXT,
+  description_en TEXT,
   founded INTEGER,
   students_count INTEGER,
   languages TEXT NOT NULL,           -- JSON array: ["Казахский", "Русский", "Английский"]
@@ -67,9 +69,16 @@ CREATE TABLE IF NOT EXISTS grants (
   type TEXT NOT NULL,                -- 'government', 'regional', 'corporate', 'university'
   amount TEXT NOT NULL,
   description TEXT,
+  description_kk TEXT,
+  description_en TEXT,
   requirements TEXT NOT NULL,        -- JSON array: ["Требование 1", "Требование 2", ...]
   deadline TEXT,
-  link TEXT
+  link TEXT,
+  university_id INTEGER,
+  city_id INTEGER,
+  academic_year TEXT DEFAULT '2025-2026',
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE SET NULL,
+  FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE SET NULL
 );
 CREATE INDEX IF NOT EXISTS idx_grants_type ON grants(type);
 
@@ -104,6 +113,7 @@ CREATE TABLE IF NOT EXISTS users (
   profile_picture TEXT,
   bio TEXT,
   preferences TEXT,                  -- JSON: {"theme": "light", "language": "kk"}
+  is_admin INTEGER DEFAULT 0,        -- 0 или 1
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -173,6 +183,7 @@ CREATE TABLE IF NOT EXISTS admission_requirements (
   avg_ent INTEGER NOT NULL,
   grant_min_ent INTEGER,
   competition_level INTEGER DEFAULT 3,
+  academic_year TEXT DEFAULT '2025-2026',
   FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE,
   FOREIGN KEY(specialty_id) REFERENCES specialties(id) ON DELETE CASCADE,
   UNIQUE(university_id, specialty_id)
@@ -238,3 +249,37 @@ CREATE INDEX IF NOT EXISTS idx_admission_stats_city ON admission_chance_stats(ci
 CREATE INDEX IF NOT EXISTS idx_admission_stats_ent_from ON admission_chance_stats(ent_score_from);
 CREATE INDEX IF NOT EXISTS idx_admission_stats_ent_to ON admission_chance_stats(ent_score_to);
 CREATE INDEX IF NOT EXISTS idx_admission_stats_composite ON admission_chance_stats(specialty_id, university_id, year);
+
+-- ==================== REVIEWS ====================
+
+CREATE TABLE IF NOT EXISTS reviews (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  university_id INTEGER NOT NULL,
+  user_name TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+  pros TEXT,
+  cons TEXT,
+  comment TEXT,
+  faculty TEXT,
+  study_year TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_reviews_university ON reviews(university_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_rating ON reviews(rating);
+
+-- ==================== QUERY LOG (ANALYTICS) ====================
+
+CREATE TABLE IF NOT EXISTS query_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  query TEXT NOT NULL,
+  intent TEXT,
+  lang TEXT DEFAULT 'ru',
+  response_time_ms INTEGER,
+  user_id INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_query_log_intent ON query_log(intent);
+CREATE INDEX IF NOT EXISTS idx_query_log_created ON query_log(created_at);
+CREATE INDEX IF NOT EXISTS idx_query_log_lang ON query_log(lang);

@@ -8,7 +8,7 @@
     "dev": "cd backend && node server.js",
     "seed": "cd backend && node scripts/seed-admission-stats.js",
     "db:init": "cd backend && node scripts/load-full-data.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd backend && node test-automated.js"
   },
   "keywords": [
     "education",

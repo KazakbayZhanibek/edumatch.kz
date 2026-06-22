@@ -23,6 +23,7 @@ function initDatabase() {
       // Проверяем, что БД валидна
       db.exec('SELECT 1');
       console.log('✓ Подключено к существующей БД:', DB_PATH);
+      migrateExistingDb(db);
       return db;
     } catch (e) {
       // БД повреждена, удаляем и пересоздаем
@@ -42,7 +43,72 @@ function initDatabase() {
   db.exec(schema);
   console.log('✓ Схема БД создана');
 
+  // Миграции для существующих БД (безопасные ALTER TABLE)
+  migrateExistingDb(db);
+
   return db;
+}
+
+/**
+ * Миграции для добавления недостающих колонок/таблиц в существующую БД
+ */
+function migrateExistingDb(db) {
+  const migrations = [
+    // is_admin колонка в users
+    { table: 'users', col: 'is_admin', sql: "ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0" },
+    // description_kk/en в universities
+    { table: 'universities', col: 'description_kk', sql: "ALTER TABLE universities ADD COLUMN description_kk TEXT" },
+    { table: 'universities', col: 'description_en', sql: "ALTER TABLE universities ADD COLUMN description_en TEXT" },
+    // academic_year в admission_requirements
+    { table: 'admission_requirements', col: 'academic_year', sql: "ALTER TABLE admission_requirements ADD COLUMN academic_year TEXT DEFAULT '2025-2026'" },
+    // description_kk/en и university_id, city_id, academic_year в grants
+    { table: 'grants', col: 'description_kk', sql: "ALTER TABLE grants ADD COLUMN description_kk TEXT" },
+    { table: 'grants', col: 'description_en', sql: "ALTER TABLE grants ADD COLUMN description_en TEXT" },
+    { table: 'grants', col: 'university_id', sql: "ALTER TABLE grants ADD COLUMN university_id INTEGER" },
+    { table: 'grants', col: 'city_id', sql: "ALTER TABLE grants ADD COLUMN city_id INTEGER" },
+    { table: 'grants', col: 'academic_year', sql: "ALTER TABLE grants ADD COLUMN academic_year TEXT DEFAULT '2025-2026'" },
+  ];
+
+  for (const m of migrations) {
+    try {
+      const cols = db.prepare(`PRAGMA table_info(${m.table})`).all();
+      if (!cols.some(c => c.name === m.col)) {
+        db.exec(m.sql);
+        console.log(`  + ${m.table}.${m.col}`);
+      }
+    } catch (e) {
+      // Игнорируем если колонка уже существует или таблица не найдена
+    }
+  }
+
+  // Создаём таблицу reviews если нет
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS reviews (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      university_id INTEGER NOT NULL,
+      user_name TEXT NOT NULL,
+      rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+      pros TEXT, cons TEXT, comment TEXT, faculty TEXT, study_year TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE
+    )`);
+    db.exec("CREATE INDEX IF NOT EXISTS idx_reviews_university ON reviews(university_id)");
+    db.exec("CREATE INDEX IF NOT EXISTS idx_reviews_rating ON reviews(rating)");
+  } catch (e) { /* exists */ }
+
+  // Создаём таблицу query_log если нет
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS query_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      query TEXT NOT NULL, intent TEXT, lang TEXT DEFAULT 'ru',
+      response_time_ms INTEGER, user_id INTEGER,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
+    )`);
+    db.exec("CREATE INDEX IF NOT EXISTS idx_query_log_intent ON query_log(intent)");
+    db.exec("CREATE INDEX IF NOT EXISTS idx_query_log_created ON query_log(created_at)");
+    db.exec("CREATE INDEX IF NOT EXISTS idx_query_log_lang ON query_log(lang)");
+  } catch (e) { /* exists */ }
 }
 
 /**
