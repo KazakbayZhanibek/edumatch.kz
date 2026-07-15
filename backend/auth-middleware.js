@@ -8,21 +8,29 @@ const { tr, getLang } = require('./i18n');
 
 /**
  * Middleware для проверки аутентификации
- * Проверяет наличие и валидность JWT токена в заголовке Authorization
+ * Проверяет наличие и валидность JWT токена в httpOnly cookie или Authorization header
  * Использование: router.get('/protected', verifyAuth, handler)
  */
 function verifyAuth(req, res, next) {
   try {
-    const authHeader = req.headers.authorization;
     const lang = getLang(req);
+    
+    // Сначала пытаемся получить токен из httpOnly cookie
+    let token = req.cookies?.auth_token;
+    
+    // Если нет в cookie, пытаемся из Authorization header (для совместимости)
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.slice(7); // Убрать 'Bearer '
+      }
+    }
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!token) {
       return res.status(401).json({
         error: tr('auth_token_missing', lang) || 'Токен не найден'
       });
     }
-
-    const token = authHeader.slice(7); // Убрать 'Bearer '
 
     // Проверить, действителен ли токен в БД
     const validation = authService.validateSessionToken(token);

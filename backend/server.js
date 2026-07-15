@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 
 // Глобальные обработчики ошибок
@@ -12,8 +13,9 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 process.on('uncaughtException', (error) => {
-  console.error('⚠ Uncaught Exception:', error);
-  // Не выходим из процесса, чтобы сервер продолжал работать
+  console.error('⚠ FATAL Uncaught Exception:', error);
+  console.error('Stack:', error.stack);
+  process.exit(1);
 });
 
 // Инициализируем БД перед импортом db модуля
@@ -27,17 +29,66 @@ const admissionRoutes = require('./admission-routes');
 
 const app = express();
 
-// Security headers (helmet)
+// Security headers (helmet) with CSP
 app.use(helmet({
-  contentSecurityPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://cdn.jsdelivr.net'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://unpkg.com', 'https://cdn.jsdelivr.net'],
+      imgSrc: ["'self'", 'data:', 'https:'],
+      connectSrc: ["'self'", 'https://openrouter.io'],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+      'script-src-attr': ["'unsafe-inline'"],
+      'style-src-attr': ["'unsafe-inline'"]
+    }
+  },
   crossOriginEmbedderPolicy: false,
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
 }));
 
 // Response compression
 app.use(compression());
 
-app.use(cors());
+// Validate required environment variables
+const requiredEnv = ['JWT_SECRET'];
+for (const key of requiredEnv) {
+  if (!process.env[key]) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+}
+
+// CORS configuration
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:3001').split(',').map(o => o.trim());
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Not allowed by CORS: ${origin}`));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// HTTPS redirect for production
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
+      return res.redirect(301, `https://${req.get('host')}${req.url}`);
+    }
+    next();
+  });
+}
 app.use(express.json({ limit: '1mb' }));
+app.use(cookieParser());
 
 // Add logging middleware
 app.use((req, res, next) => {
@@ -226,5 +277,36 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  try {
+    const db = require('./database').getDb();
+    db.exec('SELECT 1');
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  } catch (e) {
+    res.status(503).json({ status: 'error', message: e.message });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('EduMatch KZ running at http://localhost:' + PORT));
+const server = app.listen(PORT, () => {
+  console.log(`✓ EduMatch KZ running on port ${PORT}`);
+  console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✓ Allowed origins: ${allowedOrigins.join(', ')}`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, closing server gracefully...');
+  server.close(() => {
+    console.log('Server closed');
+    const { closeDb } = require('./database');
+    closeDb?.();
+    process.exit(0);
+  });
+  // Force shutdown after 30s
+  setTimeout(() => {
+    console.error('Forced shutdown after 30 seconds');
+    process.exit(1);
+  }, 30000);
+});

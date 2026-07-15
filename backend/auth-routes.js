@@ -9,6 +9,43 @@ const authService = require('./auth-service');
 const { verifyAuth } = require('./auth-middleware');
 const { tr, getLang } = require('./i18n');
 
+// ============== RATE LIMITING ==============
+const loginAttempts = new Map();
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOGIN_WINDOW = 15 * 60 * 1000; // 15 минут
+
+function checkLoginRateLimit(email, ip) {
+  const key = `${email}:${ip}`;
+  const now = Date.now();
+  
+  if (!loginAttempts.has(key)) {
+    loginAttempts.set(key, []);
+  }
+  
+  const attempts = loginAttempts.get(key);
+  const recentAttempts = attempts.filter(t => now - t < LOGIN_WINDOW);
+  
+  if (recentAttempts.length >= MAX_LOGIN_ATTEMPTS) {
+    return false; // Rate limited
+  }
+  
+  recentAttempts.push(now);
+  loginAttempts.set(key, recentAttempts);
+  
+  // Cleanup старых ключей если карта слишком большая (memory leak fix)
+  if (loginAttempts.size > 1000) {
+    const now = Date.now();
+    for (const [k, v] of loginAttempts.entries()) {
+      const active = v.filter(t => now - t < LOGIN_WINDOW);
+      if (active.length === 0) {
+        loginAttempts.delete(k);
+      }
+    }
+  }
+  
+  return true;
+}
+
 // ==================== AUTH ENDPOINTS ====================
 
 /**
@@ -17,6 +54,15 @@ const { tr, getLang } = require('./i18n');
  * Body: { email, password, username, fullName? }
  */
 router.post('/register', async (req, res) => {
+  // Rate limiting check
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const email = (req.body.email || '').toLowerCase();
+  if (!checkLoginRateLimit(email, ip)) {
+    return res.status(429).json({
+      error: tr('auth_too_many_attempts', getLang(req)) || 'Too many registration attempts. Please try again later.'
+    });
+  }
+  
   try {
     const { email, password, username, fullName } = req.body;
     const lang = getLang(req);
@@ -49,13 +95,25 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: result.error });
     }
 
+    // Set httpOnly cookie with JWT token
+    res.cookie('auth_token', result.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 дней
+    });
+
     return res.status(201).json({
       success: true,
-      user: result.user,
-      token: result.token
+      user: result.user
     });
   } catch (error) {
-    console.error('Register error:', error);
+    const safeError = {
+      message: error.message,
+      stack: process.env.NODE_ENV === 'production' ? undefined : error.stack
+    };
+    console.error('Register error:', safeError);
     return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
@@ -66,6 +124,15 @@ router.post('/register', async (req, res) => {
  * Body: { email, password }
  */
 router.post('/login', async (req, res) => {
+  // Rate limiting check
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const email = (req.body.email || '').toLowerCase();
+  if (!checkLoginRateLimit(email, ip)) {
+    return res.status(429).json({
+      error: tr('auth_too_many_attempts', getLang(req)) || 'Too many login attempts. Please try again later.'
+    });
+  }
+  
   try {
     const { email, password } = req.body;
     const lang = getLang(req);
@@ -82,13 +149,25 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: result.error });
     }
 
+    // Set httpOnly cookie with JWT token
+    res.cookie('auth_token', result.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 дней
+    });
+
     return res.json({
       success: true,
-      user: result.user,
-      token: result.token
+      user: result.user
     });
   } catch (error) {
-    console.error('Login error:', error);
+    const safeError = {
+      message: error.message,
+      stack: process.env.NODE_ENV === 'production' ? undefined : error.stack
+    };
+    console.error('Login error:', safeError);
     return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
 });
@@ -96,11 +175,11 @@ router.post('/login', async (req, res) => {
 /**
  * POST /api/auth/logout
  * Выход пользователя
- * Header: Authorization: Bearer <token>
+ * Cookie: auth_token или Header: Authorization: Bearer <token>
  */
 router.post('/logout', verifyAuth, (req, res) => {
   try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
+    const token = req.token; // Установлено middleware verifyAuth
     const lang = getLang(req);
 
     if (!token) {
@@ -112,6 +191,14 @@ router.post('/logout', verifyAuth, (req, res) => {
     if (!deleted) {
       return res.status(400).json({ error: tr('auth_logout_error', lang) || 'Ошибка при выходе' });
     }
+
+    // Очищаем cookie
+    res.clearCookie('auth_token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/'
+    });
 
     return res.json({ success: true });
   } catch (error) {

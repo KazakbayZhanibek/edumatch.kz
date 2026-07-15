@@ -5,6 +5,7 @@ const authService = require('./auth-service');
 const requestLogs = new Map();
 const MAX_REQUESTS = 10; // max requests per time window
 const TIME_WINDOW = 60000; // 60 seconds
+const MAX_KEYS = 5000; // Limit map size to prevent memory leak
 
 function checkRateLimit(userId) {
   const key = userId || 'anonymous';
@@ -24,6 +25,20 @@ function checkRateLimit(userId) {
   }
   
   recentRequests.push(now);
+  
+  // Memory leak prevention: cleanup old entries when map gets too large
+  if (requestLogs.size > MAX_KEYS) {
+    const now = Date.now();
+    const keysToDelete = [];
+    for (const [k, v] of requestLogs.entries()) {
+      const active = v.filter(t => now - t < TIME_WINDOW);
+      if (active.length === 0) {
+        keysToDelete.push(k);
+      }
+    }
+    keysToDelete.forEach(k => requestLogs.delete(k));
+  }
+  
   return true;
 }
 

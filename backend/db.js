@@ -97,19 +97,36 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
     query += ' ORDER BY CASE WHEN u.qs_world IS NULL THEN 1 ELSE 0 END, u.qs_world ASC';
   }
 
+  // Оптимизация: вместо отдельных запросов для специальностей,
+  // получаем их все одним запросом (избегаем N+1 проблемы)
+  const allSpecialties = db.prepare(`
+    SELECT DISTINCT
+      us.university_id,
+      s.id,
+      s.name,
+      s.category
+    FROM university_specialties us
+    JOIN specialties s ON us.specialty_id = s.id
+  `).all();
+
+  // Группируем специальности по университету
+  const specialtiesByUni = {};
+  allSpecialties.forEach(spec => {
+    if (!specialtiesByUni[spec.university_id]) {
+      specialtiesByUni[spec.university_id] = [];
+    }
+    specialtiesByUni[spec.university_id].push({
+      id: spec.id,
+      name: spec.name,
+      category: spec.category
+    });
+  });
+
   const stmt = db.prepare(query);
   let unis = stmt.all(...params);
 
-  // Постобработка: добавляем specialties массив
+  // Постобработка: добавляем specialties массив из кеша
   unis = unis.map(u => {
-    const specialtiesStmt = db.prepare(`
-      SELECT s.id, s.name, s.category
-      FROM specialties s
-      JOIN university_specialties us ON s.id = us.specialty_id
-      WHERE us.university_id = ?
-    `);
-    const specialties = specialtiesStmt.all(u.id);
-
     // Парсим JSON поля с error handling
     let languages = [];
     let accreditations = [];
@@ -133,7 +150,7 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
       description: pickDescription(u, lang),
       languages,
       accreditations,
-      specialties,
+      specialties: specialtiesByUni[u.id] || [],
       city_name: u.city_name || 'Алматы'
     };
   });

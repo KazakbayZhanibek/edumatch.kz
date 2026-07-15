@@ -10,9 +10,35 @@ const { getDb } = require('./database');
 const { tr } = require('./i18n');
 
 // Получить JWT секрет из переменной окружения
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || JWT_SECRET.length < 32) {
+  throw new Error('CRITICAL: JWT_SECRET must be set in .env with minimum 32 characters');
+}
 const JWT_EXPIRES_IN = '7d'; // Токен действует 7 дней
 const BCRYPT_ROUNDS = 10; // Раунды хеширования пароля
+
+// ============== ВАЛИДАЦИЯ ПАРОЛЯ ==============
+function validatePassword(password) {
+  if (password.length < 12) {
+    return { valid: false, error: 'Password must be at least 12 characters' };
+  }
+  if (!/[A-Z]/.test(password)) {
+    return { valid: false, error: 'Password must contain uppercase letter' };
+  }
+  if (!/[0-9]/.test(password)) {
+    return { valid: false, error: 'Password must contain digit' };
+  }
+  if (!/[!@#$%^&*\-_=+]/.test(password)) {
+    return { valid: false, error: 'Password must contain special character (!@#$%^&*-_=+)' };
+  }
+  return { valid: true };
+}
+
+// ============== ВАЛИДАЦИЯ EMAIL ==============
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email) && email.length <= 255;
+}
 
 // ============== РЕГИСТРАЦИЯ ==============
 
@@ -40,11 +66,20 @@ async function registerUser(email, password, username, fullName = '', lang = 'ru
       };
     }
 
-    // Валидация пароля
-    if (password.length < 6) {
+    // Валидация email
+    if (!validateEmail(email)) {
       return {
         success: false,
-        error: tr('auth_password_short', lang) || 'Пароль должен быть не менее 6 символов'
+        error: tr('auth_invalid_email', lang) || 'Invalid email format'
+      };
+    }
+
+    // Валидация пароля
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      return {
+        success: false,
+        error: tr('auth_password_weak', lang) || passwordValidation.error
       };
     }
 
@@ -82,7 +117,12 @@ async function registerUser(email, password, username, fullName = '', lang = 'ru
       token
     };
   } catch (error) {
-    console.error('Register error:', error);
+    const safeError = {
+      message: error.message || 'Unknown error',
+      code: error.code,
+      stack: process.env.NODE_ENV === 'production' ? undefined : error.stack
+    };
+    console.error('Register error:', safeError);
     return {
       success: false,
       error: tr('auth_register_error', lang) || 'Ошибка при регистрации'
@@ -142,7 +182,12 @@ async function loginUser(email, password, lang = 'ru') {
       token
     };
   } catch (error) {
-    console.error('Login error:', error);
+    const safeError = {
+      message: error.message || 'Unknown error',
+      code: error.code,
+      stack: process.env.NODE_ENV === 'production' ? undefined : error.stack
+    };
+    console.error('Login error:', safeError);
     return {
       success: false,
       error: tr('auth_login_error', lang) || 'Ошибка при входе'

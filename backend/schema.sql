@@ -46,11 +46,15 @@ CREATE TABLE IF NOT EXISTS universities (
   admission_phone TEXT,              -- future-field
   admission_email TEXT,              -- future-field
   admission_whatsapp TEXT,           -- future-field
-  FOREIGN KEY(city_id) REFERENCES cities(id)
+  FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE RESTRICT
 );
+-- Performance индексы
+CREATE INDEX IF NOT EXISTS idx_universities_name ON universities(name);
+CREATE INDEX IF NOT EXISTS idx_universities_short_name ON universities(short_name);
 CREATE INDEX IF NOT EXISTS idx_universities_city_id ON universities(city_id);
 CREATE INDEX IF NOT EXISTS idx_universities_price_from ON universities(price_from);
 CREATE INDEX IF NOT EXISTS idx_universities_qs_world ON universities(qs_world);
+CREATE INDEX IF NOT EXISTS idx_universities_qs_asia ON universities(qs_asia);
 CREATE INDEX IF NOT EXISTS idx_universities_is_top ON universities(is_top);
 
 -- Связь: Университет ↔ Специальность (многие-ко-многим)
@@ -58,9 +62,11 @@ CREATE TABLE IF NOT EXISTS university_specialties (
   university_id INTEGER NOT NULL,
   specialty_id INTEGER NOT NULL,
   PRIMARY KEY(university_id, specialty_id),
-  FOREIGN KEY(university_id) REFERENCES universities(id),
-  FOREIGN KEY(specialty_id) REFERENCES specialties(id)
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  FOREIGN KEY(specialty_id) REFERENCES specialties(id) ON DELETE CASCADE
 );
+CREATE INDEX IF NOT EXISTS idx_university_specialties_uni ON university_specialties(university_id);
+CREATE INDEX IF NOT EXISTS idx_university_specialties_spec ON university_specialties(specialty_id);
 
 -- Гранты
 CREATE TABLE IF NOT EXISTS grants (
@@ -80,16 +86,20 @@ CREATE TABLE IF NOT EXISTS grants (
   FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE SET NULL,
   FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE SET NULL
 );
+CREATE INDEX IF NOT EXISTS idx_grants_name ON grants(name);
 CREATE INDEX IF NOT EXISTS idx_grants_type ON grants(type);
+CREATE INDEX IF NOT EXISTS idx_grants_academic_year ON grants(academic_year);
 
 -- Связь: Грант ↔ Специальность (многие-ко-многим)
 CREATE TABLE IF NOT EXISTS grant_specialties (
   grant_id INTEGER NOT NULL,
   specialty_id INTEGER NOT NULL,
   PRIMARY KEY(grant_id, specialty_id),
-  FOREIGN KEY(grant_id) REFERENCES grants(id),
-  FOREIGN KEY(specialty_id) REFERENCES specialties(id)
+  FOREIGN KEY(grant_id) REFERENCES grants(id) ON DELETE CASCADE,
+  FOREIGN KEY(specialty_id) REFERENCES specialties(id) ON DELETE CASCADE
 );
+CREATE INDEX IF NOT EXISTS idx_grant_specialties_grant ON grant_specialties(grant_id);
+CREATE INDEX IF NOT EXISTS idx_grant_specialties_spec ON grant_specialties(specialty_id);
 
 -- Советы / Рекомендации
 CREATE TABLE IF NOT EXISTS tips (
@@ -283,3 +293,21 @@ CREATE TABLE IF NOT EXISTS query_log (
 CREATE INDEX IF NOT EXISTS idx_query_log_intent ON query_log(intent);
 CREATE INDEX IF NOT EXISTS idx_query_log_created ON query_log(created_at);
 CREATE INDEX IF NOT EXISTS idx_query_log_lang ON query_log(lang);
+
+-- ==================== AUDIT LOG ====================
+CREATE TABLE IF NOT EXISTS audit_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  table_name TEXT NOT NULL,
+  record_id INTEGER,
+  action TEXT NOT NULL CHECK(action IN ('INSERT', 'UPDATE', 'DELETE')),
+  old_values TEXT,                   -- JSON
+  new_values TEXT,                   -- JSON
+  user_id INTEGER,
+  ip_address TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_audit_log_table ON audit_log(table_name);
+CREATE INDEX IF NOT EXISTS idx_audit_log_record ON audit_log(record_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_user ON audit_log(user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_created ON audit_log(created_at);

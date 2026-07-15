@@ -2,42 +2,39 @@
    EDUMATCH KZ — AUTH (Phase 2)
    ============================================= */
 
-const AUTH_TOKEN_KEY = 'edumatch_token';
+// ВАЖНО: JWT токены НЕ хранятся в localStorage (XSS уязвимость).
+// Вместо этого используются httpOnly cookies, которые автоматически отправляются с запросами.
+// Frontend никогда не читает/пишет токен из JS - это делает браузер автоматически.
+
 const AUTH_USER_KEY = 'edumatch_user';
 
 const Auth = {
   user: null,
-  token: null,
 
   init() {
-    this.token = localStorage.getItem(AUTH_TOKEN_KEY);
     const saved = localStorage.getItem(AUTH_USER_KEY);
     if (saved) {
       try { this.user = JSON.parse(saved); } catch (e) { this.user = null; }
     }
     this.updateNavUI();
-    if (this.token) this.verifySession();
+    if (this.user) this.verifySession();
   },
 
   isLoggedIn() {
-    return Boolean(this.token && this.user);
-  },
-
-  getToken() {
-    return this.token;
+    return Boolean(this.user);
   },
 
   getHeaders(json = true) {
     const headers = {};
     if (json) headers['Content-Type'] = 'application/json';
-    if (this.token) headers['Authorization'] = `Bearer ${this.token}`;
     return headers;
   },
 
   async fetch(path, options = {}) {
     const res = await fetch(`${API}${path}`, {
       ...options,
-      headers: { ...this.getHeaders(options.body != null), ...(options.headers || {}) }
+      headers: { ...this.getHeaders(options.body != null), ...(options.headers || {}) },
+      credentials: 'include' // автоматически отправляет httpOnly cookies
     });
     return res;
   },
@@ -58,18 +55,14 @@ const Auth = {
     }
   },
 
-  setSession(user, token) {
+  setSession(user) {
     this.user = user;
-    this.token = token;
-    localStorage.setItem(AUTH_TOKEN_KEY, token);
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
     this.updateNavUI();
   },
 
   clearSession() {
     this.user = null;
-    this.token = null;
-    localStorage.removeItem(AUTH_TOKEN_KEY);
     localStorage.removeItem(AUTH_USER_KEY);
     this.updateNavUI();
   },
@@ -81,7 +74,7 @@ const Auth = {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || t('profile_page.err_register'));
-    this.setSession(data.user, data.token);
+    this.setSession(data.user);
     await this.mergeLocalFavoritesToServer();
     return data;
   },
@@ -93,7 +86,7 @@ const Auth = {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || t('profile_page.err_login'));
-    this.setSession(data.user, data.token);
+    this.setSession(data.user);
     await this.mergeLocalFavoritesToServer();
     await this.syncFavoritesFromServer();
     return data;
@@ -101,7 +94,7 @@ const Auth = {
 
   async logout() {
     try {
-      if (this.token) {
+      if (this.user) {
         await this.fetch('/auth/logout', { method: 'POST' });
       }
     } catch (e) { /* ignore */ }
@@ -250,15 +243,25 @@ const Auth = {
     const guest = document.getElementById('nav-auth-guest');
     const user = document.getElementById('nav-auth-user');
     const label = document.getElementById('nav-auth-username');
+    const profileSheet = document.getElementById('more-sheet-profile');
+    const loginSheet = document.getElementById('more-sheet-login');
+    const logoutSheet = document.getElementById('more-sheet-logout');
+
     if (!guest || !user) return;
 
     if (this.isLoggedIn()) {
       guest.style.display = 'none';
       user.style.display = 'flex';
       if (label) label.textContent = this.user.username || this.user.email;
+      if (profileSheet) profileSheet.style.display = 'flex';
+      if (logoutSheet) logoutSheet.style.display = 'flex';
+      if (loginSheet) loginSheet.style.display = 'none';
     } else {
       guest.style.display = 'flex';
       user.style.display = 'none';
+      if (profileSheet) profileSheet.style.display = 'none';
+      if (logoutSheet) logoutSheet.style.display = 'none';
+      if (loginSheet) loginSheet.style.display = 'flex';
     }
   }
 };
