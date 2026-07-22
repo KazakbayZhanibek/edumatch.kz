@@ -1019,9 +1019,6 @@ async function sendMessage(retryMessage = null) {
   try {
     // Call new OpenRouter-based endpoint
     const headers = { 'Content-Type': 'application/json' };
-    if (typeof Auth !== 'undefined' && Auth.getToken()) {
-      headers['Authorization'] = `Bearer ${Auth.getToken()}`;
-    }
 
     console.log('[sendMessage] Sending request to:', `${API}/ai/advice`);
     console.log('[sendMessage] Payload:', { message: text, history: state.chatHistory.slice(-20).length, lang: window.currentLanguage || 'ru' });
@@ -1733,9 +1730,6 @@ async function calculateAdmissionChance() {
   try {
     // Отправляем запрос на новый endpoint
     const headers = { 'Content-Type': 'application/json' };
-    if (typeof Auth !== 'undefined' && Auth.getToken()) {
-      headers.Authorization = `Bearer ${Auth.getToken()}`;
-    }
 
     const payload = {
       entScore,
@@ -1995,8 +1989,7 @@ function escapeHtml(str) {
 async function saveAdmissionHistory(input, matches) {
   try {
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${Auth.getToken()}`
+      'Content-Type': 'application/json'
     };
 
     await fetch(`${API}/admission/save-history`, {

@@ -1152,7 +1152,7 @@ input, select, textarea { font-family: inherit; }
 }
 .chat-suggestion-btn {
   padding: 10px 12px;
-  background: white;
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 13px;
@@ -1181,7 +1181,7 @@ input, select, textarea { font-family: inherit; }
 }
 .btn-outline {
   padding: 8px 16px;
-  background: white;
+  background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 13px;
