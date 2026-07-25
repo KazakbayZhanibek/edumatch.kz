@@ -26,6 +26,7 @@ const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTi
 const aiRoutes = require('./ai-routes');
 const authRoutes = require('./auth-routes');
 const admissionRoutes = require('./admission-routes');
+const { verifyAuth, verifyAdmin } = require('./auth-middleware');
 
 const app = express();
 
@@ -176,8 +177,8 @@ app.use('/api/users', authRoutes);
 // saved-universities, chat-history, test-results на /api/*
 app.use('/api', authRoutes);
 
-// Admin: Update academic year
-app.put('/api/admin/academic-year', (req, res) => {
+// Admin: Update academic year (requires auth + admin)
+app.put('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {
   try {
     const { year } = req.body;
     if (!year || !/^\d{4}-\d{4}$/.test(year)) {
@@ -206,6 +207,10 @@ app.get('/api/admin/academic-year', (req, res) => {
 });
 
 // ─── REVIEWS API ──────────────────────────────
+const reviewRateLimit = new Map();
+const REVIEW_RATE_WINDOW = 300000; // 5 minutes
+const MAX_REVIEWS_PER_WINDOW = 3;
+
 app.get('/api/universities/:id/reviews', (req, res) => {
   try {
     const db = require('./database').getDb();
@@ -219,9 +224,20 @@ app.get('/api/universities/:id/reviews', (req, res) => {
 
 app.post('/api/universities/:id/reviews', (req, res) => {
   try {
+    const ip = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    const log = reviewRateLimit.get(ip) || [];
+    const recent = log.filter(t => now - t < REVIEW_RATE_WINDOW);
+    if (recent.length >= MAX_REVIEWS_PER_WINDOW) {
+      return res.status(429).json({ error: 'Too many reviews. Please wait 5 minutes.' });
+    }
+    recent.push(now);
+    reviewRateLimit.set(ip, recent);
+
     const db = require('./database').getDb();
     const { user_name, rating, pros, cons, comment, faculty, study_year } = req.body;
     if (!user_name || !rating) return res.status(400).json({ error: 'user_name and rating required' });
+    if (rating < 1 || rating > 5) return res.status(400).json({ error: 'Rating must be 1-5' });
     const result = db.prepare('INSERT INTO reviews (university_id, user_name, rating, pros, cons, comment, faculty, study_year) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(
       req.params.id, user_name, rating, pros || '', cons || '', comment || '', faculty || '', study_year || ''
     );

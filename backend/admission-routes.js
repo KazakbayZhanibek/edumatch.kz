@@ -32,7 +32,7 @@ router.get('/specialties', (req, res) => {
     res.json({ specialties });
   } catch (err) {
     console.error('Error fetching specialties:', err);
-    res.json({ specialties: [] });
+    res.status(500).json({ specialties: [], error: err.message });
   }
 });
 

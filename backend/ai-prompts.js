@@ -28,11 +28,26 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function getSystemPrompt(intent, universitiesData, grantsData, lang = 'ru') {
+let _countsCache = null;
+let _countsCacheTime = 0;
+const COUNTS_CACHE_TTL = 5 * 60 * 1000;
+
+function getCachedCounts() {
+  if (_countsCache && Date.now() - _countsCacheTime < COUNTS_CACHE_TTL) {
+    return _countsCache;
+  }
   const db = getDb();
-  const uniCount = db.prepare('SELECT COUNT(*) as c FROM universities').get().c;
-  const specCount = db.prepare('SELECT COUNT(*) as c FROM specialties').get().c;
-  const grantCount = db.prepare('SELECT COUNT(*) as c FROM grants').get().c;
+  _countsCache = {
+    uniCount: db.prepare('SELECT COUNT(*) as c FROM universities').get().c,
+    specCount: db.prepare('SELECT COUNT(*) as c FROM specialties').get().c,
+    grantCount: db.prepare('SELECT COUNT(*) as c FROM grants').get().c,
+  };
+  _countsCacheTime = Date.now();
+  return _countsCache;
+}
+
+function getSystemPrompt(intent, universitiesData, grantsData, lang = 'ru') {
+  const { uniCount, specCount, grantCount } = getCachedCounts();
 
   if (intent === 'general' || intent === 'comparison') {
     return buildGeneralPrompt(uniCount, specCount, grantCount, lang);

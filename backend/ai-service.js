@@ -2213,7 +2213,6 @@ function formatGrantsForContext(grants) {
 
 async function callOpenRouter(systemPrompt, userMessage, history) {
   const apiKey = process.env.OPENROUTER_API_KEY;
-  const model = process.env.OPENROUTER_MODEL || 'openrouter/auto';
   const baseUrl = process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1';
 
   if (!apiKey) {
@@ -2233,47 +2232,80 @@ async function callOpenRouter(systemPrompt, userMessage, history) {
   });
 
   const requestBody = {
-    model: model,
-    messages: messages,
+    model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash',
+    models: ['google/gemini-2.5-pro'],
+    provider: {
+      only: ['google-ai-studio'],
+      data_collection: 'deny',
+    },
+    messages,
     temperature: 0.75,
     max_tokens: 640,
   };
 
   console.log('[ai-service] OpenRouter request:', JSON.stringify({
-    model, messages_count: messages.length, system_prompt_length: systemPrompt.length,
-    user_message_length: userMessage.length, history_count: history.length,
+    model: requestBody.model,
+    messages_count: messages.length,
+    system_prompt_length: systemPrompt.length,
+    user_message_length: userMessage.length,
+    history_count: (history || []).length,
   }));
 
-  try {
-    const response = await fetch(`${baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'User-Agent': 'EduMatchKZ/1.0',
-      },
-      body: JSON.stringify(requestBody),
-    });
+  const MAX_RETRIES = 2;
+  let lastErr = null;
 
-    if (!response.ok) {
-      const error_text = await response.text();
-      throw new Error(`OpenRouter error ${response.status}: ${error_text}`);
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+    try {
+      const response = await fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+          'User-Agent': 'EduMatchKZ/1.0',
+        },
+        body: JSON.stringify(requestBody),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        if ((response.status === 429 || response.status >= 500) && attempt < MAX_RETRIES) {
+          lastErr = new Error(`OpenRouter error ${response.status}: ${errorText}`);
+          await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
+          continue;
+        }
+        throw new Error(`OpenRouter error ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+      if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+        throw new Error('Unexpected OpenRouter response format');
+      }
+
+      logTokenUsage(data.model, data.usage);
+
+      return {
+        text: data.choices[0].message.content,
+        model_used: data.model,
+        usage: data.usage,
+      };
+    } catch (err) {
+      clearTimeout(timeoutId);
+      if (err.name === 'AbortError') {
+        lastErr = new Error('OpenRouter request timed out after 15s');
+        if (attempt < MAX_RETRIES) continue;
+        throw lastErr;
+      }
+      if (attempt === MAX_RETRIES) throw err;
+      lastErr = err;
     }
-
-    const data = await response.json();
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new Error('Unexpected OpenRouter response format');
-    }
-
-    return {
-      text: data.choices[0].message.content,
-      model_used: data.model,
-      usage: data.usage,
-    };
-  } catch (err) {
-    console.error('[ai-service] OpenRouter error:', err.message);
-    throw err;
   }
+
+  throw lastErr || new Error('OpenRouter request failed after retries');
 }
 
 async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
@@ -2958,6 +2990,31 @@ function logQuery(query, intent, lang, responseTimeMs) {
   } catch (e) { /* silent */ }
 }
 
+function logTokenUsage(model, usage) {
+  if (!usage) return;
+  try {
+    const db = getDb();
+    db.exec(`CREATE TABLE IF NOT EXISTS token_usage_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      model TEXT,
+      prompt_tokens INTEGER,
+      completion_tokens INTEGER,
+      total_tokens INTEGER,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+    db.prepare(
+      'INSERT INTO token_usage_log (model, prompt_tokens, completion_tokens, total_tokens) VALUES (?, ?, ?, ?)'
+    ).run(
+      model || 'unknown',
+      usage.prompt_tokens || 0,
+      usage.completion_tokens || 0,
+      usage.total_tokens || 0
+    );
+  } catch (e) {
+    console.error('[ai-service] token usage log error:', e.message);
+  }
+}
+
 function getTopQueries(days = 7, limit = 10) {
   try {
     const db = require('./database.js').initDatabase();
@@ -2991,4 +3048,5 @@ module.exports = {
   callOpenRouter,
   formatUniversitiesForContext,
   formatGrantsForContext,
+  logTokenUsage,
 };

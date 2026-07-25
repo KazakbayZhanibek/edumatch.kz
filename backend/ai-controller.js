@@ -148,7 +148,6 @@ async function handleAIAdvice(req, res) {
     return res.status(500).json({
       success: false,
       error: 'Internal server error',
-      message: err.message,
     });
   }
 }
