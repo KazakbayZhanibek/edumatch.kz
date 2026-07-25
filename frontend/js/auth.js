@@ -31,12 +31,19 @@ const Auth = {
   },
 
   async fetch(path, options = {}) {
-    const res = await fetch(`${API}${path}`, {
-      ...options,
-      headers: { ...this.getHeaders(options.body != null), ...(options.headers || {}) },
-      credentials: 'include' // автоматически отправляет httpOnly cookies
-    });
-    return res;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), options.timeoutMs || 15000);
+    try {
+      const res = await fetch(`${API}${path}`, {
+        ...options,
+        headers: { ...this.getHeaders(options.body != null), ...(options.headers || {}) },
+        credentials: 'include', // автоматически отправляет httpOnly cookies
+        signal: controller.signal,
+      });
+      return res;
+    } finally {
+      clearTimeout(timeoutId);
+    }
   },
 
   async verifySession() {

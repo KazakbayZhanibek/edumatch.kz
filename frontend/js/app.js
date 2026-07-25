@@ -211,6 +211,28 @@ function navigate(page, param) {
     activateNavLink('admission');
     initAdmissionPage();
   }
+
+  updateBottomNav(page);
+}
+
+const BOTTOM_NAV_MAP = {
+  home: 'bnav-home',
+  compare: 'bnav-compare',
+  advisor: 'bnav-advisor',
+  admission: 'bnav-tools',
+  career: 'bnav-tools',
+  map: 'bnav-tools',
+  grants: 'bnav-more',
+  tips: 'bnav-more',
+  profile: 'bnav-more',
+  login: 'bnav-more',
+  register: 'bnav-more',
+};
+
+function updateBottomNav(page) {
+  document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
+  const id = BOTTOM_NAV_MAP[page];
+  if (id) document.getElementById(id)?.classList.add('active');
 }
 
 // ─── TRACKER PAGE ────────────────────────────
@@ -360,21 +382,42 @@ async function loadUniversities() {
 async function loadSpecialties() {
   try {
     const res = await fetch(`${API}/specialties`);
-    const specs = await res.json();
-    const selects = [
-      document.getElementById('filter-specialty'),
-      document.getElementById('sheet-specialty')
-    ].filter(Boolean);
+    if (!res.ok) return;
+    const data = await res.json();
+    const specs = data.specialties || data;
 
-    selects.forEach(sel => {
+    // Filter bar + mobile filter sheet (category-based)
+    const filterSelects = [
+      document.getElementById('filter-specialty'),
+      document.getElementById('sheet-specialty'),
+    ].filter(Boolean);
+    filterSelects.forEach(sel => {
       while (sel.options.length > 1) sel.remove(1);
+      const seen = new Set();
       specs.forEach(spec => {
+        const cat = spec.category || spec;
+        if (seen.has(cat)) return;
+        seen.add(cat);
         const opt = document.createElement('option');
-        opt.value = spec.category || spec;
-        opt.textContent = spec.category || spec;
+        opt.value = cat;
+        opt.textContent = cat;
         sel.appendChild(opt);
       });
     });
+
+    // Admission form (id-based)
+    const admitSelect = document.getElementById('admit-specialty');
+    if (admitSelect) {
+      while (admitSelect.options.length > 1) admitSelect.remove(1);
+      if (Array.isArray(specs)) {
+        specs.forEach(spec => {
+          const opt = document.createElement('option');
+          opt.value = spec.id;
+          opt.textContent = trRu(spec.name || spec);
+          admitSelect.appendChild(opt);
+        });
+      }
+    }
   } catch (e) { /* silent */ }
 }
 
@@ -398,45 +441,6 @@ async function loadCities() {
       });
     });
   } catch (e) { /* silent */ }
-}
-
-/**
- * Load specialties from API
- */
-async function loadSpecialties() {
-  try {
-    const res = await fetch(`${API}/specialties`);
-    
-    if (!res.ok) {
-      return;
-    }
-    
-    const data = await res.json();
-    // Данные приходят как: { specialties: [...] } или как массив
-    const specialties = data.specialties || data;
-    
-    const specSelect = document.getElementById('admit-specialty');
-    if (!specSelect) {
-      return;
-    }
-    
-    // Сохраняем placeholder
-    while (specSelect.options.length > 1) {
-      specSelect.remove(1);
-    }
-    
-    // Добавляем все специальности
-    if (Array.isArray(specialties)) {
-      specialties.forEach((spec) => {
-        const opt = document.createElement('option');
-        opt.value = spec.id;
-        opt.textContent = trRu(spec.name || spec);
-        specSelect.appendChild(opt);
-      });
-    }
-  } catch (e) { 
-    // silent
-  }
 }
 
 function renderUniversityGrid(unis) {
@@ -1017,24 +1021,17 @@ async function sendMessage(retryMessage = null) {
   document.getElementById('chat-send').disabled = true;
 
   try {
-    // Call new OpenRouter-based endpoint
-    const headers = { 'Content-Type': 'application/json' };
-    if (typeof Auth !== 'undefined' && Auth.getToken()) {
-      headers['Authorization'] = `Bearer ${Auth.getToken()}`;
-    }
-
-    console.log('[sendMessage] Sending request to:', `${API}/ai/advice`);
+    console.log('[sendMessage] Sending request to:', '/ai/advice');
     console.log('[sendMessage] Payload:', { message: text, history: state.chatHistory.slice(-20).length, lang: window.currentLanguage || 'ru' });
 
-    const res = await fetch(`${API}/ai/advice`, {
+    const res = await Auth.fetch('/ai/advice', {
       method: 'POST',
-      headers,
       body: JSON.stringify({
         message: text,
         history: state.chatHistory.slice(-20),
         lang: window.currentLanguage || 'ru',
       }),
-      timeout: 15000,
+      timeoutMs: 15000,
     });
 
     console.log('[sendMessage] Response status:', res.status, res.ok);
@@ -1351,8 +1348,8 @@ function appendMessage(role, text, matches = null, admission = null, options = {
   div.className = `chat-msg chat-msg-${role === 'user' ? 'user' : 'ai'}`;
   div.style.animation = 'fadeInUp 0.3s ease both';
 
-  // Use marked.js for AI responses, plain text for user
-  let content = role === 'ai' ? renderMarkdown(text) : `<p>${text}</p>`;
+  // Use marked.js for AI responses, escaped plain text for user
+  let content = role === 'ai' ? renderMarkdown(text) : `<p>${escapeHtml(text)}</p>`;
   if (role === 'ai' && matches && matches.length > 0) {
     content += renderMatches(matches);
   }
@@ -1479,9 +1476,10 @@ function showToast(msg, type = 'default') {
 
 /* ─── MARKED — markdown in chat ──────────── */
 function renderMarkdown(text) {
-  if (typeof marked === 'undefined') return text;
+  if (typeof marked === 'undefined') return escapeHtml(text);
   marked.setOptions({ breaks: true, gfm: true });
-  return marked.parse(text);
+  const rawHtml = marked.parse(text);
+  return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(rawHtml) : rawHtml;
 }
 
 /* ─── NPROGRESS ───────────────────────────── */
@@ -1581,12 +1579,7 @@ function closeMobileMenu() {
 }
 
 /* ─── BOTTOM NAV ──────────────────────────── */
-function setBottomNav(id) {
-  document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
-  const map = { home:'bnav-home', compare:'bnav-compare', advisor:'bnav-advisor', tools:'bnav-tools', more:'bnav-more' };
-  const el = document.getElementById(map[id] || 'bnav-home');
-  if (el) el.classList.add('active');
-}
+/* bottom nav state is now updated centrally from navigate() */
 
 /* ─── STICKY COMPARE BAR ─────────────────── */
 function updateStickyCompare() {
@@ -1731,12 +1724,6 @@ async function calculateAdmissionChance() {
   showAdmissionLoading();
 
   try {
-    // Отправляем запрос на новый endpoint
-    const headers = { 'Content-Type': 'application/json' };
-    if (typeof Auth !== 'undefined' && Auth.getToken()) {
-      headers.Authorization = `Bearer ${Auth.getToken()}`;
-    }
-
     const payload = {
       entScore,
       gpa,
@@ -1748,10 +1735,10 @@ async function calculateAdmissionChance() {
       useAiExplanation: true,  // Запрашиваем AI объяснение
     };
 
-    const res = await fetch(`${API}/admission/calculate`, {
+    const res = await Auth.fetch('/admission/calculate', {
       method: 'POST',
-      headers,
       body: JSON.stringify({ ...payload, lang: window.currentLanguage || 'ru' }),
+      timeoutMs: 15000,
     });
 
     const result = await res.json();
@@ -1994,15 +1981,10 @@ function escapeHtml(str) {
 // ─── SAVE HISTORY ─────────────────────────────────────
 async function saveAdmissionHistory(input, matches) {
   try {
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${Auth.getToken()}`
-    };
-
-    await fetch(`${API}/admission/save-history`, {
+    await Auth.fetch('/admission/save-history', {
       method: 'POST',
-      headers,
       body: JSON.stringify({ input, matches }),
+      timeoutMs: 15000,
     });
   } catch (err) {
     console.error('Failed to save admission history:', err);
