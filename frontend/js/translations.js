@@ -29,17 +29,17 @@ const translations = {
     },
     home: {
       hero_title: 'Выбор университета — главное финансовое решение',
-      hero_sub: 'Сравните стоимость, рейтинги и специальности ведущих вузов Алматы. Получите персональный совет от ИИ-советника.',
+      hero_sub: 'Сравните стоимость, рейтинги и специальности ведущих вузов Казахстана. Получите персональный совет от ИИ-советника.',
       hero_btn1: 'Получить совет ИИ',
       hero_btn2: 'Смотреть вузы',
       stat_unis: 'университетов',
       stat_specs: 'специальностей',
       stat_price: 'тенге/год',
-      badge: 'Алматы · 2025–2026',
+      badge: 'Казахстан · 2025–2026',
       hero_heading1: 'Выбор университета —',
       hero_heading2: 'главное финансовое решение',
       card_cost: 'Стоимость',
-      card_unis: 'Вузов в Алматы',
+      card_unis: 'Вузов в Казахстане',
       card_in_db: 'в базе данных'
     },
     filters: {
@@ -275,7 +275,7 @@ const translations = {
       btn: 'На главную'
     },
     footer: {
-      desc: 'Платформа для сравнения университетов Алматы — цены, рейтинги, специальности и ИИ-советник.',
+      desc: 'Платформа для сравнения университетов Казахстана — цены, рейтинги, специальности и ИИ-советник.',
       sections: 'Разделы',
       universities: 'Университеты',
       comparison: 'Сравнение',
@@ -285,19 +285,19 @@ const translations = {
       fin_literacy: 'Финансовая грамотность',
       contacts: 'Контакты',
       data_section: 'Данные',
-      location: 'Алматы, Казахстан',
+      location: 'Казахстан',
       year: '2025–2026 учебный год',
       unis_count: '15 университетов'
     },
     modal: {
       about_title: 'О проекте',
-      about_text1: 'EduMatch KZ — учебный проект по финансовой грамотности, созданный чтобы помочь абитуриентам Алматы осознанно выбирать университет.',
-      about_text2: 'Выбор вуза — это крупное финансовое решение на 4 года. Разница между самым дешёвым и самым дорогим университетом Алматы составляет более',
+      about_text1: 'EduMatch KZ — учебный проект по финансовой грамотности, созданный чтобы помочь абитуриентам Казахстана осознанно выбирать университет.',
+      about_text2: 'Выбор вуза — это крупное финансовое решение на 4 года. Разница между самым дешёвым и самым дорогим университетом Казахстана составляет более',
       about_text2_strong: '13 миллионов тенге',
-      about_text2_cont: 'EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов города в одном месте.',
+      about_text2_cont: 'EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов страны в одном месте.',
       about_stack: 'Стек:',
       about_data: 'Данные:',
-      about_data_val: '11 университетов Алматы, актуальные на 2025–2026 учебный год',
+      about_data_val: 'Данные по университетам Казахстана, актуальные на 2025–2026 учебный год',
       contacts_title: 'Контакты',
       contacts_sub: 'По вопросам сотрудничества, предложениям и обратной связи:'
     },
@@ -320,7 +320,7 @@ const translations = {
       prompt5: 'Сравни КБТУ и КазНУ по стоимости',
       prompt6: 'Какой вуз даёт лучший старт в бизнесе?',
       welcome_title: 'Привет! Я помогу выбрать университет',
-      welcome_sub: 'Расскажите о своих интересах, бюджете и планах — я дам персональную рекомендацию на основе актуальных данных по вузам Алматы.',
+      welcome_sub: 'Расскажите о своих интересах, бюджете и планах — я дам персональную рекомендацию на основе актуальных данных по вузам Казахстана.',
       chat_placeholder: 'Напишите вопрос...',
       disclaimer: 'Совет основан на публичных данных. Уточняйте актуальную информацию на сайтах вузов.'
     },
@@ -375,7 +375,7 @@ const translations = {
     financial: {
       badge: 'Финансовая грамотность',
       title: 'Считайте полную стоимость обучения',
-      desc1: '4 года учёбы — это крупная инвестиция. Разница между самым дешёвым и самым дорогим вузом Алматы составляет до',
+      desc1: '4 года учёбы — это крупная инвестиция. Разница между самым дешёвым и самым дорогим вузом Казахстана составляет до',
       desc_strong: '13 миллионов тенге',
       desc2: 'за весь период.',
       budget_label: 'Бюджетный вариант',
@@ -389,7 +389,7 @@ const translations = {
       premium_note: 'за 4 года (3.8M/год)'
     },
     universities: {
-      title: 'Университеты Алматы',
+      title: 'Университеты Казахстана',
       sub: 'Данные актуальны на 2025–2026 учебный год',
       search: 'Поиск университета...',
       filters_btn: 'Фильтры',
@@ -719,17 +719,17 @@ const translations = {
     },
     home: {
       hero_title: 'Университетті таңдау — ең маңызды қаржылық шешім',
-      hero_sub: 'Алматының жетекші университеттерінің бағасын, рейтингісін және мамандықтарын салыстырыңыз. ҚИ-кеңесшіден жеке кеңес алыңыз.',
+      hero_sub: 'Қазақстанның жетекші университеттерінің бағасын, рейтингісін және мамандықтарын салыстырыңыз. ҚИ-кеңесшіден жеке кеңес алыңыз.',
       hero_btn1: 'ҚИ кеңесін алу',
       hero_btn2: 'Университеттерді көру',
       stat_unis: 'университеттер',
       stat_specs: 'мамандықтар',
       stat_price: 'теңге/жыл',
-      badge: 'Алматы · 2025–2026',
+      badge: 'Қазақстан · 2025–2026',
       hero_heading1: 'Университетті таңдау —',
       hero_heading2: 'ең маңызды қаржылық шешім',
       card_cost: 'Бағасы',
-      card_unis: 'Алматыдағы университеттер',
+      card_unis: 'Қазақстандағы университеттер',
       card_in_db: 'дерекқорда'
     },
     filters: {
@@ -965,7 +965,7 @@ const translations = {
       btn: 'Басты бетке'
     },
     footer: {
-      desc: 'Алматы университеттерін салыстыру платформасы — бағалар, рейтингтер, мамандықтар және ҚИ-кеңесші.',
+      desc: 'Қазақстан университеттерін салыстыру платформасы — бағалар, рейтингтер, мамандықтар және ҚИ-кеңесші.',
       sections: 'Бөлімдер',
       universities: 'Университеттер',
       comparison: 'Салыстыру',
@@ -975,19 +975,19 @@ const translations = {
       fin_literacy: 'Қаржылық сауаттылық',
       contacts: 'Байланыс',
       data_section: 'Деректер',
-      location: 'Алматы, Қазақстан',
+      location: 'Қазақстан',
       year: '2025–2026 оқу жылы',
       unis_count: '15 университет'
     },
     modal: {
       about_title: 'Жоба туралы',
-      about_text1: 'EduMatch KZ — Алматы түлектеріне университетті саналы түрде таңдауға көмектесу үшін жасалған қаржылық сауаттылық бойынша оқу жобасы.',
-      about_text2: 'Университетті таңдау — бұл 4 жылға арналған ірі қаржылық шешім. Алматыдағы ең арзан және ең қымбат университет арасындағы айырмашылық',
+      about_text1: 'EduMatch KZ — Қазақстан түлектеріне университетті саналы түрде таңдауға көмектесу үшін жасалған қаржылық сауаттылық бойынша оқу жобасы.',
+      about_text2: 'Университетті таңдау — бұл 4 жылға арналған ірі қаржылық шешім. Қазақстандағы ең арзан және ең қымбат университет арасындағы айырмашылық',
       about_text2_strong: '13 миллион теңге',
-      about_text2_cont: 'EduMatch KZ қаладағы барлық жетекші университеттердің бағаларын, QS рейтингісін және мамандықтарын салыстыруға көмектеседі.',
+      about_text2_cont: 'EduMatch KZ барлық жетекші университеттердің бағаларын, QS рейтингісін және мамандықтарын салыстыруға көмектеседі.',
       about_stack: 'Стек:',
       about_data: 'Деректер:',
-      about_data_val: '11 Алматы университеті, 2025–2026 оқу жылына өзекті',
+      about_data_val: 'Қазақстан университеттері туралы деректер, 2025–2026 оқу жылына өзекті',
       contacts_title: 'Байланыс',
       contacts_sub: 'Ынтымақтастық, ұсыныстар және кері байланыс туралы сұрақтар бойынша:'
     },
@@ -1010,7 +1010,7 @@ const translations = {
       prompt5: 'КБТУ мен КазНУ-ды бағасы бойынша салыстырыңыз',
       prompt6: 'Қай университет бизнеске ең жақсы бастама береді?',
       welcome_title: 'Сәлеметсіз бе! Мен университетті таңдауға көмектесемін',
-      welcome_sub: 'Қызығушылықтарыңыз, бюджетіңіз және жоспарларыңыз туралы айтыңыз — мен Алматы университеттері туралы өзекті деректер негізінде жеке ұсыныс беремін.',
+      welcome_sub: 'Қызығушылықтарыңыз, бюджетіңіз және жоспарларыңыз туралы айтыңыз — мен Қазақстан университеттері туралы өзекті деректер негізінде жеке ұсыныс беремін.',
       chat_placeholder: 'Сұрақ жазыңыз...',
       disclaimer: 'Кеңес жариялы деректерге негізделген. Өзекті ақпаратты университеттердің сайттарында тексеріңіз.'
     },
@@ -1065,7 +1065,7 @@ const translations = {
     financial: {
       badge: 'Қаржылық сауаттылық',
       title: 'Оқудың толық құнын есептеңіз',
-      desc1: '4 жыл оқу — бұл ірі инвестиция. Алматыдағы ең арзан және ең қымбат университет арасындағы айырмашылық',
+      desc1: '4 жыл оқу — бұл ірі инвестиция. Қазақстандағы ең арзан және ең қымбат университет арасындағы айырмашылық',
       desc_strong: '13 миллион теңге',
       desc2: 'барлық кезеңге.',
       budget_label: 'Бюджеттік нұсқа',
@@ -1079,7 +1079,7 @@ const translations = {
       premium_note: '4 жылға (3.8M/жыл)'
     },
     universities: {
-      title: 'Алматы университеттері',
+      title: 'Қазақстан университеттері',
       sub: 'Деректер 2025–2026 оқу жылына өзекті',
       search: 'Университетті іздеу...',
       filters_btn: 'Сүзгілер',
@@ -1534,17 +1534,17 @@ const translations = {
     },
     home: {
       hero_title: 'Choosing a university is the most important financial decision',
-      hero_sub: 'Compare costs, rankings, and specialties of top Almaty universities. Get personalized advice from the AI Advisor.',
+      hero_sub: 'Compare costs, rankings, and specialties of top universities in Kazakhstan. Get personalized advice from the AI Advisor.',
       hero_btn1: 'Get AI Advice',
       hero_btn2: 'View Universities',
       stat_unis: 'universities',
       stat_specs: 'specialties',
       stat_price: 'tenge/year',
-      badge: 'Almaty · 2025–2026',
+      badge: 'Kazakhstan · 2025–2026',
       hero_heading1: 'Choosing a university —',
       hero_heading2: 'is the most important financial decision',
       card_cost: 'Cost',
-      card_unis: 'Universities in Almaty',
+      card_unis: 'Universities in Kazakhstan',
       card_in_db: 'in database'
     },
     filters: {
@@ -1780,7 +1780,7 @@ const translations = {
       btn: 'Go Home'
     },
     footer: {
-      desc: 'Platform for comparing Almaty universities — prices, rankings, specialties, and AI advisor.',
+      desc: 'Platform for comparing universities in Kazakhstan — prices, rankings, specialties, and AI advisor.',
       sections: 'Sections',
       universities: 'Universities',
       comparison: 'Compare',
@@ -1790,19 +1790,19 @@ const translations = {
       fin_literacy: 'Financial Literacy',
       contacts: 'Contact',
       data_section: 'Data',
-      location: 'Almaty, Kazakhstan',
+      location: 'Kazakhstan',
       year: '2025–2026 Academic Year',
       unis_count: '15 universities'
     },
     modal: {
       about_title: 'About',
-      about_text1: 'EduMatch KZ is an educational financial literacy project created to help Almaty applicants make informed university choices.',
-      about_text2: 'Choosing a university is a major financial decision for 4 years. The difference between the cheapest and most expensive university in Almaty is over',
+      about_text1: 'EduMatch KZ is an educational financial literacy project created to help applicants in Kazakhstan make informed university choices.',
+      about_text2: 'Choosing a university is a major financial decision for 4 years. The difference between the cheapest and most expensive university in Kazakhstan is over',
       about_text2_strong: '13 million tenge',
-      about_text2_cont: 'EduMatch KZ helps compare prices, QS rankings, and specialties of all leading universities in the city in one place.',
+      about_text2_cont: 'EduMatch KZ helps compare prices, QS rankings, and specialties of all leading universities in the country in one place.',
       about_stack: 'Stack:',
       about_data: 'Data:',
-      about_data_val: '11 Almaty universities, current for the 2025–2026 academic year',
+      about_data_val: 'Data for universities in Kazakhstan, current for the 2025–2026 academic year',
       contacts_title: 'Contact',
       contacts_sub: 'For collaboration, suggestions, and feedback:'
     },
@@ -1825,7 +1825,7 @@ const translations = {
       prompt5: 'Compare KBTU and KazNU by cost',
       prompt6: 'Which university gives the best start in business?',
       welcome_title: 'Hi! I\'ll help you choose a university',
-      welcome_sub: 'Tell me about your interests, budget, and plans — I\'ll give you a personalized recommendation based on current Almaty university data.',
+      welcome_sub: 'Tell me about your interests, budget, and plans — I\'ll give you a personalized recommendation based on current university data in Kazakhstan.',
       chat_placeholder: 'Type a question...',
       disclaimer: 'Advice is based on public data. Please verify current information on university websites.'
     },
@@ -1880,7 +1880,7 @@ const translations = {
     financial: {
       badge: 'Financial Literacy',
       title: 'Calculate the Full Cost of Education',
-      desc1: '4 years of study is a major investment. The difference between the cheapest and most expensive university in Almaty is up to',
+      desc1: '4 years of study is a major investment. The difference between the cheapest and most expensive university in Kazakhstan is up to',
       desc_strong: '13 million tenge',
       desc2: 'for the entire period.',
       budget_label: 'Budget Option',
@@ -1894,7 +1894,7 @@ const translations = {
       premium_note: 'for 4 years (3.8M/year)'
     },
     universities: {
-      title: 'Universities of Almaty',
+      title: 'Universities of Kazakhstan',
       sub: 'Data current for the 2025–2026 academic year',
       search: 'Search university...',
       filters_btn: 'Filters',

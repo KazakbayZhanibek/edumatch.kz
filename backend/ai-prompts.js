@@ -62,14 +62,18 @@ function getSystemPrompt(intent, universitiesData, grantsData, lang = 'ru') {
 
 function buildBasePrompt(universitiesData, grantsData, lang = 'ru') {
   const tone = pickRandom([PERSONALITIES.professional, PERSONALITIES.friendly]);
+  const langHint = lang === 'kk' ? 'Қазақ тілінде жауап бер.' : lang === 'en' ? 'Respond in English.' : 'Отвечай на русском языке.';
+  const whatLabel = lang === 'kk' ? '📋 НЕ БІЛЕСІЗ:' : lang === 'en' ? '📋 WHAT YOU KNOW:' : '📋 ЧТО ТЫ ЗНАЕШЬ:';
+  const whatDesc = lang === 'kk' ? 'Университеттер туралы деректер базасы: бағалар, QS рейтингтер, тілдер, мамандықтар, жатақханалар, түлектер жалақысы және гранттар туралы мәліметтер бар.' : lang === 'en' ? 'Database contains university info: prices, QS rankings, languages, specialties, dorms, graduate salaries, and grant data.' : 'База данных содержит информацию о вузах: цены, рейтинги QS, языки, специальности, общежития, зарплаты выпускников, а также данные о грантах.';
+  const noLabel = lang === 'kk' ? '🚫 НЕ ТИЙМЕЙДІ:' : lang === 'en' ? '🚫 WHAT YOU CANNOT:' : '🚫 ЧЕГО НЕЛЬЗЯ:';
   return `${tr('prompt_base', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
 
 ${tone.instruction}
 
-${tr('prompt_base_what', lang) || '📋 ЧТО ТЫ ЗНАЕШЬ:'}
-${tr('prompt_base_what_desc', lang) || 'База данных содержит информацию о вузах: цены, рейтинги QS, языки, специальности, общежития, зарплаты выпускников, а также данные о грантах.'}
+${whatLabel}
+${whatDesc}
 
-${tr('prompt_base_no', lang) || '🚫 ЧЕГО НЕЛЬЗЯ:'}
+${noLabel}
 - ${tr('prompt_base_no1', lang) || 'Выдумывать цифры — используй ТОЛЬКО данные из контекста ниже'}
 - ${tr('prompt_base_no2', lang) || 'Добавлять требования по ЕНТ или проходные баллы (их нет в базе)'}
 - ${tr('prompt_base_no3', lang) || 'Давать ссылки, которых нет в данных'}
@@ -82,41 +86,51 @@ ${universitiesData}
 ГРАНТЫ:
 ${grantsData}
 
-${tr('lang_instruction', lang) || 'Отвечай на русском языке.'}`;
+${langHint}`;
 }
 
 function buildGeneralPrompt(uniCount, specCount, grantCount, lang = 'ru') {
   const tone = pickRandom([PERSONALITIES.friendly, PERSONALITIES.concise]);
+  const langHint = lang === 'kk' ? 'Қазақ тілінде жауап бер.' : lang === 'en' ? 'Respond in English.' : 'Отвечай на русском языке.';
+  const dbLabel = lang === 'kk' ? 'Деректер қорында бар:' : lang === 'en' ? 'Database contains:' : 'У тебя есть доступ к базе данных с:';
+  const uniLabel = lang === 'kk' ? 'университеттер (бағалар, QS рейтингтер, тілдер, жатақханалар)' : lang === 'en' ? 'universities (prices, QS rankings, languages, dorms)' : 'университетами (цены, рейтинги, языки, общежития)';
+  const specLabel = lang === 'kk' ? 'мамандықтар' : lang === 'en' ? 'specialties' : 'специальностями';
+  const grantLabel = lang === 'kk' ? 'гранттар мен стипендиялар' : lang === 'en' ? 'grants and scholarships' : 'грантами и стипендиями';
   return `${tr('prompt_general', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
 
 ${tone.instruction}
 
-У тебя есть доступ к базе данных с:
-• ${uniCount} университетами (цены, рейтинги, языки, общежития)
-• ${specCount} специальностями
-• ${grantCount} грантами и стипендиями
+${dbLabel}
+• ${uniCount} ${uniLabel}
+• ${specCount} ${specLabel}
+• ${grantCount} ${grantLabel}
 
-${tr('prompt_general_hint', lang) || 'Отвечай на русском языке. Не выдумывай данные. Если не знаешь — так и скажи.'}
+${tr('prompt_general_hint', lang) || langHint}
 
-Строй ответ естественно, как живой консультант, а не как автоматический шаблон.`;
+Строй ответ естественно, как живой консультант, а не как автоматический шаблон.
+${langHint}`;
 }
 
 function buildGrantPrompt(uniCount, specCount, grantCount, grantsData, lang = 'ru') {
   const tone = pickRandom([PERSONALITIES.detailed, PERSONALITIES.professional]);
+  const langHint = lang === 'kk' ? 'Қазақ тілінде жауап бер.' : lang === 'en' ? 'Respond in English.' : 'Отвечай на русском языке.';
+  const dbLabel = lang === 'kk' ? 'Деректер қорында' : lang === 'en' ? 'Database has' : 'В базе';
+  const grantTypes = lang === 'kk' ? 'гранттардың әр түрлі түрлері бар (мемлекеттік, корпоративтік, университеттік).' : lang === 'en' ? 'grants of different types (state, corporate, university).' : 'грантов разных типов (государственные, корпоративные, университетские).';
+  const noLabel = lang === 'kk' ? '🚫 ТИЙМЕЙДІ:' : lang === 'en' ? '🚫 FORBIDDEN:' : '🚫 НЕЛЬЗЯ:';
   return `${tr('prompt_grant', lang) || 'Ты — EduMatch KZ, консультант по грантам и стипендиям в Казахстане.'}
 
 ${tone.instruction}
 
-В базе ${grantCount} грантов разных типов (государственные, корпоративные, университетские).
+${dbLabel} ${grantCount} ${grantTypes}
 
 ДАННЫЕ О ГРАНТАХ:
 ${grantsData}
 
-🚫 НЕЛЬЗЯ:
-- Придумывать гранты, которых нет в данных
-- Гарантировать получение гранта
+${noLabel}
+- ${lang === 'kk' ? 'Деректерде жоқ гранттарды ойлап табу' : lang === 'en' ? 'Inventing grants not in the data' : 'Придумывать гранты, которых нет в данных'}
+- ${lang === 'kk' ? 'Грантты алуға кепілдік беру' : lang === 'en' ? 'Guaranteeing grant receipt' : 'Гарантировать получение гранта'}
 
-${tr('prompt_grant_hint', lang) || 'Отвечай на русском языке. Если грантов подходящих нет — предложи альтернативы.'}`;
+${tr('prompt_grant_hint', lang) || langHint}`;
 }
 
 function getAdmissionBriefPrompt(params, prediction, lang = 'ru') {

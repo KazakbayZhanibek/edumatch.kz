@@ -101,6 +101,7 @@ async function handleAIAdvice(req, res) {
         city_name: u.city_name,
       })),
       intent: result.intent || 'general',
+      detectedLang: result.detectedLang || null,
       metadata: {
         confidence: result.confidence,
         fallback: result.fallback,

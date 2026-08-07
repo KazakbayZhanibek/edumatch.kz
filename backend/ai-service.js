@@ -208,7 +208,10 @@ const INTENT_PATTERNS = [
     patterns: [
       /(?:рекомендуй|посоветуй|подбери|какой вуз|какие университет|лучший вуз|посоветуйте)/i,
       /(?:интересует|хочу|ищу).*(?:вуз|университет|специальность|направление)/i,
-      // KK
+      // KK — "мамандықтары туралы", "мамандық туралы", "мамандық айтыңыз"
+      /мамандықтары?\s+(?:туралы|айтыңызшы|беріңізші|көрсетіңізші)/i,
+      /(?:айтыңызшы|беріңізші|көрсетіңізші)\s+.*мамандық/i,
+      // KK other
       /(?:ұсын|кеңес бер|таңда|қай университет|қандай университет|жәй университет|ұсыныңыз)/i,
       /(?:қызықтырады|қаламын|іздеймін).*(?:университет|мамандық|бағыт)/i,
       // EN
@@ -216,7 +219,7 @@ const INTENT_PATTERNS = [
       /(?:interested in|want|looking for).*(?:university|specialty|major)/i,
     ],
     keywords: ['рекомендуй','посоветуй','подбери','лучший','интересует',
-               'ұсын','кеңес бер','таңда','қай','жәй','қызықтырады',
+               'ұсын','кеңес бер','таңда','қай','жәй','қызықтырады','мамандық','мамандықтары',
                'recommend','suggest','which','best','interested'],
   },
   {
@@ -263,9 +266,19 @@ const INTENT_PATTERNS = [
   },
 ];
 
-function classifyIntent(message) {
+const VALID_INTENTS = ['greeting', 'help', 'comparison', 'admission', 'recommendation', 'grant', 'uni_info', 'city', 'onboarding', 'deadlines', 'profession', 'general'];
+
+function classifyIntent(message, history = []) {
   const q = (message || '').toLowerCase().trim();
   if (!q) return 'general';
+
+  // Определяем последний intent из истории для контекста
+  let lastIntent = null;
+  if (history && history.length > 0) {
+    for (let i = history.length - 1; i >= 0; i--) {
+      if (history[i].intent) { lastIntent = history[i].intent; break; }
+    }
+  }
 
   // Приветствия и короткие фразы → general с заготовленным ответом
   if (/^(?:привет|здравствуй(?:те)?|سلام|hello|hi|hey|приветик|добрый|добрый день|добрый вечер|доброе утро|здорово|йо|йоу|хай|здаров|хай|здрасьте|здарова|хелло|хэлло|сәлеметсіз бе|сәлем|сәлеметсің бе|сәлеметсізбе|assalamu alaikum|саған сәлем|жәрекем)(?:[!?.，。]+)?$/i.test(q)) {
@@ -273,6 +286,25 @@ function classifyIntent(message) {
   }
   if (/^(?:что (?:ты )?умеешь|чем (?:ты )?поможешь|что (?:ты )?можешь|помощь|help|what (?:can|do) (?:you|u) (?:do|help)|what are you doing|что делать|как пользоваться|көмек|не істей аламын|қалай пайдалану|қандай мүмкіндіктер)(?:[!?.，。]+)?$/i.test(q)) {
     return 'help';
+  }
+
+  // Контекстные follow-up: короткие вопросы после конкретного intent
+  if (lastIntent) {
+    if (lastIntent === 'admission' && /(?:требован|ент|балл|конкурс|проходн|минимальн|средн|каки.*балл|какой.*балл|какие.*требован)/i.test(q)) {
+      return 'admission';
+    }
+    if (lastIntent === 'city' && /(?:покажи|показат|конкретн|именно|только|ещ[ёе]|больше|подробн)/i.test(q)) {
+      return 'city';
+    }
+    if (lastIntent === 'uni_info' && /(?:а|и|но|ещ[ёе]|кстати|расскажи|подробн|цена|стоим|рейтинг|общежит)/i.test(q)) {
+      return 'uni_info';
+    }
+    if (lastIntent === 'grant' && /(?:а|и|но|ещ[ёе]|кстати|други|еще|каки)/i.test(q)) {
+      return 'grant';
+    }
+    if (lastIntent === 'recommendation' && /(?:а|и|но|ещ[ёе]|кстати|покажи|конкретн|именно)/i.test(q)) {
+      return 'recommendation';
+    }
   }
 
   // Проверяем comparison ДО uni_info (чтобы "сравни стоимость КБТУ и МУИТ" не ловилось как uni_info)
@@ -410,6 +442,56 @@ function classifyIntent(message) {
   }
 
   return 'general';
+}
+
+async function classifyIntentLLM(message, history = []) {
+  const historyText = (history || []).slice(-6).map(h => {
+    const intent = h.intent ? ` [intent=${h.intent}]` : '';
+    return `${h.role}: ${h.content}${intent}`;
+  }).join('\n') || '(нет истории)';
+  const systemPrompt = `Ты классифицируешь вопросы абитуриентов о вузах Казахстана.
+Верни ТОЛЬКО валидный JSON, без markdown и пояснений, ровно такой формы:
+{"intent": "один_из_списка", "entities": {"ent": null, "budget": null, "specialty": null, "university": null, "city": null}}
+
+Допустимые значения intent: ${VALID_INTENTS.join(', ')}.
+
+Правила:
+- "admission" — расчёт шансов поступления, вопросы про ЕНТ (проходные баллы, требования, конкурс), "мои шансы", "поступлю ли я", "какие требования к ЕНТ". Если в предыдущих сообщениях был запрос на расчёт шансов — follow-up вопросы про ЕНТ тоже admission.
+- "grant" — вопросы о грантах и стипендиях.
+- "comparison" — сравнение двух и более конкретных названных вузов.
+- "uni_info" — вопрос про один конкретный названный вуз (цена, рейтинг, общежитие, документы).
+- "recommendation" — просьба посоветовать/подобрать вуз, "какие вузы", "какие специальности".
+- "profession" — вопрос про профессию, "хочу стать", "кем работать", "какая профессия".
+- "city" — вопрос про вузы в конкретном городе.
+- "deadlines" — вопрос про сроки, дедлайны, регистрацию.
+- "onboarding" — пользователь явно не определился с выбором.
+- "greeting"/"help" — приветствие или вопрос о возможностях бота.
+- "language" — просьба переключить язык ("на казахском", "по-казахски", "in English", "на русском").
+- "general" — всё остальное: вопросы о процедуре поступления, документах, любые общие вопросы.
+
+ВАЖНО: Учитывай КОНТЕКСТ предыдущих сообщений! Если пользователь ранее спрашивал про поступление/ЕНТ — follow-up вопросы про баллы/требования/конкурс = admission. Если спрашивал про вуз — follow-up = uni_info. Если спрашивал про город — follow-up = city.
+
+Последние сообщения диалога для контекста:
+${historyText}`;
+
+  try {
+    const result = await callOpenRouter(systemPrompt, message, history, { temperature: 0, maxTokens: 150 });
+    const raw = result.text.trim().replace(/^```json\s*|```\s*$/g, '');
+    const parsed = JSON.parse(raw);
+    if (!parsed || !VALID_INTENTS.includes(parsed.intent)) {
+      throw new Error('LLM вернул неизвестный intent: ' + String(parsed?.intent));
+    }
+    return {
+      intent: parsed.intent,
+      entities: parsed.entities || {},
+    };
+  } catch (err) {
+    console.error('[ai-service] LLM-классификация не удалась, откат на regex:', err.message || err);
+    return {
+      intent: classifyIntent(message, history),
+      entities: {},
+    };
+  }
 }
 
 function extractParamsFromHistory(history) {
@@ -979,7 +1061,7 @@ function extractLanguages(question) {
 
 // ==================== PROFESSION HANDLER ====================
 
-function handleProfessionQuery(msg, lang = 'ru') {
+async function handleProfessionQuery(msg, lang = 'ru') {
   const startTime = Date.now();
   const profession = findProfession(msg);
 
@@ -988,6 +1070,73 @@ function handleProfessionQuery(msg, lang = 'ru') {
     const db = getDb();
     const qLower = msg.toLowerCase();
     
+    // Семантические ключевые слова → профессия
+    const semanticMap = {
+      'работать с людьми': 'psychologist',
+      'помогать людям': 'psychologist',
+      'помощь людям': 'psychologist',
+      'помогать больным': 'doctor',
+      'лечить': 'doctor',
+      'лечение': 'doctor',
+      'рисовать': 'designer',
+      'создавать красивое': 'designer',
+      'считать': 'economist',
+      'анализировать': 'economist',
+      'цифры': 'economist',
+      'суд': 'lawyer',
+      'закон': 'lawyer',
+      'справедливость': 'lawyer',
+      'учить детей': 'teacher',
+      'обучать': 'teacher',
+      'строить': 'engineer',
+      'мосты': 'engineer',
+      'здания': 'engineer',
+      'продавать': 'marketer',
+      'реклама': 'marketer',
+      'лекарства': 'pharmacist',
+      'аптека': 'pharmacist',
+      'код': 'programmer',
+      'программы': 'programmer',
+      'сайты': 'programmer',
+      'приложения': 'programmer',
+      'компьютеры': 'programmer',
+    };
+
+    let semanticProfId = null;
+    for (const [phrase, profId] of Object.entries(semanticMap)) {
+      if (qLower.includes(phrase)) {
+        semanticProfId = profId;
+        break;
+      }
+    }
+
+    if (semanticProfId) {
+      const { PROFESSIONS: allProfs } = require('./profession-data');
+      const matched = allProfs.find(p => p.id === semanticProfId);
+      if (matched) {
+        const title = matched.title[lang] || matched.title.ru;
+        const desc = matched.description[lang] || matched.description.ru;
+        const skills = matched.skills?.[lang] || matched.skills?.ru || [];
+        const salary = matched.salary;
+        let text = `💡 ${lang === 'kk' ? 'Сізге мына мамандық сәйкес келеді:' : lang === 'en' ? 'This profession suits you:' : 'Вам подходит профессия:'}\n\n`;
+        text += `**${title}** — ${desc}\n\n`;
+        if (skills.length) {
+          text += `📋 ${lang === 'kk' ? 'Негізгі дағдылар' : lang === 'en' ? 'Key skills' : 'Основные навыки'}: ${skills.slice(0, 5).join(', ')}\n\n`;
+        }
+        text += `💰 ${lang === 'kk' ? 'Орташа жалақы' : lang === 'en' ? 'Average salary' : 'Средняя зарплата'}: ${salary?.avg?.toLocaleString() || '—'}₸\n\n`;
+        text += `📝 ${lang === 'kk' ? 'Толығырақ жазыңыз:' : lang === 'en' ? 'Write for details:' : 'Напишите подробнее:'} *"${title}"*`;
+        return {
+          answer: text,
+          matches: [],
+          usedData: { profession: matched.id, semantic_match: true },
+          fallback: false,
+          confidence: 0.85,
+          took_ms: Date.now() - startTime,
+          intent: 'profession',
+        };
+      }
+    }
+
     // Прямое соответствие категорий
     const categoryMap = {
       'it': 'Информационные технологии',
@@ -1105,15 +1254,34 @@ function handleProfessionQuery(msg, lang = 'ru') {
       };
     }
 
-    return {
-      answer: tr('prof_not_found', lang) || 'Я не нашёл такую профессию. Попробуйте:\n• Психолог\n• Программист\n• Врач\n• Экономист\n• Юрист\n• Дизайнер\n• Учитель\n• Инженер\n• Маркетолог\n• Фармацевт',
-      matches: [],
-      usedData: { profession: null },
-      fallback: false,
-      confidence: 0.5,
-      took_ms: Date.now() - startTime,
-      intent: 'profession',
-    };
+    // Если ничего не нашли — отправляем в LLM как general
+    const { getSystemPrompt: getGenPrompt } = require('./ai-prompts');
+    const systemPrompt = `Ты — EduMatch KZ, консультант по профориентации в Казахстане.
+Пользователь описывает свои интересы/навыки. Рекомендуй подходящие профессии из списка: Психолог, Программист, Врач, Экономист, Юрист, Дизайнер, Учитель, Инженер, Маркетолог, Фармацевт, Менеджер.
+Для каждой рекомендации укажи: название, краткое описание (1-2 предложения), среднюю зарплату в Казахстане.
+Отвечай на языке пользователя (${lang}). Кратко, 3-5 рекомендаций.`;
+    try {
+      const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.7, maxTokens: 500 });
+      return {
+        answer: llmResult.text,
+        matches: [],
+        usedData: { profession: null, llm_generated: true },
+        fallback: false,
+        confidence: 0.7,
+        took_ms: Date.now() - startTime,
+        intent: 'profession',
+      };
+    } catch (e) {
+      return {
+        answer: tr('prof_not_found', lang) || 'Я не нашёл такую профессию. Попробуйте:\n• Психолог\n• Программист\n• Врач\n• Экономист\n• Юрист\n• Дизайнер\n• Учитель\n• Инженер\n• Маркетолог\n• Фармацевт',
+        matches: [],
+        usedData: { profession: null },
+        fallback: true,
+        confidence: 0.3,
+        took_ms: Date.now() - startTime,
+        intent: 'profession',
+      };
+    }
   }
 
   const db = getDb();
@@ -1160,26 +1328,52 @@ function handleProfessionQuery(msg, lang = 'ru') {
   const skills = (profession.skills[lang] || profession.skills.ru);
   const careerPath = profession.careerPath[lang] || profession.careerPath.ru;
 
-  let text = `## 🎓 ${title}\n\n${desc}\n\n`;
-  text += `💰 **${tr('prof_salary', lang) || 'Зарплата'}:** ${salary.min.toLocaleString()} — ${salary.max.toLocaleString()}₸\n`;
-  text += `   ${tr('prof_avg', lang) || 'Средняя'}: ${salary.avg.toLocaleString()}₸\n`;
-  text += `📊 **${tr('prof_demand', lang) || 'Спрос'}:** ${demand}\n\n`;
+  const professionData = {
+    title,
+    description: desc,
+    salary_min: salary.min,
+    salary_max: salary.max,
+    salary_avg: salary.avg,
+    demand,
+    skills,
+    career_path: careerPath,
+    universities: universities.map(u => ({
+      name: u.short_name || u.name,
+      qs_world: u.qs_world,
+      city: u.city_name,
+      price_from: u.price_from,
+    })),
+  };
 
-  text += `🛠 **${tr('prof_skills', lang) || 'Навыки'}:**\n`;
-  skills.forEach(s => { text += `• ${s}\n`; });
+  const systemPrompt = `Ты — EduMatch KZ, консультант по профессиям и вузам Казахстана.
+Ниже РЕАЛЬНЫЕ данные о профессии "${title}" (JSON) — зарплаты, вузы, навыки уже посчитаны, не выдумывай ничего сверх этого.
+Отвечай на конкретный вопрос пользователя, а не пересказывай все данные подряд, если он спросил про что-то одно (например, только про зарплату).
 
-  text += `\n📈 **${tr('prof_career', lang) || 'Карьерный путь'}:** ${careerPath}\n\n`;
+DATA: ${JSON.stringify(professionData)}`;
 
-  if (universities.length > 0) {
-    const titleWord = (lang === 'kk') ? 'Университеттер' : (lang === 'en') ? 'Universities' : 'Университеты';
-    text += `🏛 **${tr('prof_unis', lang) || titleWord}:**\n`;
-    universities.forEach(u => {
-      const qs = u.qs_world ? ` (QS #${u.qs_world})` : '';
-      const city = u.city_name ? `, ${u.city_name}` : '';
-      const price = u.price_from ? ` — ${u.price_from.toLocaleString()}₸/год` : '';
-      text += `• **${u.short_name || u.name}**${qs}${city}${price}\n`;
-    });
-    text += `\n💡 ${tr('prof_advice', lang) || 'Чтобы узнать шансы поступления, напишите: «Мои шансы в [вуз] на [направление] с ЕНТ [балл]»'}`;
+  let text;
+  try {
+    const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.7, maxTokens: 700 });
+    text = llmResult.text;
+  } catch (e) {
+    console.error('[ai-service] LLM composition failed for profession, откат на шаблон:', e.message);
+    text = `## 🎓 ${title}\n\n${desc}\n\n💰 **${tr('prof_salary', lang) || 'Зарплата'}:** ${salary.min.toLocaleString()} — ${salary.max.toLocaleString()}₸\n`;
+    text += `   ${tr('prof_avg', lang) || 'Средняя'}: ${salary.avg.toLocaleString()}₸\n`;
+    text += `📊 **${tr('prof_demand', lang) || 'Спрос'}:** ${demand}\n\n`;
+    text += `🛠 **${tr('prof_skills', lang) || 'Навыки'}:**\n`;
+    skills.forEach(s => { text += `• ${s}\n`; });
+    text += `\n📈 **${tr('prof_career', lang) || 'Карьерный путь'}:** ${careerPath}\n`;
+    if (universities.length > 0) {
+      const titleWord = (lang === 'kk') ? 'Университеттер' : (lang === 'en') ? 'Universities' : 'Университеты';
+      text += `\n🏛 **${tr('prof_unis', lang) || titleWord}:**\n`;
+      universities.forEach(u => {
+        const qs = u.qs_world ? ` (QS #${u.qs_world})` : '';
+        const city = u.city_name ? `, ${u.city_name}` : '';
+        const price = u.price_from ? ` — ${u.price_from.toLocaleString()}₸/год` : '';
+        text += `• **${u.short_name || u.name}**${qs}${city}${price}\n`;
+      });
+      text += `\n💡 ${tr('prof_advice', lang) || 'Чтобы узнать шансы поступления, напишите: «Мои шансы в [вуз] на [направление] с ЕНТ [балл]»'}`;
+    }
   }
 
   return {
@@ -1195,7 +1389,7 @@ function handleProfessionQuery(msg, lang = 'ru') {
 
 // ==================== UNI INFO HANDLER ====================
 
-function handleUniInfoQuery(msg, lang = 'ru') {
+async function handleUniInfoQuery(msg, lang = 'ru') {
   const startTime = Date.now();
   const db = getDb();
   const q = msg.toLowerCase();
@@ -1240,74 +1434,45 @@ function handleUniInfoQuery(msg, lang = 'ru') {
     };
   }
 
-  // Определяем что именно спрашивают
-  const isPrice = /сколько стоит|цена|стоимость|оплат|бюджет|қанша тұрады|бағасы|cost|price|tuition/i.test(q);
-  const isDorm = /общежитие|общага|проживан|жатақхана|dormitory|dorm/i.test(q);
-  const isRanking = /рейтинг|ранг|место|позиция|qs|ranking|position|rating/i.test(q);
-  const isEnt = /средний балл|минимальный балл|проходной|порог|ент|балл/i.test(q);
-  const isDocs = /документ|бумаг|пакет|поступ|процедур|как поступить|подавать/i.test(q);
-
-  // Парсим JSON поля
   const languages = foundUni.languages ? (typeof foundUni.languages === 'string' ? JSON.parse(foundUni.languages) : foundUni.languages) : [];
+  const reqs = db.prepare('SELECT s.name, ar.min_ent, ar.avg_ent, ar.grant_min_ent FROM admission_requirements ar JOIN specialties s ON ar.specialty_id = s.id WHERE ar.university_id = ? ORDER BY ar.grant_min_ent DESC LIMIT 10').all(foundUni.id);
+  const specs = db.prepare('SELECT s.name FROM university_specialties us JOIN specialties s ON us.specialty_id = s.id WHERE us.university_id = ? LIMIT 15').all(foundUni.id);
 
-  let text = `## ${foundUni.short_name || foundUni.name}\n\n`;
+  const uniData = {
+    name: foundUni.short_name || foundUni.name,
+    city: foundUni.city_name,
+    founded: foundUni.founded,
+    students_count: foundUni.students_count,
+    price_from: foundUni.price_from,
+    price_to: foundUni.price_to,
+    has_dorm: !!foundUni.has_dorm,
+    dorm_price: foundUni.dorm_price,
+    languages,
+    qs_world: foundUni.qs_world,
+    qs_asia: foundUni.qs_asia,
+    website: foundUni.website,
+    specialties: specs.map(s => s.name),
+    ent_thresholds: reqs.map(r => ({ specialty: r.name, min_ent: r.min_ent, avg_ent: r.avg_ent, grant_min_ent: r.grant_min_ent })),
+  };
 
-  if (isPrice) {
-    text += `### 💰 Стоимость обучения\n`;
-    text += `• От **${foundUni.price_from?.toLocaleString() || '—'}** до **${foundUni.price_to?.toLocaleString() || '—'}** тг/год\n`;
-    if (foundUni.dorm_price) text += `• Общежитие: **${foundUni.dorm_price.toLocaleString()}** тг/год\n`;
-    text += `\n`;
-  } else if (isDorm) {
-    text += `### 🏠 Общежитие\n`;
-    text += foundUni.has_dorm
-      ? `✅ Общежитие есть\n${foundUni.dorm_price ? `💰 Стоимость: **${foundUni.dorm_price.toLocaleString()}** тг/год\n` : ''}`
-      : `❌ Общежития нет\n`;
-    text += `\n`;
-  } else if (isRanking) {
-    text += `### 🏆 Рейтинг\n`;
-    if (foundUni.qs_world) text += `• QS World: **#${foundUni.qs_world}**\n`;
-    if (foundUni.qs_asia) text += `• QS Asia: **#${foundUni.qs_asia}**\n`;
-    if (!foundUni.qs_world && !foundUni.qs_asia) text += `• Рейтинг QS не указан\n`;
-    text += `\n`;
-  } else if (isEnt) {
-    text += `### 📊 ЕНТ пороги\n`;
-    const reqs = db.prepare('SELECT s.name, ar.min_ent, ar.avg_ent, ar.grant_min_ent FROM admission_requirements ar JOIN specialties s ON ar.specialty_id = s.id WHERE ar.university_id = ? ORDER BY ar.grant_min_ent DESC LIMIT 10').all(foundUni.id);
-    if (reqs.length > 0) {
-      reqs.forEach(r => {
-        text += `• **${r.name}**: мин. ${r.min_ent}, ср. ${r.avg_ent}, грант ${r.grant_min_ent}\n`;
-      });
-    } else {
-      text += `• Данные по ЕНТ пока не загружены\n`;
-    }
-    text += `\n`;
-  } else if (isDocs) {
-    text += `### 📄 Документы для поступления\n`;
-    text += `1. Аттестат о среднем образовании\n`;
-    text += `2. Результаты ЕНТ (если требуются)\n`;
-    text += `3. Паспорт (или свидетельство о рождении)\n`;
-    text += `4. Фотографии 3×4 (6 шт.)\n`;
-    text += `5. Медицинская справка\n`;
-    text += `6. Документы, подтверждающие льготы (если есть)\n\n`;
-    text += `📅 **Сроки подачи:** июль–август\n`;
-    text += `🌐 Подача онлайн: **egov.kz**\n`;
-    text += `\n⚠️ Точный список уточняйте на сайте вуза.\n`;
-  } else {
-    // Общая информация
-    text += `📍 Город: ${foundUni.city_name || '—'}\n`;
-    if (foundUni.founded) text += `📅 Основан: ${foundUni.founded}\n`;
-    if (foundUni.students_count) text += `👥 Студентов: ${foundUni.students_count.toLocaleString()}\n`;
-    text += `💰 Стоимость: ${foundUni.price_from?.toLocaleString() || '—'} – ${foundUni.price_to?.toLocaleString() || '—'} тг/год\n`;
-    if (foundUni.has_dorm) text += `🏠 Общежитие: ✅ (${foundUni.dorm_price?.toLocaleString() || '—'} тг/год)\n`;
-    if (languages.length) text += `🌐 Языки: ${languages.join(', ')}\n`;
-    if (foundUni.qs_world) text += `🏆 QS World: #${foundUni.qs_world}\n`;
-    if (foundUni.qs_asia) text += `🏆 QS Asia: #${foundUni.qs_asia}\n`;
-    if (foundUni.website) text += `🌐 Сайт: ${foundUni.website}\n`;
-    text += `\n`;
-    // Специальности
-    const specs = db.prepare('SELECT s.name FROM university_specialties us JOIN specialties s ON us.specialty_id = s.id WHERE us.university_id = ? LIMIT 8').all(foundUni.id);
-    if (specs.length > 0) {
-      text += `📚 **Направления:** ${specs.map(s => s.name).join(', ')}\n`;
-    }
+  const systemPrompt = `Ты — EduMatch KZ, консультант по вузам Казахстана.
+Ниже РЕАЛЬНЫЕ данные о вузе "${uniData.name}" (JSON). Отвечай ИМЕННО на то, что спросил пользователь — если спросил только про цену, не пересказывай всё остальное.
+Если спрашивают про документы для поступления (это общий процесс, не в DATA) — назови: аттестат, результаты ЕНТ, паспорт, фото 3×4 (6 шт.), медсправка, льготные документы (если есть); приём — июль-август, подача через egov.kz; посоветуй уточнить точный список на сайте вуза.
+НЕ выдумывай данные, которых нет в DATA.
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}. Не используй русский, если пользователь пишет на казахском или английском.
+
+DATA: ${JSON.stringify(uniData)}`;
+
+  let text;
+  try {
+    const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.6, maxTokens: 700 });
+    text = llmResult.text;
+  } catch (e) {
+    console.error('[ai-service] LLM composition failed for uni_info, откат на шаблон:', e.message);
+    text = `## ${uniData.name}\n\n📍 Город: ${uniData.city || '—'}\n💰 Стоимость: ${uniData.price_from?.toLocaleString() || '—'} – ${uniData.price_to?.toLocaleString() || '—'} тг/год\n`;
+    if (uniData.languages.length) text += `🌐 Языки: ${uniData.languages.join(', ')}\n`;
+    if (uniData.qs_world) text += `🏆 QS World: #${uniData.qs_world}\n`;
+    if (uniData.specialties.length) text += `📚 Направления: ${uniData.specialties.join(', ')}\n`;
   }
 
   return {
@@ -1323,7 +1488,7 @@ function handleUniInfoQuery(msg, lang = 'ru') {
 
 // ==================== CITY HANDLER ====================
 
-function handleCityQuery(msg, lang = 'ru') {
+async function handleCityQuery(msg, lang = 'ru') {
   const startTime = Date.now();
   const db = getDb();
 
@@ -1332,18 +1497,57 @@ function handleCityQuery(msg, lang = 'ru') {
   const hasEnt = params.ent !== null;
   const qLower = msg.toLowerCase();
 
+  // Извлекаем контекст из истории (budget, specialty, city, ent)
+  const histParams = extractParamsFromHistory(history);
+  if (!params.specialty && histParams.specialty) params.specialty = histParams.specialty;
+  if (!params.cityId && histParams.cityId) params.cityId = histParams.cityId;
+  if (!params.ent && histParams.ent) params.ent = histParams.ent;
+  if (!params.budget && histParams.budget) params.budget = histParams.budget;
+
   // Проверяем, спрашивает ли пользователь о конкретном городе
   const isSpecificCityQuery = /каки[еяй]\s+(?:универ|вуз)|в\s+(?:каком|этом)\s+город|покажи\s+(?:вузы|университеты)\s+в|вуз(?:ы|ов)?\s+(?:в|городе)|вуз.*(?:в|городе)/i.test(qLower);
+
+  // Английские/транслитерированные алиасы городов
+  const cityAliases = {
+    'almaty': 'Алматы', 'almata': 'Алматы', 'almat': 'Алматы',
+    'astana': 'Астана', 'nur-sultan': 'Астана', 'nursultan': 'Астана',
+    'shymkent': 'Шымкент', 'chemkent': 'Шымкент',
+    'karaganda': 'Караганда', 'karagandy': 'Караганда',
+    'aktobe': 'Актобе', 'aktyubinsk': 'Актобе',
+    'pavlodar': 'Павлодар',
+    'ural': 'Уральск', 'oral': 'Уральск', 'uralsk': 'Уральск',
+    'atyrau': 'Атырау', 'atyrau': 'Атырау',
+    'aktau': 'Актау', 'shevchenko': 'Актау',
+    'semey': 'Семей', 'semipalatinsk': 'Семей',
+    'kzylorda': 'Кызылорда', 'kyzylorda': 'Кызылорда',
+    'petropavlovsk': 'Петропавловск',
+    'ust-kamenogorsk': 'Усть-Каменогорск', 'uskemen': 'Усть-Каменогорск',
+    'kokshetau': 'Кокшетау',
+    'zhezkazgan': 'Жезказган',
+    'kaskelen': 'Каскелен',
+  };
 
   // Определяем ВСЕ города из запроса (для multi-city)
   let specificCities = [];
   try {
     const cities = db.prepare('SELECT id, name FROM cities').all();
+    // Проверяем английские алиасы
+    for (const [alias, rusName] of Object.entries(cityAliases)) {
+      if (qLower.includes(alias)) {
+        const matched = cities.find(c => c.name === rusName);
+        if (matched && !specificCities.find(c => c.id === matched.id)) {
+          specificCities.push(matched);
+        }
+      }
+    }
+    // Проверяем русские названия
     for (const c of cities) {
       const cityNameLower = c.name.toLowerCase();
       const stem = cityNameLower.slice(0, -1);
       if (qLower.includes(cityNameLower) || qLower.includes(stem)) {
-        specificCities.push(c);
+        if (!specificCities.find(sc => sc.id === c.id)) {
+          specificCities.push(c);
+        }
       }
     }
   } catch (e) {}
@@ -1408,29 +1612,69 @@ function handleCityQuery(msg, lang = 'ru') {
       };
     }
 
-    let text = `🏙 **${specificCity.name}** — ${unis.length} ${unis.length === 1 ? 'вуз' : unis.length < 5 ? 'вуза' : 'вузов'}`;
-    if (params.specialty) text += ` | ${params.specialty}`;
-    if (params.ent) text += ` | ЕНТ ≤ ${params.ent}`;
-    text += ':\n\n';
+    const cityData = {
+      city: specificCity.name,
+      inquiry: {
+        specialty: params.specialty || null,
+        ent: params.ent || null,
+      },
+      universities_count: unis.length,
+      universities: unis.map(u => ({
+        name: u.short_name || u.name,
+        qs_world: u.qs_world || null,
+        price_from: u.price_from || null,
+        price_to: u.price_to || null,
+        languages: u.languages ? JSON.parse(u.languages) : [],
+        has_dorm: !!u.has_dorm,
+        avg_ent: u.avg_ent || null,
+        min_ent: u.min_ent || null,
+        max_grant_ent: u.max_grant_ent || null,
+        spec_count: u.spec_count || 0,
+      })),
+    };
 
-    unis.forEach((u, i) => {
-      const qs = u.qs_world ? `QS #${u.qs_world}` : '';
-      const price = u.price_from ? `${u.price_from.toLocaleString()}–${(u.price_to || u.price_from).toLocaleString()}₸` : '—';
-      const langs = u.languages ? JSON.parse(u.languages).join(', ') : '—';
-      const dorm = u.has_dorm ? '🏠' : '';
-      const avgEnt = u.avg_ent ? Math.round(u.avg_ent) : '—';
-      const minEnt = u.min_ent || '—';
-      const grantEnt = u.max_grant_ent || '—';
+    const systemPrompt = `Ты — EduMatch KZ, консультант по городам и университетам Казахстана.
+Ниже РЕАЛЬНЫЕ данные о городе "${specificCity.name}" (JSON) — список вузов уже посчитан, не выдумывай ничего сверх этого.
+Отвечай ИМЕННО на то, что спросил пользователь, а не пересказывай весь список вузов подряд, если он спросил про что-то одно.
+Отвечай подробно: покажи все вузы с ценами, рейтингами, языками, общежитиями и средними баллами ЕНТ.
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}. Не используй русский, если пользователь пишет на казахском или английском.
 
-      text += `**${i + 1}. ${u.short_name || u.name}**`;
-      if (qs) text += ` (${qs})`;
-      if (dorm) text += ' 🏠';
-      text += `\n   💰 ${price} | 🌐 ${langs}`;
-      if (u.spec_count > 0) text += ` | 📚 ${u.spec_count} ${u.spec_count === 1 ? 'спец.' : 'спец.'}`;
-      text += `\n   📊 средний ЕНТ ${avgEnt}, мин. ${minEnt}, грант до ${grantEnt}\n\n`;
-    });
+DATA: ${JSON.stringify(cityData)}`;
 
-    text += `💡 Напишите *"Мои шансы в [вуз] на [направление] с ЕНТ [балл]"* для расчёта вероятности.`;
+    let text;
+    try {
+      const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.6, maxTokens: 800 });
+      text = llmResult.text;
+    } catch (e) {
+      console.error('[ai-service] LLM composition failed for city, откат на шаблон:', e.message);
+      text = `🏙 **${specificCity.name}** — ${unis.length} ${unis.length === 1 ? 'вуз' : unis.length < 5 ? 'вуза' : 'вузов'}`;
+      if (params.specialty) text += ` | ${params.specialty}`;
+      if (params.ent) text += ` | ЕНТ ≤ ${params.ent}`;
+      text += ':\n\n';
+
+      unis.forEach((u, i) => {
+        const qs = u.qs_world ? `QS #${u.qs_world}` : '';
+        const price = u.price_from ? `${u.price_from.toLocaleString()}–${(u.price_to || u.price_from).toLocaleString()}₸` : '—';
+        const langs = u.languages ? JSON.parse(u.languages).join(', ') : '—';
+        const dorm = u.has_dorm ? '🏠' : '';
+        const avgEnt = u.avg_ent ? Math.round(u.avg_ent) : '—';
+        const minEnt = u.min_ent || '—';
+        const grantEnt = u.max_grant_ent || '—';
+
+        text += `**${i + 1}. ${u.short_name || u.name}**`;
+        if (qs) text += ` (${qs})`;
+        if (dorm) text += ' 🏠';
+        text += `\n   💰 ${price} | 🌐 ${langs}`;
+        if (u.spec_count > 0) text += ` | 📚 ${u.spec_count} ${u.spec_count === 1 ? 'спец.' : 'спец.'}`;
+        text += `\n   📊 средний ЕНТ ${avgEnt}, мин. ${minEnt}, грант до ${grantEnt}\n\n`;
+      });
+
+  const hintLabel = lang === 'kk' ? 'Есептеу үшін жазыңыз:' : lang === 'en' ? 'Write to calculate:' : 'Напишите:';
+  const hintExample = lang === 'kk' ? 'Менің мүмкіндіктерім [универ] [мамандық] ҰБТ [балл]'
+    : lang === 'en' ? 'My chances at [uni] [specialty] ENT [score]'
+    : 'Мои шансы в [вуз] на [направление] с ЕНТ [балл]';
+  text += '\n\n💡 ' + hintLabel + ' *"' + hintExample + '"*';
+    }
 
     return {
       answer: text,
@@ -1595,10 +1839,52 @@ function handleCityQuery(msg, lang = 'ru') {
 
 // ==================== GRANT HANDLER ====================
 
-function handleGrantQuery(msg, lang = 'ru') {
+function buildGrantListFallback(grants, matchedSpec, specDisplayNames, cityName, lang) {
+  const db = getDb();
+  const specText = matchedSpec ? `📚 **Специальность:** ${specDisplayNames[matchedSpec] || matchedSpec}\n` : '';
+  const cityText = cityName ? `🏙 **Город:** ${cityName}\n` : '';
+  let text = '';
+  if (specText || cityText) text += `${specText}${cityText}\n`;
+  text += `💰 **Доступные гранты (${grants.length}):**\n\n`;
+
+  grants.slice(0, 15).forEach((g, i) => {
+    const desc = (lang === 'kk' && g.description_kk) ? g.description_kk
+      : (lang === 'en' && g.description_en) ? g.description_en
+      : g.description || '—';
+    const amount = g.amount || '—';
+    const type = g.type === 'government' ? '🏛 Государственный'
+      : g.type === 'university' ? '🎓 Вузовский'
+      : g.type === 'private' ? '🏢 Частный'
+      : g.type || '—';
+
+    let uniInfo = '';
+    if (g.university_id) {
+      const uni = db.prepare('SELECT short_name, city_id FROM universities WHERE id = ?').get(g.university_id);
+      if (uni) {
+        const city = db.prepare('SELECT name FROM cities WHERE id = ?').get(uni.city_id);
+        uniInfo = ` | 🏫 ${uni.short_name}${city ? ' (' + city.name + ')' : ''}`;
+      }
+    }
+
+    text += `${i + 1}. **${g.name}**\n`;
+    text += `   ${type} | 💰 ${amount}${uniInfo}\n`;
+    text += `   📋 ${desc.slice(0, 250)}${desc.length > 250 ? '...' : ''}\n`;
+    if (g.deadline) text += `   📅 Дедлайн: ${g.deadline}\n`;
+    if (g.link) text += `   🔗 ${g.link}\n`;
+    text += '\n';
+  });
+
+  text += `💡 Напишите направление для точного списка: *"Какие есть гранты на IT?"*`;
+  return text;
+}
+
+async function handleGrantQuery(msg, history = [], lang = 'ru') {
   const startTime = Date.now();
   const db = getDb();
   const qLower = msg.toLowerCase();
+
+  // Извлекаем контекст из истории
+  const histParams = extractParamsFromHistory(history);
 
   // Получаем все гранты и фильтруем по ключевым словам
   const allGrants = db.prepare('SELECT * FROM grants').all();
@@ -1671,41 +1957,45 @@ function handleGrantQuery(msg, lang = 'ru') {
     grants = allGrants; // fallback: показываем все
   }
 
-  const specText = matchedSpec ? `📚 **Специальность:** ${specDisplayNames[matchedSpec] || matchedSpec}\n` : '';
-  const cityText = cityName ? `🏙 **Город:** ${cityName}\n` : '';
-  let text = '';
-  if (specText || cityText) text += `${specText}${cityText}\n`;
-  text += `💰 **Доступные гранты (${grants.length}):**\n\n`;
-
-  grants.slice(0, 15).forEach((g, i) => {
-    const desc = (lang === 'kk' && g.description_kk) ? g.description_kk
-      : (lang === 'en' && g.description_en) ? g.description_en
-      : g.description || '—';
-    const amount = g.amount || '—';
-    const type = g.type === 'government' ? '🏛 Государственный'
-      : g.type === 'university' ? '🎓 Вузовский'
-      : g.type === 'private' ? '🏢 Частный'
-      : g.type || '—';
-
-    // Получаем информацию о вузе
-    let uniInfo = '';
-    if (g.university_id) {
-      const uni = db.prepare('SELECT short_name, city_id FROM universities WHERE id = ?').get(g.university_id);
-      if (uni) {
-        const city = db.prepare('SELECT name FROM cities WHERE id = ?').get(uni.city_id);
-        uniInfo = ` | 🏫 ${uni.short_name}${city ? ' (' + city.name + ')' : ''}`;
+  const grantsData = {
+    filters: { specialty: matchedSpec ? specDisplayNames[matchedSpec] : null, city: cityName },
+    grants: grants.slice(0, 15).map(g => {
+      let uniName = null, uniCity = null;
+      if (g.university_id) {
+        const uni = db.prepare('SELECT short_name, city_id FROM universities WHERE id = ?').get(g.university_id);
+        if (uni) {
+          uniName = uni.short_name;
+          uniCity = db.prepare('SELECT name FROM cities WHERE id = ?').get(uni.city_id)?.name;
+        }
       }
-    }
+      return {
+        name: g.name,
+        type: g.type,
+        amount: g.amount,
+        description: (lang === 'kk' && g.description_kk) ? g.description_kk : (lang === 'en' && g.description_en) ? g.description_en : g.description,
+        deadline: g.deadline,
+        link: g.link,
+        university: uniName,
+        university_city: uniCity,
+      };
+    }),
+  };
 
-    text += `${i + 1}. **${g.name}**\n`;
-    text += `   ${type} | 💰 ${amount}${uniInfo}\n`;
-    text += `   📋 ${desc.slice(0, 250)}${desc.length > 250 ? '...' : ''}\n`;
-    if (g.deadline) text += `   📅 Дедлайн: ${g.deadline}\n`;
-    if (g.link) text += `   🔗 ${g.link}\n`;
-    text += '\n';
-  });
+  const systemPrompt = `Ты — EduMatch KZ, консультант по грантам и стипендиям в Казахстане.
+Ниже РЕАЛЬНЫЕ данные о грантах (JSON) — не выдумывай гранты, суммы или дедлайны, которых нет в DATA.
+Отвечай на конкретный вопрос пользователя. Если грантов по его запросу не нашлось, но есть общий список (см. filters) — честно скажи, что точных совпадений нет, покажи ближайшие альтернативы.
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}. Не используй русский, если пользователь пишет на казахском или английском.
 
-  text += `💡 Напишите направление для точного списка: *"Какие есть гранты на IT?"*`;
+DATA: ${JSON.stringify(grantsData)}`;
+
+  let text;
+  try {
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 700 });
+    text = llmResult.text;
+  } catch (e) {
+    console.error('[ai-service] LLM composition failed for grant, откат на шаблон:', e.message);
+    text = buildGrantListFallback(grants, matchedSpec, specDisplayNames, cityName, lang);
+  }
 
   return {
     answer: text,
@@ -1720,19 +2010,75 @@ function handleGrantQuery(msg, lang = 'ru') {
 
 // ==================== COMPARISON HANDLER ====================
 
-function handleComparisonQuery(msg, lang = 'ru') {
+function buildComparisonTableFallback(unis, descriptions, lang) {
+  let text = `## 📊 Сравнение: ${unis.map(u => u.short_name).join(' vs ')}\n\n`;
+
+  const headers = [`| | ${unis.map(u => `**${u.short_name}**`).join(' | ')} |`];
+  const sep = `|---|${unis.map(() => '---').join('|')}|`;
+  const rows = [
+    `| 🏙 Город | ${unis.map(u => u.city_name || '—').join(' | ')} |`,
+    `| 📅 Основан | ${unis.map(u => u.founded || '—').join(' | ')} |`,
+    `| 🌍 QS World | ${unis.map(u => u.qs_world ? `#${u.qs_world}` : '—').join(' | ')} |`,
+    `| 🌏 QS Asia | ${unis.map(u => u.qs_asia ? `#${u.qs_asia}` : '—').join(' | ')} |`,
+    `| 💰 Стоимость | ${unis.map(u => u.price_from ? `${u.price_from.toLocaleString()}–${(u.price_to || u.price_from).toLocaleString()}₸` : '—').join(' | ')} |`,
+    `| 👥 Студентов | ${unis.map(u => u.students_count ? u.students_count.toLocaleString() : '—').join(' | ')} |`,
+    `| 📚 Специальностей | ${unis.map(u => u.spec_count || 0).join(' | ')} |`,
+    `| 🏠 Общежитие | ${unis.map(u => u.has_dorm ? '✅ Да' : '❌ Нет').join(' | ')} |`,
+    `| 🌐 Языки | ${unis.map(u => u.languages ? JSON.parse(u.languages).join(', ') : '—').join(' | ')} |`,
+  ];
+
+  text += `${headers.join('\n')}\n${sep}\n${rows.join('\n')}\n\n`;
+
+  if (descriptions.some(Boolean)) {
+    text += `### Описание\n\n`;
+    descriptions.forEach((desc, idx) => {
+      if (desc) text += `**${unis[idx].short_name}:** ${desc.slice(0, 300)}\n\n`;
+    });
+  }
+
+  text += `### 💡 Рекомендация\n\n`;
+  const qws = unis.map(u => u.qs_world).filter(Boolean);
+  if (qws.length > 1) {
+    const best = [...unis].sort((a, b) => (a.qs_world || Infinity) - (b.qs_world || Infinity))[0];
+    text += `**${best.short_name}** имеет лучший QS World по сравнению с остальными. `;
+  }
+  const cheapest = [...unis].sort((a, b) => (a.price_from || Infinity) - (b.price_from || Infinity))[0];
+  text += `**${cheapest.short_name}** дешевле остальных по исходной цене.`;
+
+  text += `\n\nНапишите *"Мои шансы в ${unis[0].short_name}"* для расчёта вероятности поступления.`;
+  return text;
+}
+
+async function handleComparisonQuery(msg, history = [], lang = 'ru') {
   const startTime = Date.now();
   const db = getDb();
   const qLower = msg.toLowerCase();
 
-  // Ищем упоминания вузов в сообщении
   const unis = db.prepare('SELECT id, short_name, name FROM universities').all();
+  // Английские алиасы университетов
+  const uniAliases = {
+    'kbtu': 'КБТУ', 'kaznu': 'КазНУ', 'kaznu im. al-farabi': 'КазНУ',
+    'nu': 'НУ', 'nazarbayev': 'НУ', 'nazarbayev university': 'НУ',
+    'enu': 'ЕНУ', 'l.n. gumilyov': 'ЕНУ',
+    'muIt': 'МУИТ', 'iitu': 'МУИТ',
+    'kimep': 'KIMEP',
+    'astana medical': 'АТУ', 'atu': 'АТУ',
+    'kazakh': 'КазНУ',
+  };
   const mentioned = [];
   for (const u of unis) {
     const shortLower = u.short_name.toLowerCase();
     const nameLower = u.name.toLowerCase();
     if (qLower.includes(shortLower) || qLower.includes(nameLower)) {
       mentioned.push(u);
+      continue;
+    }
+    // Проверяем английские алиасы
+    for (const [alias, rusName] of Object.entries(uniAliases)) {
+      if (qLower.includes(alias) && u.short_name === rusName) {
+        if (!mentioned.find(m => m.id === u.id)) mentioned.push(u);
+        break;
+      }
     }
   }
 
@@ -1748,8 +2094,6 @@ function handleComparisonQuery(msg, lang = 'ru') {
     };
   }
 
-  // Берём первые два из упомянутых в ПОРЯДКЕ ПОЯВЛЕНИЯ в тексте
-  // Сортируем по позиции в исходном сообщении
   const qOriginal = msg.toLowerCase();
   const scored = mentioned.map(u => {
     const shortLower = u.short_name.toLowerCase();
@@ -1763,29 +2107,21 @@ function handleComparisonQuery(msg, lang = 'ru') {
     return { ...u, pos };
   }).sort((a, b) => a.pos - b.pos);
 
-  const uni1 = scored[0];
-  const uni2 = scored[1];
+  const selected = scored.slice(0, 3);
+  const fulls = [];
+  for (const uni of selected) {
+    const full = db.prepare(`
+      SELECT u.*, c.name as city_name,
+        (SELECT COUNT(DISTINCT us2.specialty_id) FROM university_specialties us2 WHERE us2.university_id = u.id) as spec_count,
+        (SELECT COUNT(DISTINCT ar2.specialty_id) FROM admission_requirements ar2 WHERE ar2.university_id = u.id) as req_count
+      FROM universities u
+      LEFT JOIN cities c ON u.city_id = c.id
+      WHERE u.id = ?
+    `).get(uni.id);
+    if (full) fulls.push(full);
+  }
 
-  // Получаем полную информацию о вузах
-  const full1 = db.prepare(`
-    SELECT u.*, c.name as city_name,
-      (SELECT COUNT(DISTINCT us2.specialty_id) FROM university_specialties us2 WHERE us2.university_id = u.id) as spec_count,
-      (SELECT COUNT(DISTINCT ar2.specialty_id) FROM admission_requirements ar2 WHERE ar2.university_id = u.id) as req_count
-    FROM universities u
-    LEFT JOIN cities c ON u.city_id = c.id
-    WHERE u.id = ?
-  `).get(uni1.id);
-
-  const full2 = db.prepare(`
-    SELECT u.*, c.name as city_name,
-      (SELECT COUNT(DISTINCT us2.specialty_id) FROM university_specialties us2 WHERE us2.university_id = u.id) as spec_count,
-      (SELECT COUNT(DISTINCT ar2.specialty_id) FROM admission_requirements ar2 WHERE ar2.university_id = u.id) as req_count
-    FROM universities u
-    LEFT JOIN cities c ON u.city_id = c.id
-    WHERE u.id = ?
-  `).get(uni2.id);
-
-  if (!full1 || !full2) {
+  if (fulls.length < 2) {
     return {
       answer: tr('compare_not_found', lang) || 'Не удалось найти информацию об одном из вузов.',
       matches: [],
@@ -1797,79 +2133,44 @@ function handleComparisonQuery(msg, lang = 'ru') {
     };
   }
 
-  const desc1 = pickDescription(full1, lang);
-  const desc2 = pickDescription(full2, lang);
+  const descriptions = fulls.map(u => pickDescription(u, lang));
+  const compareData = fulls.map((u, idx) => ({
+    name: u.short_name,
+    city: u.city_name,
+    founded: u.founded,
+    qs_world: u.qs_world,
+    qs_asia: u.qs_asia,
+    price_from: u.price_from,
+    price_to: u.price_to,
+    students_count: u.students_count,
+    specialties_count: u.spec_count,
+    has_dorm: !!u.has_dorm,
+    languages: u.languages ? JSON.parse(u.languages) : [],
+    description: descriptions[idx],
+  }));
 
-  let text = `## 📊 Сравнение: ${full1.short_name} vs ${full2.short_name}\n\n`;
+  const systemPrompt = `Ты — EduMatch KZ, консультант по вузам Казахстана.
+Ниже РЕАЛЬНЫЕ данные о вузах (JSON) для сравнения. Не выдумывай цифры, которых нет в DATA.
+Оформи ответ как КОРОТКУЮ markdown-таблицу (5-7 строк: название, город, рейтинг, цена, ЕНТ) + 2-3 предложения вывод.
+НЕ пиши длинные описания — будь максимально лаконичен. Максимум 500 слов.
+Если пользователь спросил про что-то конкретное — отвечай прямо на это, без полной таблицы.
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}. Не используй русский, если пользователь пишет на казахском или английском.
 
-  // Таблица сравнения
-  text += `| | **${full1.short_name}** | **${full2.short_name}** |\n`;
-  text += `|---|---|---|\n`;
-  text += `| 🏙 Город | ${full1.city_name || '—'} | ${full2.city_name || '—'} |\n`;
-  text += `| 📅 Основан | ${full1.founded || '—'} | ${full2.founded || '—'} |\n`;
+DATA: ${JSON.stringify(compareData)}`;
 
-  const qs1 = full1.qs_world ? `#${full1.qs_world}` : '—';
-  const qs2 = full2.qs_world ? `#${full2.qs_world}` : '—';
-  text += `| 🌍 QS World | ${qs1} | ${qs2} |\n`;
-
-  const qsAsia1 = full1.qs_asia ? `#${full1.qs_asia}` : '—';
-  const qsAsia2 = full2.qs_asia ? `#${full2.qs_asia}` : '—';
-  text += `| 🌏 QS Asia | ${qsAsia1} | ${qsAsia2} |\n`;
-
-  const price1 = full1.price_from ? `${full1.price_from.toLocaleString()}–${(full1.price_to || full1.price_from).toLocaleString()}₸` : '—';
-  const price2 = full2.price_from ? `${full2.price_from.toLocaleString()}–${(full2.price_to || full2.price_from).toLocaleString()}₸` : '—';
-  text += `| 💰 Стоимость | ${price1} | ${price2} |\n`;
-
-  const students1 = full1.students_count ? full1.students_count.toLocaleString() : '—';
-  const students2 = full2.students_count ? full2.students_count.toLocaleString() : '—';
-  text += `| 👥 Студентов | ${students1} | ${students2} |\n`;
-
-  const specs1 = full1.spec_count || 0;
-  const specs2 = full2.spec_count || 0;
-  text += `| 📚 Специальностей | ${specs1} | ${specs2} |\n`;
-
-  const dorm1 = full1.has_dorm ? '✅ Да' : '❌ Нет';
-  const dorm2 = full2.has_dorm ? '✅ Да' : '❌ Нет';
-  text += `| 🏠 Общежитие | ${dorm1} | ${dorm2} |\n`;
-
-  const langs1 = full1.languages ? JSON.parse(full1.languages).join(', ') : '—';
-  const langs2 = full2.languages ? JSON.parse(full2.languages).join(', ') : '—';
-  text += `| 🌐 Языки | ${langs1} | ${langs2} |\n`;
-
-  text += '\n';
-
-  // Описания
-  if (desc1 || desc2) {
-    text += `### Описание\n\n`;
-    if (desc1) text += `**${full1.short_name}:** ${desc1.slice(0, 300)}\n\n`;
-    if (desc2) text += `**${full2.short_name}:** ${desc2.slice(0, 300)}\n\n`;
+  let text;
+  try {
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 700 });
+    text = llmResult.text;
+  } catch (e) {
+    console.error('[ai-service] LLM composition failed for comparison, откат на шаблон:', e.message);
+    text = buildComparisonTableFallback(fulls, descriptions, lang);
   }
-
-  // Рекомендация
-  text += `### 💡 Рекомендация\n\n`;
-  if (full1.qs_world && full2.qs_world) {
-    if (full1.qs_world < full2.qs_world) {
-      text += `**${full1.short_name}** выше в рейтинге QS World (${qs1} vs ${qs2}). `;
-    } else if (full2.qs_world < full1.qs_world) {
-      text += `**${full2.short_name}** выше в рейтинге QS World (${qs2} vs ${qs1}). `;
-    } else {
-      text += `Оба вуза на одном уровне в рейтинге QS. `;
-    }
-  }
-  if (full1.price_from && full2.price_from) {
-    if (full1.price_from < full2.price_from) {
-      text += `**${full1.short_name}** дешевле (${price1} vs ${price2}).`;
-    } else if (full2.price_from < full1.price_from) {
-      text += `**${full2.short_name}** дешевле (${price2} vs ${price1}).`;
-    }
-  }
-
-  text += `\n\nНапишите *"Мои шансы в ${full1.short_name}"* или *"Мои шансы в ${full2.short_name}"* для расчёта вероятности поступления.`;
 
   return {
     answer: text,
     matches: [],
-    usedData: { universities_count: 2, uni1: full1.short_name, uni2: full2.short_name },
+    usedData: { universities_count: fulls.length, universities: fulls.map(u => u.short_name) },
     fallback: false,
     confidence: 0.95,
     took_ms: Date.now() - startTime,
@@ -1879,7 +2180,7 @@ function handleComparisonQuery(msg, lang = 'ru') {
 
 // ==================== RECOMMENDATION HANDLER ====================
 
-function handleRecommendationQuery(msg, lang = 'ru') {
+async function handleRecommendationQuery(msg, history = [], lang = 'ru') {
   const startTime = Date.now();
   const db = getDb();
   const qLower = msg.toLowerCase();
@@ -1887,6 +2188,13 @@ function handleRecommendationQuery(msg, lang = 'ru') {
   // Определяем специальность из запроса
   const params = parseAdmissionQuery(msg);
   let specialtyCategory = params.specialty;
+
+  // Извлекаем контекст из истории
+  const histParams = extractParamsFromHistory(history);
+  if (!specialtyCategory && histParams.specialty) specialtyCategory = histParams.specialty;
+  const budget = params.budget || histParams.budget;
+  const cityId = params.cityId || histParams.cityId;
+  const ent = params.ent || histParams.ent;
 
   // Ищем специальность по ключевым словам
   if (!specialtyCategory) {
@@ -1898,12 +2206,6 @@ function handleRecommendationQuery(msg, lang = 'ru') {
       }
     }
   }
-
-  // Определяем бюджет
-  const budget = params.budget;
-
-  // Определяем город
-  const cityId = params.cityId;
 
   // Ищем вузы
   let unis;
@@ -1979,10 +2281,10 @@ function handleRecommendationQuery(msg, lang = 'ru') {
     };
   }
 
-  const specText = specialtyCategory ? `📚 **Специальность:** ${specialtyCategory}\n` : '';
-  const cityText = params.cityName ? `🏙 **Город:** ${params.cityName}\n` : '';
-  const budgetText = budget ? `💰 **Бюджет:** до ${budget.toLocaleString()}₸\n` : '';
-  const entText = params.ent ? `🎯 **Ваш ЕНТ:** ${params.ent}\n` : '';
+  const specText = specialtyCategory ? `📚 **${lang === 'kk' ? 'Мамандық' : lang === 'en' ? 'Specialty' : 'Специальность'}:** ${specialtyCategory}\n` : '';
+  const cityText = params.cityName ? `🏙 **${lang === 'kk' ? 'Қала' : lang === 'en' ? 'City' : 'Город'}:** ${params.cityName}\n` : '';
+  const budgetText = budget ? `💰 **${lang === 'kk' ? 'Бюджет' : lang === 'en' ? 'Budget' : 'Бюджет'}:** ${lang === 'kk' ? 'дейін' : lang === 'en' ? 'up to' : 'до'} ${budget.toLocaleString()}₸\n` : '';
+  const entText = params.ent ? `🎯 **${lang === 'kk' ? 'Сіздің ҰБТ' : lang === 'en' ? 'Your ENT' : 'Ваш ЕНТ'}:** ${params.ent}\n` : '';
 
   let text = '';
   if (specText || cityText || budgetText || entText) {
@@ -2015,7 +2317,7 @@ function handleRecommendationQuery(msg, lang = 'ru') {
     })
     .slice(0, 20);
 
-  text += `## 📋 Лучшие вузы (${grouped.length}):\n\n`;
+  text += `## 📋 ${lang === 'kk' ? 'Үздік университеттер' : lang === 'en' ? 'Best universities' : 'Лучшие вузы'} (${grouped.length}):\n\n`;
 
   // Группируем по городам
   const byCity = {};
@@ -2046,7 +2348,7 @@ function handleRecommendationQuery(msg, lang = 'ru') {
       text += '\n';
       text += `   💰 ${price} | 🌐 ${langs}\n`;
       if (u.specs.length) text += `   📚 ${u.specs.join(', ')}\n`;
-      text += `   📊 средний ЕНТ ${avgEnt}, мин. ${minEnt}, грант до ${grantEnt}\n\n`;
+      text += `   📊 ${lang === 'kk' ? 'орташа ҰБТ' : lang === 'en' ? 'avg ENT' : 'средний ЕНТ'} ${avgEnt}, ${lang === 'kk' ? 'мин' : lang === 'en' ? 'min' : 'мин'} ${minEnt}, ${lang === 'kk' ? 'грантқа дейін' : lang === 'en' ? 'grant up to' : 'грант до'} ${grantEnt}\n\n`;
       idx++;
     }
   }
@@ -2211,7 +2513,7 @@ function formatGrantsForContext(grants) {
   }).join('\n\n');
 }
 
-async function callOpenRouter(systemPrompt, userMessage, history) {
+async function callOpenRouter(systemPrompt, userMessage, history, options = {}) {
   const apiKey = process.env.OPENROUTER_API_KEY;
   const baseUrl = process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1';
 
@@ -2239,8 +2541,8 @@ async function callOpenRouter(systemPrompt, userMessage, history) {
       data_collection: 'deny',
     },
     messages,
-    temperature: 0.75,
-    max_tokens: 640,
+    temperature: options.temperature ?? 0.75,
+    max_tokens: options.maxTokens ?? 640,
   };
 
   console.log('[ai-service] OpenRouter request:', JSON.stringify({
@@ -2534,7 +2836,39 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
     }
   }
 
-  let answer = getAdmissionBriefPrompt(params, { ...prediction, matches: filtered });
+  const admissionData = {
+    ent: params.ent,
+    specialty: specialtyToUse,
+    budget: params.budget,
+    matches: filtered.slice(0, 12).map(m => ({
+      university: m.university,
+      chance_percent: m.chance,
+      recommendation: m.recommendation,
+      min_ent: m.requirement?.min_ent,
+      avg_ent: m.requirement?.avg_ent,
+      grant_min_ent: m.requirement?.grant_min_ent,
+      price_from: m.price_from,
+    })),
+    academicYear: prediction.academicYear || '2025-2026',
+    whatIf: prediction.whatIf || [],
+  };
+
+  const systemPrompt = `Ты — EduMatch KZ, консультант по поступлению в вузы Казахстана.
+Ниже РЕАЛЬНО посчитанные данные о шансах поступления (JSON) — проценты и пороги ЕНТ уже рассчитаны кодом, ты их НЕ пересчитываешь и не меняешь, только объясняешь.
+Отвечай на конкретный вопрос пользователя. Если он спросил только про один вуз — не вываливай весь список остальных.
+Если задаёт уточняющий вопрос ("а если баллы выше?", "а на другую специальность?") — отвечай по существу.
+НЕ выдумывай проценты, вузы или пороги, которых нет в DATA.
+
+DATA: ${JSON.stringify(admissionData)}`;
+
+  let answer;
+  try {
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 700 });
+    answer = llmResult.text;
+  } catch (e) {
+    console.error('[ai-service] LLM composition failed for admission, откат на шаблон:', e.message);
+    answer = getAdmissionBriefPrompt(params, { ...prediction, matches: filtered });
+  }
 
   if (usedHistory) {
     const used = [];
@@ -2648,27 +2982,7 @@ function handleDeadlinesQuery(lang = 'ru') {
   };
 }
 
-function handleOnboardingQuery(msg, history, lang = 'ru') {
-  const startTime = Date.now();
-  const parsed = parseAdmissionQuery(msg);
-  const historyParams = extractParamsFromHistory(history);
-
-  const params = {
-    ent: parsed.ent ?? historyParams.ent ?? null,
-    specialty: parsed.specialty ?? historyParams.specialty ?? null,
-    cityId: parsed.cityId ?? historyParams.cityId ?? null,
-    budget: parsed.budget ?? historyParams.budget ?? null,
-  };
-
-  const missing = [];
-  if (!params.ent) missing.push('ент');
-  if (!params.specialty) missing.push('направление');
-  if (!params.cityId) missing.push('город');
-
-  if (missing.length === 0) {
-    return handleRecommendationQuery(msg, lang);
-  }
-
+function buildOnboardingFallback(params, lang) {
   const texts = {
     ru: {
       intro: 'Не знаете что выбрать? Не страшно! Давайте определимся шаг за шагом.\n\nОтветьте на несколько вопросов, и я подберу лучшие вузы для вас:\n',
@@ -2695,8 +3009,8 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
       budget: "💰 What's your maximum annual budget? (or 'grant' if seeking a scholarship)",
     }
   };
-  const t = texts[lang] || texts.ru;
 
+  const t = texts[lang] || texts.ru;
   const questions = [];
   if (!params.ent) questions.push(t.ent);
   if (!params.specialty) questions.push(t.spec);
@@ -2706,11 +3020,55 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
   let answer = t.intro;
   questions.forEach((q, i) => { answer += `${i + 1}. ${q}\n`; });
   answer += t.outro;
+  return answer;
+}
+
+async function handleOnboardingQuery(msg, history = [], lang = 'ru') {
+  const startTime = Date.now();
+  const parsed = parseAdmissionQuery(msg);
+  const historyParams = extractParamsFromHistory(history);
+
+  const params = {
+    ent: parsed.ent ?? historyParams.ent ?? null,
+    specialty: parsed.specialty ?? historyParams.specialty ?? null,
+    cityId: parsed.cityId ?? historyParams.cityId ?? null,
+    budget: parsed.budget ?? historyParams.budget ?? null,
+  };
+
+  const missing = [];
+  if (!params.ent) missing.push('ент');
+  if (!params.specialty) missing.push('направление');
+  if (!params.cityId) missing.push('город');
+
+  if (missing.length === 0) {
+    return await handleRecommendationQuery(msg, history, lang);
+  }
+
+  const onboardingData = {
+    known: { ent: params.ent, specialty: params.specialty, has_city: !!params.cityId, budget: params.budget },
+    missing_fields: missing,
+  };
+
+  const systemPrompt = `Ты — EduMatch KZ, консультант по вузам Казахстана.
+Пользователю не хватает данных для точного подбора вуза. Ниже — что уже известно и чего не хватает (JSON).
+Задай недостающие вопросы живым языком, коротко, без нумерованного шаблона — учитывай именно то, что написал пользователь.
+Если он прямо попросил "задай вопросы" — задавай по одному-два за раз, а не все сразу.
+
+DATA: ${JSON.stringify(onboardingData)}`;
+
+  let answer;
+  try {
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.7, maxTokens: 400 });
+    answer = llmResult.text;
+  } catch (e) {
+    console.error('[ai-service] LLM composition failed for onboarding, откат на шаблон:', e.message);
+    answer = buildOnboardingFallback(params, lang);
+  }
 
   return {
     answer,
     matches: [],
-    usedData: { onboarding_step: questions.length, params },
+    usedData: { onboarding_step: missing.length, params },
     fallback: false,
     confidence: 0.9,
     took_ms: Date.now() - startTime,
@@ -2734,47 +3092,67 @@ function handleOnboardingQuery(msg, history, lang = 'ru') {
   console.log(`\n[ai-service] User message: "${msg}"`);
   console.log(`[ai-service] History length: ${history.length}`);
 
-  const intent = classifyIntent(msg);
+  const classification = await classifyIntentLLM(msg, history);
+  const intent = classification.intent || classifyIntent(msg, history);
   console.log(`[ai-service] Classified intent: "${intent}"`);
+
+  // Обработка смены языка
+  if (intent === 'language' || /(?:на казахском|по-казахски|қазақша|in english|на английском|на русском|по-русски)/i.test(msg)) {
+    let newLang = lang;
+    if (/(?:на казахском|по-казахски|қазақша)/i.test(msg)) newLang = 'kk';
+    else if (/(?:in english|на английском)/i.test(msg)) newLang = 'en';
+    else if (/(?:на русском|по-русски)/i.test(msg)) newLang = 'ru';
+    const langNames = { ru: 'русском', kk: 'казахском', en: 'английском' };
+    return {
+      answer: `✅ ${lang === 'kk' ? 'Тіл ауыстырылды' : lang === 'en' ? 'Language switched' : 'Язык переключён'}: ${langNames[newLang] || newLang}.\n\n${lang === 'kk' ? 'Енді сізге қазақша жауап беремін.' : lang === 'en' ? 'I will now respond in English.' : 'Теперь я буду отвечать на ' + (langNames[newLang] || newLang) + '.'}`,
+      matches: [],
+      usedData: { language_switch: newLang },
+      fallback: false,
+      confidence: 1.0,
+      took_ms: Date.now() - startTime,
+      intent: 'language',
+      detectedLang: newLang,
+    };
+  }
 
   if (intent === 'admission') {
     console.log('[ai-service] Routing to admission handler');
-    return handleAdmissionChatQuery(msg, history, lang);
+    return await handleAdmissionChatQuery(msg, history, lang);
   }
 
   if (intent === 'profession') {
     console.log('[ai-service] Routing to profession handler');
-    return handleProfessionQuery(msg, lang);
+    return await handleProfessionQuery(msg, lang);
   }
 
   if (intent === 'uni_info') {
     console.log('[ai-service] Routing to uni_info handler');
-    return handleUniInfoQuery(msg, lang);
+    return await handleUniInfoQuery(msg, lang);
   }
 
   if (intent === 'city') {
     console.log('[ai-service] Routing to city handler');
-    return handleCityQuery(msg, lang);
+    return await handleCityQuery(msg, history, lang);
   }
 
   if (intent === 'grant') {
     console.log('[ai-service] Routing to grant handler');
-    return handleGrantQuery(msg, lang);
+    return await handleGrantQuery(msg, history, lang);
   }
 
   if (intent === 'comparison') {
     console.log('[ai-service] Routing to comparison handler');
-    return handleComparisonQuery(msg, lang);
+    return await handleComparisonQuery(msg, history, lang);
   }
 
   if (intent === 'recommendation') {
     console.log('[ai-service] Routing to recommendation handler');
-    return handleRecommendationQuery(msg, lang);
+    return await handleRecommendationQuery(msg, history, lang);
   }
 
   if (intent === 'onboarding') {
     console.log('[ai-service] Routing to onboarding handler');
-    return handleOnboardingQuery(msg, history, lang);
+    return await handleOnboardingQuery(msg, history, lang);
   }
 
   if (intent === 'deadlines') {

@@ -6,7 +6,7 @@
 <title data-i18n="page.title">EduMatch KZ — Выбери свой университет</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" href="logo.png">
 
 <!-- Leaflet (map) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -32,7 +32,7 @@
 <nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="#" class="nav-logo" onclick="navigate('home')">
-      <img src="logo.svg" class="logo-mark" alt="EduMatch KZ logo">
+      <img src="logo.png" class="logo-mark" alt="EduMatch KZ logo">
       <span class="logo-text">EduMatch<span class="logo-kz">KZ</span></span>
     </a>
     <div class="nav-links">
@@ -131,9 +131,9 @@
   <div id="page-home" class="page active">
     <section class="hero">
       <div class="hero-inner">
-        <div class="hero-badge" data-aos="fade-down" data-aos-duration="600" data-i18n="home.badge">Алматы · 2025–2026</div>
+        <div class="hero-badge" data-aos="fade-down" data-aos-duration="600" data-i18n="home.badge">Казахстан · 2025–2026</div>
         <h1 class="hero-title" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100"><span data-i18n="home.hero_heading1">Выбор университета —</span><br><em><span data-i18n="home.hero_heading2">главное финансовое решение</span></em></h1>
-        <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200" data-i18n="home.hero_sub">Сравните стоимость, рейтинги и специальности ведущих вузов Алматы. Получите персональный совет от ИИ-советника.</p>
+        <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200" data-i18n="home.hero_sub">Сравните стоимость, рейтинги и специальности ведущих вузов Казахстана. Получите персональный совет от ИИ-советника.</p>
         <div class="hero-actions" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
           <button class="btn btn-primary" onclick="navigate('advisor')" data-i18n="home.hero_btn1">Получить совет ИИ</button>
           <button class="btn btn-ghost hero-btn-scroll" onclick="document.getElementById('universities-section').scrollIntoView({behavior:'smooth'})" data-i18n="home.hero_btn2">Смотреть вузы</button>
@@ -150,7 +150,7 @@
         <div class="hero-card-stack">
           <div class="hcard hcard-1"><div class="hcard-label">QS World</div><div class="hcard-val">#163</div><div class="hcard-uni">КазНУ</div></div>
           <div class="hcard hcard-2"><div class="hcard-label" data-i18n="home.card_cost">Стоимость</div><div class="hcard-val">580K–3.8M</div><div class="hcard-uni" data-i18n="home.stat_price">тенге/год</div></div>
-          <div class="hcard hcard-3"><div class="hcard-label" data-i18n="home.card_unis">Вузов в Алматы</div><div class="hcard-val">15</div><div class="hcard-uni" data-i18n="home.card_in_db">в базе данных</div></div>
+          <div class="hcard hcard-3"><div class="hcard-label" data-i18n="home.card_unis">Вузов в Казахстане</div><div class="hcard-val">15</div><div class="hcard-uni" data-i18n="home.card_in_db">в базе данных</div></div>
         </div>
       </div>
     </section>
@@ -158,7 +158,7 @@
     <section class="universities-section" id="universities-section">
       <div class="container">
         <div class="section-head" data-aos="fade-up" data-aos-duration="600">
-          <h2 class="section-title" data-i18n="universities.title">Университеты Алматы</h2>
+          <h2 class="section-title" data-i18n="universities.title">Университеты Казахстана</h2>
           <p class="section-sub" data-i18n="universities.sub">Данные актуальны на 2025–2026 учебный год</p>
         </div>
 
@@ -242,7 +242,7 @@
           <div class="fin-text">
             <div class="section-badge" data-i18n="financial.badge">Финансовая грамотность</div>
             <h2 class="fin-title" data-i18n="financial.title">Считайте полную стоимость обучения</h2>
-            <p class="fin-desc"><span data-i18n="financial.desc1">4 года учёбы — это крупная инвестиция. Разница между самым дешёвым и самым дорогим вузом Алматы составляет до</span> <strong data-i18n="financial.desc_strong">13 миллионов тенге</strong> <span data-i18n="financial.desc2">за весь период.</span></p>
+            <p class="fin-desc"><span data-i18n="financial.desc1">4 года учёбы — это крупная инвестиция. Разница между самым дешёвым и самым дорогим вузом Казахстана составляет до</span> <strong data-i18n="financial.desc_strong">13 миллионов тенге</strong> <span data-i18n="financial.desc2">за весь период.</span></p>
           </div>
           <div class="fin-cards">
               <div class="fin-card">
@@ -328,7 +328,13 @@
         <div class="chat-messages" id="chat-messages">
           <div class="chat-welcome">
             <h2 data-i18n="advisor.welcome_title">Привет! Я помогу выбрать университет</h2>
-            <p data-i18n="advisor.welcome_sub">Расскажите о своих интересах, бюджете и планах — я дам персональную рекомендацию на основе актуальных данных по вузам Алматы.</p>
+            <p data-i18n="advisor.welcome_sub">Расскажите о своих интересах, бюджете и планах — я дам персональную рекомендацию на основе актуальных данных по вузам Казахстана.</p>
+            <div class="chat-welcome-prompts">
+              <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt1">Поступлю ли я в КБТУ с ЕНТ 110?</button>
+              <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt2">Мои шансы на грант с 120 баллами</button>
+              <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt3">У меня бюджет 1.2 млн тг/год, интересует IT</button>
+              <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt4">Хочу в медицину, какой вуз лучше?</button>
+            </div>
           </div>
         </div>
         <div class="chat-input-area">
@@ -891,10 +897,10 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-logo">
-        <img src="logo.svg" alt="EduMatch KZ" class="footer-logo-img">
+        <img src="logo.png" alt="EduMatch KZ" class="footer-logo-img">
         <span class="footer-logo-text">EduMatch<span class="footer-logo-kz">KZ</span></span>
       </div>
-      <p class="footer-desc" data-i18n="footer.desc">Платформа для сравнения университетов Алматы — цены, рейтинги, специальности и ИИ-советник.</p>
+      <p class="footer-desc" data-i18n="footer.desc">Платформа для сравнения университетов Казахстана — цены, рейтинги, специальности и ИИ-советник.</p>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
@@ -911,7 +917,7 @@
       </div>
       <div class="footer-col">
         <div class="footer-col-title" data-i18n="footer.data_section">Данные</div>
-        <span class="footer-text" data-i18n="footer.location">Алматы, Казахстан</span>
+        <span class="footer-text" data-i18n="footer.location">Казахстан</span>
         <span class="footer-text" data-i18n="footer.year">2025–2026 учебный год</span>
         <span class="footer-text" data-i18n="footer.unis_count">15 университетов</span>
       </div>
@@ -930,10 +936,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
   <h2 class="modal-title" data-i18n="modal.about_title">О проекте</h2>
-  <p class="modal-text" data-i18n="modal.about_text1">EduMatch KZ — учебный проект по финансовой грамотности, созданный чтобы помочь абитуриентам Алматы осознанно выбирать университет.</p>
-  <p class="modal-text"><span data-i18n="modal.about_text2">Выбор вуза — это крупное финансовое решение на 4 года. Разница между самым дешёвым и самым дорогим университетом Алматы составляет более</span> <strong data-i18n="modal.about_text2_strong">13 миллионов тенге</strong>. <span data-i18n="modal.about_text2_cont">EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов города в одном месте.</span></p>
+  <p class="modal-text" data-i18n="modal.about_text1">EduMatch KZ — учебный проект по финансовой грамотности, созданный чтобы помочь абитуриентам Казахстана осознанно выбирать университет.</p>
+  <p class="modal-text"><span data-i18n="modal.about_text2">Выбор вуза — это крупное финансовое решение на 4 года. Разница между самым дешёвым и самым дорогим университетом Казахстана составляет более</span> <strong data-i18n="modal.about_text2_strong">13 миллионов тенге</strong>. <span data-i18n="modal.about_text2_cont">EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов страны в одном месте.</span></p>
   <p class="modal-text"><strong data-i18n="modal.about_stack">Стек:</strong> Node.js, Express, HTML/CSS/JS, Google Gemma AI</p>
-  <p class="modal-text"><strong data-i18n="modal.about_data">Данные:</strong> <span data-i18n="modal.about_data_val">11 университетов Алматы, актуальные на 2025–2026 учебный год</span></p>
+  <p class="modal-text"><strong data-i18n="modal.about_data">Данные:</strong> <span data-i18n="modal.about_data_val">Данные по университетам Казахстана, актуальные на 2025–2026 учебный год</span></p>
 </div>
 
 <div class="modal" id="modal-contacts">

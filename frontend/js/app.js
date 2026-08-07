@@ -160,6 +160,7 @@ function navigate(page, param) {
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   state.currentPage = page;
   window.scrollTo(0, 0);
+  document.body.classList.toggle('chat-page-active', page === 'advisor');
 
   if (page === 'home') {
     document.getElementById('page-home').classList.add('active');
@@ -234,6 +235,7 @@ function updateBottomNav(page) {
   const id = BOTTOM_NAV_MAP[page];
   if (id) document.getElementById(id)?.classList.add('active');
 }
+const setBottomNav = updateBottomNav;
 
 // ─── TRACKER PAGE ────────────────────────────
 // ─── PROFILE PAGE ─────────────────────────
@@ -635,7 +637,7 @@ function renderCompareTable(unis, container) {
 
   const rows = [
     { label: t('compare_page.short_name'), key: u => u.short_name || '—' },
-    { label: t('compare_page.city'), key: u => trRu(u.city_name) || 'Алматы' },
+    { label: t('compare_page.city'), key: u => trRu(u.city_name) || '—' },
     { label: t('compare_page.founded'), key: u => u.founded || '—' },
     { label: t('compare_page.students'), key: u => u.students_count ? u.students_count.toLocaleString('ru') : '—' },
     { label: 'QS World', key: u => u.qs_world ? `#${u.qs_world}` : '—', isQs: true },
@@ -873,7 +875,7 @@ function renderUniversityDetail(u, container) {
         <div>
           <div class="detail-badges">
             ${qsBadge}
-            <span class="detail-badge badge-city">${trRu(u.city_name) || 'Алматы'}</span>
+            <span class="detail-badge badge-city">${trRu(u.city_name) || '—'}</span>
             ${u.founded ? `<span class="detail-badge badge-city">${t('compare_page.founded')} ${u.founded}</span>` : ''}
           </div>
           <h1 class="detail-title">${trRu(u.name)}</h1>
@@ -1051,6 +1053,12 @@ async function sendMessage(retryMessage = null) {
       const errorMsg = data.error || 'Unknown error';
       appendMessage('ai', `⚠️ ${t('error.load_error')}: ${errorMsg}`, null, null, { retryFn: () => sendMessage(text) });
     } else {
+      // Handle language switch
+      if (data.detectedLang && data.detectedLang !== window.currentLanguage) {
+        setLanguage(data.detectedLang);
+        localStorage.setItem('edumatch_lang', data.detectedLang);
+      }
+
       // Show AI answer
       if (data.intent === 'admission' && data.admission && data.admission.type === 'result') {
         appendMessage('ai', data.answer, [], data.admission);
@@ -1058,6 +1066,11 @@ async function sendMessage(retryMessage = null) {
         appendMessage('ai', data.answer, data.matches);
       }
       state.chatHistory.push({ role: 'assistant', content: data.answer });
+      
+      // Store intent in history for context
+      if (state.chatHistory.length > 0) {
+        state.chatHistory[state.chatHistory.length - 1].intent = data.intent;
+      }
       
       // Show quick suggestions based on intent
       showQuickSuggestions(data.intent, text);
@@ -1103,7 +1116,7 @@ function showQuickSuggestions(intent, userMessage) {
       ];
     } else {
       suggestions = [
-        'Какие вузы в Алматы?',
+        'Какие вузы есть?',
         'Посоветуй специальность',
         'Сколько стоит обучение?'
       ];
@@ -1129,7 +1142,7 @@ function showQuickSuggestions(intent, userMessage) {
       ];
     } else {
       suggestions = [
-        'Алматыдағы университеттер',
+        'Қандай университеттер бар?',
         'Мамандықтарды ұсын',
         'Оқу шығыны қанша?'
       ];
@@ -1155,7 +1168,7 @@ function showQuickSuggestions(intent, userMessage) {
       ];
     } else {
       suggestions = [
-        'Universities in Almaty',
+        'What universities are available?',
         'Suggest a specialty',
         'How much does it cost?'
       ];
@@ -1333,7 +1346,8 @@ function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
 
 function scrollChatToBottom() {
   requestAnimationFrame(() => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    const el = document.getElementById('chat-messages');
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   });
 }
 
@@ -2499,8 +2513,8 @@ async function loadMap() {
     return;
   }
 
-  // Алматы центр: 43.2, 76.9
-  mapInstance = window.mapInstance = L.map('map-container', { minZoom: 5, maxZoom: 18 }).setView([43.2, 76.9], 10);
+  // Центр Казахстана
+  mapInstance = window.mapInstance = L.map('map-container', { minZoom: 5, maxZoom: 18 }).setView([48.0, 66.9], 5);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors'
