@@ -1921,7 +1921,7 @@ function renderExplanationBlock(explanation) {
   }[strategy] || '';
 
   let html = `
-    <div class="ai-explanation ${strategyClass}" style="margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--bg-light, #f9fafb); border-left: 4px solid ${getStrategyColor(strategy)};">
+    <div class="ai-explanation ${strategyClass}" style="margin-top: 16px; padding: 12px; border-radius: 8px; background: var(--bg-secondary); border-left: 4px solid ${getStrategyColor(strategy)};">
       ${fallback ? `<p style="font-size: 0.8rem; color: var(--gray, #999); margin: 0 0 8px 0;">${t('admission_page.template_explain')}</p>` : `<p style="font-size: 0.8rem; color: var(--gray, #999); margin: 0 0 8px 0;">${t('admission_page.ai_explain')}</p>`}
       
       <p style="font-weight: 500; margin: 0 0 8px 0; color: var(--text);">${escapeHtml(summary || '')}</p>
