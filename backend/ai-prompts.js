@@ -264,9 +264,124 @@ function getMissingParamsMessage(params, lang = 'ru') {
   return (tr('missing_prompt', lang) || 'Чтобы рассчитать шансы, уточните:\n• ${items}\n\nНапример: *"Поступлю ли я в КБТУ с ЕНТ 110?"*').replace('${items}', missing.join('\n• '));
 }
 
+// ─── LLM PROMPTS FOR ALL INTENTS ──────────────────
+
+function buildGreetingPrompt(lang = 'ru') {
+  const tone = pickRandom([PERSONALITIES.friendly, PERSONALITIES.concise]);
+  return `${tr('prompt_base', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
+
+${tone.instruction}
+
+Пользователь тебя поздоровался. Поприветствуй его коротко и тепло.
+Расскажи, чем ты можешь помочь (расчёт шансов, сравнение вузов, гранты, профессии, города), но КРАТКО — 3-5 предложений.
+Не используй нумерованный список — просто перечисли возможности текстом.
+Задай вопрос в конце, чтобы поддержать диалог.
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}.`;
+}
+
+function buildHelpPrompt(lang = 'ru') {
+  const tone = pickRandom([PERSONALITIES.detailed, PERSONALITIES.friendly]);
+  return `${tr('prompt_base', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
+
+${tone.instruction}
+
+Пользователь спрашивает, чем ты можешь помочь.
+Объясни свои возможности живым языком, как консультант:
+- Расчёт шансов на поступление (с ЕНТ баллом)
+- Информация о вузах (цены, рейтинги, специальности)
+- Сравнение университетов
+- Гранты и стипендии
+- Профориентация
+- Города и вузы в них
+
+Дай 2-3 примера вопросов, которые пользователь может задать.
+Будь дружелюбным и помоги начать диалог.
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}.`;
+}
+
+function buildDeadlinesPrompt(lang = 'ru', deadlinesData) {
+  const tone = pickRandom([PERSONALITIES.professional, PERSONALITIES.concise]);
+  return `${tr('prompt_base', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
+
+${tone.instruction}
+
+Пользователь спрашивает о сроках/календаре поступления.
+Ниже РЕАЛЬНЫЕ данные о календаре поступления — расскажи о них живым языком, как эксперт.
+Не выдумывай даты, которых нет в данных.
+В конце предупреди, что даты могут отличаться в зависимости от вуза.
+
+ДАННЫЕ:
+${JSON.stringify(deadlinesData)}
+
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}.`;
+}
+
+function buildRecommendationPrompt(lang = 'ru', uniData, params) {
+  const tone = pickRandom([PERSONALITIES.detailed, PERSONALITIES.professional]);
+  const paramHint = params.specialty ? `Специальность: ${params.specialty}. ` : '';
+  const cityHint = params.cityName ? `Город: ${params.cityName}. ` : '';
+  const budgetHint = params.budget ? `Бюджет: до ${params.budget.toLocaleString()}₸. ` : '';
+  const entHint = params.ent ? `ЕНТ: ${params.ent}. ` : '';
+  return `${tr('prompt_base', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
+
+${tone.instruction}
+
+Пользователь просит подобрать/порекомендовать вузы.
+Ниже РЕАЛЬНЫЕ данные о вузах из базы данных. Не выдумывай цифры, которых нет в DATA.
+Сгруппируй вузы по городам или категориям для удобства.
+Дай краткую рекомендацию по каждому вузу (цена, рейтинг, язык).
+В конце предложи уточнить запрос для более точного подбора.
+
+${paramHint}${cityHint}${budgetHint}${entHint}
+
+ДАННЫЕ О ВУЗАХ:
+${uniData}
+
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}.`;
+}
+
+function buildOverviewPrompt(lang = 'ru', overviewData) {
+  const tone = pickRandom([PERSONALITIES.detailed, PERSONALITIES.professional]);
+  return `${tr('prompt_base', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
+
+${tone.instruction}
+
+Пользователь указал балл ЕНТ, но не указал специальность.
+Ниже РЕАЛЬНЫЕ данные о вузах, которые подходят по баллу — покажи лучшие варианты.
+Сгруппируй по шансам (высокие/средние/низкие).
+Дай совет, какую специальность выбрать.
+В конце предложи уточнить направление для точного расчёта.
+
+ДАННЫЕ:
+${JSON.stringify(overviewData)}
+
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}.`;
+}
+
+function buildEdgeCasePrompt(lang = 'ru', scenario, context) {
+  const tone = pickRandom([PERSONALITIES.friendly, PERSONALITIES.concise]);
+  return `${tr('prompt_base', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
+
+${tone.instruction}
+
+Сценарий: ${scenario}
+Контекст: ${JSON.stringify(context)}
+
+Ответь пользователюhelpful иriendly. Если он отправил просто число — попроси уточнить контекст.
+Если балл ЕНТ некорректный — вежливо объясни ограничения.
+Если не хватает данных — предложи варианты.
+Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}.`;
+}
+
 module.exports = {
   getSystemPrompt,
   getAdmissionBriefPrompt,
   getMissingParamsMessage,
   PERSONALITIES,
+  buildGreetingPrompt,
+  buildHelpPrompt,
+  buildDeadlinesPrompt,
+  buildRecommendationPrompt,
+  buildOverviewPrompt,
+  buildEdgeCasePrompt,
 };
