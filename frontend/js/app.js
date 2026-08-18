@@ -13,9 +13,41 @@ const state = window.state = {
   favoriteList: [],  // array of ids (from localStorage)
   trackerList: [],   // array of {id, university_id, name, status, added_at, notes}
   chatHistory: [],
+  chatHistoryLoaded: false,
   admissionLastResult: null,
   currentPage: 'home',
 };
+
+function saveSessionChatHistory() {
+  try {
+    sessionStorage.removeItem('edumatch_chat_history');
+  } catch (e) {
+    console.warn('Failed to clear stale session chat history', e);
+  }
+}
+
+function loadSessionChatHistory() {
+  state.chatHistory = [];
+  try {
+    sessionStorage.removeItem('edumatch_chat_history');
+  } catch (e) {
+    console.warn('Failed to clear stale session chat history', e);
+  }
+}
+
+async function hydrateAdvisorChatHistory() {
+  if (state.chatHistoryLoaded) return;
+  state.chatHistoryLoaded = true;
+
+  loadSessionChatHistory();
+
+  const msgs = document.getElementById('chat-messages');
+  if (msgs) {
+    const existingWelcome = msgs.querySelector('.chat-welcome');
+    if (existingWelcome) existingWelcome.remove();
+    state.chatHistory.forEach(item => appendMessage(item.role, item.content));
+  }
+}
 
 // ─── TRACKER (localStorage) ──────────────────
 function loadTracker() {
@@ -196,6 +228,7 @@ function navigate(page, param) {
   } else if (page === 'advisor') {
     document.getElementById('page-advisor').classList.add('active');
     activateNavLink('advisor');
+    hydrateAdvisorChatHistory();
   } else if (page === 'career') {
     document.getElementById('page-career').classList.add('active');
     activateNavLink('career');
@@ -1016,6 +1049,7 @@ async function sendMessage(retryMessage = null) {
     autoResize(input);
     appendMessage('user', text);
     state.chatHistory.push({ role: 'user', content: text });
+    saveSessionChatHistory();
   }
 
   // Typing indicator
@@ -1065,7 +1099,8 @@ async function sendMessage(retryMessage = null) {
       } else {
         appendMessage('ai', data.answer, data.matches);
       }
-      state.chatHistory.push({ role: 'assistant', content: data.answer });
+      state.chatHistory.push({ role: 'assistant', content: data.answer, intent: data.intent });
+      saveSessionChatHistory();
       
       // Store intent in history for context
       if (state.chatHistory.length > 0) {
@@ -2516,8 +2551,10 @@ async function loadMap() {
   // Центр Казахстана
   mapInstance = window.mapInstance = L.map('map-container', { minZoom: 5, maxZoom: 18 }).setView([48.0, 66.9], 5);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
   }).addTo(mapInstance);
 
   const res = await fetch(`${API}/universities?lang=${window.currentLanguage || 'ru'}`);
