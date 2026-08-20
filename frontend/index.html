@@ -327,13 +327,42 @@
       <div class="chat-area">
         <div class="chat-messages" id="chat-messages">
           <div class="chat-welcome">
+            <div class="chat-welcome-icon">🎓</div>
             <h2 data-i18n="advisor.welcome_title">Привет! Я помогу выбрать университет</h2>
-            <p data-i18n="advisor.welcome_sub">Расскажите о своих интересах, бюджете и планах — я дам персональную рекомендацию на основе актуальных данных по вузам Казахстана.</p>
-            <div class="chat-welcome-prompts">
-              <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt1">Поступлю ли я в КБТУ с ЕНТ 110?</button>
-              <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt2">Мои шансы на грант с 120 баллами</button>
-              <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt3">У меня бюджет 1.2 млн тг/год, интересует IT</button>
-              <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt4">Хочу в медицину, какой вуз лучше?</button>
+            <p class="chat-welcome-sub" data-i18n="advisor.welcome_sub">Задайте вопрос о вузах, поступлении, грантах или специальностях — я отвечу на основе актуальных данных.</p>
+            <div class="chat-welcome-categories">
+              <div class="chat-welcome-cat">
+                <div class="chat-welcome-cat-icon">🎯</div>
+                <div class="chat-welcome-cat-title">Шансы на поступление</div>
+                <div class="chat-welcome-cat-prompts">
+                  <button class="prompt-chip" onclick="usePrompt(this)">Поступлю ли я в КБТУ с ЕНТ 110?</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)">Мои шансы на грант с 120 баллами</button>
+                </div>
+              </div>
+              <div class="chat-welcome-cat">
+                <div class="chat-welcome-cat-icon">🏙</div>
+                <div class="chat-welcome-cat-title">Города и вузы</div>
+                <div class="chat-welcome-cat-prompts">
+                  <button class="prompt-chip" onclick="usePrompt(this)">Какие вузы в Алматы на IT?</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)">Сравни КБТУ и КазНУ</button>
+                </div>
+              </div>
+              <div class="chat-welcome-cat">
+                <div class="chat-welcome-cat-icon">💰</div>
+                <div class="chat-welcome-cat-title">Бюджет и гранты</div>
+                <div class="chat-welcome-cat-prompts">
+                  <button class="prompt-chip" onclick="usePrompt(this)">У меня бюджет 1.2 млн тг/год, интересует IT</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)">Какие гранты на медицину?</button>
+                </div>
+              </div>
+              <div class="chat-welcome-cat">
+                <div class="chat-welcome-cat-icon">💼</div>
+                <div class="chat-welcome-cat-title">Профессии</div>
+                <div class="chat-welcome-cat-prompts">
+                  <button class="prompt-chip" onclick="usePrompt(this)">Хочу в медицину, какой вуз лучше?</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)">Кем работать с IT образованием?</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
