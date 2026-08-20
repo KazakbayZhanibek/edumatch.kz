@@ -729,6 +729,9 @@ input, select, textarea { font-family: inherit; }
   font-size: 15px;
   line-height: 1.7;
   max-width: 560px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 .chat-msg-user .chat-bubble {
   background: var(--accent);
@@ -746,6 +749,17 @@ input, select, textarea { font-family: inherit; }
   width: auto !important;
   max-width: none !important;
   padding: 12px 20px;
+}
+.chat-bubble p,
+.chat-bubble li,
+.chat-bubble ul,
+.chat-bubble ol,
+.chat-bubble blockquote,
+.chat-bubble pre,
+.chat-bubble code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 .chat-bubble p { margin-bottom: 8px; }
 .chat-bubble p:last-child { margin-bottom: 0; }

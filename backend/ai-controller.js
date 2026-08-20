@@ -3,7 +3,7 @@ const authService = require('./auth-service');
 
 // Rate limiting: store user request timestamps
 const requestLogs = new Map();
-const MAX_REQUESTS = 10; // max requests per time window
+const MAX_REQUESTS = 30; // max requests per time window
 const TIME_WINDOW = 60000; // 60 seconds
 const MAX_KEYS = 5000; // Limit map size to prevent memory leak
 

@@ -1,5 +1,5 @@
 const { getDb } = require('./database');
-const { getSystemPrompt, getAdmissionBriefPrompt, getMissingParamsMessage } = require('./ai-prompts');
+const { getSystemPrompt, getAdmissionBriefPrompt, getMissingParamsMessage, buildGreetingPrompt, buildHelpPrompt, buildDeadlinesPrompt, buildRecommendationPrompt, buildOverviewPrompt, buildEdgeCasePrompt } = require('./ai-prompts');
 const { getAdmissionPrediction } = require('./admission-service');
 const { tr } = require('./i18n');
 const { findProfession, formatProfessionForContext, getProfessionsBySpecialty } = require('./profession-data');
@@ -206,7 +206,10 @@ const INTENT_PATTERNS = [
   {
     name: 'recommendation',
     patterns: [
-      /(?:рекомендуй|посоветуй|подбери|какой вуз|какие университет|лучший вуз|посоветуйте)/i,
+      /(?:рекомендуй|посоветуй|подбери|какой вуз|какие университет|лучший вуз|посоветуйте|выбери)/i,
+      /(?:покажи|показать|покажите|подскажи|подскажи).*(?:лучшие|топ|самые|best).*(?:вузы|университеты|универы)/i,
+      /(?:лучшие|топ|самые|best)\s+(?:вузы|университеты|универы)/i,
+      /(?:какой\s+вуз\s+лучше|какой\s+университет\s+лучше|где\s+лучше\s+учиться|где\s+лучше\s+поступать)/i,
       /(?:интересует|хочу|ищу).*(?:вуз|университет|специальность|направление)/i,
       // KK — "мамандықтары туралы", "мамандық туралы", "мамандық айтыңыз"
       /мамандықтары?\s+(?:туралы|айтыңызшы|беріңізші|көрсетіңізші)/i,
@@ -215,12 +218,12 @@ const INTENT_PATTERNS = [
       /(?:ұсын|кеңес бер|таңда|қай университет|қандай университет|жәй университет|ұсыныңыз)/i,
       /(?:қызықтырады|қаламын|іздеймін).*(?:университет|мамандық|бағыт)/i,
       // EN
-      /(?:recommend|suggest|advise|which uni|which university|best uni|best university)/i,
+      /(?:recommend|suggest|advise|which uni|which university|best uni|best university|show me the best|best universities|where is better to study)/i,
       /(?:interested in|want|looking for).*(?:university|specialty|major)/i,
     ],
-    keywords: ['рекомендуй','посоветуй','подбери','лучший','интересует',
+    keywords: ['рекомендуй','посоветуй','подбери','покажи','лучшие вузы','лучший','интересует',
                'ұсын','кеңес бер','таңда','қай','жәй','қызықтырады','мамандық','мамандықтары',
-               'recommend','suggest','which','best','interested'],
+               'recommend','suggest','show me the best','best universities','which','best','interested'],
   },
   {
     name: 'city',
@@ -307,6 +310,11 @@ function classifyIntent(message, history = []) {
     }
   }
 
+  // Явная рекомендация по вузам должна идти в recommendation, даже если формулировка короткая
+  if (/(?:какой\s+(?:универ|вуз)|какой\s+университет|какой\s+универ\s+ещ[ёе]|ещ[ёе]\s+(?:совет|вариант)|посовету(?:й|ешь)|порекомендуй|подбери(?:те)?\s*(?:вуз|университет)|подобрать\s*(?:вуз|университет)|какой\s+вуз\s+лучше|покажи\s+(?:еще|ещё|други[её]|другие)\s+вариант(?:ы|ы)?|покажи\s+други[её]\s+вузы|хочу\s+(?:пару|несколько)\s+вариант(?:ов|ы)?) /i.test(q)) {
+    return 'recommendation';
+  }
+
   // Проверяем comparison ДО uni_info (чтобы "сравни стоимость КБТУ и МУИТ" не ловилось как uni_info)
   const compCheck = INTENT_PATTERNS.find(i => i.name === 'comparison');
   if (compCheck && compCheck.patterns.some(p => p.test(q))) {
@@ -315,7 +323,7 @@ function classifyIntent(message, history = []) {
 
   // Сильные маркеры admission ДО recommendation (чтобы "Хочу поступить" не ловилось как recommendation)
   // Но НЕ информационные вопросы про процесс поступления — это general
-  if (/(?:поступ|шанс|поступлю)/i.test(q) && !/документ/i.test(q) && !/мне\s+\d+\s+лет/i.test(q)) {
+  if (/(?:поступ|шанс|поступлю|куда\s+я\s+могу\s+поступить|своим\s+баллом|с\s+е?нт\s+\d+|с\s+балл(?:ом|а)\s+\d+)/i.test(q) && !/документ/i.test(q) && !/мне\s+\d+\s+лет/i.test(q)) {
     // Информационные вопросы про процесс → general
     if (/(?:как (?:подать|поступить|записаться|заявк)|процедур|заявлен|заявк|порядок|этап|список документов|пакет документов|когда подавать|сроки подач|где подавать|подача заяв|вступительн)/i.test(q)) {
       // пропускаем
@@ -327,6 +335,12 @@ function classifyIntent(message, history = []) {
   // Проверяем recommendation ДО uni_info (чтобы "подбери вуз" не ловилось как uni_info)
   const recCheck = INTENT_PATTERNS.find(i => i.name === 'recommendation');
   if (recCheck && recCheck.patterns.some(p => p.test(q))) {
+    return 'recommendation';
+  }
+  if (/(?:покажи|показать|покажите|подскажи|подскажи).*(?:лучшие|топ|самые|best).*(?:вузы|университеты|универы)/i.test(q) ||
+      /(?:лучшие|топ|самые|best)\s+(?:вузы|университеты|универы)/i.test(q) ||
+      /(?:какой\s+вуз\s+лучше|какой\s+университет\s+лучше|где\s+лучше\s+учиться|где\s+лучше\s+поступать)/i.test(q) ||
+      /(?:покажи\s+(?:ещ[ёе]|други[её]|другие)\s+вариант(?:ы|а)?|(?:хочу|нужны?)\s+(?:пару|несколько)\s+вариант(?:ов|ы)?)/i.test(q)) {
     return 'recommendation';
   }
 
@@ -400,6 +414,17 @@ function classifyIntent(message, history = []) {
   // Проверяем admission ДО profession (чтобы "мои шансы в КБТУ на программиста" не ловилось как profession)
   const admCheck = INTENT_PATTERNS.find(i => i.name === 'admission');
   if (admCheck && admCheck.patterns.some(p => p.test(q))) {
+    return 'admission';
+  }
+
+  // Явные вопросы про шансы/ЕНТ/поступление всегда идут в admission, даже без длинного шаблона.
+  if (/(?:поступлю\s+ли\s+я|поступил|поступать|поступление|мои\s+шансы|шансы\s+в|шанс\s+на\s+поступление|куда\s+я\s+могу\s+поступить|с\s+е?нт\s+\d|с\s+ебт\s+\d|ent\s+\d|своим\s+баллом|с\s+балл(?:ом|а)\s+\d)/i.test(q)) {
+    return 'admission';
+  }
+
+  // Университет + специализация без явного вопроса про профессию = запрос на поступление/проверку программы.
+  if (/(?:кбт|казну|ну|ену|муит|кимэп|туран|сд|астана|алматы|шымкент|павлодар|семей|актау|атырау|усть|караганд|кызылорда|кокшетау|жезказган|орда|университет|вуз).*(?:на|по|про|для)\s*(?:программист|программирование|айти|it|медицина|эконом|инженер|педагог|юрист|дизайн|архитект|бизнес|технолог|медицин|физика|матем)/i.test(q)
+      && !/(?:какой|какая|кем|работа|карьера|профессия|профессии|чем|что делать)/i.test(q)) {
     return 'admission';
   }
 
@@ -1261,7 +1286,7 @@ async function handleProfessionQuery(msg, lang = 'ru') {
 Для каждой рекомендации укажи: название, краткое описание (1-2 предложения), среднюю зарплату в Казахстане.
 Отвечай на языке пользователя (${lang}). Кратко, 3-5 рекомендаций.`;
     try {
-      const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.7, maxTokens: 500 });
+      const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.7, maxTokens: 1024 });
       return {
         answer: llmResult.text,
         matches: [],
@@ -1353,7 +1378,7 @@ DATA: ${JSON.stringify(professionData)}`;
 
   let text;
   try {
-    const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.7, maxTokens: 700 });
+    const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.7, maxTokens: 1024 });
     text = llmResult.text;
   } catch (e) {
     console.error('[ai-service] LLM composition failed for profession, откат на шаблон:', e.message);
@@ -1465,7 +1490,7 @@ DATA: ${JSON.stringify(uniData)}`;
 
   let text;
   try {
-    const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.6, maxTokens: 700 });
+    const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.6, maxTokens: 1024 });
     text = llmResult.text;
   } catch (e) {
     console.error('[ai-service] LLM composition failed for uni_info, откат на шаблон:', e.message);
@@ -1488,7 +1513,7 @@ DATA: ${JSON.stringify(uniData)}`;
 
 // ==================== CITY HANDLER ====================
 
-async function handleCityQuery(msg, lang = 'ru') {
+async function handleCityQuery(msg, history = [], lang = 'ru') {
   const startTime = Date.now();
   const db = getDb();
 
@@ -1643,7 +1668,7 @@ DATA: ${JSON.stringify(cityData)}`;
 
     let text;
     try {
-      const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.6, maxTokens: 800 });
+      const llmResult = await callOpenRouter(systemPrompt, msg, [], { temperature: 0.6, maxTokens: 1024 });
       text = llmResult.text;
     } catch (e) {
       console.error('[ai-service] LLM composition failed for city, откат на шаблон:', e.message);
@@ -1990,7 +2015,7 @@ DATA: ${JSON.stringify(grantsData)}`;
 
   let text;
   try {
-    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 700 });
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 1024 });
     text = llmResult.text;
   } catch (e) {
     console.error('[ai-service] LLM composition failed for grant, откат на шаблон:', e.message);
@@ -2160,7 +2185,7 @@ DATA: ${JSON.stringify(compareData)}`;
 
   let text;
   try {
-    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 700 });
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 1024 });
     text = llmResult.text;
   } catch (e) {
     console.error('[ai-service] LLM composition failed for comparison, откат на шаблон:', e.message);
@@ -2281,17 +2306,7 @@ async function handleRecommendationQuery(msg, history = [], lang = 'ru') {
     };
   }
 
-  const specText = specialtyCategory ? `📚 **${lang === 'kk' ? 'Мамандық' : lang === 'en' ? 'Specialty' : 'Специальность'}:** ${specialtyCategory}\n` : '';
-  const cityText = params.cityName ? `🏙 **${lang === 'kk' ? 'Қала' : lang === 'en' ? 'City' : 'Город'}:** ${params.cityName}\n` : '';
-  const budgetText = budget ? `💰 **${lang === 'kk' ? 'Бюджет' : lang === 'en' ? 'Budget' : 'Бюджет'}:** ${lang === 'kk' ? 'дейін' : lang === 'en' ? 'up to' : 'до'} ${budget.toLocaleString()}₸\n` : '';
-  const entText = params.ent ? `🎯 **${lang === 'kk' ? 'Сіздің ҰБТ' : lang === 'en' ? 'Your ENT' : 'Ваш ЕНТ'}:** ${params.ent}\n` : '';
-
-  let text = '';
-  if (specText || cityText || budgetText || entText) {
-    text += `${specText}${cityText}${budgetText}${entText}\n`;
-  }
-
-  // Группируем по вузам
+  // Группируем по вузам для формирования контекста
   const byUni = new Map();
   for (const u of unis) {
     if (!byUni.has(u.id)) {
@@ -2317,53 +2332,67 @@ async function handleRecommendationQuery(msg, history = [], lang = 'ru') {
     })
     .slice(0, 20);
 
-  text += `## 📋 ${lang === 'kk' ? 'Үздік университеттер' : lang === 'en' ? 'Best universities' : 'Лучшие вузы'} (${grouped.length}):\n\n`;
+  // Формируем контекст для LLM
+  const uniContext = grouped.map(u => ({
+    name: u.short_name || u.name,
+    city: u.city_name,
+    qs_world: u.qs_world,
+    price_from: u.price_from,
+    price_to: u.price_to,
+    has_dorm: !!u.has_dorm,
+    languages: u.languages ? JSON.parse(u.languages) : [],
+    specialties: u.specs,
+    avg_ent: u.avg_ents.length ? Math.round(u.avg_ents.reduce((a, b) => a + b, 0) / u.avg_ents.length) : null,
+    min_ent: u.min_ents.filter(v => v !== null && v !== undefined).length ? Math.min(...u.min_ents.filter(v => v !== null && v !== undefined)) : null,
+    grant_min_ent: u.grant_ents.filter(v => v !== null && v !== undefined).length ? Math.max(...u.grant_ents.filter(v => v !== null && v !== undefined)) : null,
+  }));
 
-  // Группируем по городам
-  const byCity = {};
-  for (const u of grouped) {
-    const city = u.city_name || 'Другой';
-    if (!byCity[city]) byCity[city] = [];
-    byCity[city].push(u);
-  }
+  const systemPrompt = buildRecommendationPrompt(lang, uniContext, { specialty: specialtyCategory, cityName: params.cityName, budget, ent: params.ent });
 
-  let idx = 1;
-  for (const [city, cityUnis] of Object.entries(byCity)) {
-    text += `### 🏙 ${city}\n\n`;
-    for (const u of cityUnis) {
-      const qs = u.qs_world ? `QS #${u.qs_world}` : '';
-      const price = u.price_from ? `${u.price_from.toLocaleString()}–${(u.price_to || u.price_from).toLocaleString()}₸` : '—';
-      const langs = u.languages ? JSON.parse(u.languages).join(', ') : '—';
-      const dorm = u.has_dorm ? '🏠' : '';
-      const specs = u.specs.join(', ');
-      const avgEnt = u.avg_ents.length ? Math.round(u.avg_ents.reduce((a, b) => a + b, 0) / u.avg_ents.length) : '—';
-      const validMins = u.min_ents.filter(v => v !== null && v !== undefined);
-      const validGrants = u.grant_ents.filter(v => v !== null && v !== undefined);
-      const minEnt = validMins.length ? Math.min(...validMins) : '—';
-      const grantEnt = validGrants.length ? Math.max(...validGrants) : '—';
-
-      text += `**${idx}. ${u.short_name || u.name}**`;
-      if (qs) text += ` (${qs})`;
-      if (dorm) text += ` ${dorm}`;
-      text += '\n';
-      text += `   💰 ${price} | 🌐 ${langs}\n`;
-      if (u.specs.length) text += `   📚 ${u.specs.join(', ')}\n`;
-      text += `   📊 ${lang === 'kk' ? 'орташа ҰБТ' : lang === 'en' ? 'avg ENT' : 'средний ЕНТ'} ${avgEnt}, ${lang === 'kk' ? 'мин' : lang === 'en' ? 'min' : 'мин'} ${minEnt}, ${lang === 'kk' ? 'грантқа дейін' : lang === 'en' ? 'grant up to' : 'грант до'} ${grantEnt}\n\n`;
-      idx++;
+  try {
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 1024 });
+    return {
+      answer: llmResult.text,
+      matches: [],
+      usedData: { universities_count: unis.length, specialty: specialtyCategory, city: params.cityName, model_used: llmResult.model_used },
+      fallback: false,
+      confidence: 0.9,
+      took_ms: Date.now() - startTime,
+      intent: 'recommendation',
+    };
+  } catch (e) {
+    console.error('[ai-service] LLM recommendation failed, fallback:', e.message);
+    // Фоллбэк — компактный список
+    let text = `## 📋 ${lang === 'kk' ? 'Үздік университеттер' : lang === 'en' ? 'Best universities' : 'Лучшие вузы'} (${grouped.length}):\n\n`;
+    const byCity = {};
+    for (const u of grouped) {
+      const city = u.city_name || 'Другой';
+      if (!byCity[city]) byCity[city] = [];
+      byCity[city].push(u);
     }
+    let idx = 1;
+    for (const [city, cityUnis] of Object.entries(byCity)) {
+      text += `### 🏙 ${city}\n\n`;
+      for (const u of cityUnis) {
+        const qs = u.qs_world ? `QS #${u.qs_world}` : '';
+        const price = u.price_from ? `${u.price_from.toLocaleString()}–${(u.price_to || u.price_from).toLocaleString()}₸` : '—';
+        const avgEnt = u.avg_ents.length ? Math.round(u.avg_ents.reduce((a, b) => a + b, 0) / u.avg_ents.length) : '—';
+        text += `**${idx}. ${u.short_name || u.name}**${qs ? ' (' + qs + ')' : ''}\n`;
+        text += `   💰 ${price} | 📊 ЕНТ ${avgEnt}\n\n`;
+        idx++;
+      }
+    }
+    text += `💡 Напишите *"Мои шансы в [вуз] на [направление] с ЕНТ [балл]"* для расчёта.`;
+    return {
+      answer: text,
+      matches: [],
+      usedData: { universities_count: unis.length, specialty: specialtyCategory, city: params.cityName },
+      fallback: true,
+      confidence: 0.5,
+      took_ms: Date.now() - startTime,
+      intent: 'recommendation',
+    };
   }
-
-  text += `💡 Напишите *"Мои шансы в [вуз] на [направление] с ЕНТ [балл]"* для расчёта вероятности.`;
-
-  return {
-    answer: text,
-    matches: [],
-    usedData: { universities_count: unis.length, specialty: specialtyCategory, city: params.cityName },
-    fallback: false,
-    confidence: 0.9,
-    took_ms: Date.now() - startTime,
-    intent: 'recommendation',
-  };
 }
 
 function retrieveRelevantUniversities(question) {
@@ -2535,14 +2564,9 @@ async function callOpenRouter(systemPrompt, userMessage, history, options = {}) 
 
   const requestBody = {
     model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash',
-    models: ['google/gemini-2.5-pro'],
-    provider: {
-      only: ['google-ai-studio'],
-      data_collection: 'deny',
-    },
     messages,
     temperature: options.temperature ?? 0.75,
-    max_tokens: options.maxTokens ?? 640,
+    max_tokens: options.maxTokens ?? 1024,
   };
 
   console.log('[ai-service] OpenRouter request:', JSON.stringify({
@@ -2629,37 +2653,71 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
   const usedHistory = historyParams.ent !== undefined && parsed.ent === null
     || historyParams.specialty !== undefined && parsed.specialty === null;
 
-  // Проверка на слишком высокий ЕНТ (141+ или 1000+)
+  // Проверка на слишком высокий ЕНТ (141+ или 1000+) — через LLM
   const hasEntNumber = /(?:ент|бал[а-я]*)\s*:?\s*(\d{3,})\b/i.test(msg) ||
     /(\d{3,})\s*(?:бал[а-я]*)/i.test(msg);
   if (hasEntNumber) {
     const match = msg.match(/(?:ент|бал[а-я]*)\s*:?\s*(\d{3,})/i) || msg.match(/(\d{3,})\s*(?:бал[а-я]*)/i);
     const num = match ? parseInt(match[1], 10) : 0;
     if (num > 140) {
-      return {
-        answer: tr('max_ent', lang) || 'Максимальный балл ЕНТ — 140. Укажите корректное значение (0–140).',
-        matches: [],
-        usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
-        fallback: false,
-        confidence: 0.9,
-        took_ms: Date.now() - startTime,
-        intent: 'admission',
-        admission: { type: 'invalid_ent', params },
-      };
+      const startTimeEdge = Date.now();
+      const context = { ent: num, scenario: 'invalid_ent' };
+      const systemPrompt = buildEdgeCasePrompt(lang, 'Пользователь указал балл ЕНТ выше максимального (больше 140). Вежливо объясни, что максимальный балл — 140.', context);
+      try {
+        const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.7, maxTokens: 300 });
+        return {
+          answer: llmResult.text,
+          matches: [],
+          usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null, model_used: llmResult.model_used },
+          fallback: false,
+          confidence: 0.9,
+          took_ms: Date.now() - startTimeEdge,
+          intent: 'admission',
+          admission: { type: 'invalid_ent', params },
+        };
+      } catch (e) {
+        return {
+          answer: 'Максимальный балл ЕНТ — 140. Укажите корректное значение (0–140).',
+          matches: [],
+          usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
+          fallback: true,
+          confidence: 0.9,
+          took_ms: Date.now() - startTimeEdge,
+          intent: 'admission',
+          admission: { type: 'invalid_ent', params },
+        };
+      }
     }
   }
 
   if (params.ent === null && !params.specialty && !params.university_id) {
-    return {
-      answer: tr('specify_ent', lang) || 'Укажите балл ЕНТ и направление, чтобы я рассчитал шансы.\n\nНапример: *"Поступлю ли я в КБТУ на IT с ЕНТ 110?"*',
-      matches: [],
-      usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
-      fallback: false,
-      confidence: 0.9,
-      took_ms: Date.now() - startTime,
-      intent: 'admission',
-      admission: { type: 'missing_params', params },
-    };
+    const startTimeEdge = Date.now();
+    const context = { message: msg, scenario: 'admission_missing_params' };
+    const systemPrompt = buildEdgeCasePrompt(lang, 'Пользователь обратился за расчётом шансов на поступление, но не указал ни балл ЕНТ, ни вуз, ни специальность. Попроси уточнить.', context);
+    try {
+      const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.7, maxTokens: 300 });
+      return {
+        answer: llmResult.text,
+        matches: [],
+        usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null, model_used: llmResult.model_used },
+        fallback: false,
+        confidence: 0.9,
+        took_ms: Date.now() - startTimeEdge,
+        intent: 'admission',
+        admission: { type: 'missing_params', params },
+      };
+    } catch (e) {
+      return {
+        answer: 'Укажите балл ЕНТ и направление, чтобы я рассчитал шансы.\n\nНапример: *"Поступлю ли я в КБТУ на IT с ЕНТ 110?"*',
+        matches: [],
+        usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
+        fallback: true,
+        confidence: 0.9,
+        took_ms: Date.now() - startTimeEdge,
+        intent: 'admission',
+        admission: { type: 'missing_params', params },
+      };
+    }
   }
 
   const db = getDb();
@@ -2692,9 +2750,6 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
         `).all(params.ent);
 
         if (allCandidates.length > 0) {
-          // For each university, find the specialty with SMALLEST GAP to user's ENT
-          // Gap = params.ent - avg_ent (negative = below average, positive = above)
-          // We want the specialty where gap is closest to 0 (best match)
           const bestPerUni = new Map();
           for (const c of allCandidates) {
             if (!bestPerUni.has(c.uid)) {
@@ -2705,7 +2760,6 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
 
           const results = [];
           for (const [uid, rows] of bestPerUni) {
-            // Find specialty with smallest absolute gap
             let chosen = rows.reduce((best, r) => {
               const gapBest = Math.abs(params.ent - best.avg_ent);
               const gapCurr = Math.abs(params.ent - r.avg_ent);
@@ -2723,72 +2777,130 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
             })
             .slice(0, 12);
 
-          const qualifyCount = results.filter(r => r.qualifies).length;
-          const totalCount = results.length;
-
-          let text = (tr('overview_title', lang) || '🎯 **С вашим баллом ${score}**\n\n').replace('${score}', params.ent);
-          if (qualifyCount > 0) {
-            text += (tr('overview_qualify', lang) || `Ваш балл подходит для **${qualifyCount}** вузов (из ${totalCount} с данными):\n\n`).replace('${count}', qualifyCount);
-          } else {
-            text += (tr('overview_near', lang) || 'Ваш балл чуть ниже среднего по всем вузам, но есть варианты:\n\n');
-          }
-
-          top.forEach((u, i) => {
-            const emoji = u.qualifies ? '🟢' : '🟡';
-            const qs = u.qs_world ? ` (QS #${u.qs_world})` : '';
-            const specDisplay = u.specialty_name || u.category;
-            text += `${emoji} **${u.short_name}**${qs} — ${specDisplay}, средний ЕНТ ${u.avg_ent}`;
-            if (u.qualifies) {
-              text += `, ${tr('overview_line', lang) || 'вы **на ${diff} выше**'}`.replace('${diff}', u.diff);
-            } else {
-              text += `, ${tr('overview_need', lang) || 'вам не хватает ${diff}'}`.replace('${diff}', Math.abs(u.diff));
-            }
-            if (u.grant && params.ent >= u.grant) text += ` ✅ грант`;
-            text += '\n';
-          });
-          text += `\n${tr('overview_hint', lang) || '💡 Напишите вуз и направление для точного расчёта.\nНапример: *"Мои шансы в КБТУ на IT"*'}`;
-
-    return {
-            answer: text,
-            matches: [],
-            usedData: { universities_count: totalCount, grants_count: 0, extraction_params: params, admission_result: null },
-            fallback: false,
-            confidence: 0.9,
-            took_ms: Date.now() - startTime,
-            intent: 'admission',
-            admission: { type: 'overview', params },
+          const overviewData = {
+            ent: params.ent,
+            qualifyCount: results.filter(r => r.qualifies).length,
+            totalCount: results.length,
+            universities: top.map(u => ({
+              name: u.short_name,
+              qs_world: u.qs_world,
+              specialty: u.specialty_name || u.category,
+              avg_ent: u.avg_ent,
+              min_ent: u.min_ent,
+              grant_min_ent: u.grant,
+              diff: u.diff,
+              qualifies: u.qualifies,
+            })),
           };
+
+          const systemPrompt = buildOverviewPrompt(lang, overviewData);
+          try {
+            const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 1024 });
+            return {
+              answer: llmResult.text,
+              matches: [],
+              usedData: { universities_count: overviewData.totalCount, grants_count: 0, extraction_params: params, admission_result: null, model_used: llmResult.model_used },
+              fallback: false,
+              confidence: 0.9,
+              took_ms: Date.now() - startTime,
+              intent: 'admission',
+              admission: { type: 'overview', params },
+            };
+          } catch (e) {
+            console.error('[ai-service] LLM overview failed, fallback:', e.message);
+            let text = `🎯 **С вашим баллом ${params.ent}**\n\n`;
+            if (overviewData.qualifyCount > 0) {
+              text += `Ваш балл подходит для **${overviewData.qualifyCount}** вузов (из ${overviewData.totalCount}):\n\n`;
+            } else {
+              text += `Ваш балл чуть ниже среднего по всем вузам, но есть варианты:\n\n`;
+            }
+            top.forEach((u) => {
+              const emoji = u.qualifies ? '🟢' : '🟡';
+              const qs = u.qs_world ? ` (QS #${u.qs_world})` : '';
+              const specDisplay = u.specialty_name || u.category;
+              text += `${emoji} **${u.short_name}**${qs} — ${specDisplay}, средний ЕНТ ${u.avg_ent}`;
+              if (u.qualifies) {
+                text += `, вы **на ${u.diff} выше**`;
+              } else {
+                text += `, вам не хватает ${Math.abs(u.diff)}`;
+              }
+              if (u.grant && params.ent >= u.grant) text += ` ✅ грант`;
+              text += '\n';
+            });
+            text += `\n💡 Напишите вуз и направление для точного расчёта.`;
+            return {
+              answer: text,
+              matches: [],
+              usedData: { universities_count: overviewData.totalCount, grants_count: 0, extraction_params: params, admission_result: null },
+              fallback: true,
+              confidence: 0.5,
+              took_ms: Date.now() - startTime,
+              intent: 'admission',
+              admission: { type: 'overview', params },
+            };
+          }
         }
       } catch (e) {
         console.error('[ai-service] overview query error:', e.message);
       }
 
-      // Fallback: suggest popular specialties
-      const popularSpecs = ['Информационные технологии', 'Медицина', 'Бизнес', 'Инженерия', 'Образование'];
-      let specHint = popularSpecs.map((s, i) => `${i + 1}. ${s}`).join('\n');
+      // Fallback: suggest popular specialties via LLM
+      const context = { ent: params.ent, scenario: 'missing_specialty', popularSpecs: ['Информационные технологии', 'Медицина', 'Бизнес', 'Инженерия', 'Образование'] };
+      const systemPrompt = buildEdgeCasePrompt(lang, 'Пользователь указал ЕНТ балл, но не указал специальность. Попроси его выбрать направление.', context);
+      try {
+        const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.7, maxTokens: 400 });
+        return {
+          answer: llmResult.text,
+          matches: [],
+          usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null, model_used: llmResult.model_used },
+          fallback: false,
+          confidence: 0.9,
+          took_ms: Date.now() - startTime,
+          intent: 'admission',
+          admission: { type: 'missing_specialty', params },
+        };
+      } catch (e) {
+        const popularSpecs = ['Информационные технологии', 'Медицина', 'Бизнес', 'Инженерия', 'Образование'];
+        let specHint = popularSpecs.map((s, i) => `${i + 1}. ${s}`).join('\n');
+        return {
+          answer: `Я вижу ЕНТ: **${params.ent}** баллов. На какое направление хотите поступить?\n\n${specHint}\n\nНапишите, например: *"Шансы на IT с ${params.ent} баллами"* или *"Поступлю ли в КБТУ на программиста"*`,
+          matches: [],
+          usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
+          fallback: true,
+          confidence: 0.5,
+          took_ms: Date.now() - startTime,
+          intent: 'admission',
+          admission: { type: 'missing_specialty', params },
+        };
+      }
+    }
+    // No ENT, no specialty — ask via LLM
+    const context = { scenario: 'missing_params', message: msg };
+    const systemPrompt = buildEdgeCasePrompt(lang, 'Пользователь обратился за расчётом шансов, но не указал ни балл ЕНТ, ни специальность. Попроси уточнить.', context);
+    try {
+      const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.7, maxTokens: 400 });
       return {
-        answer: (tr('overview_fallback', lang) || 'Я вижу ЕНТ: **${ent}** баллов. На какое направление хотите поступить?\n\n${specHint}\n\nНапишите, например: *"Шансы на IT с ${ent} баллами"* или *"Поступлю ли в КБТУ на программиста"*')
-          .replace(/\$\{ent\}/g, params.ent)
-          .replace('${specHint}', specHint),
+        answer: llmResult.text,
         matches: [],
-        usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
+        usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null, model_used: llmResult.model_used },
         fallback: false,
         confidence: 0.9,
         took_ms: Date.now() - startTime,
         intent: 'admission',
-        admission: { type: 'missing_specialty', params },
+        admission: { type: 'missing_params', params },
+      };
+    } catch (e) {
+      return {
+        answer: 'Укажите балл ЕНТ и направление.\n\nНапример: *"Поступлю ли я в КБТУ на IT с ЕНТ 110?"*',
+        matches: [],
+        usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
+        fallback: true,
+        confidence: 0.5,
+        took_ms: Date.now() - startTime,
+        intent: 'admission',
+        admission: { type: 'missing_params', params },
       };
     }
-    return {
-      answer: tr('no_data', lang) || 'Укажите балл ЕНТ и направление.\n\nНапример: *"Поступлю ли я в КБТУ на IT с ЕНТ 110?"*',
-      matches: [],
-      usedData: { universities_count: 0, grants_count: 0, extraction_params: params, admission_result: null },
-      fallback: false,
-      confidence: 0.9,
-      took_ms: Date.now() - startTime,
-      intent: 'admission',
-      admission: { type: 'missing_params', params },
-    };
   }
 
   const prediction = getAdmissionPrediction({
@@ -2855,15 +2967,28 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
 
   const systemPrompt = `Ты — EduMatch KZ, консультант по поступлению в вузы Казахстана.
 Ниже РЕАЛЬНО посчитанные данные о шансах поступления (JSON) — проценты и пороги ЕНТ уже рассчитаны кодом, ты их НЕ пересчитываешь и не меняешь, только объясняешь.
-Отвечай на конкретный вопрос пользователя. Если он спросил только про один вуз — не вываливай весь список остальных.
-Если задаёт уточняющий вопрос ("а если баллы выше?", "а на другую специальность?") — отвечай по существу.
-НЕ выдумывай проценты, вузы или пороги, которых нет в DATA.
+
+СУТЬ ЗАДАЧИ:
+- Отвечай ТОЛЬКО на вопрос пользователя о шансах поступления.
+- Если пользователь спрашивает "поступлю ли я", "мои шансы", "с ЕНТ ...", "в КБТУ", "на IT" — отвечай как эксперт по результатам именно этого запроса.
+- Не вставляй общий список "Лучшие вузы", "топ университетов", рекомендации по другим вузам, если пользователь не просил именно список.
+- Не смешивай ответ с блоком про "лучшие вузы" или "готовые рекомендации".
+- Если это один вуз и одна специальность — давай короткий, но осмысленный ответ по данным, с % шансов, порогом, выводом и коротким советом.
+- Если пользователь задаёт уточняющий вопрос — отвечай по существу и не пересказывай весь список.
+- НЕ выдумывай проценты, вузы, пороги или стоимости, которых нет в DATA.
+
+ФОРМАТ ОТВЕТА:
+1) Короткое вступление (1–2 предложения)
+2) Чёткий итог по шансам
+3) 2–4 важных факта из DATA
+4) Короткий совет/вывод
+5) НИКОГДА не добавляй список "Лучшие вузы" без явного запроса пользователя
 
 DATA: ${JSON.stringify(admissionData)}`;
 
   let answer;
   try {
-    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 700 });
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 1024 });
     answer = llmResult.text;
   } catch (e) {
     console.error('[ai-service] LLM composition failed for admission, откат на шаблон:', e.message);
@@ -2964,22 +3089,39 @@ function handleDeadlinesQuery(lang = 'ru') {
   };
 
   const cal = deadlines[lang] || deadlines.ru;
-  let text = `## ${cal.title}\n\n`;
-  cal.items.forEach(item => {
-    text += `**${item.date}** — ${item.event}\n`;
-    text += `   ${item.desc}\n\n`;
-  });
-  text += `---\n💡 *Даты могут отличаться в зависимости от вуза. Уточняйте на официальном сайте.*`;
+  const systemPrompt = buildDeadlinesPrompt(lang, cal);
 
-  return {
-    answer: text,
-    matches: [],
-    usedData: {},
-    fallback: false,
-    confidence: 0.95,
-    took_ms: Date.now() - startTime,
-    intent: 'deadlines',
-  };
+  return (async () => {
+    try {
+      const llmResult = await callOpenRouter(systemPrompt, '', [], { temperature: 0.6, maxTokens: 600 });
+      return {
+        answer: llmResult.text,
+        matches: [],
+        usedData: { model_used: llmResult.model_used },
+        fallback: false,
+        confidence: 0.95,
+        took_ms: Date.now() - startTime,
+        intent: 'deadlines',
+      };
+    } catch (e) {
+      console.error('[ai-service] LLM deadlines failed, fallback:', e.message);
+      let text = `## ${cal.title}\n\n`;
+      cal.items.forEach(item => {
+        text += `**${item.date}** — ${item.event}\n`;
+        text += `   ${item.desc}\n\n`;
+      });
+      text += `---\n💡 *Даты могут отличаться в зависимости от вуза. Уточняйте на официальном сайте.*`;
+      return {
+        answer: text,
+        matches: [],
+        usedData: {},
+        fallback: true,
+        confidence: 0.5,
+        took_ms: Date.now() - startTime,
+        intent: 'deadlines',
+      };
+    }
+  })();
 }
 
 function buildOnboardingFallback(params, lang) {
@@ -3076,17 +3218,46 @@ DATA: ${JSON.stringify(onboardingData)}`;
   };
 }
 
-  // Отклоняем чистые числа (не как часть запроса)
+  // Отклоняем чистые числа — через LLM
   if (/^\d+$/.test(msg)) {
-    return {
-      answer: 'Я вижу число, но не понимаю контекст. Укажите балл ЕНТ и направление:\n\n• *"Мои шансы в КБТУ с ЕНТ 110"*\n• *"Поступлю ли я в КазНУ с ЕНТ 100?"*',
-      matches: [],
-      usedData: {},
-      fallback: false,
-      confidence: 0.3,
-      took_ms: 0,
-      intent: 'general',
-    };
+    const startTimeEdge = Date.now();
+    const context = { message: msg, scenario: 'pure_number' };
+    const systemPrompt = buildEdgeCasePrompt(lang, 'Пользователь отправил только число без контекста. Вежливо попроси уточнить, что он имеет в виду — возможно, это балл ЕНТ.', context);
+    try {
+      const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.7, maxTokens: 300 });
+      return {
+        answer: llmResult.text,
+        matches: [],
+        usedData: { model_used: llmResult.model_used },
+        fallback: false,
+        confidence: 0.5,
+        took_ms: Date.now() - startTimeEdge,
+        intent: 'general',
+      };
+    } catch (e) {
+      return {
+        answer: 'Я вижу число, но не понимаю контекст. Укажите балл ЕНТ и направление:\n\n• *"Мои шансы в КБТУ с ЕНТ 110"*\n• *"Поступлю ли я в КазНУ с ЕНТ 100?"*',
+        matches: [],
+        usedData: {},
+        fallback: true,
+        confidence: 0.3,
+        took_ms: 0,
+        intent: 'general',
+      };
+    }
+  }
+
+  const strongAdmission = /(?:поступлю\s+ли\s+я|поступить\s+в|куда\s+я\s+могу\s+поступить|мои\s+шансы|шансы\s+на\s+поступление|с\s+е?нт\s+\d+|с\s+балл(?:ом|а)\s+\d+|своим\s+баллом|думаю\s+о\s+поступлении|в\s+кбту.*с\s+ент)/i.test(msg);
+  const strongRecommendation = /(?:подбери|подберите|какие\s+вузы|какие\s+университеты|пару\s+вариант(?:ов|а)|несколько\s+вариант(?:ов|а)|вариант(?:ы|ов)|хочу\s+пару\s+вариант(?:ов|а)|покажи\s+лучшие\s+вузы|какой\s+вуз\s+лучше)/i.test(msg);
+
+  if (strongAdmission && !strongRecommendation) {
+    console.log('[ai-service] Hard admission guard triggered');
+    return await handleAdmissionChatQuery(msg, history, lang);
+  }
+
+  if (strongRecommendation && !strongAdmission) {
+    console.log('[ai-service] Hard recommendation guard triggered');
+    return await handleRecommendationQuery(msg, history, lang);
   }
 
   console.log(`\n[ai-service] User message: "${msg}"`);
@@ -3160,134 +3331,72 @@ DATA: ${JSON.stringify(onboardingData)}`;
     return handleDeadlinesQuery(lang);
   }
 
-  // Приветствие — заготовленный ответ без LLM
+  // Приветствие — через LLM
   if (intent === 'greeting') {
-    const greetings = {
-      ru: `Привет! 👋 Я твой ИИ-советник по поступлению в вузы Казахстана.
-
-Могу помочь с:
-• 🎯 **Расчёт шансов** — "Мои шансы в КБТУ на программиста с ЕНТ 110"
-• 🏙 **Города** — "Какие вузы в Алматы?"
-• 📋 **Списки вузов** — "Дай список вузов на IT"
-• ⚖️ **Сравнение** — "Сравни КБТУ и КазНУ"
-• 💰 **Гранты** — "Какие гранты на медицину?"
-• 💼 **Профессии** — "Кем работать с IT образованием?"
-
-Задавай вопрос! 😊`,
-      kk: `Сәлем! 👋 Мен Қазақстан университеттеріне түсу бойынша СИ-кеңесшімін.
-
-Көмектесе аламын:
-• 🎯 **Мүмкіндікті есептеу** — "Менің КБТУ-ге мүмкіндігім ЕНТ 110 болғанда"
-• 🏙 **Қалалар** — "Алматыда қандай университеттер бар?"
-• 📋 **Тізімдер** — "IT бойынша университеттер тізімін бер"
-• ⚖️ **Салыстыру** — "КБТУ мен ҚазҰУ-ды салыстыр"
-• 💰 **Гранттар** — "Медицина бойынша қандай гранттар бар?"
-• 💼 **Мамандықтар** — "IT білімімен қандай жұмыс істеуге болады?"
-
-Сұрағыңды қой! 😊`,
-      en: `Hi! 👋 I'm your AI advisor for Kazakh university admissions.
-
-I can help with:
-• 🎯 **Chance calculator** — "My chances at KBTU for programmer with ENT 110"
-• 🏙 **Cities** — "What universities are in Almaty?"
-• 📋 **University lists** — "Give me a list of IT universities"
-• ⚖️ **Comparison** — "Compare KBTU and KazNU"
-• 💰 **Grants** — "What grants are available for medicine?"
-• 💼 **Careers** — "What jobs can I get with IT education?"
-
-Ask away! 😊`
-    };
-    return {
-      answer: greetings[lang] || greetings.ru,
-      matches: [],
-      usedData: {},
-      fallback: false,
-      confidence: 1.0,
-      took_ms: 0,
-      intent: 'greeting',
-    };
+    const startTimeGreeting = Date.now();
+    try {
+      const systemPrompt = buildGreetingPrompt(lang);
+      const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.75, maxTokens: 400 });
+      return {
+        answer: llmResult.text,
+        matches: [],
+        usedData: { model_used: llmResult.model_used },
+        fallback: false,
+        confidence: 1.0,
+        took_ms: Date.now() - startTimeGreeting,
+        intent: 'greeting',
+      };
+    } catch (e) {
+      console.error('[ai-service] LLM greeting failed, fallback:', e.message);
+      const fallbackGreeting = {
+        ru: 'Привет! Я EduMatch KZ — ИИ-советник по вузам Казахстана. Могу помочь с расчётом шансов, выбором вуза, грантами и профессиями. Задавай вопрос!',
+        kk: 'Сәлем! Мен EduMatch KZ — Қазақстан университеттері туралы СИ-кеңесшісімін. Түсу мүмкіндігін есептеуге, университет таңдауға, гранттар мен мамандықтар туралы көмектесемін. Сұрағыңды қой!',
+        en: 'Hi! I\'m EduMatch KZ — your AI advisor for Kazakh universities. I can help with admission chances, university selection, grants, and careers. Ask away!',
+      };
+      return {
+        answer: fallbackGreeting[lang] || fallbackGreeting.ru,
+        matches: [],
+        usedData: {},
+        fallback: true,
+        confidence: 0.5,
+        took_ms: Date.now() - startTimeGreeting,
+        intent: 'greeting',
+      };
+    }
   }
 
-  // Помощь — заготовленный ответ без LLM
+  // Помощь — через LLM
   if (intent === 'help') {
-    const helpTexts = {
-      ru: `Вот что я умею:
-
-**🎯 Расчёт шансов на поступление:**
-• *"Мои шансы в КБТУ на программиста с ЕНТ 110"*
-• *"Поступлю ли я в КазНУ с ЕНТ 100?"*
-
-**🏙 Информация по городам:**
-• *"Какие вузы в Шымкенте?"*
-
-**📋 Списки вузов:**
-• *"Дай список вузов на программиста"*
-
-**⚖️ Сравнение вузов:**
-• *"Сравни КБТУ и КазНУ"*
-
-**💰 Гранты:**
-• *"Какие гранты на IT?"*
-
-**💼 Профессии:**
-• *"Кем я могу работать с IT образованием?"*
-
-**💡 Советы:**
-Я понимаю русский, казахский и английский языки.`,
-      kk: `Мен не істей аламын:
-
-**🎯 Түсу мүмкіндігін есептеу:**
-• *"Менің КБТУ-ге мүмкіндігім ЕНТ 110 болғанда"*
-
-**🏙 Қалалар туралы ақпарат:**
-• *"Шымкентте қандай университеттер бар?"*
-
-**📋 Университеттер тізімі:**
-• *"Программист бойынша университеттер тізімін бер"*
-
-**⚖️ Университеттерді салыстыру:**
-• *"КБТУ мен ҚазҰУ-ды салыстыр"*
-
-**💰 Гранттар:**
-• *"IT бойынша қандай гранттар бар?"*
-
-**💼 Мамандықтар:**
-• *"IT білімімен қандай жұмыс істеуге болады?"*
-
-**💡 Кеңестер:**
-Мен қазақ, орыс және ағылшын тілдерін түсінемін.`,
-      en: `Here's what I can do:
-
-**🎯 Admission chances:**
-• *"My chances at KBTU for programmer with ENT 110"*
-
-**🏙 City info:**
-• *"What universities are in Shymkent?"*
-
-**📋 University lists:**
-• *"Give me a list of IT universities"*
-
-**⚖️ Compare:**
-• *"Compare KBTU and KazNU"*
-
-**💰 Grants:**
-• *"What grants are available for IT?"*
-
-**💼 Careers:**
-• *"What jobs can I get with IT education?"*
-
-**💡 Tips:**
-I understand Russian, Kazakh, and English.`
-    };
-    return {
-      answer: helpTexts[lang] || helpTexts.ru,
-      matches: [],
-      usedData: {},
-      fallback: false,
-      confidence: 1.0,
-      took_ms: 0,
-      intent: 'help',
-    };
+    const startTimeHelp = Date.now();
+    try {
+      const systemPrompt = buildHelpPrompt(lang);
+      const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.75, maxTokens: 500 });
+      return {
+        answer: llmResult.text,
+        matches: [],
+        usedData: { model_used: llmResult.model_used },
+        fallback: false,
+        confidence: 1.0,
+        took_ms: Date.now() - startTimeHelp,
+        intent: 'help',
+      };
+    } catch (e) {
+      console.error('[ai-service] LLM help failed, fallback:', e.message);
+      const fallbackHelp = {
+        ru: 'Я могу помочь с:\n\n🎯 Расчёт шансов — "Мои шансы в КБТУ с ЕНТ 110"\n🏙 Города — "Какие вузы в Алматы?"\n⚖️ Сравнение — "Сравни КБТУ и КазНУ"\n💰 Гранты — "Какие гранты на IT?"\n💼 Профессии — "Кем работать с IT образованием?"\n\nЯ понимаю русский, казахский и английский.',
+        kk: 'Мен көмектесе аламын:\n\n🎯 Түсу мүмкіндігі — "Менің КБТУ-ге мүмкіндігім ЕНТ 110"\n🏙 Қалалар — "Алматыда қандай университеттер бар?"\n⚖️ Салыстыру — "КБТУ мен ҚазҰУ-ды салыстыр"\n💰 Гранттар — "IT бойынша қандай гранттар бар?"\n💼 Мамандықтар — "IT білімімен қандай жұмыс істеуге болады?"',
+        en: 'I can help with:\n\n🎯 Admission chances — "My chances at KBTU with ENT 110"\n🏙 Cities — "What universities are in Almaty?"\n⚖️ Comparison — "Compare KBTU and KazNU"\n💰 Grants — "What grants are available for IT?"\n💼 Careers — "What jobs can I get with IT education?"',
+      };
+      return {
+        answer: fallbackHelp[lang] || fallbackHelp.ru,
+        matches: [],
+        usedData: {},
+        fallback: true,
+        confidence: 0.5,
+        took_ms: Date.now() - startTimeHelp,
+        intent: 'help',
+      };
+    }
   }
 
   const { universities, extractedParams } = retrieveRelevantUniversities(msg);
