@@ -464,6 +464,14 @@ function getSavedUniversityIds(userId) {
  */
 function saveChatMessage(userId, message, response, context = null) {
   try {
+    const duplicate = getDb().prepare(
+      `SELECT id FROM chat_history
+       WHERE user_id = ? AND message = ? AND response = ?
+         AND created_at >= datetime('now', '-10 minutes')
+       LIMIT 1`
+    ).get(userId, message, response);
+    if (duplicate) return true;
+
     const contextJson = context ? JSON.stringify(context) : null;
     getDb().prepare(
       'INSERT INTO chat_history (user_id, message, response, context) VALUES (?, ?, ?, ?)'
@@ -490,8 +498,9 @@ function saveChatMessage(userId, message, response, context = null) {
  */
 async function changePassword(userId, currentPassword, newPassword, lang = 'ru') {
   try {
-    if (newPassword.length < 6) {
-      return { success: false, error: tr('auth_new_pw_short', lang) || 'Новый пароль должен быть не менее 6 символов' };
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.valid) {
+      return { success: false, error: tr('auth_password_weak', lang) || passwordValidation.error };
     }
 
     const user = getDb().prepare('SELECT password_hash FROM users WHERE id = ?').get(userId);
@@ -583,6 +592,15 @@ function getChatHistory(userId, limit = 50) {
 function saveTestResult(userId, testType, score, maxScore, resultData = null) {
   try {
     const resultDataJson = resultData ? JSON.stringify(resultData) : null;
+    const duplicate = getDb().prepare(
+      `SELECT id FROM test_results
+       WHERE user_id = ? AND test_type = ? AND score = ? AND max_score = ?
+         AND COALESCE(result_data, '') = COALESCE(?, '')
+         AND created_at >= datetime('now', '-10 minutes')
+       LIMIT 1`
+    ).get(userId, testType, score, maxScore, resultDataJson);
+    if (duplicate) return true;
+
     getDb().prepare(
       `INSERT INTO test_results (user_id, test_type, score, max_score, result_data)
        VALUES (?, ?, ?, ?, ?)`
