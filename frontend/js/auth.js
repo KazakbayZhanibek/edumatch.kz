@@ -322,7 +322,9 @@ async function loadProfilePage() {
   if (!Auth.isLoggedIn()) {
     content.innerHTML = `
       <div class="auth-prompt">
-        <p>${t('profile_page.auth_prompt')}</p>
+        <div class="auth-prompt-icon">👤</div>
+        <div class="auth-prompt-title">${t('profile_page.auth_prompt') || 'Войдите в аккаунт'}</div>
+        <div class="auth-prompt-desc">${t('profile_page.auth_prompt_desc') || 'Чтобы видеть избранные вузы, историю ИИ-советника и результаты тестов'}</div>
         <div class="auth-prompt-actions">
           <button class="btn btn-primary" onclick="navigate('login')">${t('profile_page.login_btn')}</button>
           <button class="btn btn-ghost" onclick="navigate('register')">${t('profile_page.register_btn')}</button>
@@ -339,141 +341,205 @@ async function loadProfilePage() {
     const chats = await Auth.getChatHistory(30);
     const tests = await Auth.getTestResults();
 
+    const initials = (profile.fullName || profile.username || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const displayName = profile.fullName || profile.username;
+    const bioText = profile.bio || t('profile_page.card_bio_placeholder') || 'Расскажите о себе...';
+
     content.innerHTML = `
-      <div class="profile-grid">
-        <section class="profile-card">
-          <h2 class="profile-card-title">${t('profile_page.card_profile')}</h2>
-          <form id="profile-form" class="auth-form" onsubmit="handleProfileSave(event)">
-            <div class="form-field">
-              <label>${t('profile_page.card_email')}</label>
-              <input type="email" value="${profile.email}" disabled class="form-input">
-            </div>
-            <div class="form-field">
-              <label>${t('profile_page.card_nickname')}</label>
-              <input type="text" value="${profile.username}" disabled class="form-input">
-            </div>
-            <div class="form-field">
-              <label>${t('profile_page.card_name')}</label>
-              <input type="text" id="profile-fullname" value="${profile.fullName || ''}" class="form-input" placeholder="${t('profile_page.card_name_placeholder')}">
-            </div>
-            <div class="form-field">
-              <label>${t('profile_page.card_phone')}</label>
-              <input type="tel" id="profile-phone" value="${profile.phone || ''}" class="form-input" placeholder="+7 ...">
-            </div>
-            <div class="form-field">
-              <label>${t('profile_page.card_bio')}</label>
-              <textarea id="profile-bio" class="form-input" rows="3" placeholder="${t('profile_page.card_bio_placeholder')}">${profile.bio || ''}</textarea>
-            </div>
-            <p class="form-error" id="profile-error"></p>
-            <button type="submit" class="btn btn-primary">${t('profile_page.card_save')}</button>
-          </form>
-          <button class="btn btn-ghost" style="margin-top:16px;width:100%" onclick="Auth.logout()">${t('profile_page.card_logout')}</button>
-        </section>
+      <div class="profile-layout">
 
-        <section class="profile-card">
-          <h2 class="profile-card-title">${t('profile_page.card_password_title')}</h2>
-          <form id="password-form" class="auth-form" onsubmit="handlePasswordChange(event)">
-            <div class="form-field">
-              <label>${t('profile_page.card_pw_current')}</label>
-              <input type="password" id="pw-current" class="form-input" required minlength="6">
+        <!-- LEFT: User Card -->
+        <aside class="profile-user-card">
+          <div class="profile-user-banner"></div>
+          <div class="profile-user-avatar">${initials}</div>
+          <div class="profile-user-info">
+            <div class="profile-user-name">${escapeHtml(displayName)}</div>
+            <div class="profile-user-email">${escapeHtml(profile.email)}</div>
+            ${profile.bio ? `<div class="profile-user-bio">${escapeHtml(profile.bio)}</div>` : ''}
+          </div>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <div class="profile-stat-num">${saved.length}</div>
+              <div class="profile-stat-label">${t('profile_page.card_saved_title') || 'Вузы'}</div>
             </div>
-            <div class="form-field">
-              <label>${t('profile_page.card_pw_new')}</label>
-              <div class="pw-toggle-wrap">
-                <input type="password" id="pw-new" class="form-input" required minlength="6">
-                <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="${t('profile_page.card_pw_show')}">👁</button>
-              </div>
+            <div class="profile-stat">
+              <div class="profile-stat-num">${chats.length}</div>
+              <div class="profile-stat-label">${t('profile_page.card_ai_title') || 'Диалоги'}</div>
             </div>
-            <div class="form-field">
-              <label>${t('profile_page.card_pw_confirm')}</label>
-              <div class="pw-toggle-wrap">
-                <input type="password" id="pw-confirm" class="form-input" required minlength="6">
-                <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="${t('profile_page.card_pw_show')}">👁</button>
-              </div>
+            <div class="profile-stat">
+              <div class="profile-stat-num">${tests.length}</div>
+              <div class="profile-stat-label">${t('profile_page.card_tests_title') || 'Тесты'}</div>
             </div>
-            <p class="form-error" id="password-error"></p>
-            <button type="submit" class="btn btn-primary">${t('profile_page.card_pw_change')}</button>
-          </form>
-        </section>
+          </div>
+          <div class="profile-sidebar-actions">
+            <button class="btn btn-ghost btn-sm" onclick="Auth.logout()">
+              ${t('profile_page.card_logout') || 'Выйти'}
+            </button>
+          </div>
+        </aside>
 
-        <section class="profile-card">
-          <h2 class="profile-card-title">${t('profile_page.card_saved_title')} <span class="profile-count">${saved.length}</span></h2>
-          ${saved.length ? `
-            <div class="profile-saved-list">
-              ${saved.map(u => `
-                <div class="profile-saved-item" data-uni-id="${u.university_id}">
-                  <div>
-                    <strong>${u.short_name || u.name}</strong>
-                    <div class="profile-saved-meta">от ${fmtPrice(u.price_from)} тг/год</div>
+        <!-- RIGHT: Main Content -->
+        <div class="profile-main">
+
+          <!-- Edit Profile -->
+          <section class="profile-section">
+            <div class="profile-section-header">
+              <h2 class="profile-section-title">✏️ ${t('profile_page.card_profile') || 'Редактировать профиль'}</h2>
+            </div>
+            <form id="profile-form" class="auth-form" onsubmit="handleProfileSave(event)">
+              <div class="profile-form-row">
+                <div class="form-field">
+                  <label>${t('profile_page.card_name') || 'Имя'}</label>
+                  <input type="text" id="profile-fullname" value="${escapeHtml(profile.fullName || '')}" class="form-input" placeholder="${t('profile_page.card_name_placeholder') || 'Ваше имя'}">
+                </div>
+                <div class="form-field">
+                  <label>${t('profile_page.card_phone') || 'Телефон'}</label>
+                  <input type="tel" id="profile-phone" value="${escapeHtml(profile.phone || '')}" class="form-input" placeholder="+7 ...">
+                </div>
+              </div>
+              <div class="form-field">
+                <label>${t('profile_page.card_bio') || 'О себе'}</label>
+                <textarea id="profile-bio" class="form-input" rows="2" placeholder="${t('profile_page.card_bio_placeholder') || 'Расскажите о себе...'}">${escapeHtml(profile.bio || '')}</textarea>
+              </div>
+              <p class="form-error" id="profile-error"></p>
+              <div class="profile-form-actions">
+                <button type="submit" class="btn btn-primary">${t('profile_page.card_save') || 'Сохранить'}</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Saved Universities -->
+          <section class="profile-section">
+            <div class="profile-section-header">
+              <h2 class="profile-section-title">🏛 ${t('profile_page.card_saved_title') || 'Сохранённые вузы'}</h2>
+              <span class="profile-section-badge">${saved.length}</span>
+            </div>
+            ${saved.length ? `
+              <div class="profile-saved-grid">
+                ${saved.map(u => `
+                  <div class="profile-saved-card" onclick="navigate('university', ${u.university_id})">
+                    <div class="profile-saved-icon">${(u.short_name || u.name || '?')[0]}</div>
+                    <div class="profile-saved-details">
+                      <div class="profile-saved-name">${escapeHtml(u.short_name || u.name)}</div>
+                      <div class="profile-saved-price">от ${fmtPrice(u.price_from)} тг/год</div>
+                    </div>
+                    <button class="profile-saved-remove" onclick="event.stopPropagation(); deleteSavedUniversity(${u.university_id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">✕</button>
                   </div>
-                  <div class="profile-saved-actions">
-                    <button class="btn btn-sm btn-ghost" onclick="navigate('university', ${u.university_id})">${t('profile_page.card_saved_open')}</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteSavedUniversity(${u.university_id}, this)" title="${t('profile_page.card_saved_delete')}">✕</button>
+                `).join('')}
+              </div>
+            ` : `<div class="profile-empty"><div class="profile-empty-icon">🏛</div>${t('profile_page.card_saved_empty') || 'Нет сохранённых вузов'}</div>`}
+          </section>
+
+          <!-- Application Tracker -->
+          <section class="profile-section">
+            <div class="profile-section-header">
+              <h2 class="profile-section-title">📋 ${t('tracker.title') || 'Мои заявки'}</h2>
+              <span class="profile-section-badge" id="tracker-count"></span>
+            </div>
+            <div id="profile-tracker-content"></div>
+          </section>
+
+          <!-- Password Change -->
+          <section class="profile-section">
+            <div class="profile-section-header">
+              <h2 class="profile-section-title">🔒 ${t('profile_page.card_password_title') || 'Смена пароля'}</h2>
+            </div>
+            <form id="password-form" class="auth-form" onsubmit="handlePasswordChange(event)">
+              <div class="profile-pw-fields">
+                <div class="form-field">
+                  <label>${t('profile_page.card_pw_current') || 'Текущий пароль'}</label>
+                  <input type="password" id="pw-current" class="form-input" required minlength="6">
+                </div>
+                <div class="form-field">
+                  <label>${t('profile_page.card_pw_new') || 'Новый пароль'}</label>
+                  <div class="pw-toggle-wrap">
+                    <input type="password" id="pw-new" class="form-input" required minlength="6">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">👁</button>
                   </div>
                 </div>
-              `).join('')}
-            </div>
-          ` : `<p class="profile-empty">${t('profile_page.card_saved_empty')}</p>`}
-        </section>
-
-        <section class="profile-card profile-card-wide">
-          <h2 class="profile-card-title">📋 ${t('tracker.title') || 'Мои заявки'} <span class="profile-count" id="tracker-count"></span></h2>
-          <div id="profile-tracker-content"></div>
-        </section>
-
-        <section class="profile-card">
-          <h2 class="profile-card-title">${t('profile_page.card_settings')}</h2>
-          <form class="auth-form" onsubmit="handlePreferencesSave(event)">
-            <div class="form-field">
-              <label>${t('profile_page.card_lang_label')}</label>
-              <select id="pref-lang" class="form-input">
-                <option value="ru"${(profile.preferences && profile.preferences.language === 'ru') ? ' selected' : ''}>Русский</option>
-                <option value="kk"${(profile.preferences && profile.preferences.language === 'kk') ? ' selected' : ''}>Қазақша</option>
-                <option value="en"${(profile.preferences && profile.preferences.language === 'en') ? ' selected' : ''}>English</option>
-              </select>
-            </div>
-            <p class="form-error" id="preferences-error"></p>
-            <button type="submit" class="btn btn-primary">${t('profile_page.card_settings_save')}</button>
-          </form>
-        </section>
-
-        <section class="profile-card profile-card-wide">
-          <h2 class="profile-card-title">${t('profile_page.card_ai_title')} <span class="profile-count">${chats.length}</span></h2>
-          ${chats.length ? `
-            <div class="profile-chat-list">
-              ${chats.slice(0, 15).map(c => `
-                <div class="profile-chat-item" data-chat-id="${c.id}">
-                  <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete')}">✕</button>
-                  <div class="profile-chat-q"><strong>${t('profile_page.card_ai_you')}</strong> ${escapeHtml(c.message.slice(0, 120))}${c.message.length > 120 ? '…' : ''}</div>
-                  <div class="profile-chat-a">${escapeHtml(c.response.slice(0, 200))}${c.response.length > 200 ? '…' : ''}</div>
-                  <div class="profile-chat-date">${formatDate(c.created_at)}</div>
-                </div>
-              `).join('')}
-            </div>
-          ` : `<p class="profile-empty">${t('profile_page.card_ai_empty')}</p>`}
-        </section>
-
-        <section class="profile-card profile-card-wide">
-          <h2 class="profile-card-title">${t('profile_page.card_tests_title')} <span class="profile-count">${tests.length}</span></h2>
-          ${tests.length ? `
-            <div class="profile-tests-list">
-              ${tests.map(test => {
-                const data = test.result_data ? JSON.parse(test.result_data) : {};
-                const labelFn = TEST_TYPE_LABELS[test.test_type];
-                const label = typeof labelFn === 'function' ? labelFn() : test.test_type;
-                return `
-                  <div class="profile-test-item">
-                    <button class="profile-chat-delete" onclick="deleteTestResultItem(${test.id}, this)" title="${t('profile_page.card_saved_delete')}">✕</button>
-                    <div class="profile-test-type">${label}</div>
-                    <div class="profile-test-score">${test.score}${test.max_score ? ` / ${test.max_score}` : ''}</div>
-                    ${data.summary ? `<div class="profile-test-meta">${escapeHtml(data.summary)}</div>` : ''}
-                    <div class="profile-chat-date">${formatDate(test.created_at)}</div>
+                <div class="form-field">
+                  <label>${t('profile_page.card_pw_confirm') || 'Подтвердите пароль'}</label>
+                  <div class="pw-toggle-wrap">
+                    <input type="password" id="pw-confirm" class="form-input" required minlength="6">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">👁</button>
                   </div>
-                `;
-              }).join('')}
+                </div>
+              </div>
+              <p class="form-error" id="password-error"></p>
+              <div class="profile-form-actions">
+                <button type="submit" class="btn btn-primary">${t('profile_page.card_pw_change') || 'Сменить пароль'}</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Settings -->
+          <section class="profile-section">
+            <div class="profile-section-header">
+              <h2 class="profile-section-title">⚙️ ${t('profile_page.card_settings') || 'Настройки'}</h2>
             </div>
-          ` : `<p class="profile-empty">${t('profile_page.card_tests_empty')}</p>`}
-        </section>
+            <form class="auth-form" onsubmit="handlePreferencesSave(event)">
+              <div class="profile-settings-row">
+                <label>${t('profile_page.card_lang_label') || 'Язык интерфейса'}</label>
+                <select id="pref-lang" class="form-input">
+                  <option value="ru"${(profile.preferences && profile.preferences.language === 'ru') ? ' selected' : ''}>Русский</option>
+                  <option value="kk"${(profile.preferences && profile.preferences.language === 'kk') ? ' selected' : ''}>Қазақша</option>
+                  <option value="en"${(profile.preferences && profile.preferences.language === 'en') ? ' selected' : ''}>English</option>
+                </select>
+              </div>
+              <p class="form-error" id="preferences-error"></p>
+              <div class="profile-form-actions">
+                <button type="submit" class="btn btn-primary">${t('profile_page.card_settings_save') || 'Сохранить'}</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- AI Chat History -->
+          <section class="profile-section">
+            <div class="profile-section-header">
+              <h2 class="profile-section-title">💬 ${t('profile_page.card_ai_title') || 'История ИИ-советника'}</h2>
+              <span class="profile-section-badge">${chats.length}</span>
+            </div>
+            ${chats.length ? `
+              <div class="profile-chat-list">
+                ${chats.slice(0, 15).map(c => `
+                  <div class="profile-chat-item" data-chat-id="${c.id}">
+                    <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">✕</button>
+                    <div class="profile-chat-q">${escapeHtml(c.message.slice(0, 150))}${c.message.length > 150 ? '…' : ''}</div>
+                    <div class="profile-chat-a">${escapeHtml(c.response.slice(0, 250))}${c.response.length > 250 ? '…' : ''}</div>
+                    <div class="profile-chat-date">${formatDate(c.created_at)}</div>
+                  </div>
+                `).join('')}
+              </div>
+            ` : `<div class="profile-empty"><div class="profile-empty-icon">💬</div>${t('profile_page.card_ai_empty') || 'Нет истории диалогов'}</div>`}
+          </section>
+
+          <!-- Test Results -->
+          <section class="profile-section">
+            <div class="profile-section-header">
+              <h2 class="profile-section-title">📊 ${t('profile_page.card_tests_title') || 'Результаты тестов'}</h2>
+              <span class="profile-section-badge">${tests.length}</span>
+            </div>
+            ${tests.length ? `
+              <div class="profile-tests-grid">
+                ${tests.map(test => {
+                  const data = test.result_data ? JSON.parse(test.result_data) : {};
+                  const labelFn = TEST_TYPE_LABELS[test.test_type];
+                  const label = typeof labelFn === 'function' ? labelFn() : test.test_type;
+                  return `
+                    <div class="profile-test-card">
+                      <button class="profile-test-delete" onclick="deleteTestResultItem(${test.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">✕</button>
+                      <div class="profile-test-type">${escapeHtml(label)}</div>
+                      <div class="profile-test-score">${test.score}${test.max_score ? ` / ${test.max_score}` : ''}</div>
+                      ${data.summary ? `<div class="profile-test-meta">${escapeHtml(data.summary)}</div>` : ''}
+                      <div class="profile-test-date">${formatDate(test.created_at)}</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            ` : `<div class="profile-empty"><div class="profile-empty-icon">📊</div>${t('profile_page.card_tests_empty') || 'Нет результатов тестов'}</div>`}
+          </section>
+
+        </div>
       </div>
     `;
 
@@ -541,15 +607,15 @@ async function deleteSavedUniversity(uniId, btn) {
   btn.textContent = '…';
   try {
     await Auth.removeUniversity(uniId);
-    const item = btn.closest('.profile-saved-item');
-    item.remove();
-    const countEl = document.querySelector('.profile-grid > section:nth-child(3) .profile-count');
-    if (countEl) {
-      const n = parseInt(countEl.textContent) - 1;
-      countEl.textContent = n;
-      const list = document.querySelector('.profile-saved-list');
-      if (n === 0 && list) {
-        list.outerHTML = `<p class="profile-empty">${t('profile_page.card_saved_empty')}</p>`;
+    const item = btn.closest('.profile-saved-card');
+    if (item) item.remove();
+    const badge = document.querySelector('.profile-layout .profile-section:nth-child(2) .profile-section-badge');
+    if (badge) {
+      const n = parseInt(badge.textContent) - 1;
+      badge.textContent = n;
+      if (n <= 0) {
+        const grid = document.querySelector('.profile-saved-grid');
+        if (grid) grid.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon">🏛</div>${t('profile_page.card_saved_empty') || 'Нет сохранённых вузов'}</div>`;
       }
     }
   } catch (e) {
@@ -564,14 +630,16 @@ async function deleteChatItem(msgId, btn) {
   try {
     await Auth.deleteChatMessage(msgId);
     const item = btn.closest('.profile-chat-item');
-    item.remove();
-    const list = document.querySelector('.profile-chat-list');
-    const countEl = document.querySelector('.profile-grid > section:nth-child(5) .profile-count');
-    if (countEl) {
-      const n = parseInt(countEl.textContent) - 1;
-      countEl.textContent = n;
-      if (n === 0 && list) {
-        list.outerHTML = `<p class="profile-empty">${t('profile_page.card_ai_empty')}</p>`;
+    if (item) item.remove();
+    const sections = document.querySelectorAll('.profile-layout .profile-section');
+    const chatSection = sections[sections.length - 2];
+    const badge = chatSection ? chatSection.querySelector('.profile-section-badge') : null;
+    if (badge) {
+      const n = parseInt(badge.textContent) - 1;
+      badge.textContent = n;
+      if (n <= 0) {
+        const list = document.querySelector('.profile-chat-list');
+        if (list) list.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon">💬</div>${t('profile_page.card_ai_empty') || 'Нет истории диалогов'}</div>`;
       }
     }
   } catch (e) {
@@ -585,15 +653,17 @@ async function deleteTestResultItem(resultId, btn) {
   btn.textContent = '…';
   try {
     await Auth.deleteTestResult(resultId);
-    const item = btn.closest('.profile-test-item');
-    item.remove();
-    const list = document.querySelector('.profile-tests-list');
-    const countEl = document.querySelector('.profile-grid > section:nth-child(6) .profile-count');
-    if (countEl) {
-      const n = parseInt(countEl.textContent) - 1;
-      countEl.textContent = n;
-      if (n === 0 && list) {
-        list.outerHTML = `<p class="profile-empty">${t('profile_page.card_tests_empty')}</p>`;
+    const item = btn.closest('.profile-test-card');
+    if (item) item.remove();
+    const sections = document.querySelectorAll('.profile-layout .profile-section');
+    const testSection = sections[sections.length - 1];
+    const badge = testSection ? testSection.querySelector('.profile-section-badge') : null;
+    if (badge) {
+      const n = parseInt(badge.textContent) - 1;
+      badge.textContent = n;
+      if (n <= 0) {
+        const grid = document.querySelector('.profile-tests-grid');
+        if (grid) grid.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon">📊</div>${t('profile_page.card_tests_empty') || 'Нет результатов тестов'}</div>`;
       }
     }
   } catch (e) {
