@@ -2,7 +2,7 @@
    EDUMATCH KZ — APP LOGIC
    ============================================= */
 
-const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const API = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:3000/api'
   : '/api';
 
@@ -99,12 +99,12 @@ function updateTrackerNotes(id, notes) {
 }
 
 const TRACKER_STATUSES = {
-  collecting: { icon: '📋', label: 'Собираю документы', color: '#3b82f6' },
-  submitted: { icon: '📤', label: 'Подал заявку', color: '#f59e0b' },
-  waiting: { icon: '⏳', label: 'Жду ответа', color: '#8b5cf6' },
-  accepted: { icon: '✅', label: 'Зачислен', color: '#22c55e' },
-  rejected: { icon: '❌', label: 'Не прошёл', color: '#ef4444' },
-  enrolled: { icon: '🎓', label: 'Оплачиваю', color: '#06b6d4' },
+  collecting: { icon: '', label: 'Собираю документы', color: '#3b82f6' },
+  submitted: { icon: '', label: 'Подал заявку', color: '#f59e0b' },
+  waiting: { icon: '', label: 'Жду ответа', color: '#8b5cf6' },
+  accepted: { icon: '', label: 'Зачислен', color: '#22c55e' },
+  rejected: { icon: '', label: 'Не прошёл', color: '#ef4444' },
+  enrolled: { icon: '', label: 'Оплачиваю', color: '#06b6d4' },
 };
 
 function handleTrackerAdd(universityId, universityName) {
@@ -114,11 +114,11 @@ function handleTrackerAdd(universityId, universityName) {
     return;
   }
   addToTracker({ id: universityId, short_name: universityName, name: universityName });
-  showToast(`✓ ${universityName} добавлен в трекер`);
+  showToast(`${universityName} добавлен в трекер`);
   document.querySelectorAll('.tracker-add-btn').forEach(btn => {
     if (btn.onclick && btn.onclick.toString().includes(universityId)) {
       btn.classList.add('added');
-      btn.textContent = t('tracker.added') || '✓ В трекере';
+      btn.textContent = t('tracker.added') || 'В трекере';
     }
   });
 }
@@ -969,7 +969,7 @@ function renderUniversityDetail(u, container) {
         </div>` : ''}
 
       <div id="reviews-section" class="detail-specialties-section">
-        <h2 class="detail-specialties-title">💬 Отзывы студентов</h2>
+        <h2 class="detail-specialties-title">Отзывы студентов</h2>
         <div id="reviews-content"><div class="loading-state"><div class="spinner"></div></div></div>
       </div>
     </div>`;
@@ -990,7 +990,7 @@ async function loadReviews(universityId) {
     const avgRating = data.stats?.avg_rating ? Number(data.stats.avg_rating).toFixed(1) : '—';
     const starStr = (r) => '★'.repeat(r) + '☆'.repeat(5 - r);
     let html = `<div class="reviews-summary">
-      <span class="reviews-avg">⭐ ${avgRating}</span>
+      <span class="reviews-avg">Рейтинг: ${avgRating}</span>
       <span class="reviews-count">${data.stats.count} отзывов</span>
     </div>
     <div class="reviews-list">`;
@@ -1001,8 +1001,8 @@ async function loadReviews(universityId) {
           <span class="review-stars">${starStr(r.rating)}</span>
           <span class="review-meta">${escapeAdmissionHtml(r.faculty || '')} ${r.study_year ? '· ' + escapeAdmissionHtml(r.study_year) : ''}</span>
         </div>
-        ${r.pros ? `<div class="review-pros"><strong>👍 Плюсы:</strong> ${escapeAdmissionHtml(r.pros)}</div>` : ''}
-        ${r.cons ? `<div class="review-cons"><strong>👎 Минусы:</strong> ${escapeAdmissionHtml(r.cons)}</div>` : ''}
+        ${r.pros ? `<div class="review-pros"><strong>Плюсы:</strong> ${escapeAdmissionHtml(r.pros)}</div>` : ''}
+        ${r.cons ? `<div class="review-cons"><strong>Минусы:</strong> ${escapeAdmissionHtml(r.cons)}</div>` : ''}
         ${r.comment ? `<div class="review-comment">${escapeAdmissionHtml(r.comment)}</div>` : ''}
       </div>`;
     });
@@ -1031,6 +1031,22 @@ function addToCompareAndGo(id) {
 let lastMessageTime = 0;
 const MESSAGE_DELAY = 1500; // ms between messages
 
+function getAiInputErrorMessage(data) {
+  const reason = data?.reason || '';
+  const fallback = data?.error || 'Ошибка обработки запроса';
+
+  const map = {
+    blocked_terms: 'Сообщение содержит запрещённые выражения. Сформулируйте вопрос по вузам, ЕНТ, грантам или поступлению без запрещённых слов.',
+    missing_required_terms: 'Запрос слишком короткий или не содержит нужного контекста о поступлении.',
+    too_long: 'Сообщение слишком длинное. Уточните вопрос короче.',
+    empty_input: 'Введите ваш вопрос.',
+    missing_input: 'Пустой запрос. Попробуйте сформулировать вопрос заново.',
+    invalid_message: 'Запрос не распознан. Попробуйте ещё раз.',
+  };
+
+  return map[reason] || fallback;
+}
+
 async function sendMessage(retryMessage = null) {
   const input = document.getElementById('chat-input');
   let text = retryMessage || input.value.trim();
@@ -1057,9 +1073,6 @@ async function sendMessage(retryMessage = null) {
   document.getElementById('chat-send').disabled = true;
 
   try {
-    console.log('[sendMessage] Sending request to:', '/ai/advice');
-    console.log('[sendMessage] Payload:', { message: text, history: state.chatHistory.slice(-20).length, lang: window.currentLanguage || 'ru' });
-
     const res = await Auth.fetch('/ai/advice', {
       method: 'POST',
       body: JSON.stringify({
@@ -1070,8 +1083,6 @@ async function sendMessage(retryMessage = null) {
       timeoutMs: 15000,
     });
 
-    console.log('[sendMessage] Response status:', res.status, res.ok);
-
     if (!res.ok && res.status === 429) {
       removeTyping(typingId);
       appendMessage('ai', t('error.too_many_requests') || 'Слишком много запросов. Подождите 1 минуту.', null, null, { retryFn: () => sendMessage(text) });
@@ -1080,12 +1091,11 @@ async function sendMessage(retryMessage = null) {
     }
 
     const data = await res.json();
-    console.log('[sendMessage] Response data:', data);
     removeTyping(typingId);
 
     if (!data.success) {
-      const errorMsg = data.error || 'Unknown error';
-      appendMessage('ai', `⚠️ ${t('error.load_error')}: ${errorMsg}`, null, null, { retryFn: () => sendMessage(text) });
+      const errorMsg = getAiInputErrorMessage(data);
+      appendMessage('ai', errorMsg, null, null, { retryFn: () => sendMessage(text) });
     } else {
       // Handle language switch
       if (data.detectedLang && data.detectedLang !== window.currentLanguage) {
@@ -1118,7 +1128,7 @@ async function sendMessage(retryMessage = null) {
       ? (t('error.timeout') || 'Сервер не отвечает')
       : (t('error.server_offline') || 'Сервер недоступен');
     
-    appendMessage('ai', `⚠️ ${errorMsg}`, null, null, { retryFn: () => sendMessage(text) });
+    appendMessage('ai', `${errorMsg}`, null, null, { retryFn: () => sendMessage(text) });
   }
 
   document.getElementById('chat-send').disabled = false;
@@ -1214,7 +1224,7 @@ function showQuickSuggestions(intent, userMessage) {
     const suggestDiv = document.createElement('div');
     suggestDiv.className = 'chat-suggestions';
     suggestDiv.innerHTML = `
-      <div class="chat-suggestions-title">${lang === 'ru' ? '💡 Ещё вопросы:' : lang === 'kk' ? '💡 Қосымша сұрақтар:' : '💡 More questions:'}</div>
+      <div class="chat-suggestions-title">${lang === 'ru' ? 'Ещё вопросы:' : lang === 'kk' ? 'Қосымша сұрақтар:' : 'More questions:'}</div>
       <div class="chat-suggestions-list">
         ${suggestions.map(s => `<button class="chat-suggestion-btn" onclick="sendMessage(${JSON.stringify(s).replace(/"/g, '&quot;')})">${s}</button>`).join('')}
       </div>
@@ -1233,7 +1243,7 @@ function renderMatches(matches) {
   let html = `
   <div class="chat-rec-header">
     <div class="chat-rec-title">
-      📋 ${t('chat_page.recommended')} (${matches.length})
+      ${t('chat_page.recommended')} (${matches.length})
     </div>
     <div class="chat-rec-grid">
   `;
@@ -1265,15 +1275,15 @@ function renderMatches(matches) {
       <div class="chat-rec-details">
         <div>
           <div class="chat-rec-label">${t('chat_page.cost')}</div>
-          <div class="chat-rec-value-accent">💰 ${priceRange}/${t('chat_page.year')}</div>
+          <div class="chat-rec-value-accent">${priceRange}/${t('chat_page.year')}</div>
         </div>
         <div>
           <div class="chat-rec-label">${t('chat_page.study_lang')}</div>
-          <div class="chat-rec-value">🌐 ${languages}</div>
+          <div class="chat-rec-value">${languages}</div>
         </div>
         <div class="chat-rec-full">
           <div class="chat-rec-label">${t('chat_page.specs')}</div>
-          <div class="chat-rec-value">📚 ${specs}${(u.specialties || []).length > 3 ? '...' : ''}</div>
+          <div class="chat-rec-value">${specs}${(u.specialties || []).length > 3 ? '...' : ''}</div>
         </div>
       </div>
       <div class="chat-rec-actions">
@@ -1314,7 +1324,7 @@ function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
 
   matches.slice(0, 5).forEach((m, idx) => {
     const barClass = m.chance >= 80 ? 'chance-high' : m.chance >= 60 ? 'chance-mid' : 'chance-low';
-    const rankIcon = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+    const rankIcon = idx === 0 ? '1' : idx === 1 ? '2' : idx === 2 ? '3' : `#${idx + 1}`;
     const portfolioClass = m.portfolio === 'safe' ? 'portfolio-safe' : m.portfolio === 'target' ? 'portfolio-target' : 'portfolio-ambitious';
     html += `
     <div class="chat-admission-card" onclick="navigate('university', ${m.university_id})">
@@ -1332,7 +1342,7 @@ function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
       <div class="chat-admission-meta">
         <span class="portfolio-badge ${portfolioClass}">${escapeAdmissionHtml(m.portfolioLabel || '')}</span>
         <span class="chat-admission-rec">${escapeAdmissionHtml(m.recommendation)}</span>
-        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === m.university_id) ? 'added' : ''}" onclick="event.stopPropagation(); handleTrackerAdd(${m.university_id}, '${escapeAdmissionHtml(m.university)}')">${state.trackerList.some(t => t.university_id === m.university_id) ? (t('tracker.added') || '✓ В трекере') : (t('tracker.add_to_tracker') || 'В трекер')}</button>
+        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === m.university_id) ? 'added' : ''}" onclick="event.stopPropagation(); handleTrackerAdd(${m.university_id}, '${escapeAdmissionHtml(m.university)}')">${state.trackerList.some(t => t.university_id === m.university_id) ? (t('tracker.added') || 'В трекере') : (t('tracker.add_to_tracker') || 'В трекер')}</button>
       </div>`;
 
     if (m.scoreBreakdown && m.scoreBreakdown.length > 0) {
@@ -1356,7 +1366,7 @@ function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
     html += `
       <ul class="chat-admission-reasons">
         ${(m.reasons || []).slice(0, 3).map(r => {
-          const icon = r.type === 'positive' ? '✓' : r.type === 'negative' ? '✗' : '•';
+          const icon = r.type === 'positive' ? '' : r.type === 'negative' ? '' : '•';
           const cls = r.type === 'positive' ? 'reason-pos' : r.type === 'negative' ? 'reason-neg' : 'reason-neu';
           return `<li class="${cls}">${icon} ${escapeAdmissionHtml(r.text)}</li>`;
         }).join('')}
@@ -1366,7 +1376,7 @@ function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
 
   if (whatIf && whatIf.length > 0) {
     html += `<div class="chat-whatif">`;
-    html += `<div class="chat-whatif-title">📈 ${t('chat_page.what_if_title') || 'Что если ЕНТ вырастет?'}</div>`;
+    html += `<div class="chat-whatif-title">${t('chat_page.what_if_title') || 'Что если ЕНТ вырастет?'}</div>`;
     whatIf.forEach(scenario => {
       html += `<div class="chat-whatif-item"><strong>+${scenario.ent - input.ent} ЕНТ (${scenario.ent}):</strong> `;
       html += scenario.universities.map(u => `${escapeAdmissionHtml(u.university)} ${u.from}%→${u.to}%`).join(', ');
@@ -1410,7 +1420,7 @@ function appendMessage(role, text, matches = null, admission = null, options = {
   // Add retry button if provided
   if (role === 'ai' && options.retryFn) {
     const lang = window.currentLanguage || 'ru';
-    const retryText = lang === 'ru' ? '🔄 Повторить' : lang === 'kk' ? '🔄 Қайталау' : '🔄 Retry';
+    const retryText = lang === 'ru' ? 'Повторить' : lang === 'kk' ? 'Қайталау' : 'Retry';
     // Store the retry function in window to avoid scope issues
     const retryId = 'retry_' + Date.now();
     window[retryId] = options.retryFn;
@@ -1726,7 +1736,7 @@ function showAdmissionError(message) {
   resultsEl.innerHTML = `
     <div class="tool-card" style="border: 1px solid var(--red, #ef4444);">
       <p style="color: var(--red, #ef4444); margin: 0;">
-        <strong>⚠ ${t('admission_page.error_prefix')}</strong> ${escapeHtml(message)}
+        <strong>${t('admission_page.error_prefix')}</strong> ${escapeHtml(message)}
       </p>
     </div>
   `;
@@ -1838,11 +1848,11 @@ function renderAdmissionResults(result, input) {
 
   let summaryHtml = `
     <div class="admission-summary tool-card">
-      <h3 class="tool-card-title">✓ ${t('admission_page.results')}</h3>
+      <h3 class="tool-card-title">${t('admission_page.results')}</h3>
       <p class="admission-summary-text">
         <strong>${t('admission_page.ent_label')}</strong> ${input.entScore} · 
         <strong>${t('admission_page.spec_label')}</strong> ${escapeHtml(specialtyName)}
-        ${input.budgetMax ? ` · <strong>${t('admission_page.budget_label')}</strong> до ${(input.budgetMax / 1000000).toFixed(1)} ${t('admission_page.budget_suffix')}` : ''}
+        ${input.budgetMax ? ` · <strong>${t('admission_page.budget_label')}</strong> ${t('admission_page.budget_up_to')} ${(input.budgetMax / 1000000).toFixed(1)} ${t('admission_page.budget_suffix')}` : ''}
       </p>
       <p class="admission-summary-note">
         ${t('admission_page.found')} <strong>${matches.length}</strong> ${t('admission_page.found_unis')} 
@@ -1887,7 +1897,7 @@ function renderAdmissionCard(match, index) {
     <div class="admission-card-contacts">
       ${contacts.phone ? `<div class="contact-item"><strong>☎:</strong> ${escapeHtml(contacts.phone)}</div>` : ''}
       ${contacts.email ? `<div class="contact-item"><strong>✉:</strong> <a href="mailto:${escapeHtml(contacts.email)}">${escapeHtml(contacts.email)}</a></div>` : ''}
-      ${contacts.whatsapp ? `<div class="contact-item"><strong>💬:</strong> <a href="https://wa.me/${contacts.whatsapp.replace(/[^\d]/g, '')}" target="_blank">${escapeHtml(contacts.whatsapp)}</a></div>` : ''}
+      ${contacts.whatsapp ? `<div class="contact-item"><strong>WhatsApp:</strong> <a href="https://wa.me/${contacts.whatsapp.replace(/[^\d]/g, '')}" target="_blank">${escapeHtml(contacts.whatsapp)}</a></div>` : ''}
     </div>
   ` : '';
 
@@ -2297,7 +2307,7 @@ async function showCareerResult() {
       <div>
         <strong>${t('career_page_js.finance_advice')}</strong> ${t('career_page_js.budget_up_to')} <strong>${fmtPrice(careerState.budget)} ${t('career_page_js.tenge_year')}</strong>
         ${t('career_page_js.spent_4yr')} <strong>${fmtPrice(recommendedUnis[0]?.price_from * 4)} ${t('common.tenge')}</strong>.
-        <a href="#" onclick="navigate('tips')" style="color:var(--accent);text-decoration:underline">${t('career_page_js.calculator')}</a> ${t('career_page_js.calc_roi')}
+        <a href="#" onclick="event.preventDefault(); navigate('tips')" style="color:var(--accent);text-decoration:underline">${t('career_page_js.calculator')}</a> ${t('career_page_js.calc_roi')}
       </div>
     </div>
   `;
@@ -2523,7 +2533,7 @@ function runGrantMatching() {
     <div class="gm-list">
       ${matched.map(g => `
         <div class="gm-item">
-          <div class="gm-check">✓</div>
+          <div class="gm-check"></div>
           <div class="gm-info">
             <div class="gm-name">${g.name}</div>
             <div class="gm-meta">${g.type === 'university' ? t('grants_page_js.type_university') : g.type} · ${g.amount}</div>

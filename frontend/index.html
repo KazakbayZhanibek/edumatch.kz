@@ -25,25 +25,35 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
 
 <link rel="stylesheet" href="css/main.css">
+<style>
+  /* --- Патчи профиля: добавь в css/main.css и удали этот блок --- */
+  .profile-user-banner, .profile-user-avatar { cursor: pointer; }
+  .pw-hints { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12px; }
+  .pw-hints li { color: var(--text-muted, #999); position: relative; padding-left: 14px; }
+  .pw-hints li::before { content: "○"; position: absolute; left: 0; }
+  .pw-hints li.pw-hint-ok { color: var(--success, #1a9c5c); }
+  .pw-hints li.pw-hint-ok::before { content: "●"; }
+  #chat-show-more { margin-top: 10px; }
+</style>
 </head>
 <body>
 
 <!-- NAVIGATION -->
 <nav class="nav" id="nav">
   <div class="nav-inner">
-    <a href="#" class="nav-logo" onclick="navigate('home')">
+    <a href="#" class="nav-logo" onclick="event.preventDefault(); navigate('home')">
       <img src="logo.png" class="logo-mark" alt="EduMatch KZ logo">
       <span class="logo-text">EduMatch<span class="logo-kz">KZ</span></span>
     </a>
     <div class="nav-links">
-      <a href="#" class="nav-link" onclick="navigate('home')" data-i18n="nav.universities">Вузы</a>
-      <a href="#" class="nav-link" onclick="navigate('compare')"><span data-i18n="nav.comparison">Сравнение</span> <span class="compare-badge" id="compare-badge" style="display:none">0</span></a>
-      <a href="#" class="nav-link" onclick="navigate('advisor')" data-i18n="nav.advisor">ИИ-советник</a>
-      <a href="#" class="nav-link" onclick="navigate('admission')" data-i18n="nav.admission">Мои шансы</a>
-      <a href="#" class="nav-link" onclick="navigate('career')" data-i18n="nav.career">Профориентация</a>
-      <a href="#" class="nav-link" onclick="navigate('grants')" data-i18n="nav.grants">Гранты</a>
-      <a href="#" class="nav-link" onclick="navigate('map')" data-i18n="nav.map">Карта</a>
-      <a href="#" class="nav-link" onclick="navigate('tips')" data-i18n="nav.tips">Советы</a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('home')" data-i18n="nav.universities">Вузы</a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('compare')"><span data-i18n="nav.comparison">Сравнение</span> <span class="compare-badge" id="compare-badge" style="display:none">0</span></a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('advisor')" data-i18n="nav.advisor">ИИ-советник</a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('admission')" data-i18n="nav.admission">Мои шансы</a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('career')" data-i18n="nav.career">Профориентация</a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('grants')" data-i18n="nav.grants">Гранты</a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('map')" data-i18n="nav.map">Карта</a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('tips')" data-i18n="nav.tips">Советы</a>
     </div>
     <div class="nav-actions">
       <button class="theme-toggle" onclick="toggleTheme()" aria-label="Переключить тему" data-i18n-aria="buttons.toggle_theme">
@@ -236,7 +246,7 @@
       </div>
     </section>
 
-    <section class="fin-literacy">
+    <section class="fin-literacy" id="financial-section">
       <div class="container">
         <div class="fin-inner">
           <div class="fin-text">
@@ -309,8 +319,8 @@
           <p class="advisor-desc" data-i18n="advisor.desc">Опишите ваши интересы, бюджет и цели. Я помогу выбрать подходящий университет с учётом финансовой стороны.</p>
           
 
-          <div style="margin-bottom:16px">
-            <p class="prompts-label" data-i18n="advisor.prompts_chances">🎯 Шансы на поступление</p>
+          <div class="advisor-chances-prompts">
+            <p class="prompts-label" data-i18n="advisor.prompts_chances">Шансы на поступление</p>
             <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt1">Поступлю ли я в КБТУ с ЕНТ 110?</button>
             <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.prompt2">Мои шансы на грант с 120 баллами</button>
           </div>
@@ -327,40 +337,40 @@
       <div class="chat-area">
         <div class="chat-messages" id="chat-messages">
           <div class="chat-welcome">
-            <div class="chat-welcome-icon">🎓</div>
+            <div class="chat-welcome-icon" aria-hidden="true"></div>
             <h2 data-i18n="advisor.welcome_title">Привет! Я помогу выбрать университет</h2>
             <p class="chat-welcome-sub" data-i18n="advisor.welcome_sub">Задайте вопрос о вузах, поступлении, грантах или специальностях — я отвечу на основе актуальных данных.</p>
             <div class="chat-welcome-categories">
               <div class="chat-welcome-cat">
-                <div class="chat-welcome-cat-icon">🎯</div>
-                <div class="chat-welcome-cat-title">Шансы на поступление</div>
+                <div class="chat-welcome-cat-icon" aria-hidden="true"></div>
+                <div class="chat-welcome-cat-title" data-i18n="advisor.category_chances">Шансы на поступление</div>
                 <div class="chat-welcome-cat-prompts">
-                  <button class="prompt-chip" onclick="usePrompt(this)">Поступлю ли я в КБТУ с ЕНТ 110?</button>
-                  <button class="prompt-chip" onclick="usePrompt(this)">Мои шансы на грант с 120 баллами</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.welcome_prompt1">Поступлю ли я в КБТУ с ЕНТ 110?</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.welcome_prompt2">Мои шансы на грант с 120 баллами</button>
                 </div>
               </div>
               <div class="chat-welcome-cat">
-                <div class="chat-welcome-cat-icon">🏙</div>
-                <div class="chat-welcome-cat-title">Города и вузы</div>
+                <div class="chat-welcome-cat-icon" aria-hidden="true"></div>
+                <div class="chat-welcome-cat-title" data-i18n="advisor.category_cities">Города и вузы</div>
                 <div class="chat-welcome-cat-prompts">
-                  <button class="prompt-chip" onclick="usePrompt(this)">Какие вузы в Алматы на IT?</button>
-                  <button class="prompt-chip" onclick="usePrompt(this)">Сравни КБТУ и КазНУ</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.welcome_prompt3">Какие вузы в Алматы на IT?</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.welcome_prompt4">Сравни КБТУ и КазНУ</button>
                 </div>
               </div>
               <div class="chat-welcome-cat">
-                <div class="chat-welcome-cat-icon">💰</div>
-                <div class="chat-welcome-cat-title">Бюджет и гранты</div>
+                <div class="chat-welcome-cat-icon" aria-hidden="true"></div>
+                <div class="chat-welcome-cat-title" data-i18n="advisor.category_budget">Бюджет и гранты</div>
                 <div class="chat-welcome-cat-prompts">
-                  <button class="prompt-chip" onclick="usePrompt(this)">У меня бюджет 1.2 млн тг/год, интересует IT</button>
-                  <button class="prompt-chip" onclick="usePrompt(this)">Какие гранты на медицину?</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.welcome_prompt5">У меня бюджет 1.2 млн тг/год, интересует IT</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.welcome_prompt6">Какие гранты на медицину?</button>
                 </div>
               </div>
               <div class="chat-welcome-cat">
-                <div class="chat-welcome-cat-icon">💼</div>
-                <div class="chat-welcome-cat-title">Профессии</div>
+                <div class="chat-welcome-cat-icon" aria-hidden="true"></div>
+                <div class="chat-welcome-cat-title" data-i18n="advisor.category_careers">Профессии</div>
                 <div class="chat-welcome-cat-prompts">
-                  <button class="prompt-chip" onclick="usePrompt(this)">Хочу в медицину, какой вуз лучше?</button>
-                  <button class="prompt-chip" onclick="usePrompt(this)">Кем работать с IT образованием?</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.welcome_prompt7">Хочу в медицину, какой вуз лучше?</button>
+                  <button class="prompt-chip" onclick="usePrompt(this)" data-i18n="advisor.welcome_prompt8">Кем работать с IT образованием?</button>
                 </div>
               </div>
             </div>
@@ -859,7 +869,7 @@
           <p class="form-error" id="login-error"></p>
           <button type="submit" class="btn btn-primary auth-submit" id="login-submit" data-i18n="auth.login_btn">Войти</button>
         </form>
-        <p class="auth-switch"><span data-i18n="auth.no_account">Нет аккаунта?</span> <a href="#" onclick="navigate('register')"><span data-i18n="auth.register_link">Зарегистрироваться</span></a></p>
+        <p class="auth-switch"><span data-i18n="auth.no_account">Нет аккаунта?</span> <a href="#" onclick="event.preventDefault(); navigate('register')"><span data-i18n="auth.register_link">Зарегистрироваться</span></a></p>
       </div>
     </div>
   </div>
@@ -885,12 +895,21 @@
           </div>
           <div class="form-field">
             <label data-i18n="auth.password">Пароль</label>
-            <input type="password" id="reg-password" class="form-input" required minlength="6" placeholder="минимум 6 символов" data-i18n-placeholder="auth.min_chars" autocomplete="new-password">
+            <input type="password" id="reg-password" class="form-input" required minlength="12"
+              pattern="(?=.*[A-ZА-Я])(?=.*\d)(?=.*[^A-Za-zА-Яа-я0-9]).{12,}"
+              placeholder="12+ символов, заглавная, цифра, спецсимвол" data-i18n-placeholder="auth.min_chars"
+              autocomplete="new-password" oninput="updatePasswordHints('reg-password','reg-password-hints')">
+            <ul class="pw-hints" id="reg-password-hints">
+              <li data-rule="len">Минимум 12 символов</li>
+              <li data-rule="upper">Заглавная буква</li>
+              <li data-rule="digit">Цифра</li>
+              <li data-rule="special">Спецсимвол</li>
+            </ul>
           </div>
           <p class="form-error" id="register-error"></p>
           <button type="submit" class="btn btn-primary auth-submit" id="register-submit" data-i18n="auth.register_btn">Создать аккаунт</button>
         </form>
-        <p class="auth-switch"><span data-i18n="auth.has_account">Уже есть аккаунт?</span> <a href="#" onclick="navigate('login')"><span data-i18n="auth.login_link">Войти</span></a></p>
+        <p class="auth-switch"><span data-i18n="auth.has_account">Уже есть аккаунт?</span> <a href="#" onclick="event.preventDefault(); navigate('login')"><span data-i18n="auth.login_link">Войти</span></a></p>
       </div>
     </div>
   </div>
@@ -934,14 +953,14 @@
     <div class="footer-cols">
       <div class="footer-col">
         <div class="footer-col-title" data-i18n="footer.sections">Разделы</div>
-        <a href="#" class="footer-link" onclick="navigate('home')" data-i18n="footer.universities">Университеты</a>
-        <a href="#" class="footer-link" onclick="navigate('compare')" data-i18n="footer.comparison">Сравнение</a>
-        <a href="#" class="footer-link" onclick="navigate('advisor')" data-i18n="footer.advisor">ИИ-советник</a>
+        <a href="#" class="footer-link" onclick="event.preventDefault(); navigate('home')" data-i18n="footer.universities">Университеты</a>
+        <a href="#" class="footer-link" onclick="event.preventDefault(); navigate('compare')" data-i18n="footer.comparison">Сравнение</a>
+        <a href="#" class="footer-link" onclick="event.preventDefault(); navigate('advisor')" data-i18n="footer.advisor">ИИ-советник</a>
       </div>
       <div class="footer-col">
         <div class="footer-col-title" data-i18n="footer.project">Проект</div>
         <a href="#" class="footer-link" onclick="event.preventDefault(); openModal('modal-about')" data-i18n="footer.about">О проекте</a>
-        <a href="#" class="footer-link" data-i18n="footer.fin_literacy">Финансовая грамотность</a>
+        <a href="#" class="footer-link" onclick="event.preventDefault(); navigate('home'); setTimeout(() => document.getElementById('financial-section')?.scrollIntoView({behavior:'smooth'}), 0)" data-i18n="footer.fin_literacy">Финансовая грамотность</a>
         <a href="#" class="footer-link" onclick="event.preventDefault(); openModal('modal-contacts')" data-i18n="footer.contacts">Контакты</a>
       </div>
       <div class="footer-col">

@@ -322,7 +322,7 @@ async function loadProfilePage() {
   if (!Auth.isLoggedIn()) {
     content.innerHTML = `
       <div class="auth-prompt">
-        <div class="auth-prompt-icon">👤</div>
+        <div class="auth-prompt-icon" aria-hidden="true"></div>
         <div class="auth-prompt-title">${t('profile_page.auth_prompt') || 'Войдите в аккаунт'}</div>
         <div class="auth-prompt-desc">${t('profile_page.auth_prompt_desc') || 'Чтобы видеть избранные вузы, историю ИИ-советника и результаты тестов'}</div>
         <div class="auth-prompt-actions">
@@ -350,8 +350,8 @@ async function loadProfilePage() {
 
         <!-- LEFT: User Card -->
         <aside class="profile-user-card">
-          <div class="profile-user-banner"></div>
-          <div class="profile-user-avatar">${initials}</div>
+          <div class="profile-user-banner" onclick="showToast(t('profile_page.avatar_soon') || 'Загрузка фото скоро появится')" title="${t('profile_page.avatar_change') || 'Изменить обложку'}"></div>
+          <div class="profile-user-avatar" onclick="showToast(t('profile_page.avatar_soon') || 'Загрузка фото скоро появится')" title="${t('profile_page.avatar_change') || 'Изменить фото'}">${initials}</div>
           <div class="profile-user-info">
             <div class="profile-user-name">${escapeHtml(displayName)}</div>
             <div class="profile-user-email">${escapeHtml(profile.email)}</div>
@@ -384,7 +384,7 @@ async function loadProfilePage() {
           <!-- Edit Profile -->
           <section class="profile-section">
             <div class="profile-section-header">
-              <h2 class="profile-section-title">✏️ ${t('profile_page.card_profile') || 'Редактировать профиль'}</h2>
+              <h2 class="profile-section-title">${t('profile_page.card_profile') || 'Редактировать профиль'}</h2>
             </div>
             <form id="profile-form" class="auth-form" onsubmit="handleProfileSave(event)">
               <div class="profile-form-row">
@@ -394,12 +394,13 @@ async function loadProfilePage() {
                 </div>
                 <div class="form-field">
                   <label>${t('profile_page.card_phone') || 'Телефон'}</label>
-                  <input type="tel" id="profile-phone" value="${escapeHtml(profile.phone || '')}" class="form-input" placeholder="+7 ...">
+                  <input type="tel" id="profile-phone" value="${escapeHtml(profile.phone || '')}" class="form-input" placeholder="+7 (___) ___-__-__" oninput="formatPhoneInput(this)">
                 </div>
               </div>
               <div class="form-field">
                 <label>${t('profile_page.card_bio') || 'О себе'}</label>
-                <textarea id="profile-bio" class="form-input" rows="2" placeholder="${t('profile_page.card_bio_placeholder') || 'Расскажите о себе...'}">${escapeHtml(profile.bio || '')}</textarea>
+                <textarea id="profile-bio" class="form-input" rows="2" maxlength="300" oninput="document.getElementById('profile-bio-count').textContent = this.value.length" placeholder="${t('profile_page.card_bio_placeholder') || 'Расскажите о себе...'}">${escapeHtml(profile.bio || '')}</textarea>
+                <div class="form-hint" style="text-align:right;font-size:12px;color:var(--text-muted,#888)"><span id="profile-bio-count">${(profile.bio || '').length}</span>/300</div>
               </div>
               <p class="form-error" id="profile-error"></p>
               <div class="profile-form-actions">
@@ -411,8 +412,8 @@ async function loadProfilePage() {
           <!-- Saved Universities -->
           <section class="profile-section">
             <div class="profile-section-header">
-              <h2 class="profile-section-title">🏛 ${t('profile_page.card_saved_title') || 'Сохранённые вузы'}</h2>
-              <span class="profile-section-badge">${saved.length}</span>
+              <h2 class="profile-section-title">${t('profile_page.card_saved_title') || 'Сохранённые вузы'}</h2>
+              <span class="profile-section-badge" id="saved-badge">${saved.length}</span>
             </div>
             ${saved.length ? `
               <div class="profile-saved-grid">
@@ -423,17 +424,17 @@ async function loadProfilePage() {
                       <div class="profile-saved-name">${escapeHtml(u.short_name || u.name)}</div>
                       <div class="profile-saved-price">от ${fmtPrice(u.price_from)} тг/год</div>
                     </div>
-                    <button class="profile-saved-remove" onclick="event.stopPropagation(); deleteSavedUniversity(${u.university_id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">✕</button>
+                    <button class="profile-saved-remove" onclick="event.stopPropagation(); deleteSavedUniversity(${u.university_id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
                   </div>
                 `).join('')}
               </div>
-            ` : `<div class="profile-empty"><div class="profile-empty-icon">🏛</div>${t('profile_page.card_saved_empty') || 'Нет сохранённых вузов'}</div>`}
+            ` : `<div class="profile-empty"><div class="profile-empty-icon"></div>${t('profile_page.card_saved_empty') || 'Нет сохранённых вузов'}</div>`}
           </section>
 
           <!-- Application Tracker -->
           <section class="profile-section">
             <div class="profile-section-header">
-              <h2 class="profile-section-title">📋 ${t('tracker.title') || 'Мои заявки'}</h2>
+              <h2 class="profile-section-title">${t('tracker.title') || 'Мои заявки'}</h2>
               <span class="profile-section-badge" id="tracker-count"></span>
             </div>
             <div id="profile-tracker-content"></div>
@@ -442,26 +443,37 @@ async function loadProfilePage() {
           <!-- Password Change -->
           <section class="profile-section">
             <div class="profile-section-header">
-              <h2 class="profile-section-title">🔒 ${t('profile_page.card_password_title') || 'Смена пароля'}</h2>
+              <h2 class="profile-section-title">${t('profile_page.card_password_title') || 'Смена пароля'}</h2>
             </div>
             <form id="password-form" class="auth-form" onsubmit="handlePasswordChange(event)">
               <div class="profile-pw-fields">
                 <div class="form-field">
                   <label>${t('profile_page.card_pw_current') || 'Текущий пароль'}</label>
-                  <input type="password" id="pw-current" class="form-input" required minlength="6">
+                  <div class="pw-toggle-wrap">
+                    <input type="password" id="pw-current" class="form-input" required minlength="1">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">Показать</button>
+                  </div>
                 </div>
                 <div class="form-field">
                   <label>${t('profile_page.card_pw_new') || 'Новый пароль'}</label>
                   <div class="pw-toggle-wrap">
-                    <input type="password" id="pw-new" class="form-input" required minlength="6">
-                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">👁</button>
+                    <input type="password" id="pw-new" class="form-input" required minlength="12"
+                      pattern="(?=.*[A-ZА-Я])(?=.*\d)(?=.*[^A-Za-zА-Яа-я0-9]).{12,}"
+                      oninput="updatePasswordHints('pw-new','pw-new-hints')">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">Показать</button>
                   </div>
+                  <ul class="pw-hints" id="pw-new-hints">
+                    <li data-rule="len">Минимум 12 символов</li>
+                    <li data-rule="upper">Заглавная буква</li>
+                    <li data-rule="digit">Цифра</li>
+                    <li data-rule="special">Спецсимвол</li>
+                  </ul>
                 </div>
                 <div class="form-field">
                   <label>${t('profile_page.card_pw_confirm') || 'Подтвердите пароль'}</label>
                   <div class="pw-toggle-wrap">
-                    <input type="password" id="pw-confirm" class="form-input" required minlength="6">
-                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">👁</button>
+                    <input type="password" id="pw-confirm" class="form-input" required minlength="12">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">Показать</button>
                   </div>
                 </div>
               </div>
@@ -475,7 +487,7 @@ async function loadProfilePage() {
           <!-- Settings -->
           <section class="profile-section">
             <div class="profile-section-header">
-              <h2 class="profile-section-title">⚙️ ${t('profile_page.card_settings') || 'Настройки'}</h2>
+              <h2 class="profile-section-title">${t('profile_page.card_settings') || 'Настройки'}</h2>
             </div>
             <form class="auth-form" onsubmit="handlePreferencesSave(event)">
               <div class="profile-settings-row">
@@ -496,28 +508,37 @@ async function loadProfilePage() {
           <!-- AI Chat History -->
           <section class="profile-section">
             <div class="profile-section-header">
-              <h2 class="profile-section-title">💬 ${t('profile_page.card_ai_title') || 'История ИИ-советника'}</h2>
-              <span class="profile-section-badge">${chats.length}</span>
+              <h2 class="profile-section-title">${t('profile_page.card_ai_title') || 'История ИИ-советника'}</h2>
+              <span class="profile-section-badge" id="chat-badge">${chats.length}</span>
             </div>
             ${chats.length ? `
-              <div class="profile-chat-list">
+              <div class="profile-chat-list" id="profile-chat-list">
                 ${chats.slice(0, 15).map(c => `
                   <div class="profile-chat-item" data-chat-id="${c.id}">
-                    <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">✕</button>
+                    <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
+                    <div class="profile-chat-q">${escapeHtml(c.message.slice(0, 150))}${c.message.length > 150 ? '…' : ''}</div>
+                    <div class="profile-chat-a">${escapeHtml(c.response.slice(0, 250))}${c.response.length > 250 ? '…' : ''}</div>
+                    <div class="profile-chat-date">${formatDate(c.created_at)}</div>
+                  </div>
+                `).join('')}
+                ${chats.slice(15).map(c => `
+                  <div class="profile-chat-item profile-chat-item-hidden" style="display:none" data-chat-id="${c.id}">
+                    <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
                     <div class="profile-chat-q">${escapeHtml(c.message.slice(0, 150))}${c.message.length > 150 ? '…' : ''}</div>
                     <div class="profile-chat-a">${escapeHtml(c.response.slice(0, 250))}${c.response.length > 250 ? '…' : ''}</div>
                     <div class="profile-chat-date">${formatDate(c.created_at)}</div>
                   </div>
                 `).join('')}
               </div>
-            ` : `<div class="profile-empty"><div class="profile-empty-icon">💬</div>${t('profile_page.card_ai_empty') || 'Нет истории диалогов'}</div>`}
+              ${chats.length > 15 ? `<button type="button" class="btn btn-ghost btn-sm" id="chat-show-more" onclick="showMoreChatItems(this)">${t('profile_page.show_more') || 'Показать ещё'} (${chats.length - 15})</button>` : ''}
+            ` : `<div class="profile-empty"><div class="profile-empty-icon"></div>${t('profile_page.card_ai_empty') || 'Нет истории диалогов'}</div>`}
           </section>
 
           <!-- Test Results -->
           <section class="profile-section">
             <div class="profile-section-header">
-              <h2 class="profile-section-title">📊 ${t('profile_page.card_tests_title') || 'Результаты тестов'}</h2>
-              <span class="profile-section-badge">${tests.length}</span>
+              <h2 class="profile-section-title">${t('profile_page.card_tests_title') || 'Результаты тестов'}</h2>
+              <span class="profile-section-badge" id="tests-badge">${tests.length}</span>
             </div>
             ${tests.length ? `
               <div class="profile-tests-grid">
@@ -527,7 +548,7 @@ async function loadProfilePage() {
                   const label = typeof labelFn === 'function' ? labelFn() : test.test_type;
                   return `
                     <div class="profile-test-card">
-                      <button class="profile-test-delete" onclick="deleteTestResultItem(${test.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">✕</button>
+                      <button class="profile-test-delete" onclick="deleteTestResultItem(${test.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
                       <div class="profile-test-type">${escapeHtml(label)}</div>
                       <div class="profile-test-score">${test.score}${test.max_score ? ` / ${test.max_score}` : ''}</div>
                       ${data.summary ? `<div class="profile-test-meta">${escapeHtml(data.summary)}</div>` : ''}
@@ -536,7 +557,7 @@ async function loadProfilePage() {
                   `;
                 }).join('')}
               </div>
-            ` : `<div class="profile-empty"><div class="profile-empty-icon">📊</div>${t('profile_page.card_tests_empty') || 'Нет результатов тестов'}</div>`}
+            ` : `<div class="profile-empty"><div class="profile-empty-icon"></div>${t('profile_page.card_tests_empty') || 'Нет результатов тестов'}</div>`}
           </section>
 
         </div>
@@ -609,18 +630,18 @@ async function deleteSavedUniversity(uniId, btn) {
     await Auth.removeUniversity(uniId);
     const item = btn.closest('.profile-saved-card');
     if (item) item.remove();
-    const badge = document.querySelector('.profile-layout .profile-section:nth-child(2) .profile-section-badge');
+    const badge = document.getElementById('saved-badge');
     if (badge) {
       const n = parseInt(badge.textContent) - 1;
       badge.textContent = n;
       if (n <= 0) {
         const grid = document.querySelector('.profile-saved-grid');
-        if (grid) grid.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon">🏛</div>${t('profile_page.card_saved_empty') || 'Нет сохранённых вузов'}</div>`;
+        if (grid) grid.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon"> </div>${t('profile_page.card_saved_empty') || 'Нет сохранённых вузов'}</div>`;
       }
     }
   } catch (e) {
     btn.disabled = false;
-    btn.textContent = '✕';
+    btn.textContent = '×';
   }
 }
 
@@ -631,20 +652,25 @@ async function deleteChatItem(msgId, btn) {
     await Auth.deleteChatMessage(msgId);
     const item = btn.closest('.profile-chat-item');
     if (item) item.remove();
-    const sections = document.querySelectorAll('.profile-layout .profile-section');
-    const chatSection = sections[sections.length - 2];
-    const badge = chatSection ? chatSection.querySelector('.profile-section-badge') : null;
+    const badge = document.getElementById('chat-badge');
     if (badge) {
       const n = parseInt(badge.textContent) - 1;
       badge.textContent = n;
       if (n <= 0) {
-        const list = document.querySelector('.profile-chat-list');
-        if (list) list.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon">💬</div>${t('profile_page.card_ai_empty') || 'Нет истории диалогов'}</div>`;
+        const list = document.getElementById('profile-chat-list');
+        if (list) list.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon"> </div>${t('profile_page.card_ai_empty') || 'Нет истории диалогов'}</div>`;
       }
+    }
+    // если список видимых пунктов опустел ниже 15, подтягиваем следующий скрытый
+    const visibleCount = document.querySelectorAll('.profile-chat-item:not(.profile-chat-item-hidden)').length;
+    const nextHidden = document.querySelector('.profile-chat-item-hidden');
+    if (visibleCount < 15 && nextHidden) {
+      nextHidden.classList.remove('profile-chat-item-hidden');
+      nextHidden.style.display = '';
     }
   } catch (e) {
     btn.disabled = false;
-    btn.textContent = '✕';
+    btn.textContent = '×';
   }
 }
 
@@ -655,20 +681,18 @@ async function deleteTestResultItem(resultId, btn) {
     await Auth.deleteTestResult(resultId);
     const item = btn.closest('.profile-test-card');
     if (item) item.remove();
-    const sections = document.querySelectorAll('.profile-layout .profile-section');
-    const testSection = sections[sections.length - 1];
-    const badge = testSection ? testSection.querySelector('.profile-section-badge') : null;
+    const badge = document.getElementById('tests-badge');
     if (badge) {
       const n = parseInt(badge.textContent) - 1;
       badge.textContent = n;
       if (n <= 0) {
         const grid = document.querySelector('.profile-tests-grid');
-        if (grid) grid.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon">📊</div>${t('profile_page.card_tests_empty') || 'Нет результатов тестов'}</div>`;
+        if (grid) grid.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon"> </div>${t('profile_page.card_tests_empty') || 'Нет результатов тестов'}</div>`;
       }
     }
   } catch (e) {
     btn.disabled = false;
-    btn.textContent = '✕';
+    btn.textContent = '×';
   }
 }
 
@@ -729,8 +753,49 @@ function togglePW(btn) {
   const input = btn.previousElementSibling;
   const isPW = input.type === 'password';
   input.type = isPW ? 'text' : 'password';
-  btn.textContent = isPW ? '🙈' : '👁';
+  btn.textContent = isPW ? 'Скрыть' : 'Показать';
   btn.setAttribute('aria-label', isPW ? t('profile_page.card_pw_hide') : t('profile_page.card_pw_show'));
+}
+
+// Простая маска ввода для казахстанского номера: +7 (___) ___-__-__
+function formatPhoneInput(input) {
+  let digits = input.value.replace(/\D/g, '');
+  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+  if (!digits.startsWith('7')) digits = '7' + digits;
+  digits = digits.slice(0, 11);
+  const rest = digits.slice(1);
+  let formatted = '+7';
+  if (rest.length > 0) formatted += ' (' + rest.slice(0, 3);
+  if (rest.length >= 3) formatted += ') ' + rest.slice(3, 6);
+  if (rest.length >= 6) formatted += '-' + rest.slice(6, 8);
+  if (rest.length >= 8) formatted += '-' + rest.slice(8, 10);
+  input.value = formatted;
+}
+
+// Живой чек-лист требований к паролю (12+ символов, заглавная, цифра, спецсимвол)
+function updatePasswordHints(inputId, listId) {
+  const val = document.getElementById(inputId).value;
+  const list = document.getElementById(listId);
+  if (!list) return;
+  const rules = {
+    len: val.length >= 12,
+    upper: /[A-ZА-Я]/.test(val),
+    digit: /\d/.test(val),
+    special: /[^A-Za-zА-Яа-я0-9]/.test(val)
+  };
+  list.querySelectorAll('li[data-rule]').forEach(li => {
+    const ok = rules[li.dataset.rule];
+    li.classList.toggle('pw-hint-ok', !!ok);
+  });
+}
+
+// Раскрыть скрытые пункты истории ИИ-советника вместо расхождения бейджа (30) и рендера (15)
+function showMoreChatItems(btn) {
+  document.querySelectorAll('.profile-chat-item-hidden').forEach(el => {
+    el.classList.remove('profile-chat-item-hidden');
+    el.style.display = '';
+  });
+  btn.remove();
 }
 
 function escapeHtml(str) {
