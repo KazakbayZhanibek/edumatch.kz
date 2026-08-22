@@ -6,7 +6,7 @@
 <title data-i18n="page.title">EduMatch KZ — Выбери свой университет</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="logo.png">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 
 <!-- Leaflet (map) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -42,7 +42,6 @@
 <nav class="nav" id="nav">
   <div class="nav-inner">
     <a href="#" class="nav-logo" onclick="event.preventDefault(); navigate('home')">
-      <img src="logo.png" class="logo-mark" alt="EduMatch KZ logo">
       <span class="logo-text">EduMatch<span class="logo-kz">KZ</span></span>
     </a>
     <div class="nav-links">
@@ -141,7 +140,7 @@
   <div id="page-home" class="page active">
     <section class="hero">
       <div class="hero-inner">
-        <div class="hero-badge" data-aos="fade-down" data-aos-duration="600" data-i18n="home.badge">Казахстан · 2025–2026</div>
+        <div class="hero-badge" data-aos="fade-down" data-aos-duration="600" data-i18n="home.badge" data-academic-year>Казахстан · 2025–2026</div>
         <h1 class="hero-title" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100"><span data-i18n="home.hero_heading1">Выбор университета —</span><br><em><span data-i18n="home.hero_heading2">главное финансовое решение</span></em></h1>
         <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200" data-i18n="home.hero_sub">Сравните стоимость, рейтинги и специальности ведущих вузов Казахстана. Получите персональный совет от ИИ-советника.</p>
         <div class="hero-actions" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
@@ -169,7 +168,7 @@
       <div class="container">
         <div class="section-head" data-aos="fade-up" data-aos-duration="600">
           <h2 class="section-title" data-i18n="universities.title">Университеты Казахстана</h2>
-          <p class="section-sub" data-i18n="universities.sub">Данные актуальны на 2025–2026 учебный год</p>
+          <p class="section-sub" data-i18n="universities.sub" data-academic-year>Данные актуальны на 2025–2026 учебный год</p>
         </div>
 
         <div class="filters">
@@ -378,10 +377,12 @@
         </div>
         <div class="chat-input-area">
           <div class="chat-input-wrap">
-            <textarea class="chat-input" id="chat-input" placeholder="Напишите вопрос..." data-i18n-placeholder="advisor.chat_placeholder" rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
-            <button class="chat-send" id="chat-send" onclick="sendMessage()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            </button>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="chat-input" placeholder="Напишите вопрос..." data-i18n-placeholder="advisor.chat_placeholder" rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+              <button class="chat-send" id="chat-send" onclick="sendMessage()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
           </div>
           <p class="chat-disclaimer" data-i18n="advisor.disclaimer">Совет основан на публичных данных. Уточняйте актуальную информацию на сайтах вузов.</p>
         </div>
@@ -945,7 +946,6 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-logo">
-        <img src="logo.png" alt="EduMatch KZ" class="footer-logo-img">
         <span class="footer-logo-text">EduMatch<span class="footer-logo-kz">KZ</span></span>
       </div>
       <p class="footer-desc" data-i18n="footer.desc">Платформа для сравнения университетов Казахстана — цены, рейтинги, специальности и ИИ-советник.</p>
@@ -966,7 +966,7 @@
       <div class="footer-col">
         <div class="footer-col-title" data-i18n="footer.data_section">Данные</div>
         <span class="footer-text" data-i18n="footer.location">Казахстан</span>
-        <span class="footer-text" data-i18n="footer.year">2025–2026 учебный год</span>
+        <span class="footer-text" data-i18n="footer.year" data-academic-year>2025–2026 учебный год</span>
         <span class="footer-text" data-i18n="footer.unis_count">15 университетов</span>
       </div>
     </div>

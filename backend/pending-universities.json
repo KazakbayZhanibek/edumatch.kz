@@ -1,0 +1,1849 @@
+[
+  {
+    "id": 143,
+    "name": "Республиканское государственное учреждение «Военный институт Сил воздушной обороны имени дважды Героя Советского Союза Т.Я.Бегельдинова» Министерства обороны Республики Казахстан",
+    "short_name": "Военный институт Сил воздушной обороны им. Т.Я. Бегельдинова",
+    "city": "Актобе",
+    "official_website": "http://visvo.mil.kz/",
+    "address": "030011, Актюбинская область, г. Актобе, проспект Алии Молдагуловой, 39",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 0,
+    "admission_phone": "8 7132 97 22 02",
+    "source_record_id": 43,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 115,
+    "name": "Акционерное общество «ALT университет имени Мухамеджана Тынышпаева»",
+    "short_name": "ALT University им. М. Тынышпаева",
+    "city": "Алматы",
+    "official_website": "https://alt.edu.kz",
+    "address": "050012, г. Алматы, улица Шевченко, дом № 97",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 0,
+    "admission_phone": "8 707 888 19 31",
+    "source_record_id": 106,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 154,
+    "name": "Акционерное общество «Академия гражданской авиации»",
+    "short_name": "Академия гражданской авиации",
+    "city": "Алматы",
+    "official_website": "https://caa.edu.kz",
+    "address": "050039, г. Алматы, улица Закарпатская (Ахметова), 44",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 0,
+    "admission_phone": "8 7273 83 90 45",
+    "source_record_id": 56,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 139,
+    "name": "Государственное учреждение «Академия Комитета национальной безопасности Республики Казахстан»",
+    "short_name": "Академия КНБ РК",
+    "city": "Алматы",
+    "official_website": "http://knb.kz",
+    "address": "040907, Алматинская область, Карасайский район, с. Алатау, ул. Мади, 1А (согласно исходной записи: мкр. Нур Алатау, ул. Еркегали Рахмадиева, 8)",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 0,
+    "admission_phone": "8 7272 67 96 10",
+    "source_record_id": 38,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 121,
+    "name": "Негосударственное учреждение образования «Казахстанско-Российский медицинский университет»",
+    "short_name": "Казахстанско-Российский медицинский университет (КРМУ)",
+    "city": "Алматы",
+    "official_website": "https://krmu.edu.kz",
+    "address": "050004, г. Алматы, улица Толе би / проспект Абылай хана, 51/53",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": 0,
+    "admission_phone": "8 7272 50 83 75",
+    "source_record_id": 116,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 158,
+    "name": "Некоммерческое Акционерное общество «Университет Нархоз»",
+    "short_name": "Университет Нархоз",
+    "city": "Алматы",
+    "official_website": "https://narxoz.edu.kz",
+    "address": "050035, г. Алматы, улица Жандосова, дом № 55",
+    "coordinates": {
+      "lat": 43.2072,
+      "lng": 76.8858
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский",
+      "Английский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 0,
+    "admission_phone": "8 7273 77 11 02",
+    "source_record_id": 61,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 152,
+    "name": "Некоммерческое акционерное общество «Алматинский университет энергетики и связи имени Гумарбека Даукеева»",
+    "short_name": "АУЭС (Energo University)",
+    "city": "Алматы",
+    "official_website": "https://aues.edu.kz",
+    "address": "050013, г. Алматы, улица Байтурсынулы, дом № 126/1",
+    "coordinates": {
+      "lat": 43.228,
+      "lng": 76.9083
+    },
+    "price_from": 920000,
+    "price_to": 1680000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 300000,
+    "admission_phone": "8 7273 23 11 75",
+    "source_record_id": 52,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 153,
+    "name": "Некоммерческое акционерное общество «Казахская академия спорта и туризма»",
+    "short_name": "Казахская академия спорта и туризма (КазАСТ)",
+    "city": "Алматы",
+    "official_website": "https://kazast.edu.kz",
+    "address": "050022, г. Алматы, проспект Абая, дом № 85",
+    "coordinates": {
+      "lat": 43.2361,
+      "lng": 76.9394
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 0,
+    "admission_phone": "8 7172 92 39 97",
+    "source_record_id": 53,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 144,
+    "name": "Республиканское государственное учреждение «Алматинская академия Министерства внутренних дел Республики Казахстан имени Макана Есбулатова»",
+    "short_name": "Алматинская академия МВД РК им. М. Есбулатова",
+    "city": "Алматы",
+    "official_website": "https://alpolac.edu.kz",
+    "address": "050060, г. Алматы, улица Утепова, дом № 2",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 0,
+    "admission_phone": "8 7273 37 81 06",
+    "source_record_id": 44,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 140,
+    "name": "Республиканское государственное учреждение «Военно-инженерный институт радиоэлектроники и связи» Министерства обороны Республики Казахстан",
+    "short_name": "Республиканское государственное учреждение «Военно-инженерный институт радиоэлек",
+    "city": "Алматы",
+    "official_website": "https://viires.edu.kz",
+    "address": "050060, г.Алматы, УЛИЦА ЖАНДОСОВА, дом № 53",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7273 03 32 97",
+    "source_record_id": 39,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 142,
+    "name": "Республиканское государственное учреждение «Военный институт Сухопутных войск имени Сагадата Нурмагамбетова» Министерства обороны Республики Казахстан",
+    "short_name": "Республиканское государственное учреждение «Военный институт Сухопутных войск им",
+    "city": "Алматы",
+    "official_website": "https://visv.edu.kz",
+    "address": "050060, г.Алматы, Красногорская, 35",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7272 90 13 20",
+    "source_record_id": 42,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 157,
+    "name": "Республиканское государственное учреждение «Казахская национальная академия искусств имени Темирбека Жургенова» Министерства культуры и информации Республики Казахстан",
+    "short_name": "Республиканское государственное учреждение «Казахская национальная академия иску",
+    "city": "Алматы",
+    "official_website": "https://kaznai.kz",
+    "address": "050000, г.Алматы, улица Панфилова, дом № 127",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7273 38 35 55",
+    "source_record_id": 6,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 161,
+    "name": "Республиканское государственное учреждение «Казахская национальная консерватория имени Курмангазы» Министерства культуры и информации Республики Казахстан",
+    "short_name": "Республиканское государственное учреждение «Казахская национальная консерватория",
+    "city": "Алматы",
+    "official_website": "https://www.conservatoire.edu.kz",
+    "address": "050000, г.Алматы, Проспект АБЫЛАЙ ХАНА, дом № 86",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7272 61 76 40",
+    "source_record_id": 7,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 145,
+    "name": "Республиканское государственное учреждение «Пограничная академия Комитета национальной безопасности Республики Казахстан»",
+    "short_name": "Республиканское государственное учреждение «Пограничная академия Комитета национ",
+    "city": "Алматы",
+    "official_website": "http://knb.gov.kz/ru/akademia-pogranicnoi-sluzby-knb",
+    "address": "050020, г.Алматы, Проспект Достык, дом № 103",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7272 64 65 29",
+    "source_record_id": 45,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 129,
+    "name": "ТОО «Иностранное учебное заведение «University of Innovation and Technology»",
+    "short_name": "ТОО «Иностранное учебное заведение «University of Innovation and Technology»",
+    "city": "Алматы",
+    "official_website": "https://innotech.edu.kz",
+    "address": "г. Алматы, пр-т Әл-Фараби , дом № 21, 1259 здание",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 705 650 44 43",
+    "source_record_id": 131,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 130,
+    "name": "Товарищество с ограниченной ответственностью \"Иностранное учебное заведение \"New York Film Academy Kazakhstan\"",
+    "short_name": "\"Иностранное учебное заведение \"New York Film Academy Kazakhstan\"",
+    "city": "Алматы",
+    "official_website": "https://kaz.nyfa.edu",
+    "address": "г. Алматы, ул. А.Байтурсынулы, здание № 124Б",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 708 070 51 51",
+    "source_record_id": 132,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 150,
+    "name": "Товарищество с ограниченной ответственностью «De Montfort University Kazakhstan (Де Монтфорт Юниверсити Казахстан)»",
+    "short_name": "«De Montfort University Kazakhstan (Де Монтфорт Юниверсити Казахстан)»",
+    "city": "Алматы",
+    "official_website": "https://dmuk.edu.kz",
+    "address": "050044, г.Алматы, Проспект АЛЬ -ФАРАБИ, дом № 120/48, 4",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 700 836 85 39",
+    "source_record_id": 50,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 122,
+    "name": "Товарищество с ограниченной ответственностью «Казахстанский медицинский университет «ВШОЗ»",
+    "short_name": "«Казахстанский медицинский университет «ВШОЗ»",
+    "city": "Алматы",
+    "official_website": "https://ksph.edu.kz",
+    "address": "050060, г.Алматы, УЛИЦА УТЕПОВА, дом № 19А",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7273 37 80 32",
+    "source_record_id": 117,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 155,
+    "name": "Товарищество с ограниченной ответственностью «Международная образовательная корпорация»",
+    "short_name": "«Международная образовательная корпорация»",
+    "city": "Алматы",
+    "official_website": "https://mok.edu.kz",
+    "address": "050043, г.Алматы, улица Рыскулбекова, дом № 28",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7273 23 12 23",
+    "source_record_id": 57,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 160,
+    "name": "Товарищество с ограниченной ответственностью «Университет Кунаева»",
+    "short_name": "«Университет Кунаева»",
+    "city": "Алматы",
+    "official_website": "https://vuzkunaeva.kz",
+    "address": "050000, г.Алматы, улица Курмангазы, дом № 107",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7273 57 21 05",
+    "source_record_id": 69,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 100,
+    "name": "Х.А.Ясауи атындағы Халықаралық қазақ-түрік университеті",
+    "short_name": "Международный к",
+    "city": "Алматы",
+    "official_website": "https://ayu.edu.kz",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 151,
+    "name": "Акционерное общество «Университет КАЗГЮУ имени М.С. Нарикбаева»",
+    "short_name": "«Университет КАЗГЮУ имени М.С. Нарикбаева»",
+    "city": "Астана",
+    "official_website": "https://mnu.kz",
+    "address": "010000, г.Астана, Шоссе КОРГАЛЖЫН, дом № 8",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7172 70 30 30",
+    "source_record_id": 51,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 120,
+    "name": "Некоммерческое Акционерное Общество «Медицинский университет Астана»",
+    "short_name": "«Медицинский университет Астана»",
+    "city": "Астана",
+    "official_website": "https://amu.edu.kz",
+    "address": "010000, г.Астана, улица Бейбітшілік, дом № 49а",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7172 53 94 24",
+    "source_record_id": 115,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 148,
+    "name": "Республиканское государственное учреждение «Академия правосудия при Высшем Судебном Совете Республики Казахстан»",
+    "short_name": "Республиканское государственное учреждение «Академия правосудия при Высшем Судеб",
+    "city": "Астана",
+    "official_website": "https://sta.edu.kz",
+    "address": "010000, г. Астана, улица Бейбитшилик, дом 46",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7172 71 08 71",
+    "source_record_id": 48,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 124,
+    "name": "Республиканское государственное учреждение «Академия управления Министерства внутренних дел Республики Казахстан»",
+    "short_name": "Республиканское государственное учреждение «Академия управления Министерства вну",
+    "city": "Астана",
+    "official_website": "",
+    "address": "010000, г.Астана, Мангилик Ел, дом 55/4",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7172 57 01 80",
+    "source_record_id": 124,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 138,
+    "name": "Республиканское государственное учреждение «Национальный университет обороны Республики Казахстан» Министерства обороны Республики Казахстан",
+    "short_name": "Республиканское государственное учреждение «Национальный университет обороны Рес",
+    "city": "Астана",
+    "official_website": "",
+    "address": "010000, г.Астана, ПРОСПЕКТ ТҰРАН, дом № 72",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7172 60 08 60",
+    "source_record_id": 37,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 128,
+    "name": "Товарищество с ограниченной ответственностью \"Национальный исследовательский университет искусственного интеллекта\"",
+    "short_name": "\"Национальный исследовательский университет искусственного интеллекта\"",
+    "city": "Астана",
+    "official_website": "",
+    "address": "г. Астана , пр-кт Мәңгілік Ел , здание № 55/1 ғимарат",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 700 300 33 17",
+    "source_record_id": 130,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 112,
+    "name": "Товарищество с ограниченной ответственностью «Astana IT University»",
+    "short_name": "«Astana IT University»",
+    "city": "Астана",
+    "official_website": "",
+    "address": "010000, г.Астана, Проспект Мангилик Ел, дом № 55/11",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7172 64 57 16",
+    "source_record_id": 103,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 123,
+    "name": "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «Coventry Kazakhstan»",
+    "short_name": "«Иностранное учебное заведение «Coventry Kazakhstan»",
+    "city": "Астана",
+    "official_website": "",
+    "address": "г.Астана, Коргалжынское шоссе, здание 13А",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 700 317 33 33 ",
+    "source_record_id": 119,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 113,
+    "name": "Товарищество с ограниченной ответственностью «Международный университет «Астана»",
+    "short_name": "«Международный университет «Астана»",
+    "city": "Астана",
+    "official_website": "",
+    "address": "010000, г.Астана, Проспект Қабанбай Батыра, дом № 8",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7172 24 36 68",
+    "source_record_id": 104,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 159,
+    "name": "Учреждение «Esil University»",
+    "short_name": "«Esil University»",
+    "city": "Астана",
+    "official_website": "",
+    "address": "010000, г.Астана, улица Ахмета Жубанова, здание № 7",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 708 227 01 01",
+    "source_record_id": 65,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 101,
+    "name": "Халықаралық туризм және меймандостық университеті",
+    "short_name": "Международный у",
+    "city": "Астана",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 102,
+    "name": "Сырдария университеті",
+    "short_name": "Университет \"Сы",
+    "city": "Атырау",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 126,
+    "name": "Некоммерческое акционерное общество \"Университет Ұлытау\"",
+    "short_name": "\"Университет Ұлытау\"",
+    "city": "Жезказган",
+    "official_website": "",
+    "address": "г. Жезказган, ул. К. Сатпаева, здание № 1",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 747 794 45 08",
+    "source_record_id": 129,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 103,
+    "name": "Оңтүстік Қазақстан медицина академиясы",
+    "short_name": "Южно-Казахстанс",
+    "city": "Жезказган",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 106,
+    "name": "«Мирас» университеті",
+    "short_name": "Университет \"Ми",
+    "city": "Караганда",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 105,
+    "name": "М. Әуэзов атындағы Оңтүстік Қазақстан университеті",
+    "short_name": "Южно-Казахстанс",
+    "city": "Караганда",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 118,
+    "name": "Некоммерческое акционерное общество «Карагандинский медицинский университет»",
+    "short_name": "«Карагандинский медицинский университет»",
+    "city": "Караганда",
+    "official_website": "",
+    "address": "100008, Карагандинская область, г.Караганда, улица Гоголя, дом № 40",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7212 50 39 30",
+    "source_record_id": 113,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 108,
+    "name": "Орталық Азия инновациялық университеті",
+    "short_name": "Центрально-азия",
+    "city": "Караганда",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 104,
+    "name": "Оңтүстік Қазақстан мемлекеттік педагогикалық университеті",
+    "short_name": "Южно-Казахстанс",
+    "city": "Караганда",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 141,
+    "name": "Республиканское государственное учреждение «Карагандинская академия Министерства внутренних дел Республики Казахстан имени Баримбека Бейсенова»",
+    "short_name": "Республиканское государственное учреждение «Карагандинская академия Министерства",
+    "city": "Караганда",
+    "official_website": "",
+    "address": "100009, Карагандинская область, г.Караганда, улица Ермекова, 124",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7212 30 34 05",
+    "source_record_id": 41,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 107,
+    "name": "Шымкент университеті",
+    "short_name": "Шымкентский уни",
+    "city": "Караганда",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 109,
+    "name": "ҚМ. Куатбеков атындағы халықтар достығы университеті",
+    "short_name": "Университет Дру",
+    "city": "Караганда",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 136,
+    "name": "Государственное учреждение «Академия гражданской защиты имени Малика Габдуллина» Министерства по чрезвычайным ситуациям Республики Казахстан",
+    "short_name": "Государственное учреждение «Академия гражданской защиты имени Малика Габдуллина»",
+    "city": "Кокшетау",
+    "official_website": "",
+    "address": "020000, Акмолинская область, г. Кокшетау, улица Акана Серэ, дом № 136",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7162 25 13 36",
+    "source_record_id": 35,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 127,
+    "name": "Некоммерческое акционерное общество «Кокшетауский университет имени Ш.Уалиханова»",
+    "short_name": "«Кокшетауский университет имени Ш.Уалиханова»",
+    "city": "Кокшетау",
+    "official_website": "",
+    "address": "020000, Акмолинская область, г.Кокшетау, улица Абая, дом № 76",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7162 25 55 83",
+    "source_record_id": 13,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 137,
+    "name": "Республиканское государственное учреждение «Костанайская академия Министерства внутренних дел Республики Казахстан имени Шракбека Кабылбаева»",
+    "short_name": "Республиканское государственное учреждение «Костанайская академия Министерства в",
+    "city": "Костанай",
+    "official_website": "",
+    "address": "110005, Костанайская область, г.Костанай, улица АБАЯ, дом № 11",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7142 39 02 89",
+    "source_record_id": 36,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 146,
+    "name": "Государственное учреждение «Академия правоохранительных органов при Генеральной прокуратуре Республики Казахстан»",
+    "short_name": "Государственное учреждение «Академия правоохранительных органов при Генеральной ",
+    "city": "Косшы",
+    "official_website": "",
+    "address": "010078, Акмолинская область, г.Косшы, улица РЕСПУБЛИКА, строение 16",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7165 16 81 69",
+    "source_record_id": 46,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 116,
+    "name": "Товарищество с ограниченной ответственностью «Кызылординский Университет «Болашак»",
+    "short_name": "«Кызылординский Университет «Болашак»",
+    "city": "Кызылорда",
+    "official_website": "",
+    "address": "120000, Кызылординская область, г.Кызылорда, Микрорайон ЛЕВЫЙ БЕРЕГ, здание № 115",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7242 30 01 65",
+    "source_record_id": 109,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 135,
+    "name": "Некоммерческое акционерное общество «Торайгыров Университет»",
+    "short_name": "«Торайгыров Университет»",
+    "city": "Павлодар",
+    "official_website": "",
+    "address": "140008, Павлодарская область, г.Павлодар, улица Ломова, дом № 64",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7182 67 36 85",
+    "source_record_id": 30,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 147,
+    "name": "Республиканское государственное учреждение «Академия Национальной гвардии Республики Казахстан»",
+    "short_name": "Республиканское государственное учреждение «Академия Национальной гвардии Респуб",
+    "city": "Петропавловск",
+    "official_website": "",
+    "address": "150009, Северо-Казахстанская область, г.Петропавловск, улица имени Жалела Кизатова, дом № 6",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7152 37 17 26",
+    "source_record_id": 47,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 134,
+    "name": "Некоммерческое акционерное общество «Рудненский индустриальный университет»",
+    "short_name": "«Рудненский индустриальный университет»",
+    "city": "Рудный",
+    "official_website": "",
+    "address": "111500, Костанайская область, г.Рудный, улица 50 лет Октября, дом № 38",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7143 15 07 03",
+    "source_record_id": 26,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 49,
+    "name": "«Нұр-Мүбарак» Мысыр ислам мәдениеті университеті",
+    "short_name": "Египетский унив",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 55,
+    "name": "«ҚДЖМ» Қазақ медициналық университеті",
+    "short_name": "Казахстанский м",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 51,
+    "name": "Алматы гуманитарлы-экономикалық университеті",
+    "short_name": "Алматинский гум",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 53,
+    "name": "Алматы менеджмент университеті",
+    "short_name": "Алматы Менеджме",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 47,
+    "name": "Еуразиялық технологиялық университет",
+    "short_name": "Евразийский Тех",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 50,
+    "name": "Каспий қоғамдық университеті",
+    "short_name": "Каспийский обще",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 54,
+    "name": "Л.Гончаров атындағы Қазақ автомобиль жолдары академиясы",
+    "short_name": "Казахская автом",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 131,
+    "name": "Некоммерческое акционерное общество «Шәкәрім университет»",
+    "short_name": "«Шәкәрім университет»",
+    "city": "Семей",
+    "official_website": "",
+    "address": "071410, область Абай, г.Семей, улица Глинки, дом № 20",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7222 31 31 75",
+    "source_record_id": 18,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 52,
+    "name": "Қазақ Еңбек және әлеуметтік қатынастар академиясы",
+    "short_name": "Казахская акаде",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 48,
+    "name": "Қазақстан инженерлік-технологиялық университеті",
+    "short_name": "Казахстанский и",
+    "city": "Семей",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 149,
+    "name": "Учреждение «Международный казахско-турецкий университет имени Ходжи Ахмеда Ясави»",
+    "short_name": "«Международный казахско-турецкий университет имени Ходжи Ахмеда Ясави»",
+    "city": "ТУРКЕСТАН",
+    "official_website": "",
+    "address": "161200, Туркестанская область, г.ТУРКЕСТАН, проспект Б. Саттарханова, 29В",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7253 39 71 28",
+    "source_record_id": 49,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 117,
+    "name": "Некоммерческое акционерное общество «Жетысуский университет имени Ильяса Жансугурова»",
+    "short_name": "«Жетысуский университет имени Ильяса Жансугурова»",
+    "city": "Талдыкорган",
+    "official_website": "",
+    "address": "040009, область Жетісу, г.Талдыкорган, улица И.Жансугурова, дом № 187А",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7282 22 21 94",
+    "source_record_id": 11,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 132,
+    "name": "Некоммерческое акционерное общество «Таразский университет имени М.Х. Дулати»",
+    "short_name": "«Таразский университет имени М.Х. Дулати»",
+    "city": "Тараз",
+    "official_website": "",
+    "address": "080000, Жамбылская область, г.Тараз, улица Ыбырайыма Сулейменова, дом № 13",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 707 043 00 58",
+    "source_record_id": 19,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 110,
+    "name": "Учреждение «Международный Таразский инновационный университет имени Шерхана Муртазы»",
+    "short_name": "«Международный Таразский инновационный университет имени Шерхана Муртазы»",
+    "city": "Тараз",
+    "official_website": "",
+    "address": "080000, Жамбылская область, г.Тараз, улица Желтоксан, здание № 69Б",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7262 54 11 26",
+    "source_record_id": 100,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 133,
+    "name": "Некоммерческое акционерное общество «Карагандинский индустриальный университет»",
+    "short_name": "«Карагандинский индустриальный университет»",
+    "city": "Темиртау",
+    "official_website": "",
+    "address": "101400, Карагандинская область, г.Темиртау, Проспект Республики, дом № 30",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7213 91 56 26",
+    "source_record_id": 24,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 114,
+    "name": "Некоммерческое акционерное общество «Международный университет туризма и гостеприимства»",
+    "short_name": "«Международный университет туризма и гостеприимства»",
+    "city": "Туркестан",
+    "official_website": "",
+    "address": "161200, Туркестанская область, г.Туркестан, улица Рабига Сұлтан Бегим, дом № 14А",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7253 35 87 16",
+    "source_record_id": 105,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 125,
+    "name": "Товарищество с ограниченной ответственностью «Woosong University Kaxakhstan»",
+    "short_name": "«Woosong University Kaxakhstan»",
+    "city": "Туркестан",
+    "official_website": "",
+    "address": "161200, Туркестанская область, г.Туркестан, проспект Б. Саттарханова, 60",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 776 046 68 53",
+    "source_record_id": 127,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 111,
+    "name": "Негосударственное учреждение образования «Казахстанский университет инновационных и телекоммуникационных систем»",
+    "short_name": "«Казахстанский университет инновационных и телекоммуникационных систем»",
+    "city": "Уральск",
+    "official_website": "",
+    "address": "090000, Западно-Казахстанская область, г.Уральск, улица М.МАМЕТОВОЙ, дом № 81",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 705 387 88 82",
+    "source_record_id": 102,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 56,
+    "name": "Ілияс Жансүгүров атындағы Жетісу университеті",
+    "short_name": "Жетысуский уни",
+    "city": "Шымкент",
+    "official_website": "",
+    "address": "",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 500000,
+    "price_to": 2000000,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": true,
+    "dorm_price": 60000,
+    "admission_phone": "",
+    "source_record_id": null,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  },
+  {
+    "id": 119,
+    "name": "Акционерное общество «Южно-Казахстанская медицинская академия»",
+    "short_name": "«Южно-Казахстанская медицинская академия»",
+    "city": "Шымкент",
+    "official_website": "",
+    "address": "160000, г.Шымкент, ПЛОЩАДЬ АЛЬ-ФАРАБИ, дом № 1",
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "price_from": 0,
+    "price_to": 0,
+    "programs": [],
+    "languages": [
+      "Казахский",
+      "Русский"
+    ],
+    "has_dorm": false,
+    "dorm_price": null,
+    "admission_phone": "8 7252 39 57 57 (1015)",
+    "source_record_id": 114,
+    "source_url": "",
+    "verified_at": "",
+    "status": "pending"
+  }
+]

@@ -227,6 +227,11 @@ const translations = {
       card_phone: 'Телефон',
       card_bio: 'О себе',
       card_bio_placeholder: 'Кратко о целях поступления',
+      avatar_change: 'Изменить фото',
+      avatar_saved: 'Фото профиля обновлено',
+      avatar_invalid: 'Выберите JPG, PNG или WebP',
+      avatar_too_large: 'Размер фото не должен превышать 2 МБ',
+      avatar_error: 'Не удалось загрузить фото',
       card_save: 'Сохранить',
       card_logout: 'Выйти',
       card_password_title: 'Смена пароля',
@@ -472,6 +477,7 @@ const translations = {
       compare_add: '+ Сравнить',
       website: 'Сайт',
       details: 'Подробнее',
+      data_pending: 'Данные уточняются',
       add_fav: 'Добавить в избранное'
     },
     compare_page: {
@@ -930,6 +936,11 @@ const translations = {
       card_phone: 'Телефон',
       card_bio: 'Өзі туралы',
       card_bio_placeholder: 'Түсу мақсаттары туралы қысқаша',
+      avatar_change: 'Фотоны өзгерту',
+      avatar_saved: 'Профиль фотосы жаңартылды',
+      avatar_invalid: 'JPG, PNG немесе WebP таңдаңыз',
+      avatar_too_large: 'Фото өлшемі 2 МБ-тан аспауы керек',
+      avatar_error: 'Фотоны жүктеу мүмкін болмады',
       card_save: 'Сақтау',
       card_logout: 'Шығу',
       card_password_title: 'Құпия сөзді ауыстыру',
@@ -1175,6 +1186,7 @@ const translations = {
       compare_add: '+ Салыстыру',
       website: 'Сайт',
       details: 'Толығырақ',
+      data_pending: 'Деректер нақтылануда',
       add_fav: 'Таңдаулыларға қосу'
     },
     compare_page: {
@@ -1785,6 +1797,11 @@ const translations = {
       card_phone: 'Phone',
       card_bio: 'About',
       card_bio_placeholder: 'Briefly about admission goals',
+      avatar_change: 'Change photo',
+      avatar_saved: 'Profile photo updated',
+      avatar_invalid: 'Choose JPG, PNG, or WebP',
+      avatar_too_large: 'Photo size must not exceed 2 MB',
+      avatar_error: 'Could not upload photo',
       card_save: 'Save',
       card_logout: 'Log Out',
       card_password_title: 'Change Password',
@@ -2030,6 +2047,7 @@ const translations = {
       compare_add: '+ Compare',
       website: 'Site',
       details: 'Details',
+      data_pending: 'Data under review',
       add_fav: 'Add to favorites'
     },
     compare_page: {

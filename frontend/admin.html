@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EduMatch KZ | Админ-панель</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    body { background: var(--bg); }
+    .admin-page { max-width: 1180px; margin: 0 auto; padding: 36px 24px 64px; }
+    .admin-header { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:28px; }
+    .admin-header h1 { margin:0; }
+    .admin-header p { margin:6px 0 0; color:var(--text2); }
+    .admin-controls { display:flex; align-items:center; gap:8px; }
+    .admin-controls select { background:var(--bg2); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:9px; }
+    .admin-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:16px; }
+    .admin-metric,.admin-block { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; }
+    .admin-metric strong { display:block; color:var(--accent); font-size:1.6rem; }
+    .admin-metric span { color:var(--text2); font-size:.82rem; }
+    .admin-metric small { display:block; color:var(--accent); margin-top:5px; }
+    .admin-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:12px; }
+    .admin-block h2 { margin:0 0 14px; font-size:1rem; }
+    .admin-row { display:flex; justify-content:space-between; gap:12px; padding:9px 0; border-top:1px solid var(--border); font-size:.86rem; }
+    .admin-row strong { color:var(--accent); }
+    .admin-table-wrap { overflow:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.82rem; }
+    th,td { text-align:left; padding:10px 8px; border-top:1px solid var(--border); white-space:nowrap; }
+    th { color:var(--text2); }
+    .admin-error { color:#ef4444; padding:16px; }
+    @media(max-width:700px) { .admin-page{padding:22px 14px}.admin-header{align-items:flex-start;flex-direction:column}.admin-metrics,.admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-block{grid-column:1/-1} }
+  </style>
+</head>
+<body>
+  <main class="admin-page">
+    <header class="admin-header">
+      <div><h1>Админ-панель</h1><p>Управление и статистика EduMatch KZ</p></div>
+      <div class="admin-controls"><label>Период <select id="admin-days"><option value="7">7 дней</option><option value="30" selected>30 дней</option><option value="90">90 дней</option><option value="365">Год</option></select></label><button class="btn btn-ghost" id="admin-refresh">Обновить</button><a class="btn btn-primary" href="/">На сайт</a></div>
+    </header>
+    <section id="admin-root"><div class="loading-state"><div class="spinner"></div></div></section>
+  </main>
+  <script src="js/admin.js"></script>
+</body>
+</html>

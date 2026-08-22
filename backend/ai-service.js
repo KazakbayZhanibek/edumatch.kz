@@ -2556,19 +2556,19 @@ async function callOpenRouter(systemPrompt, userMessage, history, options = {}) 
   (history || []).slice(-8).forEach(msg => {
     messages.push({
       role: msg.role === 'user' ? 'user' : 'assistant',
-      content: String(msg.content || '').slice(0, 500),
+      content: String(msg.content || '').slice(0, 1500),
     });
   });
   messages.push({
     role: 'user',
-    content: String(userMessage).slice(0, 800),
+    content: String(userMessage).slice(0, 2000),
   });
 
   const requestBody = {
     model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash',
     messages,
     temperature: options.temperature ?? 0.75,
-    max_tokens: options.maxTokens ?? 1024,
+    max_tokens: options.maxTokens ?? 1500,
   };
 
   console.log('[ai-service] OpenRouter request:', JSON.stringify({
@@ -3040,7 +3040,7 @@ async function getAIAdvice(userMessage, history = [], lang = 'ru') {
     throw new Error('Invalid message');
   }
 
-  const msg = userMessage.trim().slice(0, 1000);
+  const msg = userMessage.trim();
   if (msg.length < 2) {
     throw new Error('Message too short');
   }

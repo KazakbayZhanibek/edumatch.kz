@@ -26,6 +26,7 @@ const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTi
 const aiRoutes = require('./ai-routes');
 const authRoutes = require('./auth-routes');
 const admissionRoutes = require('./admission-routes');
+const adminRoutes = require('./admin-routes');
 const { verifyAuth, verifyAdmin } = require('./auth-middleware');
 
 const app = express();
@@ -38,7 +39,7 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://cdn.jsdelivr.net'],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://unpkg.com', 'https://cdn.jsdelivr.net'],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'", 'https://openrouter.io'],
+      connectSrc: ["'self'", 'https://openrouter.ai'],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
       'script-src-attr': ["'unsafe-inline'"],
@@ -64,8 +65,21 @@ for (const key of requiredEnv) {
   }
 }
 
+if (process.env.JWT_SECRET.length < 32 || process.env.JWT_SECRET.includes('change-in-production')) {
+  throw new Error('JWT_SECRET must be a random value with at least 32 characters');
+}
+
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.ALLOWED_ORIGINS) {
+    throw new Error('ALLOWED_ORIGINS is required in production');
+  }
+  if (!process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY.startsWith('your-')) {
+    throw new Error('A real OPENROUTER_API_KEY is required in production');
+  }
+}
+
 // CORS configuration
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:3001').split(',').map(o => o.trim());
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:3001,http://localhost:3012,http://localhost:3013').split(',').map(o => o.trim());
 app.use(cors({
   origin: function(origin, callback) {
     const isLocalFile = process.env.NODE_ENV !== 'production' && origin === 'null';
@@ -89,7 +103,7 @@ if (process.env.NODE_ENV === 'production') {
     next();
   });
 }
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '4mb' }));
 app.use(cookieParser());
 
 // Add logging middleware
@@ -207,6 +221,8 @@ app.get('/api/admin/academic-year', (req, res) => {
   }
 });
 
+app.use('/api/admin', adminRoutes);
+
 // ─── REVIEWS API ──────────────────────────────
 const reviewRateLimit = new Map();
 const REVIEW_RATE_WINDOW = 300000; // 5 minutes
@@ -290,11 +306,7 @@ app.use((err, req, res, _next) => {
   });
 });
 
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
-});
-
-// Health check endpoint
+// Health check endpoint must be registered before the SPA fallback.
 app.get('/health', (req, res) => {
   try {
     const db = require('./database').getDb();
@@ -303,6 +315,10 @@ app.get('/health', (req, res) => {
   } catch (e) {
     res.status(503).json({ status: 'error', message: e.message });
   }
+});
+
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 const PORT = process.env.PORT || 3000;

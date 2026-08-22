@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "academic_year": "2026-2027",
+  "source": {
+    "name": "Официальный сайт университета",
+    "url": "https://example-university.kz",
+    "verified_at": "2026-08-22"
+  },
+  "universities": [
+    {
+      "external_id": "example-001",
+      "name": "Примерский национальный университет",
+      "short_name": "ПНУ",
+      "status": "active",
+      "city": "Алматы",
+      "region": "город Алматы",
+      "address": "050000, Республика Казахстан, г. Алматы, улица Примерная, 1",
+      "coordinates": {
+        "lat": 43.2389,
+        "lng": 76.8897
+      },
+      "contacts": {
+        "admission_phone": "+7 700 000 00 00",
+        "admission_email": "admission@example-university.kz",
+        "whatsapp": "+7 700 000 00 00"
+      },
+      "official_website": "https://example-university.kz",
+      "admission_website": "https://example-university.kz/admission",
+      "description": "Краткое подтверждённое описание университета и его ключевых направлений.",
+      "founded": 1995,
+      "students_count": 12000,
+      "ratings": {
+        "qs_world": null,
+        "qs_asia": null,
+        "national_rank": null
+      },
+      "tuition": {
+        "currency": "KZT",
+        "price_from_per_year": 1200000,
+        "price_to_per_year": 2400000,
+        "source_url": "https://example-university.kz/tuition",
+        "verified_at": "2026-08-22"
+      },
+      "languages": [
+        "Казахский",
+        "Русский",
+        "Английский"
+      ],
+      "accreditations": [
+        "Национальная аккредитация"
+      ],
+      "dormitory": {
+        "available": true,
+        "price_per_year": 180000,
+        "source_url": "https://example-university.kz/dormitory",
+        "verified_at": "2026-08-22"
+      },
+      "programs": [
+        {
+          "code": "6B06101",
+          "name": "Информационные системы",
+          "category": "Информационные технологии",
+          "level": "Бакалавриат",
+          "duration_years": 4,
+          "languages": [
+            "Казахский",
+            "Русский"
+          ],
+          "tuition_per_year": 1800000,
+          "admission": {
+            "ent_minimum": 75,
+            "grant_passing_score_last_year": 112,
+            "grant_seats": 80,
+            "contract_seats": 120,
+            "source_url": "https://example-university.kz/admission/it",
+            "verified_at": "2026-08-22"
+          },
+          "program_source_url": "https://example-university.kz/programs/information-systems"
+        }
+      ],
+      "grants": [
+        {
+          "name": "Государственный образовательный грант",
+          "type": "government",
+          "amount": "Полное покрытие обучения",
+          "eligible_programs": [
+            "6B06101"
+          ],
+          "requirements": [
+            "ЕНТ от 75 баллов",
+            "Участие в конкурсе образовательных грантов"
+          ],
+          "deadline": "2026-07-25",
+          "application_url": "https://example-university.kz/admission/grants",
+          "source_url": "https://testcenter.kz",
+          "verified_at": "2026-08-22"
+        }
+      ],
+      "data_quality": {
+        "status": "verified",
+        "confidence": "high",
+        "last_verified_at": "2026-08-22",
+        "reviewer": "data-team"
+      }
+    }
+  ]
+}
