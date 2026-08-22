@@ -473,11 +473,20 @@ function savePredictionHistory(userId, input, matches) {
   const db = getDb();
   const stmt = db.prepare(`
     INSERT INTO prediction_history (user_id, ent, specialty_category, university_id, predicted_chance)
-    VALUES (?, ?, ?, ?, ?)
+    SELECT ?, ?, ?, ?, ?
+    WHERE NOT EXISTS (
+      SELECT 1 FROM prediction_history
+      WHERE user_id = ? AND ent = ? AND specialty_category = ?
+        AND university_id = ? AND predicted_chance = ?
+        AND created_at >= datetime('now', '-10 minutes')
+    )
   `);
   const tx = db.transaction(() => {
     for (const m of matches.slice(0, 5)) {
-      stmt.run(userId, input.ent, input.specialty, m.university_id, m.chance);
+      stmt.run(
+        userId, input.ent, input.specialty, m.university_id, m.chance,
+        userId, input.ent, input.specialty, m.university_id, m.chance
+      );
     }
   });
   tx();

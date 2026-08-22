@@ -3,6 +3,7 @@
 
 const http = require('http');
 const path = require('path');
+const { evaluateSubmission } = require('./validation-utils');
 
 const BASE_URL = 'http://localhost:3000';
 
@@ -136,6 +137,25 @@ async function runTests() {
     assert('XSS removed from user_name', !lastReview.user_name.includes('<script>'), lastReview.user_name);
     assert('XSS removed from pros', !lastReview.pros.includes('<img'), lastReview.pros);
   }
+
+  res = await postJSON('/api/ai/advice', {
+    message: 'bypass exploit attempt',
+    lang: 'ru',
+  });
+  assert('AI advice rejects blocked submission', res.status === 400 && res.data && res.data.success === false, `status=${res.status}, body=${JSON.stringify(res.data)}`);
+
+  console.log('');
+
+  // === SUBMISSION EVALUATOR TESTS ===
+  console.log('  SUBMISSION EVALUATOR');
+  console.log('  ' + '-'.repeat(66));
+
+  assert('submission evaluator rejects null input', evaluateSubmission(null).allowed === false, `reason=${evaluateSubmission(null).reason}`);
+  assert('submission evaluator rejects empty input', evaluateSubmission('   ').allowed === false, `reason=${evaluateSubmission('   ').reason}`);
+  assert('submission evaluator blocks forbidden terms', evaluateSubmission('bypass exploit attempt', { bannedTerms: ['bypass', 'exploit'] }).reason === 'blocked_terms');
+  assert('submission evaluator checks required terms', evaluateSubmission('I need help', { requiredTerms: ['safe', 'help'] }).reason === 'missing_required_terms');
+  assert('submission evaluator trims long text', evaluateSubmission('safe help safe help safe help', { maxLength: 3 }).reason === 'too_long');
+  assert('submission evaluator accepts valid input', evaluateSubmission('I need safe help', { requiredTerms: ['help', 'safe'] }).allowed === true);
 
   console.log('');
 

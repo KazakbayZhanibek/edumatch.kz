@@ -193,6 +193,93 @@ function hashData(data) {
     .digest('hex');
 }
 
+// ============== SUBMISSION VALIDATION ==============
+/**
+ * Проверка пользовательского текста: длина, запрещённые слова, обязательные слова.
+ * Возвращает объект { allowed, reason, ... }.
+ */
+function evaluateSubmission(input, options = {}) {
+  const {
+    maxLength = 1500,
+    maxTokens,
+    bannedTerms = [],
+    blockedTerms = [],
+    requiredTerms = []
+  } = options;
+
+  const effectiveMaxLength = Number.isFinite(maxTokens) ? maxTokens : maxLength;
+
+  if (input == null) {
+    return { allowed: false, reason: 'missing_input' };
+  }
+
+  const text = String(input).trim();
+  if (!text) {
+    return { allowed: false, reason: 'empty_input' };
+  }
+
+  const normalized = text.replace(/\s+/g, ' ');
+  const wordMatches = normalized.toLowerCase().match(/[a-zA-Z0-9'-]+/g) || [];
+
+  if (wordMatches.length > effectiveMaxLength) {
+    return {
+      allowed: false,
+      reason: 'too_long',
+      tokenCount: wordMatches.length,
+      maxLength: effectiveMaxLength
+    };
+  }
+
+  const forbidden = [...bannedTerms, ...blockedTerms]
+    .filter(Boolean)
+    .map(term => String(term).trim())
+    .filter(Boolean);
+
+  const detectedBlocked = [];
+  const lowerText = normalized.toLowerCase();
+  for (const term of forbidden) {
+    if (lowerText.includes(String(term).toLowerCase())) {
+      detectedBlocked.push(term);
+    }
+  }
+
+  if (detectedBlocked.length) {
+    return {
+      allowed: false,
+      reason: 'blocked_terms',
+      matches: detectedBlocked
+    };
+  }
+
+  const required = (requiredTerms || [])
+    .filter(Boolean)
+    .map(term => String(term).trim())
+    .filter(Boolean);
+
+  if (required.length) {
+    const missing = [];
+    for (const term of required) {
+      if (!lowerText.includes(String(term).toLowerCase())) {
+        missing.push(term);
+      }
+    }
+
+    if (missing.length) {
+      return {
+        allowed: false,
+        reason: 'missing_required_terms',
+        missing
+      };
+    }
+  }
+
+  return {
+    allowed: true,
+    reason: 'accepted',
+    tokenCount: wordMatches.length
+  };
+}
+
 // ============== EXPORTS ==============
 module.exports = {
   validateStringArray,
@@ -205,5 +292,6 @@ module.exports = {
   validatePhone,
   validateInteger,
   sanitizeString,
-  hashData
+  hashData,
+  evaluateSubmission
 };

@@ -68,7 +68,8 @@ for (const key of requiredEnv) {
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:3001').split(',').map(o => o.trim());
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    const isLocalFile = process.env.NODE_ENV !== 'production' && origin === 'null';
+    if (!origin || isLocalFile || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error(`Not allowed by CORS: ${origin}`));

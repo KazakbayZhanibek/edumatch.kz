@@ -156,7 +156,6 @@ function initSecurity() {
     }
   });
   
-  console.log('Security module initialized');
 }
 
 // Auto-init когда DOM готов

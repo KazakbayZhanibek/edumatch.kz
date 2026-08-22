@@ -1,5 +1,6 @@
 const { getAIAdvice } = require('./ai-service');
 const authService = require('./auth-service');
+const { evaluateSubmission } = require('./validation-utils');
 
 // Rate limiting: store user request timestamps
 const requestLogs = new Map();
@@ -69,6 +70,29 @@ async function handleAIAdvice(req, res) {
     }
     if (msg.length > 2000) {
       return res.status(400).json({ success: false, error: 'Message too long (max 2000 chars)' });
+    }
+
+    const submissionCheck = evaluateSubmission(msg, {
+      maxLength: 1000,
+      bannedTerms: ['bypass', 'exploit', 'hack', 'override', 'ignore policy'],
+      requiredTerms: [],
+    });
+
+    if (!submissionCheck.allowed) {
+      const reasons = {
+        missing_input: 'Missing input',
+        empty_input: 'Empty input',
+        too_long: 'Message too long',
+        blocked_terms: 'Message contains blocked terms',
+        missing_required_terms: 'Message is missing required context',
+      };
+
+      return res.status(400).json({
+        success: false,
+        error: reasons[submissionCheck.reason] || 'Message rejected',
+        reason: submissionCheck.reason,
+        details: submissionCheck.matches || submissionCheck.missing || null,
+      });
     }
 
     let validHistory = [];
