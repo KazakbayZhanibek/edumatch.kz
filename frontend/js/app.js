@@ -235,6 +235,7 @@ function navigate(page, param) {
   state.currentPage = page;
   window.scrollTo(0, 0);
   document.body.classList.toggle('chat-page-active', page === 'advisor');
+  updateStickyCompare();
 
   if (page === 'home') {
     document.getElementById('page-home').classList.add('active');
@@ -617,11 +618,12 @@ function renderUniversityCard(u) {
       ${contactLine}
       <div class="uni-specialties">${specTags}</div>
       <div class="uni-card-actions">
-        <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" onclick="toggleCompare(${u.id}, event)">
-          ${isSelected ? t('card.in_compare') : t('card.compare_add')}
+        <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" onclick="toggleCompare(${u.id}, event)" title="${isSelected ? t('card.in_compare') : t('card.compare_add')}" aria-label="${isSelected ? t('card.in_compare') : t('card.compare_add')}">
+          <svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${isSelected ? '<path d="m5 12 4 4L19 6"/>' : '<path d="M12 5v14M5 12h14"/>'}</svg>
+          <span>${isSelected ? t('card.in_compare') : t('card.compare_add')}</span>
         </button>
-        ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()">${t('card.website')}</a>` : ''}
-        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})">${t('card.details')}</button>
+        ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()"><svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span>${t('card.website')}</span></a>` : ''}
+        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})" title="${t('card.details')}" aria-label="${t('card.details')}"><span>${t('card.details')}</span><svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
       </div>
     </div>
   `;
@@ -689,7 +691,7 @@ async function renderComparePage() {
     content.innerHTML = `
       <div class="compare-empty">
         <div class="compare-empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
         </div>
         <p>${t('compare_page.add_minimum')}</p>
         <button class="btn btn-primary" onclick="navigate('home')">${t('compare_page.choose_unis')}</button>
@@ -763,11 +765,8 @@ function renderCompareTable(unis, container) {
 function clearCompare() {
   state.compareList = [];
   updateCompareBadge();
+  updateStickyCompare();
   renderComparePage();
-  // Refresh cards if on home
-  if (state.currentPage === 'compare') {
-    renderComparePage();
-  }
 }
 
 // ─── UNIVERSITY DETAIL ───────────────────────
@@ -788,7 +787,7 @@ async function loadUniversityDetail(id) {
 const getSVGIcon = (name) => {
   const icons = {
     globe: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
-    checkmark: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+    checkmark: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
     building: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="9" y1="9" x2="9" y2="21"></line><line x1="15" y1="9" x2="15" y2="21"></line><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>`,
     money: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><path d="M4 12a8 8 0 0 0 16 0A8 8 0 0 0 4 12"></path><path d="M12 2a8 8 0 0 1 0 16 8 8 0 0 1 0-16"></path></svg>`,
     target: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="9"></circle></svg>`,
@@ -2028,7 +2027,7 @@ function updateStickyCompare() {
   const bar = document.getElementById('sticky-compare');
   const count = state.compareList.length;
   if (bar) {
-    bar.classList.toggle('visible', count >= 1);
+    bar.classList.toggle('visible', count >= 1 && state.currentPage !== 'compare');
     const countEl = document.getElementById('sticky-compare-count');
     if (countEl) countEl.textContent = count;
   }
@@ -2747,7 +2746,7 @@ function renderGrants(grants) {
       </div>
       <div class="grant-footer">
         <div class="grant-deadline">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           ${t('grants_page_js.deadline')} ${g.deadline}
         </div>
         ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">${t('grants_page_js.more_details')}</a>` : ''}
@@ -2822,28 +2821,28 @@ function showProfessionAnalysis(name) {
     <div class="prof-grid">
       <div class="prof-card">
         <div class="prof-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
         <div class="prof-card-label">${t('prof_page.avg_salary')}</div>
         <div class="prof-card-val">${data.salary}</div>
       </div>
       <div class="prof-card">
         <div class="prof-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </div>
         <div class="prof-card-label">${t('prof_page.market_growth')}</div>
         <div class="prof-card-val" style="color:${data.growth !== '—' ? '#52b788' : 'var(--text-muted)'}">${data.growth}</div>
       </div>
       <div class="prof-card">
         <div class="prof-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
         <div class="prof-card-label">${t('prof_page.demand')}</div>
         <div class="prof-card-val" style="color:${demandColor}">${t('demand_labels.' + data.demand) || data.demand}</div>
       </div>
     </div>
     <div class="prof-note">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       ${t('prof_page.disclaimer')}
     </div>
   `;
@@ -2900,7 +2899,7 @@ function runGrantMatching() {
   if (matched.length === 0) {
     resultEl.innerHTML = `
       <div class="gm-empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         <span>${t('grants_page_js.for_spec')} <strong>${spec}</strong> ${t('grants_page_js.not_found_yet')}</span>
       </div>
     `;
@@ -2909,7 +2908,7 @@ function runGrantMatching() {
 
   resultEl.innerHTML = `
     <div class="gm-header">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span>${t('grants_page_js.ai_grants')} <strong>${matched.length}</strong> ${t('grants_page_js.grants_for_you')}</span>
     </div>
     ${demandHTML}
