@@ -80,6 +80,74 @@ router.get('/users', (req, res) => {
   }
 });
 
+router.get('/universities', (req, res) => {
+  try {
+    const limit = Math.min(Math.max(Number.parseInt(req.query.limit, 10) || 100, 1), 300);
+    const query = String(req.query.q || '').trim().slice(0, 100);
+    const status = ['active', 'pending', 'inactive'].includes(req.query.status) ? req.query.status : null;
+    const rows = getDb().prepare(`
+      SELECT u.id, u.name, u.short_name, u.data_status, u.website, u.address,
+             u.price_from, u.price_to, u.last_updated_at, c.name AS city
+      FROM universities u LEFT JOIN cities c ON c.id = u.city_id
+      WHERE (? IS NULL OR u.data_status = ?)
+        AND (? = '' OR u.name LIKE ? OR u.short_name LIKE ?)
+      ORDER BY CASE u.data_status WHEN 'pending' THEN 0 WHEN 'active' THEN 1 ELSE 2 END, u.name
+      LIMIT ?
+    `).all(status, status, query, `%${query}%`, `%${query}%`, limit);
+    return res.json({ success: true, universities: rows });
+  } catch (error) {
+    console.error('Admin universities error:', error);
+    return res.status(500).json({ error: 'Ошибка загрузки вузов' });
+  }
+});
+
+router.patch('/universities/:id', (req, res) => {
+  const id = Number.parseInt(req.params.id, 10);
+  const allowed = ['name', 'short_name', 'website', 'address', 'admission_phone', 'admission_email', 'data_status', 'price_from', 'price_to'];
+  const fields = [];
+  const values = [];
+  const db = getDb();
+  try {
+    const current = db.prepare('SELECT * FROM universities WHERE id = ?').get(id);
+    if (!current) return res.status(404).json({ error: 'Вуз не найден' });
+    for (const field of allowed) {
+      if (req.body[field] === undefined) continue;
+      if (field === 'data_status' && !['active', 'pending', 'inactive'].includes(req.body[field])) return res.status(400).json({ error: 'Некорректный статус' });
+      if (['price_from', 'price_to'].includes(field)) {
+        const number = Number(req.body[field]);
+        if (!Number.isFinite(number) || number < 0) return res.status(400).json({ error: 'Некорректная цена' });
+        fields.push(`${field} = ?`); values.push(Math.round(number));
+      } else {
+        fields.push(`${field} = ?`); values.push(String(req.body[field]).trim().slice(0, 2000));
+      }
+    }
+    if (!fields.length) return res.status(400).json({ error: 'Нет данных для обновления' });
+    fields.push('last_updated_at = CURRENT_TIMESTAMP');
+    db.prepare(`UPDATE universities SET ${fields.join(', ')} WHERE id = ?`).run(...values, id);
+    db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES (?, ?, 'UPDATE', ?, ?, ?, ?)`)
+      .run('universities', id, JSON.stringify(Object.fromEntries(allowed.map(field => [field, current[field]]))), JSON.stringify(req.body), req.userId, req.ip);
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Admin university update error:', error);
+    return res.status(500).json({ error: 'Ошибка обновления вуза' });
+  }
+});
+
+router.get('/audit', (req, res) => {
+  try {
+    const limit = Math.min(Math.max(Number.parseInt(req.query.limit, 10) || 50, 1), 200);
+    const audit = getDb().prepare(`
+      SELECT a.id, a.table_name, a.record_id, a.action, a.created_at, u.email
+      FROM audit_log a LEFT JOIN users u ON u.id = a.user_id
+      ORDER BY a.created_at DESC LIMIT ?
+    `).all(limit);
+    return res.json({ success: true, audit });
+  } catch (error) {
+    console.error('Admin audit error:', error);
+    return res.status(500).json({ error: 'Ошибка загрузки аудита' });
+  }
+});
+
 router.get('/reviews', (req, res) => {
   try {
     const limit = Math.min(Math.max(Number.parseInt(req.query.limit, 10) || 30, 1), 100);

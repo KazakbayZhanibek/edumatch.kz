@@ -112,6 +112,11 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/admin.html', verifyAuth, verifyAdmin, (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.sendFile(path.join(__dirname, '../frontend/admin.html'));
+});
+
 app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Input sanitization middleware — strip HTML/script tags from JSON body fields
