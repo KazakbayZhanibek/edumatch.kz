@@ -422,7 +422,8 @@ const translations = {
     },
     sticky: {
       selected: 'Выбрано:',
-      compare_btn: 'Сравнить'
+      compare_btn: 'Сравнить',
+      clear: 'Убрать'
     },
     sheet: {
       filter_title: 'Фильтры',
@@ -1132,7 +1133,8 @@ const translations = {
     },
     sticky: {
       selected: 'Таңдалған:',
-      compare_btn: 'Салыстыру'
+      compare_btn: 'Салыстыру',
+      clear: 'Алып тастау'
     },
     sheet: {
       filter_title: 'Сүзгілер',
@@ -1994,7 +1996,8 @@ const translations = {
     },
     sticky: {
       selected: 'Selected:',
-      compare_btn: 'Compare'
+      compare_btn: 'Compare',
+      clear: 'Remove'
     },
     sheet: {
       filter_title: 'Filters',

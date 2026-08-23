@@ -445,6 +445,10 @@ input, select, textarea { font-family: inherit; }
 }
 .specialty-tag-more { color: var(--text-muted); background: transparent; border-color: transparent; }
 .uni-card-actions { display: flex; gap: 8px; }
+.uni-card-actions .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.card-action-icon { width: 15px; height: 15px; flex: 0 0 15px; }
+.btn-detail .card-action-icon { transition: transform .2s ease; }
+.btn-detail:hover .card-action-icon { transform: translateX(2px); }
 .btn-sm {
   padding: 7px 14px;
   font-size: 12px;
@@ -3092,7 +3096,11 @@ body.chat-page-active {
 }
 .sticky-compare.visible { transform: translateY(0); opacity: 1; }
 .sticky-compare-text { font-size: 15px; font-weight: 500; }
-.sticky-compare .btn { background: var(--bg); color: var(--text); flex-shrink: 0; min-height: 40px; padding: 10px 16px; }
+.sticky-compare .btn { flex-shrink: 0; min-height: 40px; padding: 10px 16px; }
+.sticky-compare .btn-primary { background: var(--bg); color: var(--text); }
+.sticky-clear-btn { display: inline-flex; align-items: center; gap: 4px; background: transparent !important; color: var(--bg) !important; opacity: .7; padding: 10px 12px !important; }
+.sticky-clear-btn svg { width: 16px; height: 16px; }
+.sticky-clear-btn:hover { opacity: 1; }
 
 /* =============================================
    BOTTOM SHEETS
@@ -3192,19 +3200,20 @@ body.chat-page-active {
 .sheet-grid-icon svg { width: 17px; height: 17px; stroke: var(--accent2); }
 
 .sheet-menu-item {
-  display: flex; align-items: center; gap: 16px;
-  width: 100%; padding: 16px 0;
-  background: none; border: none;
-  color: var(--text); font-size: 16px;
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; min-height: 72px; padding: 14px 10px;
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text); font-size: 13px;
   cursor: pointer; font-family: inherit;
-  border-bottom: 1px solid var(--border);
   transition: color var(--transition); text-align: left;
   -webkit-tap-highlight-color: transparent;
 }
 .sheet-menu-item:active { background: var(--bg-secondary); }
-.sheet-menu-item:last-child { border-bottom: none; }
-.sheet-menu-item svg { width: 22px; height: 22px; color: var(--text-muted); flex-shrink: 0; }
+.sheet-menu-item svg { width: 20px; height: 20px; color: var(--accent2); flex-shrink: 0; }
 .sheet-menu-item:hover { color: var(--accent2); }
+.sheet-body:has(.sheet-menu-item) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.sheet-body:has(.sheet-menu-item) .sheet-divider { grid-column: 1 / -1; margin: 4px 0; }
 
 /* =============================================
    RESPONSIVE — MOBILE
@@ -3339,7 +3348,9 @@ body.chat-page-active {
   .price-from { display: block; font-size: 15px; }
   .price-to { font-size: 10px; }
   .uni-card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
-  .uni-card-actions .btn { min-width: 0; min-height: 34px; padding: 6px 3px; font-size: 10px; line-height: 1.1; }
+  .uni-card-actions .btn { min-width: 0; min-height: 34px; padding: 6px; font-size: 10px; line-height: 1.1; gap: 0; }
+  .uni-card-actions .btn span { display: none; }
+  .uni-card-actions .card-action-icon { width: 16px; height: 16px; flex-basis: 16px; }
   .uni-card-actions .btn-ghost { display: none; }
   .btn-favorite { width: 28px; height: 28px; }
 }
@@ -4156,6 +4167,15 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
 }
 .profile-chat-item:hover {
   border-color: rgba(45, 106, 79, 0.2);
+}
+.chat-history-toggle {
+  margin-top: 12px;
+  min-height: 40px;
+  border-color: var(--border);
+}
+.chat-history-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .profile-chat-q {
   font-size: 13px;
@@ -5033,3 +5053,60 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
   font-size: 1.1rem; cursor: pointer; padding: 0 2px; line-height: 1;
 }
 .profile-fav-remove:hover { color: #ef4444; }
+
+/* ============================================================
+   MOBILE POLISH — touch feedback, screen transitions
+   Скоуплено под (hover: none), чтобы не затрагивать десктоп
+   ============================================================ */
+
+/* Плавное появление страницы при navigate() */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  /* Убираем серую вспышку при тапе (iOS/Android) */
+  * { -webkit-tap-highlight-color: transparent; }
+
+  /* Отключаем «резину» и pull-to-refresh — ощущение приложения */
+  body { overscroll-behavior-y: none; }
+
+  /* Тач-отклик: карточки и кнопки слегка «прожимаются» */
+  .btn:active {
+    transform: scale(0.97);
+  }
+  .uni-card:active,
+  .grant-card:active,
+  .prof-card:active,
+  .career-option:active,
+  .tip-card:active,
+  .profile-fav-card:active,
+  .mobile-nav-link:active {
+    transform: scale(0.98);
+  }
+  .bottom-nav-item:active {
+    transform: scale(0.92);
+  }
+}
+
+/* Появление активной страницы (после display:none -> block) */
+.page.active {
+  animation: pageIn 0.25s ease-out;
+}
+
+/* Уважаем системную настройку «уменьшить анимацию» */
+@media (prefers-reduced-motion: reduce) {
+  .page.active { animation: none; }
+  @media (hover: none) and (pointer: coarse) {
+    .btn:active,
+    .uni-card:active,
+    .grant-card:active,
+    .prof-card:active,
+    .career-option:active,
+    .tip-card:active,
+    .profile-fav-card:active,
+    .mobile-nav-link:active,
+    .bottom-nav-item:active { transform: none; }
+  }
+}
