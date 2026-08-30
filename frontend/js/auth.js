@@ -117,12 +117,13 @@ const Auth = {
     return data;
   },
 
-  async updateProfile({ fullName, phone, bio, preferences }) {
+  async updateProfile({ fullName, phone, bio, preferences, profilePicture }) {
     const body = { fullName, phone, bio };
     if (preferences) body.preferences = preferences;
+    if (profilePicture) body.profilePicture = profilePicture;
     const res = await this.fetch('/users/profile', {
       method: 'PUT',
-      body: JSON.stringify({ fullName, phone, bio })
+      body: JSON.stringify(body)
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || t('profile_page.err_profile_save'));
@@ -131,7 +132,8 @@ const Auth = {
         ...this.user,
         fullName: data.user.full_name,
         email: data.user.email,
-        username: data.user.username
+        username: data.user.username,
+        profilePicture: data.user.profile_picture
       };
       localStorage.setItem(AUTH_USER_KEY, JSON.stringify(this.user));
     }
@@ -195,6 +197,85 @@ const Auth = {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || t('profile_page.err_load'));
     return data.universities || [];
+  },
+
+  async getApplications() {
+    const res = await this.fetch('/applications');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось загрузить заявки');
+    return data.applications || [];
+  },
+
+  async getAdminOverview(days = 30) {
+    const res = await this.fetch(`/admin/overview?days=${days}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Нет доступа к админ-панели');
+    return data;
+  },
+
+  async getAdminReviews() {
+    const res = await this.fetch('/admin/reviews');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось загрузить отзывы');
+    return data.reviews || [];
+  },
+
+  async getAdminApplications() {
+    const res = await this.fetch('/admin/applications?limit=100');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось загрузить заявки');
+    return data.applications || [];
+  },
+
+  async getAdminUsers() {
+    const res = await this.fetch('/admin/users?limit=100');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось загрузить пользователей');
+    return data.users || [];
+  },
+
+  async moderateReview(id, approved) {
+    const res = await this.fetch(`/admin/reviews/${id}/moderate`, {
+      method: 'PATCH',
+      body: JSON.stringify({ approved })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось изменить отзыв');
+    return data;
+  },
+
+  async deleteAdminReview(id) {
+    const res = await this.fetch(`/admin/reviews/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось удалить отзыв');
+    return data;
+  },
+
+  async addApplication(application) {
+    const res = await this.fetch('/applications', {
+      method: 'POST',
+      body: JSON.stringify(application)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось добавить заявку');
+    return data;
+  },
+
+  async updateApplication(id, changes) {
+    const res = await this.fetch(`/applications/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(changes)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось обновить заявку');
+    return data;
+  },
+
+  async removeApplication(id) {
+    const res = await this.fetch(`/applications/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Не удалось удалить заявку');
+    return data;
   },
 
   async getChatHistory(limit = 50) {
@@ -317,6 +398,37 @@ function handleLogin(e) {
     .finally(() => { btn.disabled = false; });
 }
 
+function handleAvatarSelect(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const user = Auth.user || {};
+  const avatarKey = `edumatch_avatar_${user.id || user.email}`;
+
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    showToast(t('profile_page.avatar_invalid') || 'Выберите JPG, PNG или WebP', 'error');
+    event.target.value = '';
+    return;
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    showToast(t('profile_page.avatar_too_large') || 'Размер фото не должен превышать 2 МБ', 'error');
+    event.target.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    localStorage.setItem(avatarKey, reader.result);
+    Auth.updateProfile({ profilePicture: reader.result })
+      .then(() => {
+        loadProfilePage();
+        showToast(t('profile_page.avatar_saved') || 'Фото профиля обновлено', 'success');
+      })
+      .catch(error => showToast(error.message || t('profile_page.avatar_error') || 'Не удалось загрузить фото', 'error'));
+  };
+  reader.onerror = () => showToast(t('profile_page.avatar_error') || 'Не удалось загрузить фото', 'error');
+  reader.readAsDataURL(file);
+}
+
 async function loadProfilePage() {
   const content = document.getElementById('profile-content');
   if (!Auth.isLoggedIn()) {
@@ -344,6 +456,8 @@ async function loadProfilePage() {
     const initials = (profile.fullName || profile.username || '?').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
     const displayName = profile.fullName || profile.username;
     const bioText = profile.bio || t('profile_page.card_bio_placeholder') || 'Расскажите о себе...';
+    const avatarKey = `edumatch_avatar_${profile.id || profile.email}`;
+    const avatar = profile.profilePicture || localStorage.getItem(avatarKey);
 
     content.innerHTML = `
       <div class="profile-layout">
@@ -351,7 +465,13 @@ async function loadProfilePage() {
         <!-- LEFT: User Card -->
         <aside class="profile-user-card">
           <div class="profile-user-banner" onclick="showToast(t('profile_page.avatar_soon') || 'Загрузка фото скоро появится')" title="${t('profile_page.avatar_change') || 'Изменить обложку'}"></div>
-          <div class="profile-user-avatar" onclick="showToast(t('profile_page.avatar_soon') || 'Загрузка фото скоро появится')" title="${t('profile_page.avatar_change') || 'Изменить фото'}">${initials}</div>
+          <div class="profile-user-avatar" title="${t('profile_page.avatar_change') || 'Изменить фото'}">
+            ${avatar ? `<img src="${escapeHtml(avatar)}" alt="${escapeHtml(displayName)}" class="profile-avatar-image">` : `<span>${initials}</span>`}
+            <label class="profile-avatar-upload" title="${t('profile_page.avatar_change') || 'Изменить фото'}">
+              <input type="file" accept="image/jpeg,image/png,image/webp" onchange="handleAvatarSelect(event)">
+              <span aria-hidden="true">+</span>
+            </label>
+          </div>
           <div class="profile-user-info">
             <div class="profile-user-name">${escapeHtml(displayName)}</div>
             <div class="profile-user-email">${escapeHtml(profile.email)}</div>
@@ -572,12 +692,32 @@ async function loadProfilePage() {
   }
 }
 
-function renderProfileTracker() {
+async function renderProfileTracker() {
   const container = document.getElementById('profile-tracker-content');
   const countEl = document.getElementById('tracker-count');
   if (!container) return;
 
   loadTracker();
+  if (Auth.isLoggedIn() && !state.trackerServerLoaded) {
+    try {
+      let applications = await Auth.getApplications();
+      if (applications.length === 0 && state.trackerList.length > 0) {
+        for (const item of state.trackerList) {
+          await Auth.addApplication({
+            universityId: item.university_id,
+            status: item.status,
+            notes: item.notes || ''
+          });
+        }
+        applications = await Auth.getApplications();
+      }
+      state.trackerList = applications;
+      state.trackerServerLoaded = true;
+      saveTracker();
+    } catch (error) {
+      console.warn('Applications sync failed:', error);
+    }
+  }
   if (countEl) countEl.textContent = state.trackerList.length || '';
 
   if (state.trackerList.length === 0) {
@@ -586,13 +726,28 @@ function renderProfileTracker() {
     return;
   }
 
+  const activeCount = state.trackerList.filter(item => !['rejected', 'enrolled'].includes(item.status)).length;
+  const submittedCount = state.trackerList.filter(item => ['submitted', 'waiting', 'accepted', 'enrolled'].includes(item.status)).length;
+  const upcomingDeadlines = state.trackerList
+    .filter(item => item.deadline && new Date(`${item.deadline}T23:59:59`) >= new Date())
+    .sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+  const nextDeadline = upcomingDeadlines[0];
+  const deadlineText = nextDeadline
+    ? `${escapeHtml(nextDeadline.name)} · ${new Date(`${nextDeadline.deadline}T00:00:00`).toLocaleDateString('ru-RU')}`
+    : 'Дедлайн не указан';
+
+  let html = `<div class="tracker-overview">
+    <div class="tracker-overview-item"><strong>${activeCount}</strong><span>В работе</span></div>
+    <div class="tracker-overview-item"><strong>${submittedCount}</strong><span>После подачи</span></div>
+    <div class="tracker-overview-next"><span>Ближайший дедлайн</span><strong>${deadlineText}</strong></div>
+  </div>`;
+
   const grouped = {};
   state.trackerList.forEach(item => {
     if (!grouped[item.status]) grouped[item.status] = [];
     grouped[item.status].push(item);
   });
 
-  let html = '';
   const statusOrder = ['collecting', 'submitted', 'waiting', 'accepted', 'enrolled', 'rejected'];
   statusOrder.forEach(status => {
     const items = grouped[status];
@@ -607,12 +762,22 @@ function renderProfileTracker() {
       html += `<div class="tracker-card" data-id="${item.id}">
         <div class="tracker-card-head">
           <span class="tracker-card-name" onclick="navigate('university', ${item.university_id})">${escapeAdmissionHtml(item.name)}</span>
-          <button class="tracker-card-remove" onclick="removeFromTracker(${item.id}); renderProfileTracker();" title="Удалить">×</button>
+          <button class="tracker-card-remove" onclick="handleTrackerRemove(${item.id}, this)" title="Удалить заявку" aria-label="Удалить заявку">×</button>
         </div>
-        <div class="tracker-card-status">
-          ${Object.entries(TRACKER_STATUSES).map(([key, val]) =>
-            `<button class="tracker-status-btn ${key === status ? 'active' : ''}" style="--status-color: ${val.color}" onclick="updateTrackerStatus(${item.id}, '${key}'); renderProfileTracker();" title="${val.label}">${val.icon}</button>`
-          ).join('')}
+        <div class="tracker-card-fields">
+          <label class="tracker-field-label">Статус
+            <select class="tracker-status-select" onchange="updateTrackerStatus(${item.id}, this.value).then(() => renderProfileTracker())">
+              ${Object.entries(TRACKER_STATUSES).map(([key, val]) =>
+                `<option value="${key}" ${key === status ? 'selected' : ''}>${val.label}</option>`
+              ).join('')}
+            </select>
+          </label>
+          <label class="tracker-field-label">Учебный год
+            <input class="tracker-year-input" value="${escapeAdmissionHtml(item.academic_year || '2025-2026')}" maxlength="20" onchange="updateTrackerField(${item.id}, 'academicYear', this.value)">
+          </label>
+          <label class="tracker-field-label">Дедлайн
+            <input type="date" class="tracker-date-input" value="${escapeAdmissionHtml(item.deadline || '')}" onchange="updateTrackerField(${item.id}, 'deadline', this.value)">
+          </label>
         </div>
         <input class="tracker-card-notes" placeholder="${t('tracker.notes_placeholder') || 'Заметки...'}" value="${escapeAdmissionHtml(item.notes || '')}" onchange="updateTrackerNotes(${item.id}, this.value)">
       </div>`;
@@ -823,4 +988,68 @@ function requireAuth(targetPage) {
     return false;
   }
   return true;
+}
+
+async function loadAdminPanel() {
+  const container = document.getElementById('admin-panel-content');
+  if (!container) return;
+  const days = Number(container.dataset.days || 30);
+  try {
+    const [overviewData, reviews, applications, users] = await Promise.all([
+      Auth.getAdminOverview(days), Auth.getAdminReviews(), Auth.getAdminApplications(), Auth.getAdminUsers()
+    ]);
+    const overview = overviewData.overview || {};
+    const labels = { collecting: 'Сбор документов', submitted: 'Подано', waiting: 'Ожидание', accepted: 'Зачислены', enrolled: 'Оплачивают', rejected: 'Отказ' };
+    const statuses = overviewData.applicationStatuses || [];
+    const intents = overviewData.intents || [];
+    container.innerHTML = `
+      <div class="admin-toolbar"><div><strong>Центр управления</strong><span>Данные за последние ${days} дней</span></div><label>Период <select onchange="changeAdminPeriod(this.value)"><option value="7" ${days === 7 ? 'selected' : ''}>7 дней</option><option value="30" ${days === 30 ? 'selected' : ''}>30 дней</option><option value="90" ${days === 90 ? 'selected' : ''}>90 дней</option><option value="365" ${days === 365 ? 'selected' : ''}>Год</option></select></label><button class="btn btn-ghost btn-sm" onclick="loadAdminPanel()">Обновить</button></div>
+      <div class="admin-metrics">
+        <div class="admin-metric"><strong>${overview.users || 0}</strong><span>Пользователи</span><small>+${overview.periodUsers || 0} за период</small></div>
+        <div class="admin-metric"><strong>${overview.universities || 0}</strong><span>Вузы</span></div>
+        <div class="admin-metric"><strong>${overview.applications || 0}</strong><span>Заявки</span><small>+${overview.periodApplications || 0} за период</small></div>
+        <div class="admin-metric"><strong>${overview.chatMessages || 0}</strong><span>Диалоги с ИИ</span><small>+${overview.periodChats || 0} за период</small></div>
+      </div>
+      <div class="admin-columns"><div class="admin-data-block"><div class="admin-block-title">Заявки по статусам</div>${statuses.map(item => `<div class="admin-list-row"><span>${escapeHtml(labels[item.status] || item.status)}</span><strong>${item.count}</strong></div>`).join('') || '<p class="admin-muted">Нет данных</p>'}</div><div class="admin-data-block"><div class="admin-block-title">Темы ИИ за период</div>${intents.map(item => `<div class="admin-list-row"><span>${escapeHtml(item.intent)}</span><strong>${item.count}</strong></div>`).join('') || '<p class="admin-muted">Нет данных</p>'}</div></div>
+      <div class="admin-data-block admin-table-block"><div class="admin-block-title">Последние заявки <span>${applications.length}</span></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Пользователь</th><th>Вуз</th><th>Статус</th><th>Год</th></tr></thead><tbody>${applications.slice(0, 12).map(item => `<tr><td>${escapeHtml(item.username || item.email)}</td><td>${escapeHtml(item.short_name || item.university_name)}</td><td>${escapeHtml(labels[item.status] || item.status)}</td><td>${escapeHtml(item.academic_year || '')}</td></tr>`).join('') || '<tr><td colspan="4">Нет заявок</td></tr>'}</tbody></table></div></div>
+      <div class="admin-data-block admin-table-block"><div class="admin-block-title">Последние пользователи <span>${users.length}</span></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Пользователь</th><th>Email</th><th>Заявки</th><th>Чаты</th></tr></thead><tbody>${users.slice(0, 12).map(item => `<tr><td>${escapeHtml(item.username || '')}${item.is_admin ? ' · ADMIN' : ''}</td><td>${escapeHtml(item.email)}</td><td>${item.applications}</td><td>${item.chats}</td></tr>`).join('')}</tbody></table></div></div>
+      <div class="admin-reviews-head"><strong>Модерация отзывов</strong><span>${overview.pendingReviews || 0} требуют проверки</span></div>
+      <div class="admin-review-list">
+        ${reviews.length ? reviews.map(review => `
+          <article class="admin-review-item" data-admin-review-id="${review.id}">
+            <div class="admin-review-top"><strong>${escapeHtml(review.short_name || review.university_name)}</strong><span>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span></div>
+            <div class="admin-review-meta">${escapeHtml(review.user_name)} · ${formatDate(review.created_at)}</div>
+            <p>${escapeHtml(review.comment || review.pros || review.cons || 'Без текста')}</p>
+            <div class="admin-review-actions">
+              <button class="btn btn-primary btn-sm" onclick="moderateAdminReview(${review.id}, true)">${review.moderated_at ? 'Одобрено' : 'Одобрить'}</button>
+              <button class="btn btn-ghost btn-sm" onclick="moderateAdminReview(${review.id}, false)">Скрыть</button>
+              <button class="btn btn-ghost btn-sm admin-danger-btn" onclick="deleteAdminReview(${review.id})">Удалить</button>
+            </div>
+          </article>
+        `).join('') : '<div class="profile-empty">Отзывов пока нет</div>'}
+      </div>`;
+  } catch (error) {
+    container.innerHTML = `<p class="form-error">${escapeHtml(error.message)}</p>`;
+  }
+}
+
+function changeAdminPeriod(days) {
+  const container = document.getElementById('admin-panel-content');
+  if (!container) return;
+  container.dataset.days = String(days);
+  loadAdminPanel();
+}
+
+async function moderateAdminReview(id, approved) {
+  try {
+    await Auth.moderateReview(id, approved);
+    await loadAdminPanel();
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function deleteAdminReview(id) {
+  try {
+    await Auth.deleteAdminReview(id);
+    await loadAdminPanel();
+  } catch (error) { showToast(error.message, 'error'); }
 }

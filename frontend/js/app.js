@@ -2,9 +2,7 @@
    EDUMATCH KZ — APP LOGIC
    ============================================= */
 
-const API = window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000/api'
-  : '/api';
+const API = window.location.protocol === 'file:' ? 'http://localhost:3000/api' : '/api';
 
 // ─── STATE ───────────────────────────────────
 const state = window.state = {
@@ -16,6 +14,8 @@ const state = window.state = {
   chatHistoryLoaded: false,
   admissionLastResult: null,
   currentPage: 'home',
+  chatReplyDraft: null,
+  trackerServerLoaded: false,
 };
 
 function saveSessionChatHistory() {
@@ -63,38 +63,75 @@ function saveTracker() {
   localStorage.setItem('edumatch_tracker', JSON.stringify(state.trackerList));
 }
 
-function addToTracker(university) {
+async function addToTracker(university) {
   if (state.trackerList.some(t => t.university_id === university.id)) return false;
-  state.trackerList.push({
+  const localItem = {
     id: Date.now(),
     university_id: university.id,
     name: university.short_name || university.name,
     status: 'collecting',
     added_at: new Date().toISOString(),
     notes: '',
-  });
+  };
+  if (Auth.isLoggedIn()) {
+    const result = await Auth.addApplication({ universityId: university.id });
+    localItem.id = result.id;
+  }
+  state.trackerList.push(localItem);
   saveTracker();
   return true;
 }
 
-function removeFromTracker(id) {
+async function removeFromTracker(id) {
+  if (Auth.isLoggedIn()) await Auth.removeApplication(id);
   state.trackerList = state.trackerList.filter(t => t.id !== id);
   saveTracker();
+  return true;
 }
 
-function updateTrackerStatus(id, status) {
+async function handleTrackerRemove(id, button) {
+  if (button) {
+    button.disabled = true;
+    button.textContent = '…';
+  }
+  try {
+    await removeFromTracker(id);
+    await renderProfileTracker();
+  } catch (error) {
+    if (button) {
+      button.disabled = false;
+      button.textContent = '×';
+    }
+    showToast(error.message || 'Не удалось удалить заявку', 'error');
+  }
+}
+
+async function updateTrackerStatus(id, status) {
   const item = state.trackerList.find(t => t.id === id);
   if (item) {
+    if (Auth.isLoggedIn()) await Auth.updateApplication(id, { status });
     item.status = status;
     saveTracker();
   }
 }
 
-function updateTrackerNotes(id, notes) {
+async function updateTrackerNotes(id, notes) {
   const item = state.trackerList.find(t => t.id === id);
   if (item) {
+    if (Auth.isLoggedIn()) Auth.updateApplication(id, { notes }).catch(error => showToast(error.message, 'error'));
     item.notes = notes;
     saveTracker();
+  }
+}
+
+function updateTrackerField(id, field, value) {
+  const item = state.trackerList.find(t => t.id === id);
+  if (!item) return;
+  if (field === 'academicYear') item.academic_year = value;
+  if (field === 'deadline') item.deadline = value;
+  saveTracker();
+  if (Auth.isLoggedIn()) {
+    Auth.updateApplication(id, { [field]: value }).catch(error => showToast(error.message, 'error'));
   }
 }
 
@@ -107,13 +144,18 @@ const TRACKER_STATUSES = {
   enrolled: { icon: '', label: 'Оплачиваю', color: '#06b6d4' },
 };
 
-function handleTrackerAdd(universityId, universityName) {
+async function handleTrackerAdd(universityId, universityName) {
   const existing = state.trackerList.find(t => t.university_id === universityId);
   if (existing) {
     navigate('profile');
     return;
   }
-  addToTracker({ id: universityId, short_name: universityName, name: universityName });
+  try {
+    await addToTracker({ id: universityId, short_name: universityName, name: universityName });
+  } catch (error) {
+    showToast(error.message || 'Не удалось добавить заявку', 'error');
+    return;
+  }
   showToast(`${universityName} добавлен в трекер`);
   document.querySelectorAll('.tracker-add-btn').forEach(btn => {
     if (btn.onclick && btn.onclick.toString().includes(universityId)) {
@@ -193,6 +235,7 @@ function navigate(page, param) {
   state.currentPage = page;
   window.scrollTo(0, 0);
   document.body.classList.toggle('chat-page-active', page === 'advisor');
+  updateStickyCompare();
 
   if (page === 'home') {
     document.getElementById('page-home').classList.add('active');
@@ -563,6 +606,7 @@ function renderUniversityCard(u) {
         </button>
       </div>
       <div class="uni-name">${trRu(u.name)}</div>
+      ${u.data_status === 'pending' ? `<div class="uni-data-pending">${t('card.data_pending') || 'Данные уточняются'}</div>` : ''}
       <div class="uni-description">${u.description || ''}</div>
       <div class="uni-price-row">
         <span class="price-label">${t('card.from')}</span>
@@ -570,14 +614,16 @@ function renderUniversityCard(u) {
         <span class="price-to"> — ${fmtPrice(u.price_to)}</span>
         <span class="price-period">${t('card.tenge_year')}</span>
       </div>
+      ${u.address ? `<div class="uni-address">${escapeHtml(u.address)}</div>` : ''}
       ${contactLine}
       <div class="uni-specialties">${specTags}</div>
       <div class="uni-card-actions">
-        <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" onclick="toggleCompare(${u.id}, event)">
-          ${isSelected ? t('card.in_compare') : t('card.compare_add')}
+        <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" onclick="toggleCompare(${u.id}, event)" title="${isSelected ? t('card.in_compare') : t('card.compare_add')}" aria-label="${isSelected ? t('card.in_compare') : t('card.compare_add')}">
+          <svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${isSelected ? '<path d="m5 12 4 4L19 6"/>' : '<path d="M12 5v14M5 12h14"/>'}</svg>
+          <span>${isSelected ? t('card.in_compare') : t('card.compare_add')}</span>
         </button>
-        ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()">${t('card.website')}</a>` : ''}
-        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})">${t('card.details')}</button>
+        ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()"><svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span>${t('card.website')}</span></a>` : ''}
+        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})" title="${t('card.details')}" aria-label="${t('card.details')}"><span>${t('card.details')}</span><svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
       </div>
     </div>
   `;
@@ -645,7 +691,7 @@ async function renderComparePage() {
     content.innerHTML = `
       <div class="compare-empty">
         <div class="compare-empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
         </div>
         <p>${t('compare_page.add_minimum')}</p>
         <button class="btn btn-primary" onclick="navigate('home')">${t('compare_page.choose_unis')}</button>
@@ -719,11 +765,8 @@ function renderCompareTable(unis, container) {
 function clearCompare() {
   state.compareList = [];
   updateCompareBadge();
+  updateStickyCompare();
   renderComparePage();
-  // Refresh cards if on home
-  if (state.currentPage === 'compare') {
-    renderComparePage();
-  }
 }
 
 // ─── UNIVERSITY DETAIL ───────────────────────
@@ -744,7 +787,7 @@ async function loadUniversityDetail(id) {
 const getSVGIcon = (name) => {
   const icons = {
     globe: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
-    checkmark: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+    checkmark: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
     building: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="9" y1="9" x2="9" y2="21"></line><line x1="15" y1="9" x2="15" y2="21"></line><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>`,
     money: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><path d="M4 12a8 8 0 0 0 16 0A8 8 0 0 0 4 12"></path><path d="M12 2a8 8 0 0 1 0 16 8 8 0 0 1 0-16"></path></svg>`,
     target: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="9"></circle></svg>`,
@@ -977,37 +1020,125 @@ function renderUniversityDetail(u, container) {
   loadReviews(u.id);
 }
 
+async function submitUniversityReview(universityId, form) {
+  const formData = new FormData(form);
+  const payload = {
+    user_name: (formData.get('user_name') || '').toString().trim(),
+    rating: Number(formData.get('rating') || 0),
+    faculty: (formData.get('faculty') || '').toString().trim(),
+    study_year: (formData.get('study_year') || '').toString().trim(),
+    pros: (formData.get('pros') || '').toString().trim(),
+    cons: (formData.get('cons') || '').toString().trim(),
+    comment: (formData.get('comment') || '').toString().trim(),
+  };
+
+  if (!payload.user_name || !payload.rating || payload.rating < 1 || payload.rating > 5) {
+    showToast('Укажите имя и оценку от 1 до 5', 'error');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/universities/${universityId}/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Ошибка отправки отзыва');
+    form.reset();
+    showToast('Отзыв добавлен', 'success');
+    loadReviews(universityId);
+  } catch (e) {
+    showToast(e.message || 'Не удалось отправить отзыв', 'error');
+  }
+}
+
 async function loadReviews(universityId) {
   const container = document.getElementById('reviews-content');
   if (!container) return;
   try {
     const res = await fetch(`${API}/universities/${universityId}/reviews`);
     const data = await res.json();
-    if (!data.reviews || data.reviews.length === 0) {
-      container.innerHTML = `<p style="color:var(--text2)">Пока нет отзывов. Будьте первым!</p>`;
-      return;
-    }
     const avgRating = data.stats?.avg_rating ? Number(data.stats.avg_rating).toFixed(1) : '—';
     const starStr = (r) => '★'.repeat(r) + '☆'.repeat(5 - r);
-    let html = `<div class="reviews-summary">
-      <span class="reviews-avg">Рейтинг: ${avgRating}</span>
-      <span class="reviews-count">${data.stats.count} отзывов</span>
-    </div>
-    <div class="reviews-list">`;
-    data.reviews.forEach(r => {
-      html += `<div class="review-card">
-        <div class="review-head">
-          <span class="review-name">${escapeAdmissionHtml(r.user_name)}</span>
-          <span class="review-stars">${starStr(r.rating)}</span>
-          <span class="review-meta">${escapeAdmissionHtml(r.faculty || '')} ${r.study_year ? '· ' + escapeAdmissionHtml(r.study_year) : ''}</span>
-        </div>
-        ${r.pros ? `<div class="review-pros"><strong>Плюсы:</strong> ${escapeAdmissionHtml(r.pros)}</div>` : ''}
-        ${r.cons ? `<div class="review-cons"><strong>Минусы:</strong> ${escapeAdmissionHtml(r.cons)}</div>` : ''}
-        ${r.comment ? `<div class="review-comment">${escapeAdmissionHtml(r.comment)}</div>` : ''}
-      </div>`;
-    });
+    const hasReviews = Array.isArray(data.reviews) && data.reviews.length > 0;
+
+    let html = `
+      <div class="review-form-wrap">
+        <form class="review-form" data-university-id="${universityId}">
+          <div class="review-form-grid">
+            <label>
+              <span>Ваше имя</span>
+              <input type="text" name="user_name" maxlength="80" placeholder="Например: Алиса" required>
+            </label>
+            <label>
+              <span>Оценка</span>
+              <select name="rating" required>
+                <option value="">Выберите</option>
+                <option value="5">5 — отлично</option>
+                <option value="4">4 — хорошо</option>
+                <option value="3">3 — нормально</option>
+                <option value="2">2 — плохо</option>
+                <option value="1">1 — очень плохо</option>
+              </select>
+            </label>
+            <label>
+              <span>Факультет</span>
+              <input type="text" name="faculty" maxlength="120" placeholder="Например: IT">
+            </label>
+            <label>
+              <span>Курс</span>
+              <input type="text" name="study_year" maxlength="40" placeholder="Например: 2 курс">
+            </label>
+          </div>
+          <label>
+            <span>Плюсы</span>
+            <textarea name="pros" rows="2" maxlength="500" placeholder="Что понравилось?"></textarea>
+          </label>
+          <label>
+            <span>Минусы</span>
+            <textarea name="cons" rows="2" maxlength="500" placeholder="Что можно улучшить?"></textarea>
+          </label>
+          <label>
+            <span>Комментарий</span>
+            <textarea name="comment" rows="3" maxlength="1000" placeholder="Поделитесь впечатлениями о вузе"></textarea>
+          </label>
+          <button type="submit" class="btn btn-primary review-submit-btn">Оставить отзыв</button>
+        </form>
+      </div>
+      <div class="reviews-summary">
+        <span class="reviews-avg">Рейтинг: ${avgRating}</span>
+        <span class="reviews-count">${data.stats?.count || 0} отзывов</span>
+      </div>
+      <div class="reviews-list">`;
+
+    if (!hasReviews) {
+      html += `<div class="review-empty">Пока нет отзывов. Будьте первым!</div>`;
+    } else {
+      data.reviews.forEach(r => {
+        html += `<div class="review-card">
+          <div class="review-head">
+            <span class="review-name">${escapeAdmissionHtml(r.user_name)}</span>
+            <span class="review-stars">${starStr(r.rating)}</span>
+            <span class="review-meta">${escapeAdmissionHtml(r.faculty || '')} ${r.study_year ? '· ' + escapeAdmissionHtml(r.study_year) : ''}</span>
+          </div>
+          ${r.pros ? `<div class="review-pros"><strong>Плюсы:</strong> ${escapeAdmissionHtml(r.pros)}</div>` : ''}
+          ${r.cons ? `<div class="review-cons"><strong>Минусы:</strong> ${escapeAdmissionHtml(r.cons)}</div>` : ''}
+          ${r.comment ? `<div class="review-comment">${escapeAdmissionHtml(r.comment)}</div>` : ''}
+        </div>`;
+      });
+    }
+
     html += `</div>`;
     container.innerHTML = html;
+
+    const form = container.querySelector('.review-form');
+    if (form) {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        submitUniversityReview(universityId, form);
+      });
+    }
   } catch (e) {
     container.innerHTML = `<p style="color:var(--red)">Ошибка загрузки отзывов</p>`;
   }
@@ -1051,6 +1182,7 @@ async function sendMessage(retryMessage = null) {
   const input = document.getElementById('chat-input');
   let text = retryMessage || input.value.trim();
   if (!text) return;
+  const replyDraft = retryMessage ? null : state.chatReplyDraft;
 
   // Rate limiting check
   const now = Date.now();
@@ -1063,7 +1195,10 @@ async function sendMessage(retryMessage = null) {
   if (!retryMessage) {
     input.value = '';
     autoResize(input);
-    appendMessage('user', text);
+    state.chatReplyDraft = null;
+    clearReplyQuotePreview();
+    document.querySelectorAll('.chat-bubble.reply-target').forEach(target => target.classList.remove('reply-target'));
+    appendMessage('user', text, null, null, { replyQuote: replyDraft ? replyDraft.text : null });
     state.chatHistory.push({ role: 'user', content: text });
     saveSessionChatHistory();
   }
@@ -1078,6 +1213,15 @@ async function sendMessage(retryMessage = null) {
       body: JSON.stringify({
         message: text,
         history: state.chatHistory.slice(-20),
+        replyTo: replyDraft ? replyDraft.text : null,
+        applications: Auth.isLoggedIn() ? state.trackerList.map(item => ({
+          university_id: item.university_id,
+          name: item.name,
+          status: item.status,
+          academic_year: item.academic_year || '2025-2026',
+          deadline: item.deadline || null,
+          notes: item.notes || ''
+        })) : [],
         lang: window.currentLanguage || 'ru',
       }),
       timeoutMs: 15000,
@@ -1409,12 +1553,34 @@ function appendMessage(role, text, matches = null, admission = null, options = {
 
   // Use marked.js for AI responses, escaped plain text for user
   let content = role === 'ai' ? renderMarkdown(text) : `<p>${escapeHtml(text)}</p>`;
+  if (role === 'user' && options.replyQuote) {
+    const quoteText = String(options.replyQuote).trim();
+    const shortQuote = quoteText.length > 180 ? quoteText.slice(0, 180) + '…' : quoteText;
+    content = `<div class="chat-message-quote"><div class="chat-message-quote-label">Ответ на сообщение ИИ</div><div class="chat-message-quote-text">${escapeHtml(shortQuote)}</div></div>${content}`;
+  }
   if (role === 'ai' && matches && matches.length > 0) {
     content += renderMatches(matches);
   }
   // Render admission prediction cards in chat
   if (admission && admission.type === 'result' && admission.matches && admission.matches.length > 0) {
     content += renderAdmissionChatCards(admission.matches, admission.input, admission.whatIf, admission.academicYear);
+  }
+
+  if (role === 'ai') {
+    content = wrapExpandableAiMessage(content, text);
+  }
+
+  if (role === 'ai') {
+    const lang = window.currentLanguage || 'ru';
+    const copyText = lang === 'ru' ? 'Копировать' : lang === 'kk' ? 'Көшіру' : 'Copy';
+    const replyText = lang === 'ru' ? 'Ответить' : lang === 'kk' ? 'Жауап беру' : 'Reply';
+    const actionId = `chat-action-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    content += `
+      <div class="chat-bubble-actions" data-chat-action-id="${actionId}">
+        <button type="button" class="chat-reply-btn" aria-label="${replyText}">${replyText}</button>
+        <button type="button" class="chat-copy-btn" data-clipboard-text="${escapeHtml(String(text || '')).replace(/"/g, '&quot;')}">${copyText}</button>
+      </div>
+    `;
   }
   
   // Add retry button if provided
@@ -1428,6 +1594,109 @@ function appendMessage(role, text, matches = null, admission = null, options = {
   }
   
   div.innerHTML = `<div class="chat-bubble chat-bubble-${role === 'user' ? 'user' : 'ai'} markdown-body">${content}</div>`;
+  if (role === 'ai') {
+    const toggle = div.querySelector('.chat-ai-expand-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const wrapper = toggle.closest('.chat-ai-expandable');
+        if (!wrapper) return;
+        const expanded = wrapper.classList.toggle('expanded');
+        wrapper.classList.toggle('collapsed', !expanded);
+        toggle.setAttribute('aria-expanded', String(expanded));
+      });
+    }
+
+    const copyBtn = div.querySelector('.chat-copy-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const textToCopy = copyBtn.dataset.clipboardText || '';
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          const original = copyBtn.textContent;
+          copyBtn.textContent = (window.currentLanguage === 'en' ? 'Copied' : window.currentLanguage === 'kk' ? 'Көшірілді' : 'Скопировано');
+          setTimeout(() => { copyBtn.textContent = original; }, 1200);
+        } catch (e) {
+          const range = document.createRange();
+          const selection = window.getSelection();
+          const target = div.querySelector('.chat-ai-expandable-body');
+          if (target) {
+            range.selectNodeContents(target);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try { document.execCommand('copy'); } catch (err) {}
+          }
+        }
+      });
+    }
+
+    const bubble = div.querySelector('.chat-bubble-ai');
+    const replyBtn = div.querySelector('.chat-reply-btn');
+    if (replyBtn) {
+      replyBtn.addEventListener('click', () => {
+        document.querySelectorAll('.chat-bubble.reply-target').forEach(target => target.classList.remove('reply-target'));
+        if (bubble) bubble.classList.add('reply-target');
+        applyReplyToInput(String(text || ''));
+      });
+    }
+
+    if (bubble) {
+      const showReplyToolbar = () => {
+        const selection = window.getSelection();
+        const selectedText = selection ? selection.toString().trim() : '';
+        if (!selectedText) {
+          hideReplyToolbar();
+          return;
+        }
+
+        if (selectedText.length < 2) {
+          hideReplyToolbar();
+          return;
+        }
+
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        const bubbleRect = bubble.getBoundingClientRect();
+        const toolbar = document.getElementById('chat-selection-toolbar');
+        if (!toolbar) {
+          const toolbarEl = document.createElement('div');
+          toolbarEl.id = 'chat-selection-toolbar';
+          toolbarEl.className = 'chat-selection-toolbar';
+          toolbarEl.innerHTML = '<button type="button" class="chat-selection-reply-btn">Ответить</button>';
+          document.body.appendChild(toolbarEl);
+          toolbarEl.querySelector('button').addEventListener('click', () => {
+            applyReplyToInput(toolbarEl.selectedText || '');
+            hideReplyToolbar();
+            if (window.getSelection) {
+              window.getSelection().removeAllRanges();
+            }
+          });
+        }
+
+        const toolbarEl = document.getElementById('chat-selection-toolbar');
+        toolbarEl.selectedText = selectedText;
+        const finalX = Math.min(Math.max(rect.left + (rect.width / 2) - 44, 12), window.innerWidth - 110);
+        const finalY = Math.max(bubbleRect.top - 44, 12);
+        toolbarEl.style.left = `${finalX}px`;
+        toolbarEl.style.top = `${finalY}px`;
+        toolbarEl.style.display = 'block';
+      };
+
+      const hideReplyToolbar = () => {
+        const toolbar = document.getElementById('chat-selection-toolbar');
+        if (toolbar) toolbar.style.display = 'none';
+      };
+
+      bubble.addEventListener('mouseup', showReplyToolbar);
+      bubble.addEventListener('keyup', showReplyToolbar);
+      bubble.addEventListener('mouseleave', hideReplyToolbar);
+      document.addEventListener('selectionchange', () => {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0 || !selection.toString().trim()) {
+          hideReplyToolbar();
+        }
+      });
+    }
+  }
   msgs.appendChild(div);
   scrollChatToBottom();
 }
@@ -1459,6 +1728,81 @@ function handleChatKey(e) {
 function autoResize(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function clearReplyQuotePreview() {
+  const preview = document.getElementById('chat-reply-preview');
+  if (preview) {
+    preview.classList.add('hidden');
+    preview.querySelector('.chat-reply-body').textContent = '';
+    preview.querySelector('.chat-reply-header').textContent = 'Ответ';
+  }
+  document.querySelectorAll('.chat-bubble.reply-target').forEach(target => target.classList.remove('reply-target'));
+}
+
+function renderReplyQuotePreview() {
+  const wrap = document.querySelector('.chat-input-wrap');
+  if (!wrap) return;
+
+  let preview = document.getElementById('chat-reply-preview');
+  if (!preview) {
+    preview = document.createElement('div');
+    preview.id = 'chat-reply-preview';
+    preview.className = 'chat-reply-preview hidden';
+
+    const header = document.createElement('div');
+    header.className = 'chat-reply-header';
+    header.textContent = 'Ответ';
+
+    const body = document.createElement('div');
+    body.className = 'chat-reply-body';
+
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'chat-reply-clear';
+    clearBtn.setAttribute('aria-label', 'Clear reply');
+    clearBtn.innerHTML = '&times;';
+    clearBtn.addEventListener('click', () => {
+      const input = document.getElementById('chat-input');
+      if (!input || !state.chatReplyDraft) return;
+      state.chatReplyDraft = null;
+      clearReplyQuotePreview();
+      autoResize(input);
+      input.focus();
+    });
+
+    preview.appendChild(header);
+    preview.appendChild(body);
+    preview.appendChild(clearBtn);
+    wrap.insertBefore(preview, wrap.firstChild);
+  }
+
+  const body = preview.querySelector('.chat-reply-body');
+  const header = preview.querySelector('.chat-reply-header');
+  const input = document.getElementById('chat-input');
+
+  if (!state.chatReplyDraft || !input) {
+    clearReplyQuotePreview();
+    return;
+  }
+
+  const draftText = state.chatReplyDraft.text.trim();
+  const replyLabel = (window.currentLanguage === 'en' ? 'Replying to' : window.currentLanguage === 'kk' ? 'Жауап беру' : 'Ответ на');
+  header.textContent = replyLabel;
+  body.textContent = draftText.length > 180 ? draftText.slice(0, 180) + '…' : draftText;
+  preview.classList.remove('hidden');
+}
+
+function applyReplyToInput(selectedText) {
+  const input = document.getElementById('chat-input');
+  if (!input || !selectedText || !selectedText.trim()) return;
+
+  const cleanText = selectedText.trim();
+  state.chatReplyDraft = { text: cleanText };
+  renderReplyQuotePreview();
+
+  input.focus();
+  autoResize(input);
 }
 
 function usePrompt(btn) {
@@ -1541,6 +1885,28 @@ function renderMarkdown(text) {
   return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(rawHtml) : rawHtml;
 }
 
+function wrapExpandableAiMessage(html, text) {
+  const plainText = String(text || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!plainText || plainText.length <= 500) {
+    return html;
+  }
+
+  const lang = window.currentLanguage || 'ru';
+  const label = lang === 'en' ? 'Show more' : lang === 'kk' ? 'Толығырақ көрсету' : 'Показать полностью';
+  const collapseLabel = lang === 'en' ? 'Show less' : lang === 'kk' ? 'Азайту' : 'Свернуть';
+  const id = `ai-expand-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+  return `
+    <div class="chat-ai-expandable expanded" data-ai-expand-id="${id}">
+      <div class="chat-ai-expandable-body">${html}</div>
+      <button type="button" class="chat-ai-expand-toggle" data-ai-expand-id="${id}" aria-expanded="true">
+        <span class="chat-ai-expand-label">${label}</span>
+        <span class="chat-ai-collapse-label">${collapseLabel}</span>
+      </button>
+    </div>
+  `;
+}
+
 /* ─── NPROGRESS ───────────────────────────── */
 function startProgress() {
   if (typeof NProgress !== 'undefined') {
@@ -1562,6 +1928,21 @@ function animateCounters() {
   });
 }
 
+async function loadAcademicYear() {
+  try {
+    const response = await fetch(`${API}/admin/academic-year`);
+    if (!response.ok) return;
+    const { year } = await response.json();
+    if (!/^\d{4}-\d{4}$/.test(year)) return;
+    const displayYear = year.replace('-', '–');
+    document.querySelectorAll('[data-academic-year]').forEach(element => {
+      element.textContent = element.textContent.replace(/\d{4}[–-]\d{4}/, displayYear);
+    });
+  } catch (error) {
+    console.warn('Academic year loading failed', error);
+  }
+}
+
 /* ─── CONFETTI — on compare ──────────────── */
 function celebrateCompare() {
   if (typeof confetti !== 'undefined') {
@@ -1580,6 +1961,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadSpecialties();
   loadCities();
   navigate('home');
+  loadAcademicYear();
 
   // AOS scroll animations
   if (typeof AOS !== 'undefined') {
@@ -1645,7 +2027,7 @@ function updateStickyCompare() {
   const bar = document.getElementById('sticky-compare');
   const count = state.compareList.length;
   if (bar) {
-    bar.classList.toggle('visible', count >= 1);
+    bar.classList.toggle('visible', count >= 1 && state.currentPage !== 'compare');
     const countEl = document.getElementById('sticky-compare-count');
     if (countEl) countEl.textContent = count;
   }
@@ -2364,7 +2746,7 @@ function renderGrants(grants) {
       </div>
       <div class="grant-footer">
         <div class="grant-deadline">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           ${t('grants_page_js.deadline')} ${g.deadline}
         </div>
         ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">${t('grants_page_js.more_details')}</a>` : ''}
@@ -2439,28 +2821,28 @@ function showProfessionAnalysis(name) {
     <div class="prof-grid">
       <div class="prof-card">
         <div class="prof-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
         <div class="prof-card-label">${t('prof_page.avg_salary')}</div>
         <div class="prof-card-val">${data.salary}</div>
       </div>
       <div class="prof-card">
         <div class="prof-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </div>
         <div class="prof-card-label">${t('prof_page.market_growth')}</div>
         <div class="prof-card-val" style="color:${data.growth !== '—' ? '#52b788' : 'var(--text-muted)'}">${data.growth}</div>
       </div>
       <div class="prof-card">
         <div class="prof-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
         </div>
         <div class="prof-card-label">${t('prof_page.demand')}</div>
         <div class="prof-card-val" style="color:${demandColor}">${t('demand_labels.' + data.demand) || data.demand}</div>
       </div>
     </div>
     <div class="prof-note">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       ${t('prof_page.disclaimer')}
     </div>
   `;
@@ -2517,7 +2899,7 @@ function runGrantMatching() {
   if (matched.length === 0) {
     resultEl.innerHTML = `
       <div class="gm-empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
         <span>${t('grants_page_js.for_spec')} <strong>${spec}</strong> ${t('grants_page_js.not_found_yet')}</span>
       </div>
     `;
@@ -2526,7 +2908,7 @@ function runGrantMatching() {
 
   resultEl.innerHTML = `
     <div class="gm-header">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span>${t('grants_page_js.ai_grants')} <strong>${matched.length}</strong> ${t('grants_page_js.grants_for_you')}</span>
     </div>
     ${demandHTML}

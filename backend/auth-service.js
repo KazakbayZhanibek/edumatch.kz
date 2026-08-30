@@ -284,7 +284,7 @@ function getUserProfile(userId) {
   try {
     return getDb().prepare(
       `SELECT id, email, username, full_name, phone, profile_picture, bio, 
-              preferences, created_at, updated_at 
+              preferences, is_admin, created_at, updated_at 
        FROM users WHERE id = ?`
     ).get(userId);
   } catch (error) {
@@ -296,12 +296,12 @@ function getUserProfile(userId) {
 /**
  * Обновить профиль пользователя
  * @param {number} userId - ID пользователя
- * @param {object} data - {fullName, phone, bio, preferences}
+ * @param {object} data - {fullName, phone, bio, preferences, profilePicture}
  * @returns {object} - {success: true/false, user: {...}, error: "..."}
  */
 function updateUserProfile(userId, data, lang = 'ru') {
   try {
-    const { fullName, phone, bio, preferences } = data;
+    const { fullName, phone, bio, preferences, profilePicture } = data;
 
     const preferencesJson = preferences ? JSON.stringify(preferences) : null;
 
@@ -311,9 +311,10 @@ function updateUserProfile(userId, data, lang = 'ru') {
            phone = COALESCE(?, phone),
            bio = COALESCE(?, bio),
            preferences = COALESCE(?, preferences),
+              profile_picture = COALESCE(?, profile_picture),
            updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`
-    ).run(fullName, phone, bio, preferencesJson, userId);
+            ).run(fullName, phone, bio, preferencesJson, profilePicture, userId);
 
     const updatedUser = getUserProfile(userId);
 
@@ -449,6 +450,89 @@ function getSavedUniversityIds(userId) {
   } catch (error) {
     console.error('Get saved university ids error:', error);
     return [];
+  }
+}
+
+// ============== ЗАЯВКИ ПОЛЬЗОВАТЕЛЯ ==============
+
+const APPLICATION_STATUSES = ['collecting', 'submitted', 'waiting', 'accepted', 'enrolled', 'rejected'];
+
+function getApplications(userId) {
+  try {
+    return getDb().prepare(`
+      SELECT a.id, a.university_id, u.name, u.short_name, u.city_id, u.website,
+             a.status, a.academic_year, a.deadline, a.submitted_at,
+             a.notes, a.created_at, a.updated_at
+      FROM application_tracker a
+      JOIN universities u ON u.id = a.university_id
+      WHERE a.user_id = ?
+      ORDER BY CASE a.status WHEN 'waiting' THEN 1 WHEN 'collecting' THEN 2 WHEN 'submitted' THEN 3 ELSE 4 END, a.updated_at DESC
+    `).all(userId);
+  } catch (error) {
+    console.error('Get applications error:', error);
+    return [];
+  }
+}
+
+function addApplication(userId, data = {}, lang = 'ru') {
+  const universityId = Number.parseInt(data.universityId, 10);
+  const status = APPLICATION_STATUSES.includes(data.status) ? data.status : 'collecting';
+  const academicYear = String(data.academicYear || '2025-2026').slice(0, 20);
+  const notes = String(data.notes || '').slice(0, 2000);
+  if (!Number.isInteger(universityId) || universityId < 1) return { success: false, error: 'Некорректный ID вуза' };
+
+  try {
+    const db = getDb();
+    if (!db.prepare('SELECT id FROM universities WHERE id = ?').get(universityId)) {
+      return { success: false, error: 'Вуз не найден' };
+    }
+    const existing = db.prepare('SELECT id FROM application_tracker WHERE user_id = ? AND university_id = ?').get(userId, universityId);
+    if (existing) return { success: true, id: existing.id, alreadyExists: true };
+    const result = db.prepare(`INSERT INTO application_tracker
+      (user_id, university_id, status, academic_year, deadline, submitted_at, notes)
+      VALUES (?, ?, ?, ?, ?, ?, ?)`).run(
+        userId, universityId, status, academicYear, data.deadline || null,
+        data.submittedAt || null, notes
+      );
+    return { success: true, id: result.lastInsertRowid };
+  } catch (error) {
+    console.error('Add application error:', error);
+    return { success: false, error: tr('auth_save_error', lang) || 'Ошибка при сохранении' };
+  }
+}
+
+function updateApplication(userId, applicationId, data = {}, lang = 'ru') {
+  const id = Number.parseInt(applicationId, 10);
+  if (!Number.isInteger(id) || id < 1) return { success: false, error: 'Некорректный ID заявки' };
+  const fields = [];
+  const values = [];
+  if (data.status !== undefined) {
+    if (!APPLICATION_STATUSES.includes(data.status)) return { success: false, error: 'Некорректный статус' };
+    fields.push('status = ?'); values.push(data.status);
+  }
+  if (data.academicYear !== undefined) { fields.push('academic_year = ?'); values.push(String(data.academicYear).slice(0, 20)); }
+  if (data.deadline !== undefined) { fields.push('deadline = ?'); values.push(data.deadline || null); }
+  if (data.submittedAt !== undefined) { fields.push('submitted_at = ?'); values.push(data.submittedAt || null); }
+  if (data.notes !== undefined) { fields.push('notes = ?'); values.push(String(data.notes).slice(0, 2000)); }
+  if (!fields.length) return { success: false, error: 'Нет данных для обновления' };
+  fields.push('updated_at = CURRENT_TIMESTAMP');
+  values.push(id, userId);
+  try {
+    const result = getDb().prepare(`UPDATE application_tracker SET ${fields.join(', ')} WHERE id = ? AND user_id = ?`).run(...values);
+    return result.changes ? { success: true } : { success: false, error: 'Заявка не найдена' };
+  } catch (error) {
+    console.error('Update application error:', error);
+    return { success: false, error: tr('auth_save_error', lang) || 'Ошибка при сохранении' };
+  }
+}
+
+function removeApplication(userId, applicationId, lang = 'ru') {
+  try {
+    const result = getDb().prepare('DELETE FROM application_tracker WHERE id = ? AND user_id = ?').run(applicationId, userId);
+    return result.changes ? { success: true } : { success: false, error: 'Заявка не найдена' };
+  } catch (error) {
+    console.error('Remove application error:', error);
+    return { success: false, error: tr('auth_delete_error', lang) || 'Ошибка при удалении' };
   }
 }
 
@@ -661,6 +745,12 @@ module.exports = {
   removeSavedUniversity,
   removeSavedUniversityByUniversityId,
   getSavedUniversityIds,
+
+  // Applications
+  getApplications,
+  addApplication,
+  updateApplication,
+  removeApplication,
   
   // Chat & Tests
   saveChatMessage,

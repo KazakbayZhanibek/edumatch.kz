@@ -229,7 +229,8 @@ router.post('/verify', verifyAuth, (req, res) => {
         id: user.id,
         email: user.email,
         username: user.username,
-        fullName: user.full_name
+        fullName: user.full_name,
+        isAdmin: Boolean(user.is_admin)
       }
     });
   } catch (error) {
@@ -262,6 +263,8 @@ router.get('/profile', verifyAuth, (req, res) => {
       fullName: user.full_name,
       phone: user.phone,
       bio: user.bio,
+      profilePicture: user.profile_picture,
+      isAdmin: Boolean(user.is_admin),
       preferences: user.preferences ? JSON.parse(user.preferences) : {},
       createdAt: user.created_at,
       updatedAt: user.updated_at
@@ -277,18 +280,26 @@ router.get('/profile', verifyAuth, (req, res) => {
  * PUT /api/users/profile
  * Обновить профиль
  * Header: Authorization: Bearer <token>
- * Body: { fullName?, phone?, bio?, preferences? }
+ * Body: { fullName?, phone?, bio?, preferences?, profilePicture? }
  */
 router.put('/profile', verifyAuth, (req, res) => {
   try {
-    const { fullName, phone, bio, preferences } = req.body;
+    const { fullName, phone, bio, preferences, profilePicture } = req.body;
     const lang = getLang(req);
+
+    if (profilePicture && !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(profilePicture)) {
+      return res.status(400).json({ error: 'Недопустимый формат аватара' });
+    }
+    if (profilePicture && profilePicture.length > 3 * 1024 * 1024) {
+      return res.status(400).json({ error: 'Размер аватара не должен превышать 2 МБ' });
+    }
 
     const result = authService.updateUserProfile(req.userId, {
       fullName,
       phone,
       bio,
-      preferences
+      preferences,
+      profilePicture
     }, lang);
 
     if (!result.success) {
@@ -401,6 +412,32 @@ router.delete('/saved-universities/university/:universityId', verifyAuth, (req, 
     const lang = getLang(req);
     return res.status(500).json({ error: tr('auth_server_error', lang) || 'Ошибка сервера' });
   }
+});
+
+// ==================== APPLICATION TRACKER ====================
+
+router.get('/applications', verifyAuth, (req, res) => {
+  try {
+    return res.json({ success: true, applications: authService.getApplications(req.userId) });
+  } catch (error) {
+    console.error('Get applications error:', error);
+    return res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+router.post('/applications', verifyAuth, (req, res) => {
+  const result = authService.addApplication(req.userId, req.body, getLang(req));
+  return res.status(result.success ? 201 : 400).json(result);
+});
+
+router.patch('/applications/:id', verifyAuth, (req, res) => {
+  const result = authService.updateApplication(req.userId, req.params.id, req.body, getLang(req));
+  return res.status(result.success ? 200 : 400).json(result);
+});
+
+router.delete('/applications/:id', verifyAuth, (req, res) => {
+  const result = authService.removeApplication(req.userId, req.params.id, getLang(req));
+  return res.status(result.success ? 200 : 400).json(result);
 });
 
 // ==================== CHAT HISTORY ENDPOINTS ====================

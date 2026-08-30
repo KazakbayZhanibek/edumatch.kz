@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS universities (
   admission_phone TEXT,              -- future-field
   admission_email TEXT,              -- future-field
   admission_whatsapp TEXT,           -- future-field
+  address TEXT,
+  source_record_id INTEGER,
   FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE RESTRICT
 );
 -- Performance индексы
@@ -142,6 +144,25 @@ CREATE TABLE IF NOT EXISTS saved_universities (
   UNIQUE(user_id, university_id)
 );
 CREATE INDEX IF NOT EXISTS idx_saved_universities_user_id ON saved_universities(user_id);
+
+-- Заявки пользователя и статус поступления
+CREATE TABLE IF NOT EXISTS application_tracker (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  university_id INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'collecting',
+  academic_year TEXT DEFAULT '2025-2026',
+  deadline TEXT,
+  submitted_at TEXT,
+  notes TEXT DEFAULT '',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  UNIQUE(user_id, university_id)
+);
+CREATE INDEX IF NOT EXISTS idx_application_tracker_user ON application_tracker(user_id);
+CREATE INDEX IF NOT EXISTS idx_application_tracker_status ON application_tracker(user_id, status);
 
 -- Сессии пользователя (JWT токены)
 CREATE TABLE IF NOT EXISTS user_sessions (
@@ -272,6 +293,8 @@ CREATE TABLE IF NOT EXISTS reviews (
   comment TEXT,
   faculty TEXT,
   study_year TEXT,
+  moderated_at DATETIME,
+  moderated_by INTEGER,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE
 );

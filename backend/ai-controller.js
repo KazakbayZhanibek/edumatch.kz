@@ -47,7 +47,7 @@ async function handleAIAdvice(req, res) {
   const startTime = Date.now();
 
   try {
-    const { message, history } = req.body;
+    const { message, history, applications, replyTo } = req.body;
 
     // Rate limiting check
     if (!checkRateLimit(req.userId)) {
@@ -98,6 +98,26 @@ async function handleAIAdvice(req, res) {
     let validHistory = [];
     if (Array.isArray(history)) {
       validHistory = history.slice(-20).filter(h => h.role && h.content && typeof h.content === 'string');
+    }
+
+    if (Array.isArray(applications) && applications.length > 0) {
+      const safeApplications = applications.slice(0, 30).map(application => ({
+        name: String(application.name || '').slice(0, 120),
+        status: String(application.status || 'collecting').slice(0, 20),
+        academic_year: String(application.academic_year || '2025-2026').slice(0, 20),
+        deadline: application.deadline ? String(application.deadline).slice(0, 30) : null,
+        notes: String(application.notes || '').slice(0, 300),
+      }));
+      validHistory.push({
+        role: 'assistant',
+        content: `Контекст заявок пользователя (используй только если вопрос относится к заявкам): ${JSON.stringify(safeApplications)}`,
+      });
+    }
+    if (typeof replyTo === 'string' && replyTo.trim()) {
+      validHistory.push({
+        role: 'assistant',
+        content: `Пользователь отвечает на это сообщение: ${replyTo.trim().slice(0, 1500)}`,
+      });
     }
 
     const lang = req.body.lang || req.query.lang || 'ru';

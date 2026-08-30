@@ -66,6 +66,11 @@ async function runTests() {
 
   let res;
 
+  // Health check
+  res = await getJSON('/health');
+  assert('GET /health returns 200', res.status === 200, `status=${res.status}`);
+  assert('GET /health reports ok', res.data.status === 'ok', `status=${res.data.status}`);
+
   // GET /api/universities
   res = await getJSON('/api/universities');
   assert('GET /api/universities returns 200', res.status === 200, `status=${res.status}`);
@@ -204,6 +209,36 @@ async function runTests() {
       assert(`[${t.lang}] "${t.msg}" → ${t.exp}`, false, err.message);
     }
     await sleep(50);
+  }
+
+  console.log('');
+
+  // === OPENROUTER OUTPUT LIMIT TEST ===
+  console.log('  OPENROUTER OUTPUT CAP');
+  console.log('  ' + '-'.repeat(66));
+
+  const { callOpenRouter } = require('./ai-service');
+  const originalFetch = global.fetch;
+  const originalKey = process.env.OPENROUTER_API_KEY;
+  process.env.OPENROUTER_API_KEY = 'test-key';
+  global.fetch = async (url, options) => {
+    const body = JSON.parse(options.body);
+    assert('OpenRouter default token budget allows full responses', body.max_tokens >= 1200, `max_tokens=${body.max_tokens}`);
+    return {
+      ok: true,
+      json: async () => ({
+        model: 'test-model',
+        usage: { prompt_tokens: 10, completion_tokens: 20, total_tokens: 30 },
+        choices: [{ message: { content: 'Полный ответ без обрезки.' } }],
+      }),
+    };
+  };
+
+  try {
+    await callOpenRouter('system prompt', 'Сколько стоит КБТУ?', [], { temperature: 0.7 });
+  } finally {
+    global.fetch = originalFetch;
+    if (originalKey === undefined) delete process.env.OPENROUTER_API_KEY; else process.env.OPENROUTER_API_KEY = originalKey;
   }
 
   console.log('');
