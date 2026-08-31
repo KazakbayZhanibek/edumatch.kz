@@ -707,7 +707,8 @@ const translations = {
       million: 'млн',
       thousand: 'тыс',
       tenge: 'тг',
-      data_year: 'Данные за'
+      data_year: 'Данные за',
+      back: 'Назад'
     }
   },
   
@@ -1418,7 +1419,8 @@ const translations = {
       million: 'млн',
       thousand: 'мың',
       tenge: 'тг',
-      data_year: 'Деректер'
+      data_year: 'Деректер',
+      back: 'Кайтару'
     },
     db_data: {
       uni_short: {
@@ -2281,7 +2283,8 @@ const translations = {
       million: 'M',
       thousand: 'K',
       tenge: 'tenge',
-      data_year: 'Data for'
+      data_year: 'Data for',
+      back: 'Back'
     },
     db_data: {
       uni_short: {

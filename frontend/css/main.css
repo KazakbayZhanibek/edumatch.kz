@@ -491,6 +491,8 @@ input, select, textarea { font-family: inherit; }
 
 /* UNIVERSITY DETAIL */
 .page-head { padding: 48px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+.page-head-row { display: flex; align-items: flex-start; gap: 16px; }
+.page-head-row .btn { flex-shrink: 0; margin-top: 2px; }
 .page-title { font-family: var(--font-serif); font-size: 36px; color: var(--text); letter-spacing: -0.02em; margin-bottom: 6px; }
 .page-sub { font-size: 15px; color: var(--text-muted); }
 
@@ -577,7 +579,7 @@ input, select, textarea { font-family: inherit; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
+  min-height: 280px;
   gap: 16px;
   color: var(--text-muted);
 }
@@ -585,34 +587,101 @@ input, select, textarea { font-family: inherit; }
 .compare-empty-icon svg { width: 100%; height: 100%; }
 .compare-empty p { font-size: 16px; }
 
-.compare-table-wrap { overflow-x: auto; padding: 48px 0; }
+.compare-table-wrap { overflow-x: auto; padding: 16px 0; position: relative; }
+.compare-table-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 32px;
+  background: linear-gradient(to left, var(--bg), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.compare-table-wrap.scrollable::after { opacity: 1; }
 .compare-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 560px;
 }
 .compare-table th, .compare-table td {
-  padding: 14px 20px;
+  padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid var(--border);
+  white-space: nowrap;
 }
 .compare-table th {
   background: var(--bg-secondary);
   font-size: 13px;
   font-weight: 600;
   color: var(--text);
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
-.compare-table th:first-child { color: var(--text-muted); font-weight: 400; width: 200px; }
+.compare-table th:first-child { color: var(--text-muted); font-weight: 400; width: 180px; position: sticky; left: 0; z-index: 3; }
 .compare-table td { font-size: 14px; color: var(--text-secondary); }
-.compare-table td:first-child { color: var(--text-muted); font-size: 13px; }
+.compare-table td:first-child { color: var(--text-muted); font-size: 13px; position: sticky; left: 0; background: var(--bg); }
 .compare-table tr:hover td { background: var(--bg-secondary); }
 .compare-uni-head { font-weight: 600; color: var(--text); font-size: 14px; line-height: 1.4; }
 .compare-qs-val { color: var(--gold); font-weight: 600; }
 .compare-price-val { color: var(--accent); font-weight: 600; }
 .compare-best { color: var(--accent); font-weight: 600; }
 .compare-header-actions { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-.btn-clear { color: var(--red); border-color: var(--border); }
-.btn-clear:hover { border-color: var(--red); background: transparent; }
+
+/* Compare cards (mobile) */
+.compare-cards { display: none; }
+.compare-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: var(--bg-secondary);
+}
+.compare-card-head {
+  background: var(--bg);
+  padding: 14px 16px;
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: 1px solid var(--border);
+}
+.compare-card-row {
+  display: flex;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.compare-card-row:last-child { border-bottom: none; }
+.compare-card-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+.compare-card-value {
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex: 1;
+}
+.compare-card-value.best { color: var(--accent); font-weight: 600; }
+.compare-best-badge {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* Mobile card layout */
+@media (max-width: 768px) {
+  .compare-table-wrap { display: none; }
+  .compare-cards { display: block; }
+  .compare-empty { min-height: 200px; }
+  .page-head-row { flex-direction: column; gap: 8px; }
+  .page-head-row .btn { align-self: flex-start; }
+}
 
 /* ADVISOR */
 .advisor-layout {
@@ -1331,8 +1400,12 @@ input, select, textarea { font-family: inherit; }
 
 .chat-input-area {
   padding: 20px 40px 24px;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--border);
   background: var(--bg);
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
 }
 .chat-input-wrap {
   display: flex;
@@ -1421,10 +1494,10 @@ input, select, textarea { font-family: inherit; }
 }
 .chat-input::placeholder { color: var(--text-muted); }
 .chat-send {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  min-height: 40px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: var(--radius-sm);
   background: var(--accent);
   color: white;
@@ -1559,7 +1632,7 @@ input, select, textarea { font-family: inherit; }
   }
   .chat-area { min-height: 0; }
   .chat-messages { padding: 20px; }
-  .chat-input-area { padding: 16px 20px; }
+  .chat-input-area { padding: 16px 20px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (max-width: 768px) {
   .advisor-sidebar { display: none; }
@@ -1569,7 +1642,7 @@ input, select, textarea { font-family: inherit; }
   }
   .chat-area { min-height: 0; }
   .chat-messages { padding: 20px; }
-  .chat-input-area { padding: 16px 20px; }
+  .chat-input-area { padding: 16px 20px; padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   .chat-welcome h2 { font-size: 22px; }
   .chat-welcome-categories { grid-template-columns: 1fr; }
   .chat-welcome-cat-prompts .prompt-chip { font-size: 13px; padding: 10px 12px; }
@@ -2861,11 +2934,6 @@ body.chat-page-active {
   /* University grid */
   .uni-grid { grid-template-columns: 1fr; gap: 12px; }
 
-  /* Compare table → scrollable */
-  .compare-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); }
-  .compare-table { min-width: 480px; }
-  .compare-table td, .compare-table th { padding: 12px 14px; font-size: 13px; }
-
   /* University detail */
   .uni-detail-hero { grid-template-columns: 1fr; gap: 20px; }
   .detail-title { font-size: 22px; }
@@ -2883,7 +2951,7 @@ body.chat-page-active {
   .advisor-sidebar-inner { padding: 20px; }
   .advisor-prompts { display: none; } /* save space on mobile */
   .chat-messages { padding: 16px; }
-  .chat-input-area { padding: 12px 16px; }
+  .chat-input-area { padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
 
   /* Career test */
   .career-options { grid-template-columns: 1fr; }
@@ -3287,8 +3355,6 @@ body.chat-page-active {
   h1.hero-title { font-size: 32px; }
   .hero-actions { gap: 10px; }
   .hero-actions .btn { min-height: 44px; padding: 12px 20px; font-size: 14px; }
-  .compare-table-wrap { overflow-x: auto; }
-  .compare-table      { min-width: 480px; }
   .career-options     { grid-template-columns: 1fr; }
   .career-unis-grid   { grid-template-columns: 1fr; }
 
