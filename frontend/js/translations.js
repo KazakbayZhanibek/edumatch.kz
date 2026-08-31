@@ -339,6 +339,7 @@ const translations = {
       prompt6: 'Какой вуз даёт лучший старт в бизнесе?',
       welcome_title: 'Привет! Я помогу выбрать университет',
       welcome_sub: 'Расскажите о своих интересах, бюджете и планах — я дам персональную рекомендацию на основе актуальных данных по вузам Казахстана.',
+      chat_intro: '💡 Это ИИ-советник. Он анализирует данные о вузах, бюджете и вступительных баллах, чтобы дать персональную рекомендацию. Чем конкретнее вопрос — тем точнее ответ.',
       chat_placeholder: 'Напишите вопрос...',
       disclaimer: 'Совет основан на публичных данных. Уточняйте актуальную информацию на сайтах вузов.'
     },
@@ -1051,6 +1052,7 @@ const translations = {
       prompt6: 'Қай университет бизнеске ең жақсы бастама береді?',
       welcome_title: 'Сәлеметсіз бе! Мен университетті таңдауға көмектесемін',
       welcome_sub: 'Қызығушылықтарыңыз, бюджетіңіз және жоспарларыңыз туралы айтыңыз — мен Қазақстан университеттері туралы өзекті деректер негізінде жеке ұсыныс беремін.',
+      chat_intro: '💡 Бұл ИИ-кеңесші. Ол университеттер, бюджет және ентуктралау баллдары туралы деректерді талдап, жеке кеңес береді. Арнақы сұрақ қоятыңыз — кеңес толығырақ болады.',
       chat_placeholder: 'Сұрақ жазыңыз...',
       disclaimer: 'Кеңес жариялы деректерге негізделген. Өзекті ақпаратты университеттердің сайттарында тексеріңіз.'
     },
@@ -1915,6 +1917,7 @@ const translations = {
       prompt6: 'Which university gives the best start in business?',
       welcome_title: 'Hi! I\'ll help you choose a university',
       welcome_sub: 'Tell me about your interests, budget, and plans — I\'ll give you a personalized recommendation based on current university data in Kazakhstan.',
+      chat_intro: '💡 This is your AI Advisor. It analyzes university data, budgets, and admission scores to give personalized recommendations. The more specific your question, the better the answer.',
       chat_placeholder: 'Type a question...',
       disclaimer: 'Advice is based on public data. Please verify current information on university websites.'
     },

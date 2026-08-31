@@ -1220,6 +1220,8 @@ async function sendMessage(retryMessage = null) {
     appendMessage('user', text, null, null, { replyQuote: replyDraft ? replyDraft.text : null });
     state.chatHistory.push({ role: 'user', content: text });
     saveSessionChatHistory();
+    const intro = document.querySelector('.chat-intro');
+    if (intro) intro.remove();
   }
 
   // Typing indicator
