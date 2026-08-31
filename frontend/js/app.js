@@ -691,7 +691,7 @@ async function renderComparePage() {
     content.innerHTML = `
       <div class="compare-empty">
         <div class="compare-empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
         </div>
         <p>${t('compare_page.add_minimum')}</p>
         <button class="btn btn-primary" onclick="navigate('home')">${t('compare_page.choose_unis')}</button>
