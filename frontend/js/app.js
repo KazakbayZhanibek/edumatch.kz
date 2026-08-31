@@ -43,9 +43,11 @@ async function hydrateAdvisorChatHistory() {
 
   const msgs = document.getElementById('chat-messages');
   if (msgs) {
-    const existingWelcome = msgs.querySelector('.chat-welcome');
-    if (existingWelcome) existingWelcome.remove();
-    state.chatHistory.forEach(item => appendMessage(item.role, item.content));
+    if (state.chatHistory.length > 0) {
+      const existingWelcome = msgs.querySelector('.chat-welcome');
+      if (existingWelcome) existingWelcome.remove();
+      state.chatHistory.forEach(item => appendMessage(item.role, item.content));
+    }
   }
 }
 
@@ -2048,7 +2050,7 @@ function updateStickyCompare() {
   const bar = document.getElementById('sticky-compare');
   const count = state.compareList.length;
   if (bar) {
-    bar.classList.toggle('visible', count >= 1 && state.currentPage !== 'compare');
+    bar.classList.toggle('visible', count >= 1 && state.currentPage !== 'compare' && state.currentPage !== 'advisor');
     const countEl = document.getElementById('sticky-compare-count');
     if (countEl) countEl.textContent = count;
   }
