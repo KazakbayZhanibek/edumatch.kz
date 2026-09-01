@@ -232,11 +232,14 @@ function activateNavLink(page) {
 }
 
 function navigate(page, param) {
+  const isMobile = window.innerWidth <= 768;
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   state.currentPage = page;
   window.scrollTo(0, 0);
-  const isMobile = window.innerWidth <= 768;
+
+  // Mobile advisor mode only when the user actually opens the advisor page
   document.body.classList.toggle('chat-page-active', page === 'advisor' && isMobile);
   document.body.classList.toggle('desktop-mode', !isMobile);
   updateStickyCompare();
@@ -1987,12 +1990,19 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCities();
 
   const isMobile = window.innerWidth <= 768;
-  navigate(isMobile ? 'advisor' : 'home');
+  navigate('home');
   loadAcademicYear();
 
+  // Mobile: show bottom nav, but do not force the advisor page on every resize.
+  const bottomNav = document.querySelector('.bottom-nav');
+  if (bottomNav) {
+    bottomNav.style.display = isMobile ? 'flex' : 'none';
+  }
+
   window.addEventListener('resize', () => {
-    if (window.innerWidth <= 768 && state.currentPage !== 'advisor') {
-      navigate('advisor');
+    const nowMobile = window.innerWidth <= 768;
+    if (bottomNav) {
+      bottomNav.style.display = nowMobile ? 'flex' : 'none';
     }
   });
 
@@ -2116,9 +2126,27 @@ function syncSheetFilters() {
   syncVal('sheet-sort', 'filter-sort');
 }
 
-function openToolsSheet() { openSheet('tools-sheet-overlay', 'tools-sheet'); }
+function openToolsSheet() {
+  // Close more sheet if open
+  const moreOverlay = document.getElementById('more-sheet-overlay');
+  const moreSheet = document.getElementById('more-sheet');
+  if (moreOverlay?.classList.contains('open')) {
+    moreOverlay.classList.remove('open');
+    moreSheet.classList.remove('open');
+  }
+  openSheet('tools-sheet-overlay', 'tools-sheet');
+}
 function closeToolsSheet() { closeSheet('tools-sheet-overlay', 'tools-sheet'); }
-function openMoreSheet()  { openSheet('more-sheet-overlay', 'more-sheet'); }
+function openMoreSheet() {
+  // Close tools sheet if open
+  const toolsOverlay = document.getElementById('tools-sheet-overlay');
+  const toolsSheet = document.getElementById('tools-sheet');
+  if (toolsOverlay?.classList.contains('open')) {
+    toolsOverlay.classList.remove('open');
+    toolsSheet.classList.remove('open');
+  }
+  openSheet('more-sheet-overlay', 'more-sheet');
+}
 function closeMoreSheet() { closeSheet('more-sheet-overlay', 'more-sheet'); }
 
 /* =============================================

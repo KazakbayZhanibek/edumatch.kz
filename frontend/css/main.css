@@ -2921,8 +2921,27 @@ body.chat-page-active {
    ============================================= */
 
 @media (max-width: 768px) {
+  .nav { display: none !important; }
+  .footer { display: none !important; }
+  .bottom-nav { display: flex !important; flex-direction: row !important; position: fixed !important; bottom: -2px !important; left: 0 !important; right: 0 !important; height: 50px !important; padding: 2px 4px 0 !important; margin: 0 !important; gap: 0 !important; z-index: 999 !important; background: var(--bg); border-top: 1px solid var(--border); }
+  .sticky-compare { display: none !important; }
+  .mobile-menu-overlay { display: none !important; }
+  .mobile-menu { display: none !important; }
+  .sidebar { display: none !important; }
+  .advisor-sidebar { display: none !important; }
+  .scroll-top { display: none !important; }
+  .burger { display: none; }
+  body { overflow: hidden; background: #f3f2f0; color: #1a1a18; height: 100dvh; padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px)); }
+  #app { padding-top: 0; height: 100dvh; overflow-y: auto; padding-bottom: 0; }
+
+  /* Do not hide all pages on mobile. Users need access to other sections. */
+  .bottom-nav-item { height: 44px !important; font-size: 10px !important; gap: 2px !important; }
+  .bottom-nav-item svg { width: 20px !important; height: 20px !important; }
+  .bottom-nav-ai .bnav-ai-circle { width: 40px !important; height: 40px !important; }
+  .bottom-nav-ai svg { width: 16px !important; height: 16px !important; }
+  
   /* Show burger, hide desktop nav */
-  .burger { display: flex; }
+  /* .burger { display: flex; } */
   .nav-links { display: none; }
   .theme-toggle { display: none; } /* theme is in mobile menu */
 
@@ -2959,7 +2978,6 @@ body.chat-page-active {
   body.chat-page-active .nav,
   body.chat-page-active .footer,
   body.chat-page-active .sticky-compare,
-  body.chat-page-active .bottom-nav,
   body.chat-page-active #page-home,
   body.chat-page-active #page-compare,
   body.chat-page-active #page-grants,
@@ -2971,6 +2989,9 @@ body.chat-page-active {
   body.chat-page-active #page-login,
   body.chat-page-active #page-register {
     display: none !important;
+  }
+  body.chat-page-active .bottom-nav {
+    display: flex !important;
   }
   body.chat-page-active #page-advisor {
     display: block !important;
@@ -3002,17 +3023,20 @@ body.chat-page-active {
     width: 100%;
     min-height: 0;
     background: transparent;
+    padding-bottom: 2px;
   }
   .chat-messages {
-    padding: 10px 14px 8px;
+    padding: 10px 14px 6px;
     gap: 10px;
     background: transparent;
+    padding-bottom: 2px;
   }
   .chat-input-area {
-    padding: 10px 12px 16px;
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    padding: 4px 12px 0;
+    padding-bottom: calc(0px + env(safe-area-inset-bottom, 0px));
     background: transparent;
     border-top: none;
+    margin-bottom: 0;
   }
   .chat-intro {
     font-size: 12px;
@@ -3232,7 +3256,6 @@ body.chat-page-active {
   align-items: center;
   justify-content: space-around;
   box-shadow: 0 -2px 12px rgba(0,0,0,.06);
-  display: none;
 }
 .bottom-nav-item {
   display: flex; flex-direction: column;
@@ -3328,7 +3351,7 @@ body.chat-page-active {
   transform: translateY(100%);
   transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 85vh; overflow-y: auto;
-  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   display: block;
   -webkit-overflow-scrolling: touch;
 }
@@ -3354,7 +3377,7 @@ body.chat-page-active {
   cursor: pointer; color: var(--text-secondary);
 }
 .sheet-close svg { width: 14px; height: 14px; }
-.sheet-body { padding: 20px; }
+.sheet-body { padding: 16px 16px 8px; }
 .sheet-field { margin-bottom: 16px; }
 .sheet-label {
   display: block; font-size: 11px; font-weight: 600;
@@ -3452,8 +3475,12 @@ body.chat-page-active {
 }
 
 @media (max-width: 768px) {
-  /* Show bottom nav, hide burger */
-  .bottom-nav   { display: flex; }
+  /* Bottom nav already shown in first @media - just ensure consistent styling */
+  .bottom-nav   { height: 56px !important; }
+  .bottom-nav-item { height: 44px !important; font-size: 10px !important; gap: 2px !important; }
+  .bottom-nav-item svg { width: 20px !important; height: 20px !important; }
+  .bottom-nav-ai .bnav-ai-circle { width: 40px !important; height: 40px !important; }
+  .bottom-nav-ai svg { width: 16px !important; height: 16px !important; }
   .sticky-compare { display: flex; }
   .burger       { display: none !important; }
   .nav-links    { display: none !important; }
@@ -3462,7 +3489,7 @@ body.chat-page-active {
   .nav-auth { display: none !important; }
 
   /* Body padding for bottom nav */
-  body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+  body { padding-bottom: 0 !important; }
 
   /* Show filter btn, hide desktop row */
   .filter-sheet-btn { display: flex; }
