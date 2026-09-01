@@ -2954,20 +2954,136 @@ body.chat-page-active {
   .detail-title { font-size: 22px; }
   .detail-actions { flex-wrap: wrap; }
 
-  /* Advisor — stacked */
-  .advisor-layout { flex-direction: column; }
-  .advisor-sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    position: static;
-    max-height: none;
+  /* Advisor — compact phone layout */
+  #page-advisor.page { padding-top: 0; }
+  body.chat-page-active .nav,
+  body.chat-page-active .footer,
+  body.chat-page-active .sticky-compare,
+  body.chat-page-active .bottom-nav,
+  body.chat-page-active #page-home,
+  body.chat-page-active #page-compare,
+  body.chat-page-active #page-grants,
+  body.chat-page-active #page-map,
+  body.chat-page-active #page-tips,
+  body.chat-page-active #page-career,
+  body.chat-page-active #page-admission,
+  body.chat-page-active #page-profile,
+  body.chat-page-active #page-login,
+  body.chat-page-active #page-register {
+    display: none !important;
   }
-  .advisor-sidebar-inner { padding: 20px; }
-  .advisor-prompts { display: none; } /* save space on mobile */
-  .chat-messages { padding: 16px; }
-  .chat-input-area { padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
-  .chat-intro { font-size: 12px; padding: 8px 10px; }
+  body.chat-page-active #page-advisor {
+    display: block !important;
+  }
+  body.chat-page-active {
+    --bg: #f3f2f0;
+    --bg-secondary: #f7f6f4;
+    --bg-tertiary: #efeee9;
+    --border: #e4e1db;
+    --text: #1a1a18;
+    --text-secondary: #5f5f5d;
+    --text-muted: #8d8d89;
+    --accent: #2d6a4f;
+    --accent-light: #eaf3ee;
+    background: #f3f2f0;
+    color: #1a1a18;
+    overflow: hidden;
+  }
+  .advisor-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100dvh - 24px);
+    background: transparent;
+  }
+  .advisor-sidebar {
+    display: none;
+  }
+  .chat-area {
+    width: 100%;
+    min-height: 0;
+    background: transparent;
+  }
+  .chat-messages {
+    padding: 10px 14px 8px;
+    gap: 10px;
+    background: transparent;
+  }
+  .chat-input-area {
+    padding: 10px 12px 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    background: transparent;
+    border-top: none;
+  }
+  .chat-intro {
+    font-size: 12px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+  .chat-welcome {
+    max-width: 100%;
+    width: 100%;
+    padding: 8px 0 4px;
+    margin: 0;
+    background: transparent;
+  }
+  .chat-welcome h2 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    color: #111111;
+  }
+  .chat-welcome-sub {
+    font-size: 14px;
+    line-height: 1.55;
+    margin-bottom: 16px;
+    color: #2b2b2b;
+  }
+  .chat-welcome-categories {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .chat-welcome-cat {
+    padding: 12px;
+    background: rgba(255,255,255,0.94);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+  }
+  .chat-welcome-cat-title {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .chat-welcome-cat-prompts .prompt-chip {
+    font-size: 12px;
+    padding: 10px 12px;
+    background: rgba(246,247,246,0.9);
+  }
+  .prompt-chip {
+    width: 100%;
+  }
+  .advisor-chances-prompts {
+    display: none;
+  }
+  .chat-input-wrap {
+    background: rgba(255,255,255,0.96);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  }
+  .chat-input {
+    background: transparent;
+    color: #1d1d1d;
+    font-size: 16px;
+  }
+  .chat-disclaimer {
+    color: rgba(255,255,255,0.7);
+    margin-top: 10px;
+  }
+  #page-advisor .chat-welcome {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 18px 0 0;
+  }
 
   /* Career test */
   .career-options { grid-template-columns: 1fr; }

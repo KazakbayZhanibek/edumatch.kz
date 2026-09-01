@@ -236,7 +236,9 @@ function navigate(page, param) {
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   state.currentPage = page;
   window.scrollTo(0, 0);
-  document.body.classList.toggle('chat-page-active', page === 'advisor');
+  const isMobile = window.innerWidth <= 768;
+  document.body.classList.toggle('chat-page-active', page === 'advisor' && isMobile);
+  document.body.classList.toggle('desktop-mode', !isMobile);
   updateStickyCompare();
 
   if (page === 'home') {
@@ -1983,8 +1985,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof Auth !== 'undefined') Auth.init();
   loadSpecialties();
   loadCities();
-  navigate('home');
+
+  const isMobile = window.innerWidth <= 768;
+  navigate(isMobile ? 'advisor' : 'home');
   loadAcademicYear();
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 768 && state.currentPage !== 'advisor') {
+      navigate('advisor');
+    }
+  });
 
   // AOS scroll animations
   if (typeof AOS !== 'undefined') {
