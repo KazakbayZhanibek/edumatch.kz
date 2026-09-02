@@ -3031,8 +3031,7 @@ body.chat-page-active {
     padding-bottom: 2px;
   }
   .chat-input-area {
-    padding: 4px 12px 0;
-    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+    padding: 4px 12px 10px;
     background: transparent;
     border-top: none;
     margin-bottom: 0;
