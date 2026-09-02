@@ -691,7 +691,7 @@ async function renderComparePage() {
     content.innerHTML = `
       <div class="compare-empty">
         <div class="compare-empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
         </div>
         <p>${t('compare_page.add_minimum')}</p>
         <button class="btn btn-primary" onclick="navigate('home')">${t('compare_page.choose_unis')}</button>
@@ -745,6 +745,24 @@ function renderCompareTable(unis, container) {
     return `<tr><td>${row.label}</td>${cells}</tr>`;
   }).join('');
 
+  const cards = unis.map((u, i) => {
+    const rows = [];
+    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.short_name')}</span><span class="compare-card-value">${u.short_name || '—'}</span></div>`);
+    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.city')}</span><span class="compare-card-value">${trRu(u.city_name) || '—'}</span></div>`);
+    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.founded')}</span><span class="compare-card-value">${u.founded || '—'}</span></div>`);
+    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.students')}</span><span class="compare-card-value">${u.students_count ? u.students_count.toLocaleString('ru') : '—'}</span></div>`);
+    if (u.qs_world) rows.push(`<div class="compare-card-row"><span class="compare-card-label">QS World</span><span class="compare-card-value compare-qs-val">#${u.qs_world}</span></div>`);
+    if (u.qs_asia) rows.push(`<div class="compare-card-row"><span class="compare-card-label">QS Asia</span><span class="compare-card-value compare-qs-val">#${u.qs_asia}</span></div>`);
+    if (u.price_from) rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.min_price_year')}</span><span class="compare-card-value compare-price-val">${fmtPrice(u.price_from)} ${t('common.tenge')}</span></div>`);
+    if (u.price_to) rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.max_price_year')}</span><span class="compare-card-value compare-price-val">${fmtPrice(u.price_to)} ${t('common.tenge')}</span></div>`);
+    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.price_4yr')}</span><span class="compare-card-value">${fmtPrice(u.price_from * 4)} ${t('common.tenge')}</span></div>`);
+    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.specialties_count')}</span><span class="compare-card-value">${(u.specialties || []).length}</span></div>`);
+    const href = normalizeWebsiteUrl(u.website);
+    const website = href ? `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${formatWebsiteLabel(u.website)}</a>` : '—';
+    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.website_label')}</span><span class="compare-card-value">${website}</span></div>`);
+    return `<div class="compare-card"><div class="compare-card-head">${trRu(u.name)}</div>${rows.join('')}</div>`;
+  }).join('');
+
   container.innerHTML = `
     <div class="compare-header-actions">
       <h2 class="section-title" style="flex:1">${t('compare_page.title')}</h2>
@@ -757,6 +775,7 @@ function renderCompareTable(unis, container) {
         <tbody>${trs}</tbody>
       </table>
     </div>
+    <div class="compare-cards">${cards}</div>
     <div style="margin-top:24px;padding:20px;background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius-md)">
       <p style="font-size:13px;color:var(--text-secondary)"><strong style="color:var(--accent)">${t('compare_page.finance_advice')}</strong> ${t('compare_page.price_diff')} <strong style="color:var(--text)">${fmtPrice((Math.max(...unis.map(u=>u.price_to)) - Math.min(...unis.map(u=>u.price_from))) * 4)} ${t('common.tenge')}</strong>. ${t('compare_page.budget_tip')}</p>
     </div>`;
@@ -1201,6 +1220,8 @@ async function sendMessage(retryMessage = null) {
     appendMessage('user', text, null, null, { replyQuote: replyDraft ? replyDraft.text : null });
     state.chatHistory.push({ role: 'user', content: text });
     saveSessionChatHistory();
+    const intro = document.querySelector('.chat-intro');
+    if (intro) intro.remove();
   }
 
   // Typing indicator

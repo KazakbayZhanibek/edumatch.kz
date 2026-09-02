@@ -286,13 +286,18 @@
   <div id="page-compare" class="page">
     <div class="container">
       <div class="page-head">
-        <h1 class="page-title" data-i18n="compare.title">Сравнение университетов</h1>
-        <p class="page-sub" data-i18n="compare.sub">Выберите 2–3 вуза на главной странице для сравнения</p>
+        <div class="page-head-row">
+          <button class="btn btn-ghost btn-sm" onclick="navigate('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <div>
+            <h1 class="page-title" data-i18n="compare.title">Сравнение университетов</h1>
+            <p class="page-sub" data-i18n="compare.sub">Выберите 2–3 вуза на главной странице для сравнения</p>
+          </div>
+        </div>
       </div>
       <div id="compare-content">
         <div class="compare-empty">
           <div class="compare-empty-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
           </div>
           <p data-i18n="compare.empty_text">Добавьте вузы для сравнения с главной страницы</p>
           <button class="btn btn-primary" onclick="navigate('home')" data-i18n="compare.empty_btn">Выбрать вузы</button>
@@ -338,7 +343,8 @@
           <div class="chat-welcome">
             <div class="chat-welcome-icon" aria-hidden="true"></div>
             <h2 data-i18n="advisor.welcome_title">Привет! Я помогу выбрать университет</h2>
-            <p class="chat-welcome-sub" data-i18n="advisor.welcome_sub">Задайте вопрос о вузах, поступлении, грантах или специальностях — я отвечу на основе актуальных данных.</p>
+            <p class="chat-welcome-sub" data-i18n="advisor.welcome_sub">Расскажите о своих интересах, бюджете и планах — я дам персональную рекомендацию на основе актуальных данных по вузам Казахстана.</p>
+            <div class="chat-intro" data-i18n="advisor.chat_intro">💡 Это ИИ-советник. Он анализирует данные о вузах, бюджете и вступительных баллах, чтобы дать персональную рекомендацию. Чем конкретнее вопрос — тем точнее ответ.</div>
             <div class="chat-welcome-categories">
               <div class="chat-welcome-cat">
                 <div class="chat-welcome-cat-icon" aria-hidden="true"></div>

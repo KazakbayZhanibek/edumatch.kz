@@ -633,7 +633,7 @@ async function loadProfilePage() {
             </div>
             ${chats.length ? `
               <div class="profile-chat-list" id="profile-chat-list">
-                ${chats.slice(0, 15).map(c => `
+                ${chats.slice(0, 5).map(c => `
                   <div class="profile-chat-item" data-chat-id="${c.id}">
                     <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
                     <div class="profile-chat-q">${escapeHtml(c.message.slice(0, 150))}${c.message.length > 150 ? '…' : ''}</div>
@@ -641,7 +641,7 @@ async function loadProfilePage() {
                     <div class="profile-chat-date">${formatDate(c.created_at)}</div>
                   </div>
                 `).join('')}
-                ${chats.slice(15).map(c => `
+                ${chats.slice(5).map(c => `
                   <div class="profile-chat-item profile-chat-item-hidden" style="display:none" data-chat-id="${c.id}">
                     <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
                     <div class="profile-chat-q">${escapeHtml(c.message.slice(0, 150))}${c.message.length > 150 ? '…' : ''}</div>
@@ -650,7 +650,7 @@ async function loadProfilePage() {
                   </div>
                 `).join('')}
               </div>
-              ${chats.length > 15 ? `<button type="button" class="btn btn-ghost btn-sm" id="chat-show-more" onclick="showMoreChatItems(this)">${t('profile_page.show_more') || 'Показать ещё'} (${chats.length - 15})</button>` : ''}
+              ${chats.length > 5 ? `<button type="button" class="btn btn-ghost btn-sm chat-history-toggle" id="chat-show-more" onclick="toggleChatHistory(this)">${t('profile_page.show_more') || 'Показать ещё'} (${chats.length - 5})</button>` : ''}
             ` : `<div class="profile-empty"><div class="profile-empty-icon"></div>${t('profile_page.card_ai_empty') || 'Нет истории диалогов'}</div>`}
           </section>
 
@@ -954,13 +954,29 @@ function updatePasswordHints(inputId, listId) {
   });
 }
 
-// Раскрыть скрытые пункты истории ИИ-советника вместо расхождения бейджа (30) и рендера (15)
-function showMoreChatItems(btn) {
-  document.querySelectorAll('.profile-chat-item-hidden').forEach(el => {
-    el.classList.remove('profile-chat-item-hidden');
-    el.style.display = '';
-  });
-  btn.remove();
+function toggleChatHistory(btn) {
+  const list = document.getElementById('profile-chat-list');
+  if (!list) return;
+  const items = Array.from(list.querySelectorAll('.profile-chat-item'));
+  const expanded = btn.dataset.expanded === 'true';
+  const showMoreLabel = t('profile_page.show_more') || 'Показать ещё';
+
+  if (expanded) {
+    items.forEach((item, index) => {
+      const hidden = index >= 5;
+      item.classList.toggle('profile-chat-item-hidden', hidden);
+      item.style.display = hidden ? 'none' : '';
+    });
+    btn.dataset.expanded = 'false';
+    btn.textContent = `${showMoreLabel} (${Math.max(0, items.length - 5)})`;
+  } else {
+    items.forEach(item => {
+      item.classList.remove('profile-chat-item-hidden');
+      item.style.display = '';
+    });
+    btn.dataset.expanded = 'true';
+    btn.textContent = t('profile_page.show_less') || 'Свернуть';
+  }
 }
 
 function escapeHtml(str) {
