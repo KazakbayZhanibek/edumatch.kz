@@ -295,30 +295,8 @@ function navigate(page, param) {
     activateNavLink('admission');
     initAdmissionPage();
   }
-
-  updateBottomNav(page);
 }
 
-const BOTTOM_NAV_MAP = {
-  home: 'bnav-home',
-  compare: 'bnav-compare',
-  advisor: 'bnav-advisor',
-  admission: 'bnav-tools',
-  career: 'bnav-tools',
-  map: 'bnav-tools',
-  grants: 'bnav-more',
-  tips: 'bnav-more',
-  profile: 'bnav-more',
-  login: 'bnav-more',
-  register: 'bnav-more',
-};
-
-function updateBottomNav(page) {
-  document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
-  const id = BOTTOM_NAV_MAP[page];
-  if (id) document.getElementById(id)?.classList.add('active');
-}
-const setBottomNav = updateBottomNav;
 
 // ─── TRACKER PAGE ────────────────────────────
 // ─── PROFILE PAGE ─────────────────────────
@@ -2045,6 +2023,7 @@ function toggleMobileMenu() {
   const isOpen = menu.classList.contains('open');
   if (isOpen) { closeMobileMenu(); } else {
     burger.classList.add('open');
+    burger.setAttribute('aria-expanded', 'true');
     menu.classList.add('open');
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -2057,6 +2036,7 @@ function closeMobileMenu() {
   const overlay = document.getElementById('mobile-menu-overlay');
   if (!burger || !menu || !overlay) return;
   burger.classList.remove('open');
+  burger.setAttribute('aria-expanded', 'false');
   menu.classList.remove('open');
   overlay.classList.remove('open');
   document.body.style.overflow = '';

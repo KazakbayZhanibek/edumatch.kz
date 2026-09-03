@@ -360,6 +360,12 @@ function handleRegister(e) {
   e.preventDefault();
   const err = document.getElementById('register-error');
   err.textContent = '';
+  const consent = document.getElementById('reg-consent');
+  if (!consent?.checked) {
+    err.textContent = t('auth.consent_required');
+    consent?.focus();
+    return;
+  }
   const btn = document.getElementById('register-submit');
   btn.disabled = true;
 

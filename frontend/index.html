@@ -73,7 +73,7 @@
           <span id="nav-auth-username" data-i18n="buttons.profile">Профиль</span>
         </button>
       </div>
-      <button class="burger" id="burger" onclick="toggleMobileMenu()" aria-label="Меню" data-i18n-aria="menu.title">
+      <button class="burger" id="burger" onclick="toggleMobileMenu()" aria-label="Меню" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.title">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -915,6 +915,10 @@
               <li data-rule="special">Спецсимвол</li>
             </ul>
           </div>
+          <label class="auth-consent">
+            <input type="checkbox" id="reg-consent" required>
+            <span><span data-i18n="auth.consent_prefix">Я принимаю </span><a href="#" onclick="event.preventDefault(); openModal('modal-privacy')" data-i18n="auth.privacy_link">политику конфиденциальности</a><span data-i18n="auth.consent_and"> и </span><a href="#" onclick="event.preventDefault(); openModal('modal-terms')" data-i18n="auth.terms_link">пользовательское соглашение</a>.</span>
+          </label>
           <p class="form-error" id="register-error"></p>
           <button type="submit" class="btn btn-primary auth-submit" id="register-submit" data-i18n="auth.register_btn">Создать аккаунт</button>
         </form>
@@ -1026,6 +1030,32 @@
   </div>
 </div>
 
+<div class="modal" id="modal-privacy">
+  <button class="modal-close" onclick="closeModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <h2 class="modal-title" data-i18n="modal.privacy_title">Политика конфиденциальности</h2>
+  <p class="modal-lead" data-i18n="modal.privacy_intro">Коротко о том, какие данные нужны EduMatch KZ и зачем.</p>
+  <h3 class="modal-heading" data-i18n="modal.privacy_data_title">Какие данные мы используем</h3>
+  <p class="modal-text" data-i18n="modal.privacy_text1">Мы используем данные аккаунта только для авторизации, сохранения выбранных вузов и работы функций платформы.</p>
+  <h3 class="modal-heading" data-i18n="modal.privacy_rights_title">Ваши данные под вашим контролем</h3>
+  <p class="modal-text" data-i18n="modal.privacy_text2">Мы не продаём персональные данные и не передаём их третьим лицам, кроме случаев, предусмотренных законом.</p>
+  <p class="modal-text" data-i18n="modal.privacy_text3">Вы можете изменить данные профиля или попросить удалить аккаунт. Для этого напишите нам через раздел «Контакты».</p>
+</div>
+
+<div class="modal" id="modal-terms">
+  <button class="modal-close" onclick="closeModal()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <h2 class="modal-title" data-i18n="modal.terms_title">Пользовательское соглашение</h2>
+  <p class="modal-lead" data-i18n="modal.terms_intro">Это простые правила использования платформы, без мелкого шрифта.</p>
+  <h3 class="modal-heading" data-i18n="modal.terms_use_title">Использование платформы</h3>
+  <p class="modal-text" data-i18n="modal.terms_text1">Создавая аккаунт, вы соглашаетесь использовать EduMatch KZ законно и не размещать вредоносный или запрещённый контент.</p>
+  <h3 class="modal-heading" data-i18n="modal.terms_info_title">О данных и рекомендациях</h3>
+  <p class="modal-text" data-i18n="modal.terms_text2">Информация о вузах и поступлении носит справочный характер. Перед принятием решения проверяйте актуальные условия на официальных сайтах.</p>
+  <p class="modal-text" data-i18n="modal.terms_text3">EduMatch KZ не принимает решение о вашем зачислении и не гарантирует поступление, грант или точность прогноза ИИ.</p>
+</div>
+
 <div class="modal" id="modal-profession">
   <button class="modal-close" onclick="closeModal()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -1034,33 +1064,6 @@
     <div class="prof-loading"><div class="spinner"></div></div>
   </div>
 </div>
-
-<!-- BOTTOM NAV (mobile only) -->
-<nav class="bottom-nav" id="bottom-nav">
-  <button class="bottom-nav-item active" id="bnav-home" onclick="navigate('home')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
-    <span data-i18n="bottomnav.unis">Вузы</span>
-  </button>
-  <button class="bottom-nav-item" id="bnav-compare" onclick="navigate('compare')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
-    <span data-i18n="bottomnav.compare">Сравнение</span>
-    <span class="bnav-badge" id="bnav-badge" style="display:none">0</span>
-  </button>
-  <button class="bottom-nav-item bottom-nav-ai" id="bnav-advisor" onclick="navigate('advisor')">
-    <div class="bnav-ai-circle">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L9 9l-7 3 7 3 3 7 3-7 7-3-7-3z"/></svg>
-    </div>
-    <span data-i18n="bottomnav.ai">ИИ</span>
-  </button>
-  <button class="bottom-nav-item" id="bnav-tools" onclick="openToolsSheet()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-    <span data-i18n="bottomnav.tools">Инструменты</span>
-  </button>
-  <button class="bottom-nav-item" id="bnav-more" onclick="openMoreSheet()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>
-    <span data-i18n="bottomnav.more">Ещё</span>
-  </button>
-</nav>
 
 <!-- STICKY COMPARE BAR (mobile) -->
 <div class="sticky-compare" id="sticky-compare">
@@ -1180,6 +1183,7 @@
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.0/dist/countUp.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/security.js"></script>
 <script src="js/translations.js"></script>
 <script src="js/auth.js"></script>

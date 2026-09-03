@@ -2017,7 +2017,7 @@ DATA: ${JSON.stringify(grantsData)}`;
 
   let text;
   try {
-    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 1024 });
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 4096 });
     text = llmResult.text;
   } catch (e) {
     console.error('[ai-service] LLM composition failed for grant, откат на шаблон:', e.message);
@@ -2187,7 +2187,7 @@ DATA: ${JSON.stringify(compareData)}`;
 
   let text;
   try {
-    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 1024 });
+    const llmResult = await callOpenRouter(systemPrompt, msg, history, { temperature: 0.6, maxTokens: 4096 });
     text = llmResult.text;
   } catch (e) {
     console.error('[ai-service] LLM composition failed for comparison, откат на шаблон:', e.message);

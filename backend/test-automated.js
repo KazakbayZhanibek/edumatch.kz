@@ -220,9 +220,11 @@ async function runTests() {
   const { callOpenRouter } = require('./ai-service');
   const originalFetch = global.fetch;
   const originalKey = process.env.OPENROUTER_API_KEY;
+  const requestBodies = [];
   process.env.OPENROUTER_API_KEY = 'test-key';
   global.fetch = async (url, options) => {
     const body = JSON.parse(options.body);
+    requestBodies.push(body);
     assert('OpenRouter default token budget allows full responses', body.max_tokens >= 1200, `max_tokens=${body.max_tokens}`);
     return {
       ok: true,
@@ -236,6 +238,8 @@ async function runTests() {
 
   try {
     await callOpenRouter('system prompt', 'Сколько стоит КБТУ?', [], { temperature: 0.7 });
+    await callOpenRouter('recommendation prompt', 'Подбери вузы', [], { temperature: 0.6, maxTokens: 4096 });
+    assert('Recommendation token budget allows full responses', requestBodies[1].max_tokens === 4096, `max_tokens=${requestBodies[1].max_tokens}`);
   } finally {
     global.fetch = originalFetch;
     if (originalKey === undefined) delete process.env.OPENROUTER_API_KEY; else process.env.OPENROUTER_API_KEY = originalKey;
