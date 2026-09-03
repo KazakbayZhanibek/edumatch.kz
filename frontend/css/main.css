@@ -2860,6 +2860,38 @@ body.chat-page-active {
   border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
+.mobile-menu-quick-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.mobile-language-selector,
+.mobile-account-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+}
+.mobile-language-selector { flex-shrink: 0; }
+.mobile-account-actions { flex: 1; }
+.mobile-lang-btn,
+.mobile-account-btn {
+  min-height: 32px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+}
+.mobile-lang-btn.active,
+.mobile-lang-btn:hover,
+.mobile-account-btn:hover { background: var(--bg-tertiary); color: var(--text); }
+.mobile-account-btn { flex: 1; white-space: nowrap; font-size: 12px; }
+.mobile-account-primary { background: var(--accent); color: #fff; }
+.mobile-account-primary:hover { background: var(--accent); color: #fff; opacity: .88; }
 .mobile-theme-btn {
   display: flex;
   align-items: center;
@@ -4657,6 +4689,30 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
 @media (max-width: 600px) {
   .profile-stats { grid-template-columns: repeat(3, 1fr); }
   .profile-stat-num { font-size: 18px; }
+}
+
+/* Compact header: navigation lives in the burger menu on small screens. */
+@media (max-width: 768px) {
+  .nav-inner { padding: 0 16px; gap: 12px; }
+  .nav-logo { font-size: 15px; }
+  .nav-actions { margin-left: auto; }
+  .nav-actions > .theme-toggle,
+  .nav-actions > .language-selector,
+  .nav-actions > .nav-auth { display: none !important; }
+  .burger {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+  }
+  .mobile-menu.open { display: flex !important; }
+  .mobile-menu-overlay.open { display: block !important; }
+  .mobile-menu { width: min(360px, 92vw); }
+  .mobile-menu-header { padding-left: 20px; padding-right: 16px; }
+  .mobile-nav { padding: 16px 12px; }
+  .mobile-nav-link { padding-top: 13px; padding-bottom: 13px; }
+  .mobile-nav-link.active { border-left: 3px solid var(--accent); padding-left: 13px; }
 }
 
 @media (max-width: 900px) {

@@ -90,41 +90,56 @@
     </button>
   </div>
   <nav class="mobile-nav">
-    <a class="mobile-nav-link" onclick="navigate('home');closeMobileMenu()">
+    <a class="mobile-nav-link" data-page="home" onclick="navigate('home');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
       <span data-i18n="menu.universities">Университеты</span>
     </a>
-    <a class="mobile-nav-link" onclick="navigate('compare');closeMobileMenu()">
+    <a class="mobile-nav-link" data-page="compare" onclick="navigate('compare');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
       <span data-i18n="menu.comparison">Сравнение</span> <span class="compare-badge-mob" id="compare-badge-mob" style="display:none">0</span>
     </a>
-    <a class="mobile-nav-link" onclick="navigate('advisor');closeMobileMenu()">
+    <a class="mobile-nav-link" data-page="advisor" onclick="navigate('advisor');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span data-i18n="menu.advisor">ИИ-советник</span>
     </a>
-    <a class="mobile-nav-link" onclick="navigate('admission');closeMobileMenu()">
+    <a class="mobile-nav-link" data-page="admission" onclick="navigate('admission');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       <span data-i18n="menu.admission">Мои шансы на поступление</span>
     </a>
-    <a class="mobile-nav-link" onclick="navigate('career');closeMobileMenu()">
+    <a class="mobile-nav-link" data-page="career" onclick="navigate('career');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
       <span data-i18n="menu.career">Профориентация</span>
     </a>
     <div class="mobile-nav-divider" data-i18n="menu.info">Информация</div>
-    <a class="mobile-nav-link" onclick="navigate('grants');closeMobileMenu()">
+    <a class="mobile-nav-link" data-page="grants" onclick="navigate('grants');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
       <span data-i18n="menu.grants">Гранты и стипендии</span>
     </a>
-    <a class="mobile-nav-link" onclick="navigate('map');closeMobileMenu()">
+    <a class="mobile-nav-link" data-page="map" onclick="navigate('map');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
       <span data-i18n="menu.map">Карта вузов</span>
     </a>
-    <a class="mobile-nav-link" onclick="navigate('tips');closeMobileMenu()">
+    <a class="mobile-nav-link" data-page="tips" onclick="navigate('tips');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span data-i18n="menu.tips">Советы абитуриенту</span>
     </a>
   </nav>
   <div class="mobile-menu-footer">
+    <div class="mobile-menu-quick-actions">
+      <div class="mobile-language-selector" aria-label="Язык">
+        <button class="mobile-lang-btn" onclick="setLanguage('ru')">РУ</button>
+        <button class="mobile-lang-btn" onclick="setLanguage('kk')">ҚА</button>
+        <button class="mobile-lang-btn" onclick="setLanguage('en')">EN</button>
+      </div>
+      <div class="mobile-account-actions" id="mobile-account-guest">
+        <button class="mobile-account-btn" onclick="navigate('login');closeMobileMenu()" data-i18n="buttons.login">Войти</button>
+        <button class="mobile-account-btn mobile-account-primary" onclick="navigate('register');closeMobileMenu()" data-i18n="buttons.register">Регистрация</button>
+      </div>
+      <div class="mobile-account-actions mobile-account-user" id="mobile-account-user" style="display:none">
+        <button class="mobile-account-btn" onclick="navigate('profile');closeMobileMenu()" data-i18n="buttons.profile">Профиль</button>
+        <button class="mobile-account-btn mobile-account-primary" onclick="Auth.logout();closeMobileMenu()" data-i18n="buttons.logout">Выйти</button>
+      </div>
+    </div>
     <button class="mobile-theme-btn" onclick="toggleTheme()">
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>

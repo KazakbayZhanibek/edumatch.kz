@@ -229,6 +229,9 @@ function activateNavLink(page) {
     const handler = link.getAttribute('onclick') || '';
     link.classList.toggle('active', handler.includes(`navigate('${page}')`));
   });
+  document.querySelectorAll('.mobile-nav-link[data-page]').forEach(link => {
+    link.classList.toggle('active', link.dataset.page === page);
+  });
 }
 
 function navigate(page, param) {
