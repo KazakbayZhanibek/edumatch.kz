@@ -334,6 +334,8 @@ const Auth = {
     const profileSheet = document.getElementById('more-sheet-profile');
     const loginSheet = document.getElementById('more-sheet-login');
     const logoutSheet = document.getElementById('more-sheet-logout');
+    const mobileGuest = document.getElementById('mobile-account-guest');
+    const mobileUser = document.getElementById('mobile-account-user');
 
     if (!guest || !user) return;
 
@@ -344,12 +346,16 @@ const Auth = {
       if (profileSheet) profileSheet.style.display = 'flex';
       if (logoutSheet) logoutSheet.style.display = 'flex';
       if (loginSheet) loginSheet.style.display = 'none';
+      if (mobileGuest) mobileGuest.style.display = 'none';
+      if (mobileUser) mobileUser.style.display = 'flex';
     } else {
       guest.style.display = 'flex';
       user.style.display = 'none';
       if (profileSheet) profileSheet.style.display = 'none';
       if (logoutSheet) logoutSheet.style.display = 'none';
       if (loginSheet) loginSheet.style.display = 'flex';
+      if (mobileGuest) mobileGuest.style.display = 'flex';
+      if (mobileUser) mobileUser.style.display = 'none';
     }
   }
 };
@@ -360,6 +366,12 @@ function handleRegister(e) {
   e.preventDefault();
   const err = document.getElementById('register-error');
   err.textContent = '';
+  const consent = document.getElementById('reg-consent');
+  if (!consent?.checked) {
+    err.textContent = t('auth.consent_required');
+    consent?.focus();
+    return;
+  }
   const btn = document.getElementById('register-submit');
   btn.disabled = true;
 

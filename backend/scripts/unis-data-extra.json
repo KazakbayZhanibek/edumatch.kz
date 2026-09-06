@@ -1,0 +1,538 @@
+{
+  "22": {
+    "website": "https://www.turan-edu.kz",
+    "phone": "+7 (727) 260-40-00",
+    "students_count": 5842,
+    "founded": 1992,
+    "lat": 43.2380,
+    "lng": 76.9286
+  },
+  "38": {
+    "website": "https://zhubanov.edu.kz",
+    "phone": null,
+    "students_count": null,
+    "founded": 1966,
+    "lat": null,
+    "lng": null
+  },
+  "45": {
+    "website": "https://cu.edu.kz",
+    "phone": null,
+    "students_count": 3450,
+    "founded": 1992,
+    "lat": 43.2389,
+    "lng": 76.9456
+  },
+  "46": {
+    "website": "https://cu.edu.kz",
+    "phone": null,
+    "students_count": 3450,
+    "founded": 1992,
+    "lat": 43.2560,
+    "lng": 76.9370
+  },
+  "49": {
+    "website": "https://www.nmu.edu.kz",
+    "phone": "+7 (727) 302-09-30",
+    "students_count": 2311,
+    "founded": 1993,
+    "lat": 43.2150,
+    "lng": 76.9080
+  },
+  "50": {
+    "website": "https://cu.edu.kz",
+    "phone": "+7 (727) 250-69-35",
+    "students_count": 3450,
+    "founded": 1992,
+    "lat": 43.2560,
+    "lng": 76.9370
+  },
+  "51": {
+    "website": "https://ageu.edu.kz",
+    "phone": "+7 (727) 309-58-15",
+    "students_count": null,
+    "founded": 1999,
+    "lat": 43.2280,
+    "lng": 76.8860
+  },
+  "52": {
+    "website": "https://kazatiso.edu.kz",
+    "phone": "+7 (727) 279-95-43",
+    "students_count": 3000,
+    "founded": 1994,
+    "lat": 43.2530,
+    "lng": 76.9430
+  },
+  "53": {
+    "website": "https://almau.edu.kz",
+    "phone": null,
+    "students_count": null,
+    "founded": 1988,
+    "lat": 43.2390,
+    "lng": 76.9320
+  },
+  "55": {
+    "website": "https://kaznmu.edu.kz",
+    "phone": null,
+    "students_count": 10000,
+    "founded": 1930,
+    "lat": 43.2520,
+    "lng": 76.9440
+  },
+  "56": {
+    "website": "https://zhetysu.edu.kz",
+    "phone": "+7 (728) 222-25-42",
+    "students_count": 4000,
+    "founded": 1972,
+    "lat": 43.3010,
+    "lng": 77.0170
+  },
+  "100": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "101": {
+    "website": "https://iuth.edu.kz",
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": 43.3080,
+    "lng": 68.2530
+  },
+  "104": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "107": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "109": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "110": {
+    "website": "https://htu.edu.kz",
+    "phone": "+7 (7262) 50-14-27",
+    "students_count": 7957,
+    "founded": 2008,
+    "lat": 42.9000,
+    "lng": 71.3800
+  },
+  "111": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "112": {
+    "website": "https://astanait.edu.kz",
+    "phone": "+7 (7172) 64-57-10",
+    "students_count": 6000,
+    "founded": 2019,
+    "lat": 51.0900,
+    "lng": 71.4180
+  },
+  "113": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "114": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "115": {
+    "website": "https://alt.edu.kz",
+    "phone": "+7 707 888 1931",
+    "students_count": null,
+    "founded": 1931,
+    "lat": 43.2530,
+    "lng": 76.9430
+  },
+  "116": {
+    "website": "https://korkyt.edu.kz",
+    "phone": "+7 (7242) 26-27-14",
+    "students_count": 10360,
+    "founded": 1937,
+    "lat": 44.8530,
+    "lng": 65.5090
+  },
+  "117": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "118": {
+    "website": "https://qmu.edu.kz",
+    "phone": null,
+    "students_count": 9095,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "119": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "120": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "121": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "122": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "123": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "124": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "125": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "126": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "127": {
+    "website": "https://kuam.edu.kz",
+    "phone": null,
+    "students_count": 5773,
+    "founded": 1962,
+    "lat": 53.0800,
+    "lng": 68.6230
+  },
+  "128": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "129": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "130": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "131": {
+    "website": "https://shakarim.university",
+    "phone": null,
+    "students_count": 7000,
+    "founded": 1934,
+    "lat": 50.4110,
+    "lng": 80.2280
+  },
+  "132": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "133": {
+    "website": "https://tttu.edu.kz",
+    "phone": null,
+    "students_count": null,
+    "founded": 1963,
+    "lat": null,
+    "lng": null
+  },
+  "134": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "135": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "136": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "137": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "138": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "139": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "140": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "141": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "142": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "143": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "144": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "145": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "146": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "147": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "148": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "149": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "150": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "151": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "153": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "154": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "155": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "156": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "157": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "158": {
+    "website": "https://narxoz.edu.kz",
+    "phone": null,
+    "students_count": 7281,
+    "founded": 1963,
+    "lat": 43.2340,
+    "lng": 76.9090
+  },
+  "159": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "160": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  },
+  "161": {
+    "website": null,
+    "phone": null,
+    "students_count": null,
+    "founded": null,
+    "lat": null,
+    "lng": null
+  }
+}

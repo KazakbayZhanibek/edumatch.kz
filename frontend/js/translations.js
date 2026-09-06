@@ -207,7 +207,10 @@ const translations = {
       register_link: 'Зарегистрироваться',
       has_account: 'Уже есть аккаунт?',
       login_link: 'Войти',
-      min_chars: '12+ символов, заглавная, цифра, спецсимвол'
+      min_chars: '12+ символов, заглавная, цифра, спецсимвол',
+      consent_prefix: 'Я принимаю ', consent_and: ' и ',
+      privacy_link: 'политику конфиденциальности', terms_link: 'пользовательское соглашение',
+      consent_required: 'Подтвердите согласие с политикой и соглашением'
     },
     profile: {
       title: 'Личный кабинет',
@@ -305,7 +308,21 @@ const translations = {
       about_data: 'Данные:',
       about_data_val: 'Данные по университетам Казахстана, актуальные на 2025–2026 учебный год',
       contacts_title: 'Контакты',
-      contacts_sub: 'По вопросам сотрудничества, предложениям и обратной связи:'
+      contacts_sub: 'По вопросам сотрудничества, предложениям и обратной связи:',
+      privacy_title: 'Политика конфиденциальности',
+      privacy_intro: 'Коротко о том, какие данные нужны EduMatch KZ и зачем.',
+      privacy_data_title: 'Какие данные мы используем',
+      privacy_text1: 'Мы используем данные аккаунта только для авторизации, сохранения выбранных вузов и работы функций платформы.',
+      privacy_rights_title: 'Ваши данные под вашим контролем',
+      privacy_text2: 'Мы не продаём персональные данные и не передаём их третьим лицам, кроме случаев, предусмотренных законом.',
+      privacy_text3: 'Вы можете изменить данные профиля или попросить удалить аккаунт. Для этого напишите нам через раздел «Контакты».',
+      terms_title: 'Пользовательское соглашение',
+      terms_intro: 'Это простые правила использования платформы, без мелкого шрифта.',
+      terms_use_title: 'Использование платформы',
+      terms_text1: 'Создавая аккаунт, вы соглашаетесь использовать EduMatch KZ законно и не размещать вредоносный или запрещённый контент.',
+      terms_info_title: 'О данных и рекомендациях',
+      terms_text2: 'Информация о вузах и поступлении носит справочный характер. Перед принятием решения проверяйте актуальные условия на официальных сайтах.',
+      terms_text3: 'EduMatch KZ не принимает решение о вашем зачислении и не гарантирует поступление, грант или точность прогноза ИИ.'
     },
     compare: {
       title: 'Сравнение университетов',
@@ -920,7 +937,10 @@ const translations = {
       register_link: 'Тіркелу',
       has_account: 'Тіркелгіңіз бар ма?',
       login_link: 'Кіру',
-      min_chars: '12+ таңба, бас әріп, сан, арнайы таңба'
+      min_chars: '12+ таңба, бас әріп, сан, арнайы таңба',
+      consent_prefix: 'Мен ', consent_and: ' және ',
+      privacy_link: 'құпиялылық саясатымен', terms_link: 'пайдаланушы келісімімен',
+      consent_required: 'Саясат пен келісімге келісетініңізді растаңыз'
     },
     profile: {
       title: 'Жеке кабинет',
@@ -1018,7 +1038,21 @@ const translations = {
       about_data: 'Деректер:',
       about_data_val: 'Қазақстан университеттері туралы деректер, 2025–2026 оқу жылына өзекті',
       contacts_title: 'Байланыс',
-      contacts_sub: 'Ынтымақтастық, ұсыныстар және кері байланыс туралы сұрақтар бойынша:'
+      contacts_sub: 'Ынтымақтастық, ұсыныстар және кері байланыс туралы сұрақтар бойынша:',
+      privacy_title: 'Құпиялылық саясаты',
+      privacy_intro: 'EduMatch KZ қандай деректерді және не үшін пайдаланатыны туралы қысқаша.',
+      privacy_data_title: 'Қандай деректерді пайдаланамыз',
+      privacy_text1: 'Тіркелгі деректерін тек авторизация, таңдалған университеттерді сақтау және платформа функциялары үшін пайдаланамыз.',
+      privacy_rights_title: 'Деректеріңіз өз бақылауыңызда',
+      privacy_text2: 'Жеке деректерді сатпаймыз және заңда көзделген жағдайлардан басқа үшінші тұлғаларға бермейміз.',
+      privacy_text3: 'Профиль деректерін өзгерте аласыз немесе тіркелгіні жоюды сұрай аласыз. Ол үшін «Байланыс» бөлімі арқылы бізге жазыңыз.',
+      terms_title: 'Пайдаланушы келісімі',
+      terms_intro: 'Бұл платформаны пайдалану ережелері. Жасырын тармақтар жоқ.',
+      terms_use_title: 'Платформаны пайдалану',
+      terms_text1: 'Тіркелгі жасау арқылы EduMatch KZ платформасын заңды түрде пайдалануға және зиянды немесе тыйым салынған контент жарияламауға келісесіз.',
+      terms_info_title: 'Деректер мен ұсыныстар туралы',
+      terms_text2: 'Университеттер мен оқуға түсу туралы ақпарат анықтамалық сипатта. Шешім қабылдамас бұрын шарттарды ресми сайттардан тексеріңіз.',
+      terms_text3: 'EduMatch KZ оқуға қабылдау туралы шешім қабылдамайды және оқуға түсуге, грантқа немесе ҚИ болжамының дәлдігіне кепілдік бермейді.'
     },
     compare: {
       title: 'Университеттерді салыстыру',
@@ -1785,7 +1819,10 @@ const translations = {
       register_link: 'Sign Up',
       has_account: 'Already have an account?',
       login_link: 'Log In',
-      min_chars: '12+ characters, uppercase, digit, special character'
+      min_chars: '12+ characters, uppercase, digit, special character',
+      consent_prefix: 'I accept the ', consent_and: ' and ',
+      privacy_link: 'Privacy Policy', terms_link: 'Terms of Use',
+      consent_required: 'Please accept the policy and terms'
     },
     profile: {
       title: 'Personal Account',
@@ -1883,7 +1920,21 @@ const translations = {
       about_data: 'Data:',
       about_data_val: 'Data for universities in Kazakhstan, current for the 2025–2026 academic year',
       contacts_title: 'Contact',
-      contacts_sub: 'For collaboration, suggestions, and feedback:'
+      contacts_sub: 'For collaboration, suggestions, and feedback:',
+      privacy_title: 'Privacy Policy',
+      privacy_intro: 'A brief explanation of what data EduMatch KZ needs and why.',
+      privacy_data_title: 'What data we use',
+      privacy_text1: 'We use account data only for authentication, saving selected universities, and operating platform features.',
+      privacy_rights_title: 'You control your data',
+      privacy_text2: 'We do not sell personal data or share it with third parties except where required by law.',
+      privacy_text3: 'You can change your profile data or request account deletion. Contact us through the “Contact” section.',
+      terms_title: 'Terms of Use',
+      terms_intro: 'Simple rules for using the platform, with no hidden fine print.',
+      terms_use_title: 'Using the platform',
+      terms_text1: 'By creating an account, you agree to use EduMatch KZ lawfully and not to post harmful or prohibited content.',
+      terms_info_title: 'About data and recommendations',
+      terms_text2: 'University and admissions information is provided for reference. Check current requirements on official websites before making decisions.',
+      terms_text3: 'EduMatch KZ does not decide on admissions and does not guarantee admission, a grant, or the accuracy of an AI forecast.'
     },
     compare: {
       title: 'Compare Universities',

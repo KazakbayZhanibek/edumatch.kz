@@ -43,9 +43,11 @@ async function hydrateAdvisorChatHistory() {
 
   const msgs = document.getElementById('chat-messages');
   if (msgs) {
-    const existingWelcome = msgs.querySelector('.chat-welcome');
-    if (existingWelcome) existingWelcome.remove();
-    state.chatHistory.forEach(item => appendMessage(item.role, item.content));
+    if (state.chatHistory.length > 0) {
+      const existingWelcome = msgs.querySelector('.chat-welcome');
+      if (existingWelcome) existingWelcome.remove();
+      state.chatHistory.forEach(item => appendMessage(item.role, item.content));
+    }
   }
 }
 
@@ -227,14 +229,22 @@ function activateNavLink(page) {
     const handler = link.getAttribute('onclick') || '';
     link.classList.toggle('active', handler.includes(`navigate('${page}')`));
   });
+  document.querySelectorAll('.mobile-nav-link[data-page]').forEach(link => {
+    link.classList.toggle('active', link.dataset.page === page);
+  });
 }
 
 function navigate(page, param) {
+  const isMobile = window.innerWidth <= 768;
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   state.currentPage = page;
   window.scrollTo(0, 0);
-  document.body.classList.toggle('chat-page-active', page === 'advisor');
+
+  // Mobile advisor mode only when the user actually opens the advisor page
+  document.body.classList.toggle('chat-page-active', page === 'advisor' && isMobile);
+  document.body.classList.toggle('desktop-mode', !isMobile);
   updateStickyCompare();
 
   if (page === 'home') {
@@ -288,30 +298,8 @@ function navigate(page, param) {
     activateNavLink('admission');
     initAdmissionPage();
   }
-
-  updateBottomNav(page);
 }
 
-const BOTTOM_NAV_MAP = {
-  home: 'bnav-home',
-  compare: 'bnav-compare',
-  advisor: 'bnav-advisor',
-  admission: 'bnav-tools',
-  career: 'bnav-tools',
-  map: 'bnav-tools',
-  grants: 'bnav-more',
-  tips: 'bnav-more',
-  profile: 'bnav-more',
-  login: 'bnav-more',
-  register: 'bnav-more',
-};
-
-function updateBottomNav(page) {
-  document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
-  const id = BOTTOM_NAV_MAP[page];
-  if (id) document.getElementById(id)?.classList.add('active');
-}
-const setBottomNav = updateBottomNav;
 
 // ─── TRACKER PAGE ────────────────────────────
 // ─── PROFILE PAGE ─────────────────────────
@@ -1981,8 +1969,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof Auth !== 'undefined') Auth.init();
   loadSpecialties();
   loadCities();
+
+  const isMobile = window.innerWidth <= 768;
   navigate('home');
   loadAcademicYear();
+
+  // Mobile: show bottom nav, but do not force the advisor page on every resize.
+  const bottomNav = document.querySelector('.bottom-nav');
+  if (bottomNav) {
+    bottomNav.style.display = isMobile ? 'flex' : 'none';
+  }
+
+  window.addEventListener('resize', () => {
+    const nowMobile = window.innerWidth <= 768;
+    if (bottomNav) {
+      bottomNav.style.display = nowMobile ? 'flex' : 'none';
+    }
+  });
 
   // AOS scroll animations
   if (typeof AOS !== 'undefined') {
@@ -2023,6 +2026,7 @@ function toggleMobileMenu() {
   const isOpen = menu.classList.contains('open');
   if (isOpen) { closeMobileMenu(); } else {
     burger.classList.add('open');
+    burger.setAttribute('aria-expanded', 'true');
     menu.classList.add('open');
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -2035,6 +2039,7 @@ function closeMobileMenu() {
   const overlay = document.getElementById('mobile-menu-overlay');
   if (!burger || !menu || !overlay) return;
   burger.classList.remove('open');
+  burger.setAttribute('aria-expanded', 'false');
   menu.classList.remove('open');
   overlay.classList.remove('open');
   document.body.style.overflow = '';
@@ -2048,7 +2053,7 @@ function updateStickyCompare() {
   const bar = document.getElementById('sticky-compare');
   const count = state.compareList.length;
   if (bar) {
-    bar.classList.toggle('visible', count >= 1 && state.currentPage !== 'compare');
+    bar.classList.toggle('visible', count >= 1 && state.currentPage !== 'compare' && state.currentPage !== 'advisor');
     const countEl = document.getElementById('sticky-compare-count');
     if (countEl) countEl.textContent = count;
   }
@@ -2104,9 +2109,27 @@ function syncSheetFilters() {
   syncVal('sheet-sort', 'filter-sort');
 }
 
-function openToolsSheet() { openSheet('tools-sheet-overlay', 'tools-sheet'); }
+function openToolsSheet() {
+  // Close more sheet if open
+  const moreOverlay = document.getElementById('more-sheet-overlay');
+  const moreSheet = document.getElementById('more-sheet');
+  if (moreOverlay?.classList.contains('open')) {
+    moreOverlay.classList.remove('open');
+    moreSheet.classList.remove('open');
+  }
+  openSheet('tools-sheet-overlay', 'tools-sheet');
+}
 function closeToolsSheet() { closeSheet('tools-sheet-overlay', 'tools-sheet'); }
-function openMoreSheet()  { openSheet('more-sheet-overlay', 'more-sheet'); }
+function openMoreSheet() {
+  // Close tools sheet if open
+  const toolsOverlay = document.getElementById('tools-sheet-overlay');
+  const toolsSheet = document.getElementById('tools-sheet');
+  if (toolsOverlay?.classList.contains('open')) {
+    toolsOverlay.classList.remove('open');
+    toolsSheet.classList.remove('open');
+  }
+  openSheet('more-sheet-overlay', 'more-sheet');
+}
 function closeMoreSheet() { closeSheet('more-sheet-overlay', 'more-sheet'); }
 
 /* =============================================
