@@ -32,8 +32,8 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 24px;
-  --font-serif: 'Instrument Serif', Georgia, serif;
-  --font-sans: 'Geist', -apple-system, sans-serif;
+  --font-serif: 'Noto Sans', Arial, sans-serif;
+  --font-sans: 'Noto Sans', Arial, sans-serif;
   --nav-h: 60px;
   --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -3021,7 +3021,6 @@ body.chat-page-active {
 
   /* Advisor — compact phone layout */
   #page-advisor.page { padding-top: 0; }
-  body.chat-page-active .nav,
   body.chat-page-active .footer,
   body.chat-page-active .sticky-compare,
   body.chat-page-active #page-home,
@@ -3645,9 +3644,10 @@ body.chat-page-active {
    LIBRARY UPGRADES & POLISH
    ============================================= */
 
-/* Inter font upgrade */
+/* One typeface for Latin and Cyrillic text in every language */
 :root {
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Noto Sans', Arial, sans-serif;
+  --font-sans: 'Noto Sans', Arial, sans-serif;
 }
 body { font-family: var(--font-sans) !important; }
 
