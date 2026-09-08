@@ -14,6 +14,9 @@ const state = window.state = {
   chatHistoryLoaded: false,
   admissionLastResult: null,
   currentPage: 'home',
+  currentParam: null,
+  pageHistory: [],
+  skipPageHistory: false,
   chatReplyDraft: null,
   trackerServerLoaded: false,
 };
@@ -230,16 +233,39 @@ function activateNavLink(page) {
     link.classList.toggle('active', handler.includes(`navigate('${page}')`));
   });
   document.querySelectorAll('.mobile-nav-link[data-page]').forEach(link => {
-    link.classList.toggle('active', link.dataset.page === page);
+    const isActive = link.dataset.page === page;
+    link.classList.toggle('active', isActive);
+    if (isActive) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
   });
+}
+
+function updateBackButton() {
+  const button = document.getElementById('global-back-button');
+  if (!button) return;
+  button.classList.toggle('is-visible', state.currentPage !== 'home');
+}
+
+function navigateBack() {
+  const previous = state.pageHistory.pop() || { page: 'home', param: null };
+  state.skipPageHistory = true;
+  navigate(previous.page, previous.param);
 }
 
 function navigate(page, param) {
   const isMobile = window.innerWidth <= 768;
 
+  if (!state.skipPageHistory && (state.currentPage !== page || state.currentParam !== param)) {
+    state.pageHistory.push({ page: state.currentPage, param: state.currentParam });
+    if (state.pageHistory.length > 20) state.pageHistory.shift();
+  }
+  state.skipPageHistory = false;
+
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   state.currentPage = page;
+  state.currentParam = param || null;
+  updateBackButton();
   window.scrollTo(0, 0);
 
   // Mobile advisor mode only when the user actually opens the advisor page
@@ -327,6 +353,11 @@ function initLanguage() {
     btn.classList.remove('active');
   });
   document.getElementById('lang-' + lang)?.classList.add('active');
+  document.querySelectorAll('.mobile-lang-btn').forEach(btn => {
+    const isActive = btn.dataset.lang === lang;
+    btn.classList.toggle('active', isActive);
+    btn.setAttribute('aria-current', isActive ? 'true' : 'false');
+  });
   applyTranslations();
   if (typeof applyTranslationsLegacy === 'function') applyTranslationsLegacy();
 }

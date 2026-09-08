@@ -25,6 +25,7 @@ initDatabase();
 const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTips, getUniversitiesContext, getCities } = require('./db');
 const aiRoutes = require('./ai-routes');
 const authRoutes = require('./auth-routes');
+const verifyRoutes = require('./verify-routes');
 const admissionRoutes = require('./admission-routes');
 const adminRoutes = require('./admin-routes');
 const { verifyAuth, verifyAdmin } = require('./auth-middleware');
@@ -196,6 +197,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', authRoutes);
 // saved-universities, chat-history, test-results на /api/*
 app.use('/api', authRoutes);
+
+// Military verification & ENT uploads
+app.use('/api/verify', verifyRoutes);
 
 // Admin: Update academic year (requires auth + admin)
 app.put('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {

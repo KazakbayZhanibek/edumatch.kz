@@ -74,7 +74,8 @@
         </button>
       </div>
       <button class="burger" id="burger" onclick="toggleMobileMenu()" aria-label="Меню" aria-expanded="false" aria-controls="mobile-menu" data-i18n-aria="menu.title">
-        <span></span><span></span><span></span>
+        <span class="burger-icon"><span></span><span></span><span></span></span>
+        <span class="burger-label" data-i18n="menu.title">Меню</span>
       </button>
     </div>
   </div>
@@ -84,8 +85,11 @@
 <div class="mobile-menu-overlay" id="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
 <div class="mobile-menu" id="mobile-menu">
   <div class="mobile-menu-header">
-    <span class="mobile-menu-title" data-i18n="menu.title">Меню</span>
-    <button class="mobile-menu-close" onclick="closeMobileMenu()">
+    <div class="mobile-menu-brand">
+      <span class="logo-text">EduMatch<span class="logo-kz">KZ</span></span>
+      <span class="mobile-menu-title" data-i18n="menu.title">Меню</span>
+    </div>
+    <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Закрыть меню" data-i18n-aria="menu.close">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
@@ -127,9 +131,9 @@
   <div class="mobile-menu-footer">
     <div class="mobile-menu-quick-actions">
       <div class="mobile-language-selector" aria-label="Язык">
-        <button class="mobile-lang-btn" onclick="setLanguage('ru')">РУ</button>
-        <button class="mobile-lang-btn" onclick="setLanguage('kk')">ҚА</button>
-        <button class="mobile-lang-btn" onclick="setLanguage('en')">EN</button>
+        <button class="mobile-lang-btn" data-lang="ru" onclick="setLanguage('ru')" aria-label="Русский">РУ</button>
+        <button class="mobile-lang-btn" data-lang="kk" onclick="setLanguage('kk')" aria-label="Қазақша">ҚА</button>
+        <button class="mobile-lang-btn" data-lang="en" onclick="setLanguage('en')" aria-label="English">EN</button>
       </div>
       <div class="mobile-account-actions" id="mobile-account-guest">
         <button class="mobile-account-btn" onclick="navigate('login');closeMobileMenu()" data-i18n="buttons.login">Войти</button>
@@ -149,6 +153,10 @@
 </div>
 
 <!-- PAGES -->
+<button class="global-back-button" id="global-back-button" onclick="navigateBack()" aria-label="Назад" data-i18n-aria="buttons.back">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+  <span data-i18n="buttons.back">Назад</span>
+</button>
 <main id="app">
 
   <!-- HOME PAGE -->
@@ -159,7 +167,7 @@
         <h1 class="hero-title" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100"><span data-i18n="home.hero_heading1">Выбор университета —</span><br><em><span data-i18n="home.hero_heading2">главное финансовое решение</span></em></h1>
         <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200" data-i18n="home.hero_sub">Сравните стоимость, рейтинги и специальности ведущих вузов Казахстана. Получите персональный совет от ИИ-советника.</p>
         <div class="hero-actions" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
-          <button class="btn btn-primary" onclick="navigate('advisor')" data-i18n="home.hero_btn1">Получить совет ИИ</button>
+          <button class="btn btn-primary hero-primary-btn" onclick="navigate('advisor')" data-i18n="home.hero_btn1">Получить совет ИИ<span class="hero-primary-arrow" aria-hidden="true">&#8594;</span></button>
           <button class="btn btn-ghost hero-btn-scroll" onclick="document.getElementById('universities-section').scrollIntoView({behavior:'smooth'})" data-i18n="home.hero_btn2">Смотреть вузы</button>
         </div>
         <div class="hero-stats" data-aos="fade-up" data-aos-duration="700" data-aos-delay="400">

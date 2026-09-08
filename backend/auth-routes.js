@@ -263,6 +263,8 @@ router.get('/profile', verifyAuth, (req, res) => {
       fullName: user.full_name,
       phone: user.phone,
       bio: user.bio,
+      entScore: user.ent_score,
+      militaryService: Boolean(user.military_service),
       profilePicture: user.profile_picture,
       isAdmin: Boolean(user.is_admin),
       preferences: user.preferences ? JSON.parse(user.preferences) : {},
@@ -280,11 +282,11 @@ router.get('/profile', verifyAuth, (req, res) => {
  * PUT /api/users/profile
  * Обновить профиль
  * Header: Authorization: Bearer <token>
- * Body: { fullName?, phone?, bio?, preferences?, profilePicture? }
+ * Body: { fullName?, phone?, bio?, entScore?, militaryService?, preferences?, profilePicture? }
  */
 router.put('/profile', verifyAuth, (req, res) => {
   try {
-    const { fullName, phone, bio, preferences, profilePicture } = req.body;
+    const { fullName, phone, bio, entScore, militaryService, preferences, profilePicture } = req.body;
     const lang = getLang(req);
 
     if (profilePicture && !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(profilePicture)) {
@@ -298,6 +300,8 @@ router.put('/profile', verifyAuth, (req, res) => {
       fullName,
       phone,
       bio,
+      entScore,
+      militaryService,
       preferences,
       profilePicture
     }, lang);

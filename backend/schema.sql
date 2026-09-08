@@ -124,6 +124,8 @@ CREATE TABLE IF NOT EXISTS users (
   phone TEXT,
   profile_picture TEXT,
   bio TEXT,
+  ent_score INTEGER,                  -- балл ЕНТ
+  military_service INTEGER DEFAULT 0, -- 0 = не служил, 1 = проходил службу
   preferences TEXT,                  -- JSON: {"theme": "light", "language": "kk"}
   is_admin INTEGER DEFAULT 0,        -- 0 или 1
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -334,3 +336,38 @@ CREATE INDEX IF NOT EXISTS idx_audit_log_table ON audit_log(table_name);
 CREATE INDEX IF NOT EXISTS idx_audit_log_record ON audit_log(record_id);
 CREATE INDEX IF NOT EXISTS idx_audit_log_user ON audit_log(user_id);
 CREATE INDEX IF NOT EXISTS idx_audit_log_created ON audit_log(created_at);
+
+-- ==================== PHASE 5: VERIFICATION & ENT ====================
+
+-- Верификация военной службы
+CREATE TABLE IF NOT EXISTS military_verifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  document_url TEXT NOT NULL,           -- base64 или путь к файлу
+  service_type TEXT DEFAULT 'draft',    -- draft=по призыву, contract=контракт, alternative=альтернативная
+  status TEXT DEFAULT 'pending',        -- pending / approved / rejected
+  reviewed_by INTEGER,                  -- admin user_id
+  review_note TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at DATETIME,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY(reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_military_user ON military_verifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_military_status ON military_verifications(status);
+
+-- Загрузка результатов ЕНТ
+CREATE TABLE IF NOT EXISTS ent_uploads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  document_url TEXT NOT NULL,           -- base64 или путь к файлу
+  ent_score INTEGER,                    -- распознанный балл (0-140)
+  status TEXT DEFAULT 'pending',        -- pending / approved / rejected
+  reviewed_by INTEGER,
+  review_note TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at DATETIME,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY(reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_ent_uploads_user ON ent_uploads(user_id);

@@ -117,8 +117,8 @@ const Auth = {
     return data;
   },
 
-  async updateProfile({ fullName, phone, bio, preferences, profilePicture }) {
-    const body = { fullName, phone, bio };
+  async updateProfile({ fullName, phone, bio, entScore, militaryService, preferences, profilePicture }) {
+    const body = { fullName, phone, bio, entScore, militaryService };
     if (preferences) body.preferences = preferences;
     if (profilePicture) body.profilePicture = profilePicture;
     const res = await this.fetch('/users/profile', {
@@ -476,7 +476,6 @@ async function loadProfilePage() {
 
         <!-- LEFT: User Card -->
         <aside class="profile-user-card">
-          <div class="profile-user-banner" onclick="showToast(t('profile_page.avatar_soon') || 'Загрузка фото скоро появится')" title="${t('profile_page.avatar_change') || 'Изменить обложку'}"></div>
           <div class="profile-user-avatar" title="${t('profile_page.avatar_change') || 'Изменить фото'}">
             ${avatar ? `<img src="${escapeHtml(avatar)}" alt="${escapeHtml(displayName)}" class="profile-avatar-image">` : `<span>${initials}</span>`}
             <label class="profile-avatar-upload" title="${t('profile_page.avatar_change') || 'Изменить фото'}">
@@ -513,11 +512,32 @@ async function loadProfilePage() {
         <!-- RIGHT: Main Content -->
         <div class="profile-main">
 
+          <!-- Quick Navigation -->
+          <div class="profile-nav-row">
+            <a class="profile-nav-item" onclick="navigate('advisor')">
+              <span class="profile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+              <span>${t('nav.advisor') || 'ИИ-советник'}</span>
+            </a>
+            <a class="profile-nav-item" onclick="navigate('admission')">
+              <span class="profile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+              <span>${t('nav.admission') || 'Калькулятор'}</span>
+            </a>
+            <a class="profile-nav-item" onclick="navigate('career')">
+              <span class="profile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+              <span>${t('nav.career') || 'Профориентация'}</span>
+            </a>
+            <a class="profile-nav-item" onclick="navigate('universities')">
+              <span class="profile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></span>
+              <span>${t('nav.universities') || 'Вузы'}</span>
+            </a>
+          </div>
+
+          <!-- ENT & Military -->
+          <div class="profile-status-row" id="profile-status-row"></div>
+
           <!-- Edit Profile -->
           <section class="profile-section">
-            <div class="profile-section-header">
-              <h2 class="profile-section-title">${t('profile_page.card_profile') || 'Редактировать профиль'}</h2>
-            </div>
+            <h2 class="profile-section-title">${t('profile_page.card_profile') || 'Профиль'}</h2>
             <form id="profile-form" class="auth-form" onsubmit="handleProfileSave(event)">
               <div class="profile-form-row">
                 <div class="form-field">
@@ -531,8 +551,20 @@ async function loadProfilePage() {
               </div>
               <div class="form-field">
                 <label>${t('profile_page.card_bio') || 'О себе'}</label>
-                <textarea id="profile-bio" class="form-input" rows="2" maxlength="300" oninput="document.getElementById('profile-bio-count').textContent = this.value.length" placeholder="${t('profile_page.card_bio_placeholder') || 'Расскажите о себе...'}">${escapeHtml(profile.bio || '')}</textarea>
+                <textarea id="profile-bio" class="form-input" rows="2" maxlength="300" oninput="document.getElementById('profile-bio-count').textContent = this.value.length" placeholder="${t('profile_page.card_bio_placeholder') || 'Кратко о целях поступления'}">${escapeHtml(profile.bio || '')}</textarea>
                 <div class="form-hint" style="text-align:right;font-size:12px;color:var(--text-muted,#888)"><span id="profile-bio-count">${(profile.bio || '').length}</span>/300</div>
+              </div>
+              <div class="profile-form-row">
+                <div class="form-field">
+                  <label>${t('profile_page.card_ent_score') || 'Балл ЕНТ'}</label>
+                  <input type="number" id="profile-ent-score" value="${profile.entScore || ''}" class="form-input" min="0" max="200" placeholder="0–200">
+                </div>
+                <div class="form-field" style="display:flex;align-items:center;padding-top:24px">
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0">
+                    <input type="checkbox" id="profile-military" ${profile.militaryService ? 'checked' : ''} style="width:18px;height:18px;cursor:pointer">
+                    <span>${t('profile_page.card_military') || 'Проходил(а) военную службу'}</span>
+                  </label>
+                </div>
               </div>
               <p class="form-error" id="profile-error"></p>
               <div class="profile-form-actions">
@@ -572,69 +604,11 @@ async function loadProfilePage() {
             <div id="profile-tracker-content"></div>
           </section>
 
-          <!-- Password Change -->
+          <!-- ENT Upload & Military Verification -->
           <section class="profile-section">
-            <div class="profile-section-header">
-              <h2 class="profile-section-title">${t('profile_page.card_password_title') || 'Смена пароля'}</h2>
-            </div>
-            <form id="password-form" class="auth-form" onsubmit="handlePasswordChange(event)">
-              <div class="profile-pw-fields">
-                <div class="form-field">
-                  <label>${t('profile_page.card_pw_current') || 'Текущий пароль'}</label>
-                  <div class="pw-toggle-wrap">
-                    <input type="password" id="pw-current" class="form-input" required minlength="1">
-                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">Показать</button>
-                  </div>
-                </div>
-                <div class="form-field">
-                  <label>${t('profile_page.card_pw_new') || 'Новый пароль'}</label>
-                  <div class="pw-toggle-wrap">
-                    <input type="password" id="pw-new" class="form-input" required minlength="12"
-                      pattern="(?=.*[A-ZА-Я])(?=.*\d)(?=.*[^A-Za-zА-Яа-я0-9]).{12,}"
-                      oninput="updatePasswordHints('pw-new','pw-new-hints')">
-                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">Показать</button>
-                  </div>
-                  <ul class="pw-hints" id="pw-new-hints">
-                    <li data-rule="len">Минимум 12 символов</li>
-                    <li data-rule="upper">Заглавная буква</li>
-                    <li data-rule="digit">Цифра</li>
-                    <li data-rule="special">Спецсимвол</li>
-                  </ul>
-                </div>
-                <div class="form-field">
-                  <label>${t('profile_page.card_pw_confirm') || 'Подтвердите пароль'}</label>
-                  <div class="pw-toggle-wrap">
-                    <input type="password" id="pw-confirm" class="form-input" required minlength="12">
-                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1" aria-label="Показать пароль">Показать</button>
-                  </div>
-                </div>
-              </div>
-              <p class="form-error" id="password-error"></p>
-              <div class="profile-form-actions">
-                <button type="submit" class="btn btn-primary">${t('profile_page.card_pw_change') || 'Сменить пароль'}</button>
-              </div>
-            </form>
-          </section>
-
-          <!-- Settings -->
-          <section class="profile-section">
-            <div class="profile-section-header">
-              <h2 class="profile-section-title">${t('profile_page.card_settings') || 'Настройки'}</h2>
-            </div>
-            <form class="auth-form" onsubmit="handlePreferencesSave(event)">
-              <div class="profile-settings-row">
-                <label>${t('profile_page.card_lang_label') || 'Язык интерфейса'}</label>
-                <select id="pref-lang" class="form-input">
-                  <option value="ru"${(profile.preferences && profile.preferences.language === 'ru') ? ' selected' : ''}>Русский</option>
-                  <option value="kk"${(profile.preferences && profile.preferences.language === 'kk') ? ' selected' : ''}>Қазақша</option>
-                  <option value="en"${(profile.preferences && profile.preferences.language === 'en') ? ' selected' : ''}>English</option>
-                </select>
-              </div>
-              <p class="form-error" id="preferences-error"></p>
-              <div class="profile-form-actions">
-                <button type="submit" class="btn btn-primary">${t('profile_page.card_settings_save') || 'Сохранить'}</button>
-              </div>
-            </form>
+            <h2 class="profile-section-title">${t('profile_page.ent_title') || 'Верификация'}</h2>
+            <div id="ent-upload-content" style="margin-bottom:16px"></div>
+            <div id="military-content"></div>
           </section>
 
           <!-- AI Chat History -->
@@ -692,12 +666,75 @@ async function loadProfilePage() {
             ` : `<div class="profile-empty"><div class="profile-empty-icon"></div>${t('profile_page.card_tests_empty') || 'Нет результатов тестов'}</div>`}
           </section>
 
+          <!-- Settings -->
+          <section class="profile-section">
+            <h2 class="profile-section-title">${t('profile_page.card_settings') || 'Настройки'}</h2>
+            <div class="profile-settings-row" style="margin-bottom:12px">
+              <label>${t('profile_page.card_lang_label') || 'Язык интерфейса'}</label>
+              <select id="pref-lang" class="form-input" style="max-width:200px">
+                <option value="ru"${(profile.preferences && profile.preferences.language === 'ru') ? ' selected' : ''}>Русский</option>
+                <option value="kk"${(profile.preferences && profile.preferences.language === 'kk') ? ' selected' : ''}>Қазақша</option>
+                <option value="en"${(profile.preferences && profile.preferences.language === 'en') ? ' selected' : ''}>English</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="handlePreferencesSave(event)">${t('profile_page.card_settings_save') || 'Сохранить'}</button>
+          </section>
+
+          <!-- Password -->
+          <section class="profile-section">
+            <h2 class="profile-section-title">${t('profile_page.card_password_title') || 'Смена пароля'}</h2>
+            <form id="password-form" class="auth-form" onsubmit="handlePasswordChange(event)">
+              <div class="profile-pw-fields">
+                <div class="form-field">
+                  <label>${t('profile_page.card_pw_current') || 'Текущий пароль'}</label>
+                  <div class="pw-toggle-wrap">
+                    <input type="password" id="pw-current" class="form-input" required minlength="1">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">Показать</button>
+                  </div>
+                </div>
+                <div class="form-field">
+                  <label>${t('profile_page.card_pw_new') || 'Новый пароль'}</label>
+                  <div class="pw-toggle-wrap">
+                    <input type="password" id="pw-new" class="form-input" required minlength="12" pattern="(?=.*[A-ZА-Я])(?=.*\d)(?=.*[^A-Za-zА-Яа-я0-9]).{12,}" oninput="updatePasswordHints('pw-new','pw-new-hints')">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">Показать</button>
+                  </div>
+                  <ul class="pw-hints" id="pw-new-hints">
+                    <li data-rule="len">Минимум 12 символов</li>
+                    <li data-rule="upper">Заглавная буква</li>
+                    <li data-rule="digit">Цифра</li>
+                    <li data-rule="special">Спецсимвол</li>
+                  </ul>
+                </div>
+                <div class="form-field">
+                  <label>${t('profile_page.card_pw_confirm') || 'Подтвердите пароль'}</label>
+                  <div class="pw-toggle-wrap">
+                    <input type="password" id="pw-confirm" class="form-input" required minlength="12">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">Показать</button>
+                  </div>
+                </div>
+              </div>
+              <p class="form-error" id="password-error"></p>
+              <div class="profile-form-actions">
+                <button type="submit" class="btn btn-primary">${t('profile_page.card_pw_change') || 'Сменить пароль'}</button>
+              </div>
+            </form>
+          </section>
+
         </div>
       </div>
     `;
 
     // Рендер трекера в профиле
     renderProfileTracker();
+
+    // Рендер статусов ЕНТ и армии
+    renderProfileStatusRow();
+
+    // Рендер загрузки ЕНТ
+    renderEntUpload();
+
+    // Рендер верификации армии
+    renderMilitaryVerification();
 
   } catch (e) {
     content.innerHTML = `<p class="form-error">${e.message}</p>`;
@@ -798,6 +835,297 @@ async function renderProfileTracker() {
   });
 
   container.innerHTML = html;
+}
+
+// ==================== STATUS ROW (ENT + Military) ====================
+
+async function renderProfileStatusRow() {
+  const container = document.getElementById('profile-status-row');
+  if (!container) return;
+
+  const iconEnt = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>';
+  const iconClock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+  const iconCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
+  const iconShield = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+  const iconDash = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+
+  let entHtml = `<div class="profile-status-card"><div class="profile-status-icon">${iconEnt}</div><div class="profile-status-info"><div class="profile-status-value">—</div><div class="profile-status-label">ЕНТ</div></div></div>`;
+  let milHtml = `<div class="profile-status-card"><div class="profile-status-icon">${iconShield}</div><div class="profile-status-info"><div class="profile-status-value">—</div><div class="profile-status-label">Армия</div></div></div>`;
+
+  try {
+    const [entRes, milRes] = await Promise.all([
+      Auth.fetch('/verify/ent/status').then(r => r.json()).catch(() => ({})),
+      Auth.fetch('/verify/military/status').then(r => r.json()).catch(() => ({}))
+    ]);
+
+    if (entRes.entScore) {
+      entHtml = `<div class="profile-status-card profile-status-active"><div class="profile-status-icon">${iconEnt}</div><div class="profile-status-info"><div class="profile-status-value">${entRes.entScore}</div><div class="profile-status-label">Балл ЕНТ</div></div></div>`;
+    } else if (entRes.request && entRes.request.status === 'pending') {
+      entHtml = `<div class="profile-status-card profile-status-pending"><div class="profile-status-icon">${iconClock}</div><div class="profile-status-info"><div class="profile-status-value">На проверке</div><div class="profile-status-label">ЕНТ</div></div></div>`;
+    }
+
+    if (milRes.verified) {
+      milHtml = `<div class="profile-status-card profile-status-active"><div class="profile-status-icon">${iconCheck}</div><div class="profile-status-info"><div class="profile-status-value">Подтверждено</div><div class="profile-status-label">Армия</div></div></div>`;
+    } else if (milRes.request && milRes.request.status === 'pending') {
+      milHtml = `<div class="profile-status-card profile-status-pending"><div class="profile-status-icon">${iconClock}</div><div class="profile-status-info"><div class="profile-status-value">На проверке</div><div class="profile-status-label">Армия</div></div></div>`;
+    }
+  } catch (e) {}
+
+  container.innerHTML = entHtml + milHtml;
+}
+
+// ==================== ЕНТ ЗАГРУЗКА ====================
+
+async function renderEntUpload() {
+  const container = document.getElementById('ent-upload-content');
+  if (!container) return;
+
+  try {
+    const res = await Auth.fetch('/verify/ent/status');
+    const data = await res.json();
+
+    if (data.entScore) {
+      container.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <div style="font-size:32px;font-weight:700;color:var(--accent)">${data.entScore}</div>
+          <div>
+            <div style="font-weight:600">${t('profile_page.ent_score_label') || 'Балл ЕНТ'}</div>
+            <div style="font-size:13px;color:var(--text-muted)">${t('profile_page.ent_verified') || 'Верифицировано'}</div>
+          </div>
+        </div>
+        <button class="btn btn-outline" onclick="showEntUploadForm()">${t('profile_page.ent_update') || 'Обновить балл'}</button>
+      `;
+    } else {
+      container.innerHTML = `
+        <p style="color:var(--text-muted);margin-bottom:12px">${t('profile_page.ent_not_uploaded') || 'Загрузите результат ЕНТ с result.kz для верификации балла'}</p>
+        <button class="btn btn-primary" onclick="showEntUploadForm()">${t('profile_page.ent_upload_btn') || 'Загрузить результат ЕНТ'}</button>
+      `;
+    }
+  } catch (e) {
+    container.innerHTML = `<p style="color:var(--text-muted)">${t('profile_page.ent_not_logged') || 'Войдите, чтобы загрузить результат ЕНТ'}</p>`;
+  }
+}
+
+function showEntUploadForm() {
+  const container = document.getElementById('ent-upload-content');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center">
+      <input type="file" id="ent-file-input" accept="image/*,.pdf" style="display:none" onchange="handleEntFileSelect(this)">
+      <label for="ent-file-input" style="cursor:pointer;display:block">
+        <div style="font-size:32px;margin-bottom:8px"></div>
+        <div style="font-weight:600;margin-bottom:4px">${t('profile_page.ent_drop') || 'Нажмите или перетащите файл'}</div>
+        <div style="font-size:13px;color:var(--text-muted)">${t('profile_page.ent_formats') || 'JPG, PNG, PDF — скриншот с result.kz'}</div>
+      </label>
+    </div>
+    <div id="ent-file-preview" style="margin-top:12px"></div>
+    <div style="margin-top:12px">
+      <label style="font-weight:600;display:block;margin-bottom:4px">${t('profile_page.ent_manual') || 'Или введите балл вручную:'}</label>
+      <input type="number" id="ent-manual-score" class="form-input" min="0" max="140" placeholder="0–140" style="max-width:200px">
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="submitEntUpload()">${t('profile_page.ent_submit') || 'Отправить'}</button>
+      <button class="btn btn-outline" onclick="renderEntUpload()">${t('common.cancel') || 'Отмена'}</button>
+    </div>
+    <p class="form-error" id="ent-error" style="margin-top:8px"></p>
+  `;
+}
+
+function handleEntFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const preview = document.getElementById('ent-file-preview');
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%;max-height:200px;border-radius:8px">`;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    preview.innerHTML = `<div style="padding:12px;background:var(--bg-secondary);border-radius:8px">${file.name}</div>`;
+  }
+}
+
+async function submitEntUpload() {
+  const errEl = document.getElementById('ent-error');
+  if (errEl) errEl.textContent = '';
+
+  const fileInput = document.getElementById('ent-file-input');
+  const manualScore = document.getElementById('ent-manual-score');
+  const score = manualScore ? parseInt(manualScore.value) : null;
+
+  let documentUrl = null;
+
+  if (fileInput && fileInput.files[0]) {
+    const file = fileInput.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      if (errEl) errEl.textContent = t('profile_page.ent_too_large') || 'Файл не должен превышать 5 МБ';
+      return;
+    }
+    documentUrl = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (!documentUrl && (score === null || isNaN(score))) {
+    if (errEl) errEl.textContent = t('profile_page.ent_need_file_or_score') || 'Загрузите файл или введите балл';
+    return;
+  }
+
+  if (!documentUrl) {
+    documentUrl = 'manual_' + Date.now();
+  }
+
+  try {
+    const res = await Auth.fetch('/verify/ent', {
+      method: 'POST',
+      body: JSON.stringify({ documentUrl, entScore: score })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    if (score) {
+      showToast(`${t('profile_page.ent_saved') || 'Балл ЕНТ сохранён'}: ${score}`, 'success');
+    } else {
+      showToast(t('profile_page.ent_pending') || 'Заявка отправлена на проверку', 'success');
+    }
+    renderEntUpload();
+  } catch (e) {
+    if (errEl) errEl.textContent = e.message;
+  }
+}
+
+// ==================== ВЕРИФИКАЦИЯ АРМИИ ====================
+
+async function renderMilitaryVerification() {
+  const container = document.getElementById('military-content');
+  if (!container) return;
+
+  try {
+    const res = await Auth.fetch('/verify/military/status');
+    const data = await res.json();
+
+    if (data.verified) {
+      container.innerHTML = `
+        <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg-secondary);border-radius:12px">
+          <div style="font-size:28px"></div>
+          <div>
+            <div style="font-weight:600;color:var(--accent)">${t('profile_page.military_verified') || 'Военная служба подтверждена'}</div>
+            <div style="font-size:13px;color:var(--text-muted)">${t('profile_page.military_verified_desc') || 'Доступны льготы при поступлении'}</div>
+          </div>
+        </div>
+      `;
+    } else if (data.request && data.request.status === 'pending') {
+      container.innerHTML = `
+        <div style="padding:16px;background:var(--bg-secondary);border-radius:12px">
+          <div style="font-weight:600">${t('profile_page.military_pending') || 'Заявка на рассмотрении'}</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:4px">${t('profile_page.military_pending_desc') || 'Одобрение администратором может занять до 24 часов'}</div>
+        </div>
+      `;
+    } else if (data.request && data.request.status === 'rejected') {
+      container.innerHTML = `
+        <div style="padding:16px;background:var(--bg-secondary);border-radius:12px;margin-bottom:12px">
+          <div style="font-weight:600;color:var(--error)">${t('profile_page.military_rejected') || 'Заявка отклонена'}</div>
+          ${data.request.review_note ? `<div style="font-size:13px;color:var(--text-muted);margin-top:4px">${escapeHtml(data.request.review_note)}</div>` : ''}
+        </div>
+        <button class="btn btn-primary" onclick="showMilitaryUploadForm()">${t('profile_page.military_retry') || 'Отправить заново'}</button>
+      `;
+    } else {
+      container.innerHTML = `
+        <p style="color:var(--text-muted);margin-bottom:12px">${t('profile_page.military_desc') || 'Загрузите документ о прохождении военной службы для получения льгот при поступлении'}</p>
+        <button class="btn btn-primary" onclick="showMilitaryUploadForm()">${t('profile_page.military_upload_btn') || 'Загрузить документ'}</button>
+      `;
+    }
+  } catch (e) {
+    container.innerHTML = `<p style="color:var(--text-muted)">${t('profile_page.military_not_logged') || 'Войдите, чтобы загрузить документ'}</p>`;
+  }
+}
+
+function showMilitaryUploadForm() {
+  const container = document.getElementById('military-content');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div style="margin-bottom:12px">
+      <label style="font-weight:600;display:block;margin-bottom:6px">${t('profile_page.military_type') || 'Тип службы:'}</label>
+      <select id="military-type" class="form-input" style="max-width:300px">
+        <option value="draft">${t('profile_page.military_draft') || 'По призыву'}</option>
+        <option value="contract">${t('profile_page.military_contract') || 'По контракту'}</option>
+        <option value="alternative">${t('profile_page.military_alternative') || 'Альтернативная служба'}</option>
+      </select>
+    </div>
+    <div style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center">
+      <input type="file" id="military-file-input" accept="image/*,.pdf" style="display:none" onchange="handleMilitaryFileSelect(this)">
+      <label for="military-file-input" style="cursor:pointer;display:block">
+        <div style="font-size:32px;margin-bottom:8px"></div>
+        <div style="font-weight:600;margin-bottom:4px">${t('profile_page.military_drop') || 'Нажмите или перетащите файл'}</div>
+        <div style="font-size:13px;color:var(--text-muted)">${t('profile_page.military_formats') || 'Фото военного билета, справки или удостоверения'}</div>
+      </label>
+    </div>
+    <div id="military-file-preview" style="margin-top:12px"></div>
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-primary" onclick="submitMilitaryVerification()">${t('profile_page.military_submit') || 'Отправить'}</button>
+      <button class="btn btn-outline" onclick="renderMilitaryVerification()">${t('common.cancel') || 'Отмена'}</button>
+    </div>
+    <p class="form-error" id="military-error" style="margin-top:8px"></p>
+  `;
+}
+
+function handleMilitaryFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const preview = document.getElementById('military-file-preview');
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%;max-height:200px;border-radius:8px">`;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    preview.innerHTML = `<div style="padding:12px;background:var(--bg-secondary);border-radius:8px">${file.name}</div>`;
+  }
+}
+
+async function submitMilitaryVerification() {
+  const errEl = document.getElementById('military-error');
+  if (errEl) errEl.textContent = '';
+
+  const fileInput = document.getElementById('military-file-input');
+  const serviceType = document.getElementById('military-type')?.value || 'draft';
+
+  if (!fileInput || !fileInput.files[0]) {
+    if (errEl) errEl.textContent = t('profile_page.military_need_file') || 'Загрузите документ';
+    return;
+  }
+
+  const file = fileInput.files[0];
+  if (file.size > 5 * 1024 * 1024) {
+    if (errEl) errEl.textContent = t('profile_page.military_too_large') || 'Файл не должен превышать 5 МБ';
+    return;
+  }
+
+  const documentUrl = await new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+
+  try {
+    const res = await Auth.fetch('/verify/military', {
+      method: 'POST',
+      body: JSON.stringify({ documentUrl, serviceType })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+
+    showToast(t('profile_page.military_submitted') || 'Заявка отправлена на проверку', 'success');
+    renderMilitaryVerification();
+  } catch (e) {
+    if (errEl) errEl.textContent = e.message;
+  }
 }
 
 async function deleteSavedUniversity(uniId, btn) {
@@ -917,10 +1245,13 @@ function handleProfileSave(e) {
   e.preventDefault();
   const err = document.getElementById('profile-error');
   err.textContent = '';
+  const entVal = document.getElementById('profile-ent-score').value;
   Auth.updateProfile({
     fullName: document.getElementById('profile-fullname').value.trim(),
     phone: document.getElementById('profile-phone').value.trim(),
-    bio: document.getElementById('profile-bio').value.trim()
+    bio: document.getElementById('profile-bio').value.trim(),
+    entScore: entVal ? parseInt(entVal) : null,
+    militaryService: document.getElementById('profile-military').checked
   })
     .then(() => showToast(t('profile_page.toast_profile_saved'), 'success'))
     .catch(e => { err.textContent = e.message; });

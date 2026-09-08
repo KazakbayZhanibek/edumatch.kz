@@ -284,6 +284,7 @@ function getUserProfile(userId) {
   try {
     return getDb().prepare(
       `SELECT id, email, username, full_name, phone, profile_picture, bio, 
+              ent_score, military_service,
               preferences, is_admin, created_at, updated_at 
        FROM users WHERE id = ?`
     ).get(userId);
@@ -301,20 +302,23 @@ function getUserProfile(userId) {
  */
 function updateUserProfile(userId, data, lang = 'ru') {
   try {
-    const { fullName, phone, bio, preferences, profilePicture } = data;
+    const { fullName, phone, bio, entScore, militaryService, preferences, profilePicture } = data;
 
     const preferencesJson = preferences ? JSON.stringify(preferences) : null;
+    const militaryVal = militaryService !== undefined ? (militaryService ? 1 : 0) : null;
 
     getDb().prepare(
       `UPDATE users 
        SET full_name = COALESCE(?, full_name),
            phone = COALESCE(?, phone),
            bio = COALESCE(?, bio),
+           ent_score = COALESCE(?, ent_score),
+           military_service = COALESCE(?, military_service),
            preferences = COALESCE(?, preferences),
               profile_picture = COALESCE(?, profile_picture),
            updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`
-            ).run(fullName, phone, bio, preferencesJson, profilePicture, userId);
+            ).run(fullName, phone, bio, entScore, militaryVal, preferencesJson, profilePicture, userId);
 
     const updatedUser = getUserProfile(userId);
 

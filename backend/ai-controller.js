@@ -113,6 +113,27 @@ async function handleAIAdvice(req, res) {
         content: `Контекст заявок пользователя (используй только если вопрос относится к заявкам): ${JSON.stringify(safeApplications)}`,
       });
     }
+
+    // Добавляем контекст профиля пользователя (ЕНТ, армия)
+    if (req.userId) {
+      try {
+        const profile = authService.getUserProfile(req.userId);
+        if (profile) {
+          const profileContext = [];
+          if (profile.ent_score) profileContext.push(`Балл ЕНТ: ${profile.ent_score}`);
+          if (profile.military_service) profileContext.push('Проходил военную службу (льготы при поступлении)');
+          if (profile.bio) profileContext.push(`О себе: ${profile.bio}`);
+          if (profileContext.length > 0) {
+            validHistory.push({
+              role: 'assistant',
+              content: `Данные профиля пользователя: ${profileContext.join('. ')}. Используй это для персонализации рекомендаций.`,
+            });
+          }
+        }
+      } catch (e) {
+        // ignore profile fetch errors
+      }
+    }
     if (typeof replyTo === 'string' && replyTo.trim()) {
       validHistory.push({
         role: 'assistant',
