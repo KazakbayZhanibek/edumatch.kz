@@ -56,6 +56,8 @@ function migrateExistingDb(db) {
   const migrations = [
     // is_admin колонка в users
     { table: 'users', col: 'is_admin', sql: "ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0" },
+    { table: 'users', col: 'ent_score', sql: 'ALTER TABLE users ADD COLUMN ent_score INTEGER' },
+    { table: 'users', col: 'military_service', sql: 'ALTER TABLE users ADD COLUMN military_service INTEGER DEFAULT 0' },
     { table: 'reviews', col: 'moderated_at', sql: 'ALTER TABLE reviews ADD COLUMN moderated_at DATETIME' },
     { table: 'reviews', col: 'moderated_by', sql: 'ALTER TABLE reviews ADD COLUMN moderated_by INTEGER' },
     // description_kk/en в universities
