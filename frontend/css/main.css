@@ -721,55 +721,8 @@ input, select, textarea { font-family: inherit; }
 .compare-best { color: var(--accent); font-weight: 600; }
 .compare-header-actions { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
 
-/* Compare cards (mobile) */
-.compare-cards { display: none; }
-.compare-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  margin-bottom: 16px;
-  background: var(--bg-secondary);
-}
-.compare-card-head {
-  background: var(--bg);
-  padding: 14px 16px;
-  font-weight: 600;
-  font-size: 15px;
-  border-bottom: 1px solid var(--border);
-}
-.compare-card-row {
-  display: flex;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--border);
-  gap: 12px;
-}
-.compare-card-row:last-child { border-bottom: none; }
-.compare-card-label {
-  font-size: 13px;
-  color: var(--text-muted);
-  min-width: 120px;
-  flex-shrink: 0;
-}
-.compare-card-value {
-  font-size: 14px;
-  color: var(--text-secondary);
-  flex: 1;
-}
-.compare-card-value.best { color: var(--accent); font-weight: 600; }
-.compare-best-badge {
-  display: inline-block;
-  background: var(--accent-light);
-  color: var(--accent);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 10px;
-}
-
-/* Mobile card layout */
+/* Mobile table layout */
 @media (max-width: 768px) {
-  .compare-table-wrap { display: none; }
-  .compare-cards { display: block; }
   .compare-empty { min-height: 200px; }
   .page-head-row { flex-direction: column; gap: 8px; }
   .page-head-row .btn { align-self: flex-start; }
@@ -2558,10 +2511,6 @@ body.chat-page-active {
 
 .career-fin-tip strong { color: var(--text); }
 
-/* RESPONSIVE TOOLS */
-@media (max-width: 900px) {
-}
-
 @media (max-width: 600px) {
   .career-unis-grid { grid-template-columns: 1fr; }
 }
@@ -3775,13 +3724,6 @@ body.chat-page-active {
    LIBRARY UPGRADES & POLISH
    ============================================= */
 
-/* One typeface for Latin and Cyrillic text in every language */
-:root {
-  --font-serif: 'Noto Sans', Arial, sans-serif;
-  --font-sans: 'Noto Sans', Arial, sans-serif;
-}
-body { font-family: var(--font-sans) !important; }
-
 /* NProgress color */
 #nprogress .bar { background: var(--accent2) !important; height: 3px !important; }
 #nprogress .peg { box-shadow: 0 0 10px var(--accent2), 0 0 5px var(--accent2) !important; }
@@ -4793,19 +4735,6 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
   flex-wrap: wrap;
 }
 
-/* ── Legacy compatibility ── */
-.profile-grid { display: none; }
-.profile-card { display: none; }
-.profile-card-wide { display: none; }
-.profile-card-title { display: none; }
-.profile-count { display: none; }
-.profile-saved-list { display: none; }
-.profile-saved-item { display: none; }
-.profile-saved-meta { display: none; }
-.profile-saved-actions { display: none; }
-.profile-tests-list { display: none; }
-.profile-test-item { display: none; }
-
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .profile-layout {
@@ -5455,46 +5384,6 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
   .profile-sidebar-actions { padding-left: 18px; padding-right: 18px; }
 }
 
-/* --- PROFILE -------------------------------- */
-.profile-section {
-  margin-bottom: 32px;
-}
-.profile-section-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: var(--text);
-}
-.profile-empty {
-  color: var(--text2);
-  font-size: 0.9rem;
-  margin-bottom: 12px;
-}
-.profile-favorites {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px;
-}
-.profile-fav-card {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: box-shadow .2s;
-}
-.profile-fav-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-.profile-fav-name { font-weight: 600; color: var(--accent); font-size: 0.9rem; }
-.profile-fav-city { color: var(--text2); font-size: 0.8rem; flex: 1; }
-.profile-fav-remove {
-  background: none; border: none; color: var(--text2);
-  font-size: 1.1rem; cursor: pointer; padding: 0 2px; line-height: 1;
-}
-.profile-fav-remove:hover { color: #ef4444; }
-
 /* ============================================================
    MOBILE POLISH — touch feedback, screen transitions
    Скоуплено под (hover: none), чтобы не затрагивать десктоп
@@ -5522,7 +5411,6 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
   .prof-card:active,
   .career-option:active,
   .tip-card:active,
-  .profile-fav-card:active,
   .mobile-nav-link:active {
     transform: scale(0.98);
   }
@@ -5546,7 +5434,6 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
     .prof-card:active,
     .career-option:active,
     .tip-card:active,
-    .profile-fav-card:active,
     .mobile-nav-link:active,
     .bottom-nav-item:active { transform: none; }
   }
@@ -5633,9 +5520,6 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
 .profile-status-icon { font-size: 24px; }
 .profile-status-value { font-size: 15px; font-weight: 700; color: var(--text); }
 .profile-status-label { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-
-/* === Profile Sections === */
-.profile-main { gap: 16px; }
 
 @media (max-width: 600px) {
   .page-profile .page-head {
@@ -5742,7 +5626,4 @@ canvas.confetti-canvas { position: fixed !important; top: 0; left: 0; z-index: 9
     box-shadow: 6px 0 10px rgba(0, 0, 0, 0.08);
   }
 
-  #page-compare .compare-cards {
-    display: none;
-  }
 }
