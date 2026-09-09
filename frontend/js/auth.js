@@ -666,20 +666,6 @@ async function loadProfilePage() {
             ` : `<div class="profile-empty"><div class="profile-empty-icon"></div>${t('profile_page.card_tests_empty') || 'Нет результатов тестов'}</div>`}
           </section>
 
-          <!-- Settings -->
-          <section class="profile-section">
-            <h2 class="profile-section-title">${t('profile_page.card_settings') || 'Настройки'}</h2>
-            <div class="profile-settings-row" style="margin-bottom:12px">
-              <label>${t('profile_page.card_lang_label') || 'Язык интерфейса'}</label>
-              <select id="pref-lang" class="form-input" style="max-width:200px">
-                <option value="ru"${(profile.preferences && profile.preferences.language === 'ru') ? ' selected' : ''}>Русский</option>
-                <option value="kk"${(profile.preferences && profile.preferences.language === 'kk') ? ' selected' : ''}>Қазақша</option>
-                <option value="en"${(profile.preferences && profile.preferences.language === 'en') ? ' selected' : ''}>English</option>
-              </select>
-            </div>
-            <button class="btn btn-primary btn-sm" onclick="handlePreferencesSave(event)">${t('profile_page.card_settings_save') || 'Сохранить'}</button>
-          </section>
-
           <!-- Password -->
           <section class="profile-section">
             <h2 class="profile-section-title">${t('profile_page.card_password_title') || 'Смена пароля'}</h2>

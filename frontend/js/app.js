@@ -804,6 +804,7 @@ function clearCompare() {
   state.compareList = [];
   updateCompareBadge();
   updateStickyCompare();
+  if (state.universities.length) renderUniversityGrid(state.universities);
   renderComparePage();
 }
 
