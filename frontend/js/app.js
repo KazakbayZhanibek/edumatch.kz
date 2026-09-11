@@ -1272,7 +1272,7 @@ async function sendMessage(retryMessage = null) {
         })) : [],
         lang: window.currentLanguage || 'ru',
       }),
-      timeoutMs: 15000,
+      timeoutMs: 60000,
     });
 
     if (!res.ok && res.status === 429) {

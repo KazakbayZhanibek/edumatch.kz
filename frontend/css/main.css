@@ -968,7 +968,7 @@ input, select, textarea { font-family: inherit; }
 }
 .chat-msg-user .chat-bubble {
   background: var(--accent);
-  color: white;
+  color: #111;
   border-radius: var(--radius-md) 4px var(--radius-md) var(--radius-md);
 }
 .chat-msg-ai .chat-bubble {
@@ -4138,11 +4138,16 @@ body.chat-page-active {
 }
 .chat-bubble-user {
   background: var(--accent2);
-  color: white;
+  color: #111;
   border-radius: 16px 4px 16px 16px;
   max-width: 75%;
 }
-.chat-bubble-user .markdown-body strong { color: #fff; }
+.chat-bubble-user p,
+.chat-bubble-user li,
+.chat-bubble-user strong,
+.chat-bubble-user em {
+  color: #111;
+}
 
 /* =============================================
    SKELETON LOADER (loading states)

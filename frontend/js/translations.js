@@ -504,6 +504,7 @@ const translations = {
     },
     error: {
       load_server: 'Ошибка загрузки. Убедитесь, что сервер запущен.',
+      timeout: 'Сервер отвечает дольше обычного. Попробуйте ещё раз.',
       retry: 'Повторить',
       no_unis_found: 'Вузы не найдены. Попробуйте изменить фильтры.',
       load_error: 'Ошибка загрузки',
@@ -1260,6 +1261,7 @@ const translations = {
     },
     error: {
       load_server: 'Жүктеу қатесі. Сервер жұмыс істеп тұрғанына көз жеткізіңіз.',
+      timeout: 'Сервер әдеттегіден ұзақ жауап беруде. Қайталап көріңіз.',
       retry: 'Қайталау',
       no_unis_found: 'Университеттер табылмады. Сүзгілерді өзгертіп көріңіз.',
       load_error: 'Жүктеу қатесі',
@@ -2184,6 +2186,7 @@ const translations = {
     },
     error: {
       load_server: 'Failed to load. Make sure the server is running.',
+      timeout: 'The server is taking longer than usual to respond. Please try again.',
       retry: 'Retry',
       no_unis_found: 'No universities found. Try changing filters.',
       load_error: 'Loading error',
