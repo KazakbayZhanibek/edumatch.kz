@@ -7,6 +7,7 @@ const API = window.location.protocol === 'file:' ? 'http://localhost:3000/api' :
 // ─── STATE ───────────────────────────────────
 const state = window.state = {
   universities: [],
+  universityVisibleCount: 6,
   compareList: [],   // array of ids (max 3)
   favoriteList: [],  // array of ids (from localStorage)
   trackerList: [],   // array of {id, university_id, name, status, added_at, notes}
@@ -464,6 +465,7 @@ async function loadUniversities() {
     }
 
     state.universities = unis;
+    state.universityVisibleCount = 6;
     renderUniversityGrid(unis);
     const statEl = document.getElementById('stat-unis');
     if (statEl) statEl.textContent = unis.length;
@@ -546,7 +548,27 @@ function renderUniversityGrid(unis) {
     grid.innerHTML = `<div class="loading-state"><p>${t('error.no_unis_found')}</p></div>`;
     return;
   }
-  grid.innerHTML = unis.map(u => renderUniversityCard(u)).join('');
+
+  const visibleCount = Math.min(state.universityVisibleCount, unis.length);
+  const visibleUnis = unis.slice(0, visibleCount);
+  const remainingCount = unis.length - visibleCount;
+  const showMoreLabel = t('universities.show_more') || 'Показать ещё';
+
+  grid.innerHTML = `
+    ${visibleUnis.map(u => renderUniversityCard(u)).join('')}
+    ${remainingCount > 0 ? `
+      <button type="button" class="uni-show-more" onclick="showMoreUniversities()">
+        <span>${showMoreLabel}</span>
+        <span class="uni-show-more-count">${remainingCount}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    ` : ''}
+  `;
+}
+
+function showMoreUniversities() {
+  state.universityVisibleCount += 6;
+  renderUniversityGrid(state.universities);
 }
 
 /**
@@ -962,11 +984,6 @@ function renderUniversityDetail(u, container) {
 
   container.innerHTML = `
     <div class="uni-detail">
-      <div style="margin-bottom:20px">
-        <button class="btn btn-ghost btn-sm" onclick="navigate('home')">
-          ${t('uni_detail_page.all_unis')}
-        </button>
-      </div>
       <div class="uni-detail-hero">
         <div>
           <div class="detail-badges">
@@ -3056,8 +3073,19 @@ function filterMapUniversities() {
   const query = searchInput.value.toLowerCase().trim();
   const filtered = query ? state.mapMarkers.filter(m => 
     m.uni.name.toLowerCase().includes(query) || 
-    m.uni.short_name.toLowerCase().includes(query)
+    (m.uni.short_name || '').toLowerCase().includes(query)
   ) : state.mapMarkers;
+
+  const suggestions = document.getElementById('map-search-suggestions');
+  if (suggestions) {
+    suggestions.innerHTML = query ? filtered.slice(0, 6).map(m => `
+      <button type="button" class="map-search-suggestion" role="option" onclick="mapFlyTo(${m.uni.lat}, ${m.uni.lng})">
+        <strong>${escapeHtml(m.uni.short_name || '')}</strong>
+        <span>${escapeHtml(trRu(m.uni.name) || m.uni.name)}</span>
+      </button>
+    `).join('') : '';
+    suggestions.classList.toggle('open', Boolean(query && filtered.length));
+  }
   
   // Show/hide markers
   state.mapMarkers.forEach(m => {
@@ -3093,6 +3121,8 @@ function mapFlyTo(lat, lng, name) {
   if (mapInstance) {
     mapInstance.flyTo([lat, lng], 14, { duration: 1 });
   }
+  const suggestions = document.getElementById('map-search-suggestions');
+  if (suggestions) suggestions.classList.remove('open');
 }
 
 // ─── TIPS ────────────────────────────────────
