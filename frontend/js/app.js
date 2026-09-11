@@ -675,14 +675,23 @@ function applyFilters() {
 }
 
 function resetFilters() {
-  const ids = ['filter-top', 'filter-city', 'filter-specialty', 'filter-price', 'filter-language', 'filter-sort'];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = id === 'filter-sort' ? 'qs_world' : '';
+  const filterPairs = [
+    ['filter-top', 'sheet-top'],
+    ['filter-city', 'sheet-city'],
+    ['filter-specialty', 'sheet-specialty'],
+    ['filter-price', 'sheet-price'],
+    ['filter-language', 'sheet-language'],
+    ['filter-sort', 'sheet-sort']
+  ];
+  filterPairs.forEach(([desktopId, sheetId]) => {
+    const value = desktopId === 'filter-sort' ? 'qs_world' : '';
+    const desktop = document.getElementById(desktopId);
+    const sheet = document.getElementById(sheetId);
+    if (desktop) desktop.value = value;
+    if (sheet) sheet.value = value;
   });
   const search = document.getElementById('search-input');
   if (search) search.value = '';
-  syncSheetFilters();
   loadUniversities();
 }
 

@@ -340,7 +340,7 @@ const translations = {
     },
     modal: {
       about_title: 'О проекте',
-      about_text1: 'EduMatch KZ — учебный проект по финансовой грамотности, созданный чтобы помочь абитуриентам Казахстана осознанно выбирать университет.',
+      about_text1: 'EduMatch KZ — сайт со всеми университетами Казахстана. Здесь можно сравнить вузы, рассчитать шансы на поступление и получить подсказку от ИИ-агента, который поможет выбрать лучший вуз.',
       about_text2: 'Выбор вуза — это крупное финансовое решение на 4 года. Разница между самым дешёвым и самым дорогим университетом Казахстана составляет более',
       about_text2_strong: '13 миллионов тенге',
       about_text2_cont: 'EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов страны в одном месте.',
@@ -1096,7 +1096,7 @@ const translations = {
     },
     modal: {
       about_title: 'Жоба туралы',
-      about_text1: 'EduMatch KZ — Қазақстан түлектеріне университетті саналы түрде таңдауға көмектесу үшін жасалған қаржылық сауаттылық бойынша оқу жобасы.',
+      about_text1: 'EduMatch KZ — Қазақстандағы барлық университеттер туралы ақпарат беретін сайт. Мұнда университеттерді салыстырып, оқуға түсу мүмкіндігін есептеп, ең жақсы университетті таңдауға көмектесетін ЖИ-агенттен кеңес алуға болады.',
       about_text2: 'Университетті таңдау — бұл 4 жылға арналған ірі қаржылық шешім. Қазақстандағы ең арзан және ең қымбат университет арасындағы айырмашылық',
       about_text2_strong: '13 миллион теңге',
       about_text2_cont: 'EduMatch KZ барлық жетекші университеттердің бағаларын, QS рейтингісін және мамандықтарын салыстыруға көмектеседі.',
@@ -2004,7 +2004,7 @@ const translations = {
     },
     modal: {
       about_title: 'About',
-      about_text1: 'EduMatch KZ is an educational financial literacy project created to help applicants in Kazakhstan make informed university choices.',
+      about_text1: 'EduMatch KZ is a website featuring all universities in Kazakhstan. You can compare universities, calculate your admission chances, and get advice from an AI agent that will help you choose the best university.',
       about_text2: 'Choosing a university is a major financial decision for 4 years. The difference between the cheapest and most expensive university in Kazakhstan is over',
       about_text2_strong: '13 million tenge',
       about_text2_cont: 'EduMatch KZ helps compare prices, QS rankings, and specialties of all leading universities in the country in one place.',
