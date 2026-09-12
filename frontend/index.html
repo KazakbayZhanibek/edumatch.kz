@@ -268,34 +268,6 @@
       </div>
     </section>
 
-    <section class="fin-literacy" id="financial-section">
-      <div class="container">
-        <div class="fin-inner">
-          <div class="fin-text">
-            <div class="section-badge" data-i18n="financial.badge">Финансовая грамотность</div>
-            <h2 class="fin-title" data-i18n="financial.title">Считайте полную стоимость обучения</h2>
-            <p class="fin-desc"><span data-i18n="financial.desc1">4 года учёбы — это крупная инвестиция. Разница между самым дешёвым и самым дорогим вузом Казахстана составляет до</span> <strong data-i18n="financial.desc_strong">13 миллионов тенге</strong> <span data-i18n="financial.desc2">за весь период.</span></p>
-          </div>
-          <div class="fin-cards">
-              <div class="fin-card">
-                <div class="fin-card-label" data-i18n="financial.budget_label">Бюджетный вариант</div>
-                <div class="fin-card-amount" data-i18n="financial.budget_amount">~2.3 млн</div>
-                <div class="fin-card-note" data-i18n="financial.budget_note">за 4 года (580K/год)</div>
-              </div>
-              <div class="fin-card fin-card-accent">
-                <div class="fin-card-label" data-i18n="financial.avg_label">Средний вариант</div>
-                <div class="fin-card-amount" data-i18n="financial.avg_amount">~6 млн</div>
-                <div class="fin-card-note" data-i18n="financial.avg_note">за 4 года (1.5M/год)</div>
-              </div>
-              <div class="fin-card">
-                <div class="fin-card-label" data-i18n="financial.premium_label">Премиум вариант</div>
-                <div class="fin-card-amount" data-i18n="financial.premium_amount">~15 млн</div>
-                <div class="fin-card-note" data-i18n="financial.premium_note">за 4 года (3.8M/год)</div>
-              </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 
   <!-- UNIVERSITY DETAIL PAGE -->
@@ -310,7 +282,6 @@
     <div class="container">
       <div class="page-head">
         <div class="page-head-row">
-          <button class="btn btn-ghost btn-sm" onclick="navigate('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
           <div>
             <h1 class="page-title" data-i18n="compare.title">Сравнение университетов</h1>
             <p class="page-sub" data-i18n="compare.sub">Выберите 2–3 вуза на главной странице для сравнения</p>
@@ -582,6 +553,7 @@
       </div>
       <div style="margin-bottom: 20px;">
         <input type="text" id="map-search" class="map-search" placeholder="Поиск университетов..." data-i18n-placeholder="map.search" oninput="filterMapUniversities()">
+        <div id="map-search-suggestions" class="map-search-suggestions" role="listbox" aria-label="Подсказки поиска"></div>
       </div>
     </div>
     <div class="container">
@@ -995,14 +967,13 @@
       <div class="footer-col">
         <div class="footer-col-title" data-i18n="footer.project">Проект</div>
         <a href="#" class="footer-link" onclick="event.preventDefault(); openModal('modal-about')" data-i18n="footer.about">О проекте</a>
-        <a href="#" class="footer-link" onclick="event.preventDefault(); navigate('home'); setTimeout(() => document.getElementById('financial-section')?.scrollIntoView({behavior:'smooth'}), 0)" data-i18n="footer.fin_literacy">Финансовая грамотность</a>
         <a href="#" class="footer-link" onclick="event.preventDefault(); openModal('modal-contacts')" data-i18n="footer.contacts">Контакты</a>
       </div>
       <div class="footer-col">
         <div class="footer-col-title" data-i18n="footer.data_section">Данные</div>
         <span class="footer-text" data-i18n="footer.location">Казахстан</span>
         <span class="footer-text" data-i18n="footer.year" data-academic-year>2025–2026 учебный год</span>
-        <span class="footer-text" data-i18n="footer.unis_count">15 университетов</span>
+        <span class="footer-text" data-i18n="footer.unis_count">152 университета</span>
       </div>
     </div>
   </div>
@@ -1032,13 +1003,22 @@
   <h2 class="modal-title" data-i18n="modal.contacts_title">Контакты</h2>
   <p class="modal-text" data-i18n="modal.contacts_sub">По вопросам сотрудничества, предложениям и обратной связи:</p>
   <div class="modal-contacts-list">
-    <a href="mailto:janibekkaz3@gmail.com" class="modal-contact-item">
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=janibekkaz%40gmail.com" target="_blank" rel="noopener noreferrer" class="modal-contact-item">
       <div class="modal-contact-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
       </div>
       <div>
         <div class="modal-contact-label">Email</div>
         <div class="modal-contact-val">janibekkaz3@gmail.com</div>
+      </div>
+    </a>
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=edumatchkz%40gmail.com" target="_blank" rel="noopener noreferrer" class="modal-contact-item">
+      <div class="modal-contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+      </div>
+      <div>
+        <div class="modal-contact-label">Email</div>
+        <div class="modal-contact-val">edumatchkz@gmail.com</div>
       </div>
     </a>
     <a href="https://www.instagram.com/kazakbay_zhan/" target="_blank" class="modal-contact-item">

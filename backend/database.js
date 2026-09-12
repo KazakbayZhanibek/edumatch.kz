@@ -56,6 +56,8 @@ function migrateExistingDb(db) {
   const migrations = [
     // is_admin колонка в users
     { table: 'users', col: 'is_admin', sql: "ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0" },
+    { table: 'users', col: 'ent_score', sql: 'ALTER TABLE users ADD COLUMN ent_score INTEGER' },
+    { table: 'users', col: 'military_service', sql: 'ALTER TABLE users ADD COLUMN military_service INTEGER DEFAULT 0' },
     { table: 'reviews', col: 'moderated_at', sql: 'ALTER TABLE reviews ADD COLUMN moderated_at DATETIME' },
     { table: 'reviews', col: 'moderated_by', sql: 'ALTER TABLE reviews ADD COLUMN moderated_by INTEGER' },
     // description_kk/en в universities
@@ -140,6 +142,40 @@ function migrateExistingDb(db) {
     db.exec('CREATE INDEX IF NOT EXISTS idx_application_tracker_user ON application_tracker(user_id)');
     db.exec('CREATE INDEX IF NOT EXISTS idx_application_tracker_status ON application_tracker(user_id, status)');
   } catch (e) { /* exists */ }
+
+  // Верификация военной службы и загрузка результатов ЕНТ
+  try {
+    db.exec(`CREATE TABLE IF NOT EXISTS military_verifications (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      document_url TEXT NOT NULL,
+      service_type TEXT DEFAULT 'draft',
+      status TEXT DEFAULT 'pending',
+      reviewed_by INTEGER,
+      review_note TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      reviewed_at DATETIME,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY(reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+    )`);
+    db.exec('CREATE INDEX IF NOT EXISTS idx_military_user ON military_verifications(user_id)');
+    db.exec('CREATE INDEX IF NOT EXISTS idx_military_status ON military_verifications(status)');
+
+    db.exec(`CREATE TABLE IF NOT EXISTS ent_uploads (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      document_url TEXT NOT NULL,
+      ent_score INTEGER,
+      status TEXT DEFAULT 'pending',
+      reviewed_by INTEGER,
+      review_note TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      reviewed_at DATETIME,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY(reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+    )`);
+    db.exec('CREATE INDEX IF NOT EXISTS idx_ent_uploads_user ON ent_uploads(user_id)');
+  } catch (e) { /* verification tables may already exist */ }
 }
 
 /**

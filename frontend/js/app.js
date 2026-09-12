@@ -7,6 +7,7 @@ const API = window.location.protocol === 'file:' ? 'http://localhost:3000/api' :
 // ─── STATE ───────────────────────────────────
 const state = window.state = {
   universities: [],
+  universityVisibleCount: 6,
   compareList: [],   // array of ids (max 3)
   favoriteList: [],  // array of ids (from localStorage)
   trackerList: [],   // array of {id, university_id, name, status, added_at, notes}
@@ -464,6 +465,7 @@ async function loadUniversities() {
     }
 
     state.universities = unis;
+    state.universityVisibleCount = 6;
     renderUniversityGrid(unis);
     const statEl = document.getElementById('stat-unis');
     if (statEl) statEl.textContent = unis.length;
@@ -546,7 +548,27 @@ function renderUniversityGrid(unis) {
     grid.innerHTML = `<div class="loading-state"><p>${t('error.no_unis_found')}</p></div>`;
     return;
   }
-  grid.innerHTML = unis.map(u => renderUniversityCard(u)).join('');
+
+  const visibleCount = Math.min(state.universityVisibleCount, unis.length);
+  const visibleUnis = unis.slice(0, visibleCount);
+  const remainingCount = unis.length - visibleCount;
+  const showMoreLabel = t('universities.show_more') || 'Показать ещё';
+
+  grid.innerHTML = `
+    ${visibleUnis.map(u => renderUniversityCard(u)).join('')}
+    ${remainingCount > 0 ? `
+      <button type="button" class="uni-show-more" onclick="showMoreUniversities()">
+        <span>${showMoreLabel}</span>
+        <span class="uni-show-more-count">${remainingCount}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    ` : ''}
+  `;
+}
+
+function showMoreUniversities() {
+  state.universityVisibleCount += 6;
+  renderUniversityGrid(state.universities);
 }
 
 /**
@@ -653,14 +675,23 @@ function applyFilters() {
 }
 
 function resetFilters() {
-  const ids = ['filter-top', 'filter-city', 'filter-specialty', 'filter-price', 'filter-language', 'filter-sort'];
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = id === 'filter-sort' ? 'qs_world' : '';
+  const filterPairs = [
+    ['filter-top', 'sheet-top'],
+    ['filter-city', 'sheet-city'],
+    ['filter-specialty', 'sheet-specialty'],
+    ['filter-price', 'sheet-price'],
+    ['filter-language', 'sheet-language'],
+    ['filter-sort', 'sheet-sort']
+  ];
+  filterPairs.forEach(([desktopId, sheetId]) => {
+    const value = desktopId === 'filter-sort' ? 'qs_world' : '';
+    const desktop = document.getElementById(desktopId);
+    const sheet = document.getElementById(sheetId);
+    if (desktop) desktop.value = value;
+    if (sheet) sheet.value = value;
   });
   const search = document.getElementById('search-input');
   if (search) search.value = '';
-  syncSheetFilters();
   loadUniversities();
 }
 
@@ -764,24 +795,6 @@ function renderCompareTable(unis, container) {
     return `<tr><td>${row.label}</td>${cells}</tr>`;
   }).join('');
 
-  const cards = unis.map((u, i) => {
-    const rows = [];
-    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.short_name')}</span><span class="compare-card-value">${u.short_name || '—'}</span></div>`);
-    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.city')}</span><span class="compare-card-value">${trRu(u.city_name) || '—'}</span></div>`);
-    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.founded')}</span><span class="compare-card-value">${u.founded || '—'}</span></div>`);
-    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.students')}</span><span class="compare-card-value">${u.students_count ? u.students_count.toLocaleString('ru') : '—'}</span></div>`);
-    if (u.qs_world) rows.push(`<div class="compare-card-row"><span class="compare-card-label">QS World</span><span class="compare-card-value compare-qs-val">#${u.qs_world}</span></div>`);
-    if (u.qs_asia) rows.push(`<div class="compare-card-row"><span class="compare-card-label">QS Asia</span><span class="compare-card-value compare-qs-val">#${u.qs_asia}</span></div>`);
-    if (u.price_from) rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.min_price_year')}</span><span class="compare-card-value compare-price-val">${fmtPrice(u.price_from)} ${t('common.tenge')}</span></div>`);
-    if (u.price_to) rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.max_price_year')}</span><span class="compare-card-value compare-price-val">${fmtPrice(u.price_to)} ${t('common.tenge')}</span></div>`);
-    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.price_4yr')}</span><span class="compare-card-value">${fmtPrice(u.price_from * 4)} ${t('common.tenge')}</span></div>`);
-    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.specialties_count')}</span><span class="compare-card-value">${(u.specialties || []).length}</span></div>`);
-    const href = normalizeWebsiteUrl(u.website);
-    const website = href ? `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${formatWebsiteLabel(u.website)}</a>` : '—';
-    rows.push(`<div class="compare-card-row"><span class="compare-card-label">${t('compare_page.website_label')}</span><span class="compare-card-value">${website}</span></div>`);
-    return `<div class="compare-card"><div class="compare-card-head">${trRu(u.name)}</div>${rows.join('')}</div>`;
-  }).join('');
-
   container.innerHTML = `
     <div class="compare-header-actions">
       <h2 class="section-title" style="flex:1">${t('compare_page.title')}</h2>
@@ -794,7 +807,6 @@ function renderCompareTable(unis, container) {
         <tbody>${trs}</tbody>
       </table>
     </div>
-    <div class="compare-cards">${cards}</div>
     <div style="margin-top:24px;padding:20px;background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius-md)">
       <p style="font-size:13px;color:var(--text-secondary)"><strong style="color:var(--accent)">${t('compare_page.finance_advice')}</strong> ${t('compare_page.price_diff')} <strong style="color:var(--text)">${fmtPrice((Math.max(...unis.map(u=>u.price_to)) - Math.min(...unis.map(u=>u.price_from))) * 4)} ${t('common.tenge')}</strong>. ${t('compare_page.budget_tip')}</p>
     </div>`;
@@ -804,6 +816,7 @@ function clearCompare() {
   state.compareList = [];
   updateCompareBadge();
   updateStickyCompare();
+  if (state.universities.length) renderUniversityGrid(state.universities);
   renderComparePage();
 }
 
@@ -980,11 +993,6 @@ function renderUniversityDetail(u, container) {
 
   container.innerHTML = `
     <div class="uni-detail">
-      <div style="margin-bottom:20px">
-        <button class="btn btn-ghost btn-sm" onclick="navigate('home')">
-          ${t('uni_detail_page.all_unis')}
-        </button>
-      </div>
       <div class="uni-detail-hero">
         <div>
           <div class="detail-badges">
@@ -1264,7 +1272,7 @@ async function sendMessage(retryMessage = null) {
         })) : [],
         lang: window.currentLanguage || 'ru',
       }),
-      timeoutMs: 15000,
+      timeoutMs: 60000,
     });
 
     if (!res.ok && res.status === 429) {
@@ -3074,8 +3082,19 @@ function filterMapUniversities() {
   const query = searchInput.value.toLowerCase().trim();
   const filtered = query ? state.mapMarkers.filter(m => 
     m.uni.name.toLowerCase().includes(query) || 
-    m.uni.short_name.toLowerCase().includes(query)
+    (m.uni.short_name || '').toLowerCase().includes(query)
   ) : state.mapMarkers;
+
+  const suggestions = document.getElementById('map-search-suggestions');
+  if (suggestions) {
+    suggestions.innerHTML = query ? filtered.slice(0, 6).map(m => `
+      <button type="button" class="map-search-suggestion" role="option" onclick="mapFlyTo(${m.uni.lat}, ${m.uni.lng})">
+        <strong>${escapeHtml(m.uni.short_name || '')}</strong>
+        <span>${escapeHtml(trRu(m.uni.name) || m.uni.name)}</span>
+      </button>
+    `).join('') : '';
+    suggestions.classList.toggle('open', Boolean(query && filtered.length));
+  }
   
   // Show/hide markers
   state.mapMarkers.forEach(m => {
@@ -3111,6 +3130,8 @@ function mapFlyTo(lat, lng, name) {
   if (mapInstance) {
     mapInstance.flyTo([lat, lng], 14, { duration: 1 });
   }
+  const suggestions = document.getElementById('map-search-suggestions');
+  if (suggestions) suggestions.classList.remove('open');
 }
 
 // ─── TIPS ────────────────────────────────────

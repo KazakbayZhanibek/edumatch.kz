@@ -336,11 +336,11 @@ const translations = {
       data_section: 'Данные',
       location: 'Казахстан',
       year: '2025–2026 учебный год',
-      unis_count: '15 университетов'
+      unis_count: '152 университета'
     },
     modal: {
       about_title: 'О проекте',
-      about_text1: 'EduMatch KZ — учебный проект по финансовой грамотности, созданный чтобы помочь абитуриентам Казахстана осознанно выбирать университет.',
+      about_text1: 'EduMatch KZ — сайт со всеми университетами Казахстана. Здесь можно сравнить вузы, рассчитать шансы на поступление и получить подсказку от ИИ-агента, который поможет выбрать лучший вуз.',
       about_text2: 'Выбор вуза — это крупное финансовое решение на 4 года. Разница между самым дешёвым и самым дорогим университетом Казахстана составляет более',
       about_text2_strong: '13 миллионов тенге',
       about_text2_cont: 'EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов страны в одном месте.',
@@ -448,28 +448,13 @@ const translations = {
       filter_corp: 'Корпоративные',
       filter_uni: 'Вузовские'
     },
-    financial: {
-      badge: 'Финансовая грамотность',
-      title: 'Считайте полную стоимость обучения',
-      desc1: '4 года учёбы — это крупная инвестиция. Разница между самым дешёвым и самым дорогим вузом Казахстана составляет до',
-      desc_strong: '13 миллионов тенге',
-      desc2: 'за весь период.',
-      budget_label: 'Бюджетный вариант',
-      budget_amount: '~2.3 млн',
-      budget_note: 'за 4 года (580K/год)',
-      avg_label: 'Средний вариант',
-      avg_amount: '~6 млн',
-      avg_note: 'за 4 года (1.5M/год)',
-      premium_label: 'Премиум вариант',
-      premium_amount: '~15 млн',
-      premium_note: 'за 4 года (3.8M/год)'
-    },
     universities: {
       title: 'Университеты Казахстана',
       sub: 'Данные актуальны на 2025–2026 учебный год',
       search: 'Поиск университета...',
       filters_btn: 'Фильтры',
-      loading: 'Загружаем данные...'
+      loading: 'Загружаем данные...',
+      show_more: 'Показать ещё'
     },
     bottomnav: {
       unis: 'Вузы',
@@ -519,6 +504,7 @@ const translations = {
     },
     error: {
       load_server: 'Ошибка загрузки. Убедитесь, что сервер запущен.',
+      timeout: 'Сервер отвечает дольше обычного. Попробуйте ещё раз.',
       retry: 'Повторить',
       no_unis_found: 'Вузы не найдены. Попробуйте изменить фильтры.',
       load_error: 'Ошибка загрузки',
@@ -1107,11 +1093,11 @@ const translations = {
       data_section: 'Деректер',
       location: 'Қазақстан',
       year: '2025–2026 оқу жылы',
-      unis_count: '15 университет'
+      unis_count: '152 университет'
     },
     modal: {
       about_title: 'Жоба туралы',
-      about_text1: 'EduMatch KZ — Қазақстан түлектеріне университетті саналы түрде таңдауға көмектесу үшін жасалған қаржылық сауаттылық бойынша оқу жобасы.',
+      about_text1: 'EduMatch KZ — Қазақстандағы барлық университеттер туралы ақпарат беретін сайт. Мұнда университеттерді салыстырып, оқуға түсу мүмкіндігін есептеп, ең жақсы университетті таңдауға көмектесетін ЖИ-агенттен кеңес алуға болады.',
       about_text2: 'Университетті таңдау — бұл 4 жылға арналған ірі қаржылық шешім. Қазақстандағы ең арзан және ең қымбат университет арасындағы айырмашылық',
       about_text2_strong: '13 миллион теңге',
       about_text2_cont: 'EduMatch KZ барлық жетекші университеттердің бағаларын, QS рейтингісін және мамандықтарын салыстыруға көмектеседі.',
@@ -1219,28 +1205,13 @@ const translations = {
       filter_corp: 'Корпоративтік',
       filter_uni: 'Университеттік'
     },
-    financial: {
-      badge: 'Қаржылық сауаттылық',
-      title: 'Оқудың толық құнын есептеңіз',
-      desc1: '4 жыл оқу — бұл ірі инвестиция. Қазақстандағы ең арзан және ең қымбат университет арасындағы айырмашылық',
-      desc_strong: '13 миллион теңге',
-      desc2: 'барлық кезеңге.',
-      budget_label: 'Бюджеттік нұсқа',
-      budget_amount: '~2.3 млн',
-      budget_note: '4 жылға (580K/жыл)',
-      avg_label: 'Орташа нұсқа',
-      avg_amount: '~6 млн',
-      avg_note: '4 жылға (1.5M/жыл)',
-      premium_label: 'Премиум нұсқа',
-      premium_amount: '~15 млн',
-      premium_note: '4 жылға (3.8M/жыл)'
-    },
     universities: {
       title: 'Қазақстан университеттері',
       sub: 'Деректер 2025–2026 оқу жылына өзекті',
       search: 'Университетті іздеу...',
       filters_btn: 'Сүзгілер',
-      loading: 'Деректер жүктелуде...'
+      loading: 'Деректер жүктелуде...',
+      show_more: 'Тағы көрсету'
     },
     bottomnav: {
       unis: 'Университет',
@@ -1290,6 +1261,7 @@ const translations = {
     },
     error: {
       load_server: 'Жүктеу қатесі. Сервер жұмыс істеп тұрғанына көз жеткізіңіз.',
+      timeout: 'Сервер әдеттегіден ұзақ жауап беруде. Қайталап көріңіз.',
       retry: 'Қайталау',
       no_unis_found: 'Университеттер табылмады. Сүзгілерді өзгертіп көріңіз.',
       load_error: 'Жүктеу қатесі',
@@ -2030,11 +2002,11 @@ const translations = {
       data_section: 'Data',
       location: 'Kazakhstan',
       year: '2025–2026 Academic Year',
-      unis_count: '15 universities'
+      unis_count: '152 universities'
     },
     modal: {
       about_title: 'About',
-      about_text1: 'EduMatch KZ is an educational financial literacy project created to help applicants in Kazakhstan make informed university choices.',
+      about_text1: 'EduMatch KZ is a website featuring all universities in Kazakhstan. You can compare universities, calculate your admission chances, and get advice from an AI agent that will help you choose the best university.',
       about_text2: 'Choosing a university is a major financial decision for 4 years. The difference between the cheapest and most expensive university in Kazakhstan is over',
       about_text2_strong: '13 million tenge',
       about_text2_cont: 'EduMatch KZ helps compare prices, QS rankings, and specialties of all leading universities in the country in one place.',
@@ -2163,7 +2135,8 @@ const translations = {
       sub: 'Data current for the 2025–2026 academic year',
       search: 'Search university...',
       filters_btn: 'Filters',
-      loading: 'Loading data...'
+      loading: 'Loading data...',
+      show_more: 'Show more'
     },
     bottomnav: {
       unis: 'Unis',
@@ -2213,6 +2186,7 @@ const translations = {
     },
     error: {
       load_server: 'Failed to load. Make sure the server is running.',
+      timeout: 'The server is taking longer than usual to respond. Please try again.',
       retry: 'Retry',
       no_unis_found: 'No universities found. Try changing filters.',
       load_error: 'Loading error',

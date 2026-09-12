@@ -346,7 +346,7 @@ ${tone.instruction}
 ${paramHint}${cityHint}${budgetHint}${entHint}
 
 ДАННЫЕ О ВУЗАХ:
-${uniData}
+${JSON.stringify(uniData, null, 2)}
 
 Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}.`;
 }
