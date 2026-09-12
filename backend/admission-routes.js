@@ -13,11 +13,35 @@ const {
 const {
   calculateAdmissionChance,
 } = require('./admission-calculator');
-const { verifyAuthOptional } = require('./auth-middleware');
+const { verifyAuthOptional, verifyAuth } = require('./auth-middleware');
 const authService = require('./auth-service');
 const { getDb } = require('./database');
 const { getExplanationForMatch } = require('./admission-explanation-service');
 const { tr, getLang } = require('./i18n');
+
+router.get('/history', verifyAuth, (req, res, next) => {
+  try {
+    const history = getDb().prepare(`SELECT p.id, p.ent, p.specialty_category, p.predicted_chance, p.created_at,
+      u.short_name, u.name AS university_name FROM prediction_history p
+      LEFT JOIN universities u ON u.id = p.university_id WHERE p.user_id = ? ORDER BY p.id DESC LIMIT 50`).all(req.userId);
+    res.json({ history });
+  } catch (error) { next(error); }
+});
+
+router.delete('/history/all', verifyAuth, (req, res, next) => {
+  try {
+    const result = getDb().prepare('DELETE FROM prediction_history WHERE user_id = ?').run(req.userId);
+    res.json({ success: true, deleted: result.changes });
+  } catch (error) { next(error); }
+});
+
+router.delete('/history/:id', verifyAuth, (req, res, next) => {
+  try {
+    const result = getDb().prepare('DELETE FROM prediction_history WHERE id = ? AND user_id = ?').run(req.params.id, req.userId);
+    if (result.changes === 0) return res.status(404).json({ error: 'Не найдено' });
+    res.json({ success: true });
+  } catch (error) { next(error); }
+});
 
 /**
  * GET /api/admission/specialties
@@ -61,6 +85,7 @@ router.get('/options', (req, res) => {
  * POST /api/admission/predict
  */
 router.post('/predict', verifyAuthOptional, (req, res) => {
+  const lang = getLang(req);
   try {
     const {
       ent,
@@ -71,7 +96,6 @@ router.post('/predict', verifyAuthOptional, (req, res) => {
       language,
       needDorm,
     } = req.body;
-    const lang = getLang(req);
 
     const result = getAdmissionPrediction({
       ent,
@@ -192,7 +216,7 @@ router.post('/calculate', verifyAuthOptional, async (req, res) => {
     console.log('[admission] Result: success=', result.success, 'matches=', result.matches ? result.matches.length : 0);
 
     // Если ошибка валидации
-    if (result.error && !result.matches) {
+    if (result.error && !result.success) {
       return res.status(400).json({ error: result.error });
     }
 
@@ -249,9 +273,9 @@ router.post('/save-history', verifyAuthOptional, (req, res) => {
     }
 
     // Сохраняем в prediction_history для авторизованных пользователей
-    savePredictionHistory(req.userId, input, matches);
+    const recordsCount = savePredictionHistory(req.userId, input, matches);
     
-    return res.json({ success: true, saved: true, recordsCount: Math.min(matches.length, 5) });
+    return res.json({ success: true, saved: true, recordsCount });
   } catch (err) {
     console.error('[admission] save-history error:', err);
     const lang = getLang(req);

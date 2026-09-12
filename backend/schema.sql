@@ -125,6 +125,8 @@ CREATE TABLE IF NOT EXISTS users (
   profile_picture TEXT,
   bio TEXT,
   ent_score INTEGER,                  -- балл ЕНТ
+  ent_verified_score INTEGER,
+  ent_verified_at TEXT,
   military_service INTEGER DEFAULT 0, -- 0 = не служил, 1 = проходил службу
   preferences TEXT,                  -- JSON: {"theme": "light", "language": "kk"}
   is_admin INTEGER DEFAULT 0,        -- 0 или 1
@@ -297,6 +299,7 @@ CREATE TABLE IF NOT EXISTS reviews (
   study_year TEXT,
   moderated_at DATETIME,
   moderated_by INTEGER,
+  moderation_status TEXT NOT NULL DEFAULT 'pending' CHECK(moderation_status IN ('pending', 'approved', 'hidden')),
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE
 );

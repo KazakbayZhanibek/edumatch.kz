@@ -117,8 +117,8 @@ const Auth = {
     return data;
   },
 
-  async updateProfile({ fullName, phone, bio, entScore, militaryService, preferences, profilePicture }) {
-    const body = { fullName, phone, bio, entScore, militaryService };
+  async updateProfile({ fullName, phone, bio, entScore, preferences, profilePicture }) {
+    const body = { fullName, phone, bio, entScore };
     if (preferences) body.preferences = preferences;
     if (profilePicture) body.profilePicture = profilePicture;
     const res = await this.fetch('/users/profile', {
@@ -251,6 +251,40 @@ const Auth = {
     return data;
   },
 
+  async getPendingMilitary() {
+    const res = await this.fetch('/verify/military/pending');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Ошибка загрузки');
+    return data.requests || [];
+  },
+
+  async reviewMilitary(id, action, note) {
+    const res = await this.fetch(`/verify/military/${id}/review`, {
+      method: 'POST',
+      body: JSON.stringify({ action, note })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Ошибка');
+    return data;
+  },
+
+  async getPendingEnt() {
+    const res = await this.fetch('/verify/ent/pending');
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Ошибка загрузки');
+    return data.requests || [];
+  },
+
+  async reviewEnt(id, action, note, entScore) {
+    const res = await this.fetch(`/verify/ent/${id}/review`, {
+      method: 'POST',
+      body: JSON.stringify({ action, note, entScore })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Ошибка');
+    return data;
+  },
+
   async addApplication(application) {
     const res = await this.fetch('/applications', {
       method: 'POST',
@@ -324,6 +358,20 @@ const Auth = {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || t('profile_page.err_profile_save'));
+    return data;
+  },
+
+  async clearAdmissionHistory() {
+    const res = await this.fetch('/admission/history/all', { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Ошибка');
+    return data;
+  },
+
+  async deleteAdmissionHistoryItem(id) {
+    const res = await this.fetch(`/admission/history/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Ошибка');
     return data;
   },
 
@@ -526,7 +574,7 @@ async function loadProfilePage() {
               <span class="profile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
               <span>${t('nav.career') || 'Профориентация'}</span>
             </a>
-            <a class="profile-nav-item" onclick="navigate('universities')">
+            <a class="profile-nav-item" onclick="navigate('home')">
               <span class="profile-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg></span>
               <span>${t('nav.universities') || 'Вузы'}</span>
             </a>
@@ -557,13 +605,7 @@ async function loadProfilePage() {
               <div class="profile-form-row">
                 <div class="form-field">
                   <label>${t('profile_page.card_ent_score') || 'Балл ЕНТ'}</label>
-                  <input type="number" id="profile-ent-score" value="${profile.entScore || ''}" class="form-input" min="0" max="200" placeholder="0–200">
-                </div>
-                <div class="form-field" style="display:flex;align-items:center;padding-top:24px">
-                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:0">
-                    <input type="checkbox" id="profile-military" ${profile.militaryService ? 'checked' : ''} style="width:18px;height:18px;cursor:pointer">
-                    <span>${t('profile_page.card_military') || 'Проходил(а) военную службу'}</span>
-                  </label>
+                  <input type="number" id="profile-ent-score" value="${profile.entScore ?? ''}" class="form-input" min="0" max="140" step="1" placeholder="0–140">
                 </div>
               </div>
               <p class="form-error" id="profile-error"></p>
@@ -621,18 +663,28 @@ async function loadProfilePage() {
               <div class="profile-chat-list" id="profile-chat-list">
                 ${chats.slice(0, 5).map(c => `
                   <div class="profile-chat-item" data-chat-id="${c.id}">
-                    <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
+                    <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
                     <div class="profile-chat-q">${escapeHtml(c.message.slice(0, 150))}${c.message.length > 150 ? '…' : ''}</div>
                     <div class="profile-chat-a">${escapeHtml(c.response.slice(0, 250))}${c.response.length > 250 ? '…' : ''}</div>
-                    <div class="profile-chat-date">${formatDate(c.created_at)}</div>
+                    <div class="profile-chat-date">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      ${formatDate(c.created_at)}
+                    </div>
                   </div>
                 `).join('')}
                 ${chats.slice(5).map(c => `
                   <div class="profile-chat-item profile-chat-item-hidden" style="display:none" data-chat-id="${c.id}">
-                    <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
+                    <button class="profile-chat-delete" onclick="deleteChatItem(${c.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
                     <div class="profile-chat-q">${escapeHtml(c.message.slice(0, 150))}${c.message.length > 150 ? '…' : ''}</div>
                     <div class="profile-chat-a">${escapeHtml(c.response.slice(0, 250))}${c.response.length > 250 ? '…' : ''}</div>
-                    <div class="profile-chat-date">${formatDate(c.created_at)}</div>
+                    <div class="profile-chat-date">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      ${formatDate(c.created_at)}
+                    </div>
                   </div>
                 `).join('')}
               </div>
@@ -641,6 +693,7 @@ async function loadProfilePage() {
           </section>
 
           <!-- Test Results -->
+          <section class="profile-section" id="profile-admission-history"></section>
           <section class="profile-section">
             <div class="profile-section-header">
               <h2 class="profile-section-title">${t('profile_page.card_tests_title') || 'Результаты тестов'}</h2>
@@ -649,16 +702,27 @@ async function loadProfilePage() {
             ${tests.length ? `
               <div class="profile-tests-grid">
                 ${tests.map(test => {
-                  const data = test.result_data ? JSON.parse(test.result_data) : {};
+                  let data = {};
+                  try { data = test.result_data ? JSON.parse(test.result_data) || {} : {}; } catch (_) { /* An old malformed result must not break the profile. */ }
                   const labelFn = TEST_TYPE_LABELS[test.test_type];
                   const label = typeof labelFn === 'function' ? labelFn() : test.test_type;
+                  const icon = test.test_type === 'ent_calc' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>'
+                    : test.test_type === 'career_test' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>'
+                    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>';
+                  const pct = test.max_score ? Math.round((test.score / test.max_score) * 100) : null;
                   return `
                     <div class="profile-test-card">
-                      <button class="profile-test-delete" onclick="deleteTestResultItem(${test.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">×</button>
-                      <div class="profile-test-type">${escapeHtml(label)}</div>
+                      <button class="profile-test-delete" onclick="deleteTestResultItem(${test.id}, this)" title="${t('profile_page.card_saved_delete') || 'Удалить'}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      </button>
+                      <div class="profile-test-type">${icon} ${escapeHtml(label)}</div>
                       <div class="profile-test-score">${test.score}${test.max_score ? ` / ${test.max_score}` : ''}</div>
+                      ${pct !== null ? `<div style="margin-bottom:8px"><div style="height:4px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--accent);border-radius:4px"></div></div></div>` : ''}
                       ${data.summary ? `<div class="profile-test-meta">${escapeHtml(data.summary)}</div>` : ''}
-                      <div class="profile-test-date">${formatDate(test.created_at)}</div>
+                      <div class="profile-test-date">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        ${formatDate(test.created_at)}
+                      </div>
                     </div>
                   `;
                 }).join('')}
@@ -721,6 +785,7 @@ async function loadProfilePage() {
 
     // Рендер верификации армии
     renderMilitaryVerification();
+    renderAdmissionHistory();
 
   } catch (e) {
     content.innerHTML = `<p class="form-error">${e.message}</p>`;
@@ -825,294 +890,123 @@ async function renderProfileTracker() {
 
 // ==================== STATUS ROW (ENT + Military) ====================
 
-async function renderProfileStatusRow() {
-  const container = document.getElementById('profile-status-row');
+function renderProfileStatusRow() { return Verification.badges(); }
+async function renderAdmissionHistory() {
+  const container = document.getElementById('profile-admission-history');
   if (!container) return;
-
-  const iconEnt = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>';
-  const iconClock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
-  const iconCheck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>';
-  const iconShield = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
-  const iconDash = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-
-  let entHtml = `<div class="profile-status-card"><div class="profile-status-icon">${iconEnt}</div><div class="profile-status-info"><div class="profile-status-value">—</div><div class="profile-status-label">ЕНТ</div></div></div>`;
-  let milHtml = `<div class="profile-status-card"><div class="profile-status-icon">${iconShield}</div><div class="profile-status-info"><div class="profile-status-value">—</div><div class="profile-status-label">Армия</div></div></div>`;
-
+  const lang = window.currentLanguage || 'ru';
+  const labels = {
+    ru: ['История расчётов поступления', 'Последние 50 результатов', 'Расчётов пока нет', 'Обновить', 'Очистить всё', 'Удалить'],
+    kk: ['Оқуға түсу есептерінің тарихы', 'Соңғы 50 нәтиже', 'Есептер әлі жоқ', 'Жаңарту', 'Барлығын тазалау', 'Жою'],
+    en: ['Admission calculation history', 'Latest 50 results', 'No calculations yet', 'Refresh', 'Clear all', 'Delete']
+  }[lang] || ['История расчётов', 'Последние 50 результатов', 'Расчётов пока нет', 'Обновить', 'Очистить всё', 'Удалить'];
   try {
-    const [entRes, milRes] = await Promise.all([
-      Auth.fetch('/verify/ent/status').then(r => r.json()).catch(() => ({})),
-      Auth.fetch('/verify/military/status').then(r => r.json()).catch(() => ({}))
-    ]);
-
-    if (entRes.entScore) {
-      entHtml = `<div class="profile-status-card profile-status-active"><div class="profile-status-icon">${iconEnt}</div><div class="profile-status-info"><div class="profile-status-value">${entRes.entScore}</div><div class="profile-status-label">Балл ЕНТ</div></div></div>`;
-    } else if (entRes.request && entRes.request.status === 'pending') {
-      entHtml = `<div class="profile-status-card profile-status-pending"><div class="profile-status-icon">${iconClock}</div><div class="profile-status-info"><div class="profile-status-value">На проверке</div><div class="profile-status-label">ЕНТ</div></div></div>`;
-    }
-
-    if (milRes.verified) {
-      milHtml = `<div class="profile-status-card profile-status-active"><div class="profile-status-icon">${iconCheck}</div><div class="profile-status-info"><div class="profile-status-value">Подтверждено</div><div class="profile-status-label">Армия</div></div></div>`;
-    } else if (milRes.request && milRes.request.status === 'pending') {
-      milHtml = `<div class="profile-status-card profile-status-pending"><div class="profile-status-icon">${iconClock}</div><div class="profile-status-info"><div class="profile-status-value">На проверке</div><div class="profile-status-label">Армия</div></div></div>`;
-    }
-  } catch (e) {}
-
-  container.innerHTML = entHtml + milHtml;
-}
-
-// ==================== ЕНТ ЗАГРУЗКА ====================
-
-async function renderEntUpload() {
-  const container = document.getElementById('ent-upload-content');
-  if (!container) return;
-
-  try {
-    const res = await Auth.fetch('/verify/ent/status');
-    const data = await res.json();
-
-    if (data.entScore) {
-      container.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-          <div style="font-size:32px;font-weight:700;color:var(--accent)">${data.entScore}</div>
-          <div>
-            <div style="font-weight:600">${t('profile_page.ent_score_label') || 'Балл ЕНТ'}</div>
-            <div style="font-size:13px;color:var(--text-muted)">${t('profile_page.ent_verified') || 'Верифицировано'}</div>
-          </div>
+    const response = await Auth.fetch('/admission/history');
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Ошибка загрузки');
+    const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>';
+    container.innerHTML = `
+      <div class="profile-section-header">
+        <h2 class="profile-section-title">${icon} ${labels[0]}</h2>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${data.history.length ? `<button class="btn btn-ghost btn-sm" onclick="clearAdmissionHistory()" style="color:var(--error,#ef4444);font-size:12px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:4px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            ${labels[4]}
+          </button>` : ''}
+          <span class="profile-section-badge">${data.history.length}</span>
         </div>
-        <button class="btn btn-outline" onclick="showEntUploadForm()">${t('profile_page.ent_update') || 'Обновить балл'}</button>
-      `;
-    } else {
-      container.innerHTML = `
-        <p style="color:var(--text-muted);margin-bottom:12px">${t('profile_page.ent_not_uploaded') || 'Загрузите результат ЕНТ с result.kz для верификации балла'}</p>
-        <button class="btn btn-primary" onclick="showEntUploadForm()">${t('profile_page.ent_upload_btn') || 'Загрузить результат ЕНТ'}</button>
-      `;
-    }
-  } catch (e) {
-    container.innerHTML = `<p style="color:var(--text-muted)">${t('profile_page.ent_not_logged') || 'Войдите, чтобы загрузить результат ЕНТ'}</p>`;
-  }
+      </div>
+      ${data.history.length ? `<div class="profile-tests-grid">${data.history.map(row => {
+        const chance = row.predicted_chance;
+        const chanceColor = chance >= 70 ? 'var(--accent)' : chance >= 40 ? 'var(--warning,#f59e0b)' : 'var(--error,#ef4444)';
+        return `
+          <div class="profile-test-card">
+            <button class="profile-test-delete" onclick="deleteAdmissionHistoryItem(${row.id}, this)" title="${labels[5]}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div class="profile-test-type">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              ${escapeHtml(row.short_name || row.university_name || '—')}
+            </div>
+            <div class="profile-test-score" style="color:${chanceColor}">${chance != null ? chance + '%' : '—'}</div>
+            <div style="margin-bottom:8px"><div style="height:4px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:${chance || 0}%;background:${chanceColor};border-radius:4px"></div></div></div>
+            <div class="profile-test-meta">${escapeHtml(row.specialty_category || '—')} · ЕНТ ${row.ent ?? '—'}</div>
+            <div class="profile-test-date">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              ${formatDate(row.created_at)}
+            </div>
+          </div>`;
+      }).join('')}</div>` : `<div class="profile-empty"><div class="profile-empty-icon"> </div>${labels[2]}</div>`}`;
+  } catch (error) { container.innerHTML = `<p class="form-error">${escapeHtml(error.message)}</p>`; }
+  const btns = document.createElement('div');
+  btns.style.cssText = 'display:flex;gap:8px;margin-top:12px';
+  const refresh = document.createElement('button');
+  refresh.type = 'button'; refresh.className = 'btn btn-ghost btn-sm';
+  refresh.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="margin-right:6px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>' + labels[3];
+  refresh.onclick = renderAdmissionHistory;
+  btns.appendChild(refresh);
+  container.append(btns);
 }
 
-function showEntUploadForm() {
-  const container = document.getElementById('ent-upload-content');
-  if (!container) return;
+async function clearAdmissionHistory() {
+  const overlay = document.createElement('div');
+  overlay.className = 'sheet-overlay open';
+  overlay.style.cssText = 'z-index:999;display:block;opacity:1;pointer-events:auto';
+  overlay.onclick = () => overlay.remove();
 
-  container.innerHTML = `
-    <div style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center">
-      <input type="file" id="ent-file-input" accept="image/*,.pdf" style="display:none" onchange="handleEntFileSelect(this)">
-      <label for="ent-file-input" style="cursor:pointer;display:block">
-        <div style="font-size:32px;margin-bottom:8px"></div>
-        <div style="font-weight:600;margin-bottom:4px">${t('profile_page.ent_drop') || 'Нажмите или перетащите файл'}</div>
-        <div style="font-size:13px;color:var(--text-muted)">${t('profile_page.ent_formats') || 'JPG, PNG, PDF — скриншот с result.kz'}</div>
-      </label>
+  const sheet = document.createElement('div');
+  sheet.className = 'bottom-sheet open';
+  sheet.style.cssText = 'z-index:1000;max-height:auto;border-radius:20px;bottom:auto;top:50%;left:50%;transform:translate(-50%,-50%);width:min(380px,90vw);padding:28px 24px;text-align:center';
+  sheet.onclick = e => e.stopPropagation();
+
+  sheet.innerHTML = `
+    <div style="margin-bottom:16px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--error,#ef4444)" stroke-width="2" width="40" height="40" style="margin:0 auto 12px;display:block">
+        <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        <line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
+      </svg>
+      <div style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--text)">Очистить всю историю?</div>
+      <div style="font-size:13px;color:var(--text-muted)">Это действие нельзя отменить. Будут удалены все ${document.querySelector('.profile-section-badge')?.textContent || ''} расчётов.</div>
     </div>
-    <div id="ent-file-preview" style="margin-top:12px"></div>
-    <div style="margin-top:12px">
-      <label style="font-weight:600;display:block;margin-bottom:4px">${t('profile_page.ent_manual') || 'Или введите балл вручную:'}</label>
-      <input type="number" id="ent-manual-score" class="form-input" min="0" max="140" placeholder="0–140" style="max-width:200px">
-    </div>
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button class="btn btn-primary" onclick="submitEntUpload()">${t('profile_page.ent_submit') || 'Отправить'}</button>
-      <button class="btn btn-outline" onclick="renderEntUpload()">${t('common.cancel') || 'Отмена'}</button>
-    </div>
-    <p class="form-error" id="ent-error" style="margin-top:8px"></p>
-  `;
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-ghost" style="flex:1" onclick="this.closest('.bottom-sheet').remove();document.querySelector('.sheet-overlay[style*=\\'z-index:999\\']')?.remove()">Отмена</button>
+      <button class="btn" style="flex:1;background:var(--error,#ef4444);color:#fff;border-color:var(--error,#ef4444)" id="confirm-clear-history">Очистить</button>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  document.body.appendChild(sheet);
+
+  document.getElementById('confirm-clear-history').onclick = async () => {
+    sheet.remove();
+    overlay.remove();
+    try {
+      await Auth.clearAdmissionHistory();
+      showToast('История очищена', 'success');
+      await renderAdmissionHistory();
+    } catch (e) { showToast(e.message, 'error'); }
+  };
 }
 
-function handleEntFileSelect(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const preview = document.getElementById('ent-file-preview');
-  if (file.type.startsWith('image/')) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%;max-height:200px;border-radius:8px">`;
-    };
-    reader.readAsDataURL(file);
-  } else {
-    preview.innerHTML = `<div style="padding:12px;background:var(--bg-secondary);border-radius:8px">${file.name}</div>`;
-  }
-}
-
-async function submitEntUpload() {
-  const errEl = document.getElementById('ent-error');
-  if (errEl) errEl.textContent = '';
-
-  const fileInput = document.getElementById('ent-file-input');
-  const manualScore = document.getElementById('ent-manual-score');
-  const score = manualScore ? parseInt(manualScore.value) : null;
-
-  let documentUrl = null;
-
-  if (fileInput && fileInput.files[0]) {
-    const file = fileInput.files[0];
-    if (file.size > 5 * 1024 * 1024) {
-      if (errEl) errEl.textContent = t('profile_page.ent_too_large') || 'Файл не должен превышать 5 МБ';
-      return;
-    }
-    documentUrl = await new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = e => resolve(e.target.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  if (!documentUrl && (score === null || isNaN(score))) {
-    if (errEl) errEl.textContent = t('profile_page.ent_need_file_or_score') || 'Загрузите файл или введите балл';
-    return;
-  }
-
-  if (!documentUrl) {
-    documentUrl = 'manual_' + Date.now();
-  }
-
+async function deleteAdmissionHistoryItem(id, btn) {
+  const card = btn.closest('.profile-test-card');
+  card.style.opacity = '0.4';
+  btn.disabled = true;
   try {
-    const res = await Auth.fetch('/verify/ent', {
-      method: 'POST',
-      body: JSON.stringify({ documentUrl, entScore: score })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-
-    if (score) {
-      showToast(`${t('profile_page.ent_saved') || 'Балл ЕНТ сохранён'}: ${score}`, 'success');
-    } else {
-      showToast(t('profile_page.ent_pending') || 'Заявка отправлена на проверку', 'success');
-    }
-    renderEntUpload();
+    await Auth.deleteAdmissionHistoryItem(id);
+    card.remove();
+    const section = document.getElementById('profile-admission-history');
+    const badge = section?.querySelector('.profile-section-badge');
+    if (badge) badge.textContent = Math.max(0, parseInt(badge.textContent) - 1);
   } catch (e) {
-    if (errEl) errEl.textContent = e.message;
+    card.style.opacity = '1';
+    btn.disabled = false;
+    showToast(e.message, 'error');
   }
 }
-
-// ==================== ВЕРИФИКАЦИЯ АРМИИ ====================
-
-async function renderMilitaryVerification() {
-  const container = document.getElementById('military-content');
-  if (!container) return;
-
-  try {
-    const res = await Auth.fetch('/verify/military/status');
-    const data = await res.json();
-
-    if (data.verified) {
-      container.innerHTML = `
-        <div style="display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg-secondary);border-radius:12px">
-          <div style="font-size:28px"></div>
-          <div>
-            <div style="font-weight:600;color:var(--accent)">${t('profile_page.military_verified') || 'Военная служба подтверждена'}</div>
-            <div style="font-size:13px;color:var(--text-muted)">${t('profile_page.military_verified_desc') || 'Доступны льготы при поступлении'}</div>
-          </div>
-        </div>
-      `;
-    } else if (data.request && data.request.status === 'pending') {
-      container.innerHTML = `
-        <div style="padding:16px;background:var(--bg-secondary);border-radius:12px">
-          <div style="font-weight:600">${t('profile_page.military_pending') || 'Заявка на рассмотрении'}</div>
-          <div style="font-size:13px;color:var(--text-muted);margin-top:4px">${t('profile_page.military_pending_desc') || 'Одобрение администратором может занять до 24 часов'}</div>
-        </div>
-      `;
-    } else if (data.request && data.request.status === 'rejected') {
-      container.innerHTML = `
-        <div style="padding:16px;background:var(--bg-secondary);border-radius:12px;margin-bottom:12px">
-          <div style="font-weight:600;color:var(--error)">${t('profile_page.military_rejected') || 'Заявка отклонена'}</div>
-          ${data.request.review_note ? `<div style="font-size:13px;color:var(--text-muted);margin-top:4px">${escapeHtml(data.request.review_note)}</div>` : ''}
-        </div>
-        <button class="btn btn-primary" onclick="showMilitaryUploadForm()">${t('profile_page.military_retry') || 'Отправить заново'}</button>
-      `;
-    } else {
-      container.innerHTML = `
-        <p style="color:var(--text-muted);margin-bottom:12px">${t('profile_page.military_desc') || 'Загрузите документ о прохождении военной службы для получения льгот при поступлении'}</p>
-        <button class="btn btn-primary" onclick="showMilitaryUploadForm()">${t('profile_page.military_upload_btn') || 'Загрузить документ'}</button>
-      `;
-    }
-  } catch (e) {
-    container.innerHTML = `<p style="color:var(--text-muted)">${t('profile_page.military_not_logged') || 'Войдите, чтобы загрузить документ'}</p>`;
-  }
-}
-
-function showMilitaryUploadForm() {
-  const container = document.getElementById('military-content');
-  if (!container) return;
-
-  container.innerHTML = `
-    <div style="margin-bottom:12px">
-      <label style="font-weight:600;display:block;margin-bottom:6px">${t('profile_page.military_type') || 'Тип службы:'}</label>
-      <select id="military-type" class="form-input" style="max-width:300px">
-        <option value="draft">${t('profile_page.military_draft') || 'По призыву'}</option>
-        <option value="contract">${t('profile_page.military_contract') || 'По контракту'}</option>
-        <option value="alternative">${t('profile_page.military_alternative') || 'Альтернативная служба'}</option>
-      </select>
-    </div>
-    <div style="border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center">
-      <input type="file" id="military-file-input" accept="image/*,.pdf" style="display:none" onchange="handleMilitaryFileSelect(this)">
-      <label for="military-file-input" style="cursor:pointer;display:block">
-        <div style="font-size:32px;margin-bottom:8px"></div>
-        <div style="font-weight:600;margin-bottom:4px">${t('profile_page.military_drop') || 'Нажмите или перетащите файл'}</div>
-        <div style="font-size:13px;color:var(--text-muted)">${t('profile_page.military_formats') || 'Фото военного билета, справки или удостоверения'}</div>
-      </label>
-    </div>
-    <div id="military-file-preview" style="margin-top:12px"></div>
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button class="btn btn-primary" onclick="submitMilitaryVerification()">${t('profile_page.military_submit') || 'Отправить'}</button>
-      <button class="btn btn-outline" onclick="renderMilitaryVerification()">${t('common.cancel') || 'Отмена'}</button>
-    </div>
-    <p class="form-error" id="military-error" style="margin-top:8px"></p>
-  `;
-}
-
-function handleMilitaryFileSelect(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const preview = document.getElementById('military-file-preview');
-  if (file.type.startsWith('image/')) {
-    const reader = new FileReader();
-    reader.onload = e => {
-      preview.innerHTML = `<img src="${e.target.result}" style="max-width:100%;max-height:200px;border-radius:8px">`;
-    };
-    reader.readAsDataURL(file);
-  } else {
-    preview.innerHTML = `<div style="padding:12px;background:var(--bg-secondary);border-radius:8px">${file.name}</div>`;
-  }
-}
-
-async function submitMilitaryVerification() {
-  const errEl = document.getElementById('military-error');
-  if (errEl) errEl.textContent = '';
-
-  const fileInput = document.getElementById('military-file-input');
-  const serviceType = document.getElementById('military-type')?.value || 'draft';
-
-  if (!fileInput || !fileInput.files[0]) {
-    if (errEl) errEl.textContent = t('profile_page.military_need_file') || 'Загрузите документ';
-    return;
-  }
-
-  const file = fileInput.files[0];
-  if (file.size > 5 * 1024 * 1024) {
-    if (errEl) errEl.textContent = t('profile_page.military_too_large') || 'Файл не должен превышать 5 МБ';
-    return;
-  }
-
-  const documentUrl = await new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = e => resolve(e.target.result);
-    reader.readAsDataURL(file);
-  });
-
-  try {
-    const res = await Auth.fetch('/verify/military', {
-      method: 'POST',
-      body: JSON.stringify({ documentUrl, serviceType })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-
-    showToast(t('profile_page.military_submitted') || 'Заявка отправлена на проверку', 'success');
-    renderMilitaryVerification();
-  } catch (e) {
-    if (errEl) errEl.textContent = e.message;
-  }
-}
+function renderEntUpload() { return Verification.profile('ent'); }
+function renderMilitaryVerification() { return Verification.profile('military'); }
+function showEntUploadForm() { return Verification.upload('ent'); }
+function showMilitaryUploadForm() { return Verification.upload('military'); }
 
 async function deleteSavedUniversity(uniId, btn) {
   btn.disabled = true;
@@ -1236,10 +1130,9 @@ function handleProfileSave(e) {
     fullName: document.getElementById('profile-fullname').value.trim(),
     phone: document.getElementById('profile-phone').value.trim(),
     bio: document.getElementById('profile-bio').value.trim(),
-    entScore: entVal ? parseInt(entVal) : null,
-    militaryService: document.getElementById('profile-military').checked
+    entScore: entVal === '' ? null : Number(entVal)
   })
-    .then(() => showToast(t('profile_page.toast_profile_saved'), 'success'))
+    .then(() => { showToast(t('profile_page.toast_profile_saved'), 'success'); renderProfileStatusRow(); renderEntUpload(); })
     .catch(e => { err.textContent = e.message; });
 }
 
@@ -1340,13 +1233,15 @@ async function loadAdminPanel() {
   if (!container) return;
   const days = Number(container.dataset.days || 30);
   try {
-    const [overviewData, reviews, applications, users] = await Promise.all([
-      Auth.getAdminOverview(days), Auth.getAdminReviews(), Auth.getAdminApplications(), Auth.getAdminUsers()
+    const [overviewData, reviews, applications, users, milRequests, entRequests] = await Promise.all([
+      Auth.getAdminOverview(days), Auth.getAdminReviews(), Auth.getAdminApplications(), Auth.getAdminUsers(),
+      Auth.getPendingMilitary().catch(() => []), Auth.getPendingEnt().catch(() => [])
     ]);
     const overview = overviewData.overview || {};
     const labels = { collecting: 'Сбор документов', submitted: 'Подано', waiting: 'Ожидание', accepted: 'Зачислены', enrolled: 'Оплачивают', rejected: 'Отказ' };
     const statuses = overviewData.applicationStatuses || [];
     const intents = overviewData.intents || [];
+    const serviceTypes = { draft: 'По призыву', contract: 'Контракт', alternative: 'Альтернативная' };
     container.innerHTML = `
       <div class="admin-toolbar"><div><strong>Центр управления</strong><span>Данные за последние ${days} дней</span></div><label>Период <select onchange="changeAdminPeriod(this.value)"><option value="7" ${days === 7 ? 'selected' : ''}>7 дней</option><option value="30" ${days === 30 ? 'selected' : ''}>30 дней</option><option value="90" ${days === 90 ? 'selected' : ''}>90 дней</option><option value="365" ${days === 365 ? 'selected' : ''}>Год</option></select></label><button class="btn btn-ghost btn-sm" onclick="loadAdminPanel()">Обновить</button></div>
       <div class="admin-metrics">
@@ -1354,7 +1249,9 @@ async function loadAdminPanel() {
         <div class="admin-metric"><strong>${overview.universities || 0}</strong><span>Вузы</span></div>
         <div class="admin-metric"><strong>${overview.applications || 0}</strong><span>Заявки</span><small>+${overview.periodApplications || 0} за период</small></div>
         <div class="admin-metric"><strong>${overview.chatMessages || 0}</strong><span>Диалоги с ИИ</span><small>+${overview.periodChats || 0} за период</small></div>
+        <div class="admin-metric" style="border-left:3px solid var(--warning,#f59e0b)"><strong>${milRequests.length + entRequests.length}</strong><span>На верификации</span></div>
       </div>
+      <div id="verification-admin" class="admin-data-block"></div>
       <div class="admin-columns"><div class="admin-data-block"><div class="admin-block-title">Заявки по статусам</div>${statuses.map(item => `<div class="admin-list-row"><span>${escapeHtml(labels[item.status] || item.status)}</span><strong>${item.count}</strong></div>`).join('') || '<p class="admin-muted">Нет данных</p>'}</div><div class="admin-data-block"><div class="admin-block-title">Темы ИИ за период</div>${intents.map(item => `<div class="admin-list-row"><span>${escapeHtml(item.intent)}</span><strong>${item.count}</strong></div>`).join('') || '<p class="admin-muted">Нет данных</p>'}</div></div>
       <div class="admin-data-block admin-table-block"><div class="admin-block-title">Последние заявки <span>${applications.length}</span></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Пользователь</th><th>Вуз</th><th>Статус</th><th>Год</th></tr></thead><tbody>${applications.slice(0, 12).map(item => `<tr><td>${escapeHtml(item.username || item.email)}</td><td>${escapeHtml(item.short_name || item.university_name)}</td><td>${escapeHtml(labels[item.status] || item.status)}</td><td>${escapeHtml(item.academic_year || '')}</td></tr>`).join('') || '<tr><td colspan="4">Нет заявок</td></tr>'}</tbody></table></div></div>
       <div class="admin-data-block admin-table-block"><div class="admin-block-title">Последние пользователи <span>${users.length}</span></div><div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Пользователь</th><th>Email</th><th>Заявки</th><th>Чаты</th></tr></thead><tbody>${users.slice(0, 12).map(item => `<tr><td>${escapeHtml(item.username || '')}${item.is_admin ? ' · ADMIN' : ''}</td><td>${escapeHtml(item.email)}</td><td>${item.applications}</td><td>${item.chats}</td></tr>`).join('')}</tbody></table></div></div>
@@ -1366,13 +1263,14 @@ async function loadAdminPanel() {
             <div class="admin-review-meta">${escapeHtml(review.user_name)} · ${formatDate(review.created_at)}</div>
             <p>${escapeHtml(review.comment || review.pros || review.cons || 'Без текста')}</p>
             <div class="admin-review-actions">
-              <button class="btn btn-primary btn-sm" onclick="moderateAdminReview(${review.id}, true)">${review.moderated_at ? 'Одобрено' : 'Одобрить'}</button>
+              <button class="btn btn-primary btn-sm" onclick="moderateAdminReview(${review.id}, true)">${review.moderation_status === 'approved' ? 'Одобрено' : 'Одобрить'}</button>
               <button class="btn btn-ghost btn-sm" onclick="moderateAdminReview(${review.id}, false)">Скрыть</button>
               <button class="btn btn-ghost btn-sm admin-danger-btn" onclick="deleteAdminReview(${review.id})">Удалить</button>
             </div>
           </article>
         `).join('') : '<div class="profile-empty">Отзывов пока нет</div>'}
       </div>`;
+    await Verification.admin();
   } catch (error) {
     container.innerHTML = `<p class="form-error">${escapeHtml(error.message)}</p>`;
   }
@@ -1395,6 +1293,21 @@ async function moderateAdminReview(id, approved) {
 async function deleteAdminReview(id) {
   try {
     await Auth.deleteAdminReview(id);
+    await loadAdminPanel();
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function reviewVerifyRequest(type, id, action) {
+  const label = type === 'military' ? 'военную службу' : 'ЕНТ';
+  const msg = action === 'approve' ? `Одобрить заявку на ${label}?` : `Отклонить заявку на ${label}?`;
+  if (!confirm(msg)) return;
+  try {
+    if (type === 'military') {
+      await Auth.reviewMilitary(id, action);
+    } else {
+      await Auth.reviewEnt(id, action);
+    }
+    showToast(action === 'approve' ? 'Заявка одобрена' : 'Заявка отклонена', 'success');
     await loadAdminPanel();
   } catch (error) { showToast(error.message, 'error'); }
 }

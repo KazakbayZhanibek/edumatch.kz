@@ -2176,6 +2176,12 @@ function closeMoreSheet() { closeSheet('more-sheet-overlay', 'more-sheet'); }
    ============================================= */
 
 function initAdmissionPage() {
+  const entInput = document.getElementById('admit-ent');
+  if (entInput && entInput.value === '' && typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
+    Auth.getProfile().then(profile => {
+      if (entInput.value === '' && profile.entScore != null) entInput.value = profile.entScore;
+    }).catch(() => {});
+  }
   const citySel = document.getElementById('admit-city');
   if (citySel && citySel.options.length <= 1) {
     loadCities();
@@ -2222,7 +2228,8 @@ async function calculateAdmissionChance() {
   const resultsEl = document.getElementById('admission-results');
   
   // Получаем значения из формы
-  const entScore = parseInt(document.getElementById('admit-ent').value, 10);
+  const entValue = document.getElementById('admit-ent').value;
+  const entScore = entValue === '' ? NaN : Number(entValue);
   const gpa = parseFloat(document.getElementById('admit-gpa').value);
   const specialtyId = parseInt(document.getElementById('admit-specialty').value, 10);
   const cityId = document.getElementById('admit-city').value ? parseInt(document.getElementById('admit-city').value, 10) : null;
@@ -2231,7 +2238,7 @@ async function calculateAdmissionChance() {
   const needsDorm = document.getElementById('admit-dorm').checked;
 
   // Валидация
-  if (!entScore || entScore < 0 || entScore > 140) {
+  if (!Number.isInteger(entScore) || entScore < 0 || entScore > 140) {
     showToast(t('admission_page.ent_must_be'), 'warning');
     return;
   }

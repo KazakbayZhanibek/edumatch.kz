@@ -25,6 +25,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.css">
 
 <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/verification.css">
 <style>
   /* --- Патчи профиля: добавь в css/main.css и удали этот блок --- */
   .profile-user-banner, .profile-user-avatar { cursor: pointer; }
@@ -153,11 +154,11 @@
 </div>
 
 <!-- PAGES -->
+<main id="app">
 <button class="global-back-button" id="global-back-button" onclick="navigateBack()" aria-label="Назад" data-i18n-aria="buttons.back">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
   <span data-i18n="buttons.back">Назад</span>
 </button>
-<main id="app">
 
   <!-- HOME PAGE -->
   <div id="page-home" class="page active">
@@ -951,34 +952,58 @@
 
 <footer class="footer">
   <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="footer-logo">
-        <span class="footer-logo-text">EduMatch<span class="footer-logo-kz">KZ</span></span>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="28" height="28" style="color:var(--accent)"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          <span class="footer-logo-text">EduMatch<span class="footer-logo-kz">KZ</span></span>
+        </div>
+        <p class="footer-desc" data-i18n="footer.desc">Платформа для сравнения университетов Казахстана — цены, рейтинги, специальности и ИИ-советник.</p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social" aria-label="Instagram" onclick="event.preventDefault()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" class="footer-social" aria-label="Telegram" onclick="event.preventDefault()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M21 3L9 13"/><path d="M21 3l-7 18-4-9-9-4z"/></svg>
+          </a>
+          <a href="#" class="footer-social" aria-label="WhatsApp" onclick="event.preventDefault()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/></svg>
+          </a>
+        </div>
       </div>
-      <p class="footer-desc" data-i18n="footer.desc">Платформа для сравнения университетов Казахстана — цены, рейтинги, специальности и ИИ-советник.</p>
-    </div>
-    <div class="footer-cols">
-      <div class="footer-col">
-        <div class="footer-col-title" data-i18n="footer.sections">Разделы</div>
-        <a href="#" class="footer-link" onclick="event.preventDefault(); navigate('home')" data-i18n="footer.universities">Университеты</a>
-        <a href="#" class="footer-link" onclick="event.preventDefault(); navigate('compare')" data-i18n="footer.comparison">Сравнение</a>
-        <a href="#" class="footer-link" onclick="event.preventDefault(); navigate('advisor')" data-i18n="footer.advisor">ИИ-советник</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title" data-i18n="footer.project">Проект</div>
-        <a href="#" class="footer-link" onclick="event.preventDefault(); openModal('modal-about')" data-i18n="footer.about">О проекте</a>
-        <a href="#" class="footer-link" onclick="event.preventDefault(); openModal('modal-contacts')" data-i18n="footer.contacts">Контакты</a>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title" data-i18n="footer.data_section">Данные</div>
-        <span class="footer-text" data-i18n="footer.location">Казахстан</span>
-        <span class="footer-text" data-i18n="footer.year" data-academic-year>2025–2026 учебный год</span>
-        <span class="footer-text" data-i18n="footer.unis_count">152 университета</span>
+      <div class="footer-nav">
+        <div class="footer-col">
+          <div class="footer-col-title" data-i18n="footer.sections">Разделы</div>
+          <a class="footer-link" onclick="event.preventDefault(); navigate('home')" data-i18n="footer.universities">Университеты</a>
+          <a class="footer-link" onclick="event.preventDefault(); navigate('compare')" data-i18n="footer.comparison">Сравнение</a>
+          <a class="footer-link" onclick="event.preventDefault(); navigate('advisor')" data-i18n="footer.advisor">ИИ-советник</a>
+          <a class="footer-link" onclick="event.preventDefault(); navigate('career')">Профориентация</a>
+          <a class="footer-link" onclick="event.preventDefault(); navigate('grants')" data-i18n="footer.grants">Гранты</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title" data-i18n="footer.project">Проект</div>
+          <a class="footer-link" onclick="event.preventDefault(); openModal('modal-about')" data-i18n="footer.about">О проекте</a>
+          <a class="footer-link" onclick="event.preventDefault(); openModal('modal-contacts')" data-i18n="footer.contacts">Контакты</a>
+          <a class="footer-link" onclick="event.preventDefault(); navigate('map')">Карта вузов</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title" data-i18n="footer.data_section">Данные</div>
+          <span class="footer-text" data-i18n="footer.location">Казахстан</span>
+          <span class="footer-text" data-i18n="footer.year" data-academic-year>2025–2026 учебный год</span>
+          <span class="footer-text footer-highlight" data-i18n="footer.unis_count">152 университета</span>
+        </div>
       </div>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2025 EduMatch KZ</span>
+    <div class="footer-bottom-inner">
+      <span>© 2025 EduMatch KZ</span>
+      <div class="footer-bottom-links">
+        <a onclick="event.preventDefault(); openModal('modal-about')">Политика</a>
+        <span class="footer-dot">·</span>
+        <a onclick="event.preventDefault(); openModal('modal-contacts')">Связаться</a>
+      </div>
+    </div>
   </div>
 </footer>
 
@@ -1186,10 +1211,10 @@
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.0/dist/countUp.umd.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/security.js"></script>
 <script src="js/translations.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/verification.js"></script>
 <script src="js/app.js"></script>
 <button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Наверх" data-i18n-aria="scroll.top">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>

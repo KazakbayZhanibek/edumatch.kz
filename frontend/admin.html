@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>EduMatch KZ | Админ-панель</title>
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/verification.css">
   <style>
     body { background: var(--bg); }
     .admin-page { max-width: 1180px; margin: 0 auto; padding: 36px 24px 64px; }
@@ -49,10 +50,12 @@
       <button class="admin-tab" data-admin-tab="universities">Вузы</button>
       <button class="admin-tab" data-admin-tab="reviews">Отзывы</button>
       <button class="admin-tab" data-admin-tab="audit">Аудит</button>
+      <button class="admin-tab" data-admin-tab="verification">Документы</button>
     </nav>
     <input class="admin-search" id="admin-search" type="search" placeholder="Поиск по текущему разделу..." aria-label="Поиск">
     <section id="admin-root"><div class="loading-state"><div class="spinner"></div></div></section>
   </main>
+  <script src="js/verification.js"></script>
   <script src="js/admin.js"></script>
 </body>
 </html>

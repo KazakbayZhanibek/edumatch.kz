@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config(process.env.DOTENV_CONFIG_PATH ? { path: process.env.DOTENV_CONFIG_PATH } : {});
 const fetch = require('node-fetch');
 const express = require('express');
 const cors = require('cors');
@@ -39,7 +39,7 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://cdn.jsdelivr.net'],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://unpkg.com', 'https://cdn.jsdelivr.net'],
-      imgSrc: ["'self'", 'data:', 'https:'],
+      imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
       connectSrc: ["'self'", 'https://openrouter.ai'],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
@@ -91,7 +91,7 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -104,6 +104,8 @@ if (process.env.NODE_ENV === 'production') {
     next();
   });
 }
+// Base64 adds about one third to a document's size. Keep the larger limit scoped to uploads.
+app.use('/api/verify', express.json({ limit: '8mb' }));
 app.use(express.json({ limit: '4mb' }));
 app.use(cookieParser());
 
@@ -240,8 +242,8 @@ const MAX_REVIEWS_PER_WINDOW = 3;
 app.get('/api/universities/:id/reviews', (req, res) => {
   try {
     const db = require('./database').getDb();
-    const reviews = db.prepare('SELECT * FROM reviews WHERE university_id = ? ORDER BY created_at DESC').all(req.params.id);
-    const stats = db.prepare('SELECT COUNT(*) as count, AVG(rating) as avg_rating FROM reviews WHERE university_id = ?').get(req.params.id);
+    const reviews = db.prepare("SELECT * FROM reviews WHERE university_id = ? AND moderation_status != 'hidden' ORDER BY created_at DESC").all(req.params.id);
+    const stats = db.prepare("SELECT COUNT(*) as count, AVG(rating) as avg_rating FROM reviews WHERE university_id = ? AND moderation_status != 'hidden'").get(req.params.id);
     res.json({ reviews, stats });
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -326,10 +328,15 @@ app.get('/health', (req, res) => {
   }
 });
 
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, error: 'API endpoint not found' });
+});
+
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
+if (require.main === module) {
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
   console.log(`✓ EduMatch KZ running on port ${PORT}`);
@@ -352,3 +359,6 @@ process.on('SIGTERM', () => {
     process.exit(1);
   }, 30000);
 });
+}
+
+module.exports = app;

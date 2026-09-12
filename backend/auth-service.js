@@ -54,7 +54,7 @@ async function registerUser(email, password, username, fullName = '', lang = 'ru
   try {
     // Проверить, не зарегистрирован ли уже
     const existingUser = getDb().prepare(
-      'SELECT id FROM users WHERE email = ? OR username = ?'
+      'SELECT id, email FROM users WHERE lower(email) = lower(?) OR username = ?'
     ).get(email, username);
 
     if (existingUser) {
@@ -284,7 +284,7 @@ function getUserProfile(userId) {
   try {
     return getDb().prepare(
       `SELECT id, email, username, full_name, phone, profile_picture, bio, 
-              ent_score, military_service,
+              ent_score, ent_verified_score, ent_verified_at, military_service,
               preferences, is_admin, created_at, updated_at 
        FROM users WHERE id = ?`
     ).get(userId);
@@ -302,23 +302,36 @@ function getUserProfile(userId) {
  */
 function updateUserProfile(userId, data, lang = 'ru') {
   try {
-    const { fullName, phone, bio, entScore, militaryService, preferences, profilePicture } = data;
+    const { fullName, phone, bio, entScore, preferences, profilePicture } = data;
+
+    if (entScore !== undefined && entScore !== null && (!Number.isInteger(entScore) || entScore < 0 || entScore > 140)) {
+      return { success: false, error: 'Балл ЕНТ должен быть целым числом от 0 до 140' };
+    }
+    for (const [value, limit] of [[fullName, 150], [phone, 40], [bio, 2000]]) {
+      if (value != null && (typeof value !== 'string' || value.length > limit)) return { success: false, error: 'Проверьте поля профиля и длину текста' };
+    }
+    if (preferences != null && (typeof preferences !== 'object' || Array.isArray(preferences))) return { success: false, error: 'Некорректные настройки профиля' };
 
     const preferencesJson = preferences ? JSON.stringify(preferences) : null;
-    const militaryVal = militaryService !== undefined ? (militaryService ? 1 : 0) : null;
 
-    getDb().prepare(
+    const db = getDb();
+    db.transaction(() => {
+    if (entScore !== undefined) {
+      db.prepare(`UPDATE users SET ent_verified_score = CASE WHEN ent_score IS ? THEN ent_verified_score ELSE NULL END,
+        ent_verified_at = CASE WHEN ent_score IS ? THEN ent_verified_at ELSE NULL END, ent_score = ? WHERE id = ?`)
+        .run(entScore, entScore, entScore, userId);
+    }
+    db.prepare(
       `UPDATE users 
        SET full_name = COALESCE(?, full_name),
            phone = COALESCE(?, phone),
            bio = COALESCE(?, bio),
-           ent_score = COALESCE(?, ent_score),
-           military_service = COALESCE(?, military_service),
            preferences = COALESCE(?, preferences),
               profile_picture = COALESCE(?, profile_picture),
            updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`
-            ).run(fullName, phone, bio, entScore, militaryVal, preferencesJson, profilePicture, userId);
+            ).run(fullName ?? null, phone ?? null, bio ?? null, preferencesJson, profilePicture ?? null, userId);
+    })();
 
     const updatedUser = getUserProfile(userId);
 
