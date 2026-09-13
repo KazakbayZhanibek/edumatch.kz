@@ -224,4 +224,217 @@ router.delete('/reviews/:id', (req, res) => {
   }
 });
 
+// ─── USER MANAGEMENT ──────────────────────────────
+
+router.get('/users/:id', (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const user = getDb().prepare(`
+      SELECT u.id, u.email, u.username, u.full_name, u.phone, u.bio, u.ent_score,
+             u.is_admin, u.is_banned, u.created_at, u.updated_at,
+             (SELECT COUNT(*) FROM application_tracker a WHERE a.user_id = u.id) AS applications,
+             (SELECT COUNT(*) FROM chat_history c WHERE c.user_id = u.id) AS chats,
+             (SELECT COUNT(*) FROM saved_universities s WHERE s.user_id = u.id) AS saved
+      FROM users u WHERE u.id = ?
+    `).get(id);
+    if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
+    return res.json({ success: true, user });
+  } catch (error) {
+    console.error('Admin get user error:', error);
+    return res.status(500).json({ error: 'Ошибка загрузки пользователя' });
+  }
+});
+
+router.patch('/users/:id', (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const db = getDb();
+    const current = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
+    if (!current) return res.status(404).json({ error: 'Пользователь не найден' });
+    if (current.email === 'janibekkaz3@gmail.com') return res.status(400).json({ error: 'Нельзя изменить главного администратора' });
+
+    const allowed = ['full_name', 'username', 'phone', 'bio', 'ent_score', 'is_admin', 'is_banned'];
+    const fields = [];
+    const values = [];
+    for (const field of allowed) {
+      if (req.body[field] === undefined) continue;
+      if (field === 'is_admin' || field === 'is_banned') {
+        fields.push(`${field} = ?`); values.push(req.body[field] ? 1 : 0);
+      } else {
+        fields.push(`${field} = ?`); values.push(String(req.body[field]).trim().slice(0, 500));
+      }
+    }
+    if (!fields.length) return res.status(400).json({ error: 'Нет данных для обновления' });
+    fields.push('updated_at = CURRENT_TIMESTAMP');
+    db.transaction(() => {
+      db.prepare(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`).run(...values, id);
+      db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES (?, ?, 'UPDATE', ?, ?, ?, ?)`)
+        .run('users', id, JSON.stringify({ email: current.email, is_admin: current.is_admin, is_banned: current.is_banned }), JSON.stringify(req.body), req.userId, req.ip);
+    })();
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Admin update user error:', error);
+    return res.status(500).json({ error: 'Ошибка обновления пользователя' });
+  }
+});
+
+router.delete('/users/:id', (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const db = getDb();
+    const user = db.prepare('SELECT email, is_admin FROM users WHERE id = ?').get(id);
+    if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
+    if (user.email === 'janibekkaz3@gmail.com') return res.status(400).json({ error: 'Нельзя удалить главного администратора' });
+    db.transaction(() => {
+      db.prepare('DELETE FROM chat_history WHERE user_id = ?').run(id);
+      db.prepare('DELETE FROM application_tracker WHERE user_id = ?').run(id);
+      db.prepare('DELETE FROM saved_universities WHERE user_id = ?').run(id);
+      db.prepare('DELETE FROM users WHERE id = ?').run(id);
+      db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES ('users', ?, 'DELETE', ?, ?, ?, ?)`)
+        .run(id, JSON.stringify({ email: user.email }), '{}', req.userId, req.ip);
+    })();
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Admin delete user error:', error);
+    return res.status(500).json({ error: 'Ошибка удаления пользователя' });
+  }
+});
+
+router.post('/users/:id/reset-password', (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const db = getDb();
+    const user = db.prepare('SELECT id, email FROM users WHERE id = ?').get(id);
+    if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
+    const bcrypt = require('bcrypt');
+    const crypto = require('crypto');
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+    let newPass = '';
+    const bytes = crypto.randomBytes(32);
+    for (let i = 0; i < 16; i++) newPass += chars[bytes[i] % chars.length];
+    const hash = bcrypt.hashSync(newPass, 12);
+    db.prepare('UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(hash, id);
+    db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES ('users', ?, 'UPDATE', ?, ?, ?, ?)`)
+      .run(id, '{}', JSON.stringify({ action: 'password_reset' }), req.userId, req.ip);
+    return res.json({ success: true, newPassword: newPass });
+  } catch (error) {
+    console.error('Admin reset password error:', error);
+    return res.status(500).json({ error: 'Ошибка сброса пароля' });
+  }
+});
+
+// ─── UNIVERSITY MANAGEMENT ──────────────────────────────
+
+router.get('/universities/:id', (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const uni = getDb().prepare(`
+      SELECT u.*, c.name AS city_name
+      FROM universities u LEFT JOIN cities c ON c.id = u.city_id
+      WHERE u.id = ?
+    `).get(id);
+    if (!uni) return res.status(404).json({ error: 'Вуз не найден' });
+    const specialties = getDb().prepare('SELECT id, name, code, direction FROM specialties WHERE university_id = ? ORDER BY name').all(id);
+    const reviews = getDb().prepare("SELECT id, user_name, rating, comment, moderation_status FROM reviews WHERE university_id = ? ORDER BY created_at DESC LIMIT 10").all(id);
+    return res.json({ success: true, university: uni, specialties, reviews });
+  } catch (error) {
+    console.error('Admin get university error:', error);
+    return res.status(500).json({ error: 'Ошибка загрузки вуза' });
+  }
+});
+
+router.put('/universities/:id', (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const db = getDb();
+    const current = db.prepare('SELECT * FROM universities WHERE id = ?').get(id);
+    if (!current) return res.status(404).json({ error: 'Вуз не найден' });
+
+    const allowed = ['name', 'short_name', 'website', 'address', 'admission_phone', 'admission_email',
+      'data_status', 'price_from', 'price_to', 'founded_year', 'total_students', 'dormitory',
+      'description', 'latitude', 'longitude'];
+    const fields = [];
+    const values = [];
+    for (const field of allowed) {
+      if (req.body[field] === undefined) continue;
+      if (field === 'data_status' && !['active', 'pending', 'inactive'].includes(req.body[field])) return res.status(400).json({ error: 'Некорректный статус' });
+      if (['price_from', 'price_to', 'founded_year', 'total_students'].includes(field)) {
+        const num = Number(req.body[field]);
+        if (!Number.isFinite(num) || num < 0) return res.status(400).json({ error: `Некорректное значение ${field}` });
+        fields.push(`${field} = ?`); values.push(Math.round(num));
+      } else if (field === 'dormitory') {
+        fields.push(`${field} = ?`); values.push(req.body[field] ? 1 : 0);
+      } else if (['latitude', 'longitude'].includes(field)) {
+        const num = Number(req.body[field]);
+        if (!Number.isFinite(num)) return res.status(400).json({ error: `Некорректное значение ${field}` });
+        fields.push(`${field} = ?`); values.push(num);
+      } else {
+        fields.push(`${field} = ?`); values.push(String(req.body[field]).trim().slice(0, 2000));
+      }
+    }
+    if (!fields.length) return res.status(400).json({ error: 'Нет данных для обновления' });
+    fields.push('last_updated_at = CURRENT_TIMESTAMP');
+    db.transaction(() => {
+      db.prepare(`UPDATE universities SET ${fields.join(', ')} WHERE id = ?`).run(...values, id);
+      db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES (?, ?, 'UPDATE', ?, ?, ?, ?)`)
+        .run('universities', id, JSON.stringify({ name: current.name }), JSON.stringify(req.body), req.userId, req.ip);
+    })();
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Admin update university error:', error);
+    return res.status(500).json({ error: 'Ошибка обновления вуза' });
+  }
+});
+
+router.post('/universities', (req, res) => {
+  try {
+    const db = getDb();
+    const { name, short_name, website, address, city_id, admission_phone, admission_email, price_from, price_to, data_status } = req.body;
+    if (!name || !name.trim()) return res.status(400).json({ error: 'Название вуза обязательно' });
+    const result = db.prepare(`
+      INSERT INTO universities (name, short_name, website, address, city_id, admission_phone, admission_email, price_from, price_to, data_status, created_at, last_updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `).run(
+      String(name).trim().slice(0, 500),
+      String(short_name || '').trim().slice(0, 100) || null,
+      String(website || '').trim().slice(0, 500) || null,
+      String(address || '').trim().slice(0, 500) || null,
+      Number(city_id) || null,
+      String(admission_phone || '').trim().slice(0, 50) || null,
+      String(admission_email || '').trim().slice(0, 100) || null,
+      Math.round(Number(price_from) || 0),
+      Math.round(Number(price_to) || 0),
+      ['active', 'pending', 'inactive'].includes(data_status) ? data_status : 'pending'
+    );
+    db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES ('universities', ?, 'CREATE', '{}', ?, ?, ?)`)
+      .run(result.lastInsertRowid, JSON.stringify(req.body), req.userId, req.ip);
+    return res.json({ success: true, id: result.lastInsertRowid });
+  } catch (error) {
+    console.error('Admin create university error:', error);
+    return res.status(500).json({ error: 'Ошибка создания вуза' });
+  }
+});
+
+router.delete('/universities/:id', (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const db = getDb();
+    const uni = db.prepare('SELECT id, name FROM universities WHERE id = ?').get(id);
+    if (!uni) return res.status(404).json({ error: 'Вуз не найден' });
+    db.transaction(() => {
+      db.prepare('DELETE FROM specialties WHERE university_id = ?').run(id);
+      db.prepare('DELETE FROM reviews WHERE university_id = ?').run(id);
+      db.prepare('DELETE FROM saved_universities WHERE university_id = ?').run(id);
+      db.prepare('DELETE FROM application_tracker WHERE university_id = ?').run(id);
+      db.prepare('DELETE FROM universities WHERE id = ?').run(id);
+      db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES ('universities', ?, 'DELETE', ?, '{}', ?, ?)`)
+        .run(id, JSON.stringify({ name: uni.name }), req.userId, req.ip);
+    })();
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Admin delete university error:', error);
+    return res.status(500).json({ error: 'Ошибка удаления вуза' });
+  }
+});
+
 module.exports = router;

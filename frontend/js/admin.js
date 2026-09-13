@@ -3,6 +3,7 @@ const root = document.getElementById('admin-root');
 const daysSelect = document.getElementById('admin-days');
 let activeAdminTab = 'overview';
 let reviewStatusFilter = 'all';
+let adminModal = null;
 
 async function api(path, options = {}) {
   const response = await fetch(`${API}${path}`, { ...options, credentials: 'include', headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } });
@@ -14,6 +15,28 @@ async function api(path, options = {}) {
 const statusLabels = { collecting: 'Сбор документов', submitted: 'Подано', waiting: 'Ожидание', accepted: 'Зачислены', enrolled: 'Оплачивают', rejected: 'Отказ' };
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[char]));
 const date = value => value ? new Date(value).toLocaleDateString('ru-RU') : '—';
+const dateFull = value => value ? new Date(value).toLocaleString('ru-RU') : '—';
+
+function showModal(title, content, onClose) {
+  if (adminModal) adminModal.remove();
+  adminModal = document.createElement('div');
+  adminModal.className = 'admin-modal-overlay';
+  adminModal.innerHTML = `<div class="admin-modal"><div class="admin-modal-header"><h3>${esc(title)}</h3><button class="admin-modal-close" id="modal-close">&times;</button></div><div class="admin-modal-body">${content}</div></div>`;
+  document.body.appendChild(adminModal);
+  adminModal.querySelector('#modal-close').onclick = () => { adminModal.remove(); adminModal = null; if (onClose) onClose(); };
+  adminModal.onclick = e => { if (e.target === adminModal) { adminModal.remove(); adminModal = null; if (onClose) onClose(); } };
+}
+
+function closeModal() { if (adminModal) { adminModal.remove(); adminModal = null; } }
+
+function showToast(msg, type = 'success') {
+  const t = document.createElement('div');
+  t.className = `admin-toast admin-toast-${type}`;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3000);
+}
 
 async function loadAdmin() {
   root.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
@@ -21,7 +44,7 @@ async function loadAdmin() {
     const search = document.getElementById('admin-search').value;
     const days = Number(daysSelect.value);
     const [data, reviewsData, applicationsData, usersData, universitiesData, auditData] = await Promise.all([
-      api(`/admin/overview?days=${days}`), api('/admin/reviews?limit=100'), api('/admin/applications?limit=100'), api('/admin/users?limit=100'), api('/admin/universities?limit=300'), api('/admin/audit?limit=100')
+      api(`/admin/overview?days=${days}`), api('/admin/reviews?limit=100'), api('/admin/applications?limit=100'), api('/admin/users?limit=200'), api('/admin/universities?limit=300'), api('/admin/audit?limit=100')
     ]);
     const o = data.overview;
     const reviews = reviewsData.reviews || [];
@@ -29,54 +52,300 @@ async function loadAdmin() {
     const users = usersData.users || [];
     const universities = universitiesData.universities || [];
     const audit = auditData.audit || [];
+
     root.innerHTML = `
-      <section class="admin-section active" data-admin-section="overview"><section class="admin-metrics">
-        ${[['Пользователи', o.users, `+${o.periodUsers} за период`], ['Вузы', o.universities, 'В каталоге'], ['Заявки', o.applications, `+${o.periodApplications} за период`], ['Диалоги с ИИ', o.chatMessages, `+${o.periodChats} за период`]].map(item => `<article class="admin-metric"><strong>${item[1] || 0}</strong><span>${item[0]}</span><small>${item[2]}</small></article>`).join('')}
+      <section class="admin-section active" data-admin-section="overview">
+        <section class="admin-metrics">
+          ${[['Пользователи', o.users, `+${o.periodUsers} за период`], ['Вузы', o.universities, 'В каталоге'], ['Заявки', o.applications, `+${o.periodApplications} за период`], ['Диалоги с ИИ', o.chatMessages, `+${o.periodChats} за период`]].map(item => `<article class="admin-metric"><strong>${item[1] || 0}</strong><span>${item[0]}</span><small>${item[2]}</small></article>`).join('')}
+        </section>
+        <section class="admin-grid">
+          <article class="admin-block"><h2>Заявки по статусам</h2>${(data.applicationStatuses || []).map(item => `<div class="admin-row"><span>${esc(statusLabels[item.status] || item.status)}</span><strong>${item.count}</strong></div>`).join('') || '<p>Нет данных</p>'}</article>
+          <article class="admin-block"><h2>Темы ИИ</h2>${(data.intents || []).map(item => `<div class="admin-row"><span>${esc(item.intent)}</span><strong>${item.count}</strong></div>`).join('') || '<p>Нет данных</p>'}</article>
+        </section>
       </section>
-      <section class="admin-grid">
-        <article class="admin-block"><h2>Заявки по статусам</h2>${(data.applicationStatuses || []).map(item => `<div class="admin-row"><span>${esc(statusLabels[item.status] || item.status)}</span><strong>${item.count}</strong></div>`).join('') || '<p>Нет данных</p>'}</article>
-        <article class="admin-block"><h2>Темы ИИ</h2>${(data.intents || []).map(item => `<div class="admin-row"><span>${esc(item.intent)}</span><strong>${item.count}</strong></div>`).join('') || '<p>Нет данных</p>'}</article>
-      </section></section>
-      <section class="admin-section" data-admin-section="applications"><section class="admin-block"><h2>Последние заявки (${applications.length})</h2><div class="admin-table-wrap"><table><thead><tr><th>Пользователь</th><th>Вуз</th><th>Статус</th><th>Год</th><th>Создана</th></tr></thead><tbody>${applications.map(item => `<tr><td>${esc(item.username || item.email)}</td><td>${esc(item.short_name || item.university_name)}</td><td>${esc(statusLabels[item.status] || item.status)}</td><td>${esc(item.academic_year)}</td><td>${date(item.created_at)}</td></tr>`).join('') || '<tr><td colspan="5">Нет заявок</td></tr>'}</tbody></table></div></section></section>
-      <section class="admin-section" data-admin-section="users"><section class="admin-block"><h2>Пользователи (${users.length})</h2><div class="admin-table-wrap"><table><thead><tr><th>Логин</th><th>Email</th><th>Заявки</th><th>Чаты</th><th>Регистрация</th></tr></thead><tbody>${users.map(item => `<tr><td>${esc(item.username)}${item.is_admin ? ' · ADMIN' : ''}</td><td>${esc(item.email)}</td><td>${item.applications}</td><td>${item.chats}</td><td>${date(item.created_at)}</td></tr>`).join('')}</tbody></table></div></section></section>
-      <section class="admin-section" data-admin-section="universities"><section class="admin-block"><h2>Каталог вузов (${universities.length})</h2><div class="admin-table-wrap"><table><thead><tr><th>Вуз</th><th>Город</th><th>Статус</th><th>Цена</th><th>Обновлён</th><th></th></tr></thead><tbody>${universities.map(item => `<tr data-university-id="${item.id}"><td>${esc(item.short_name || item.name)}</td><td>${esc(item.city || '—')}</td><td><select class="admin-status-select" data-university-status="${item.id}"><option value="active" ${item.data_status === 'active' ? 'selected' : ''}>Активен</option><option value="pending" ${item.data_status === 'pending' ? 'selected' : ''}>На проверке</option><option value="inactive" ${item.data_status === 'inactive' ? 'selected' : ''}>Скрыт</option></select></td><td>${item.price_from ? `${item.price_from.toLocaleString('ru-RU')} ₸` : '—'}</td><td>${date(item.last_updated_at)}</td><td>${item.website ? `<a href="${esc(item.website)}" target="_blank" rel="noopener">Сайт</a>` : '—'}</td></tr>`).join('')}</tbody></table></div></section></section>
-      <section class="admin-section" data-admin-section="audit"><section class="admin-block"><h2>Журнал действий</h2><div class="admin-table-wrap"><table><thead><tr><th>Дата</th><th>Таблица</th><th>ID</th><th>Действие</th><th>Администратор</th></tr></thead><tbody>${audit.map(item => `<tr><td>${date(item.created_at)}</td><td>${esc(item.table_name)}</td><td>${item.record_id || '—'}</td><td>${esc(item.action)}</td><td>${esc(item.email || 'system')}</td></tr>`).join('') || '<tr><td colspan="5">Действий пока нет</td></tr>'}</tbody></table></div></section></section>
-      <section class="admin-section" data-admin-section="reviews"><section class="admin-block"><h2>Модерация отзывов <small>${o.pendingReviews} требуют проверки</small></h2><div class="admin-review-list">${reviews.map(review => `<article class="admin-review-item"><div class="admin-review-top"><strong>${esc(review.short_name || review.university_name)}</strong><span>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span></div><div class="admin-review-meta">${esc(review.user_name)} · ${date(review.created_at)}</div><p>${esc(review.comment || review.pros || review.cons || 'Без текста')}</p><div class="admin-review-actions"><button class="btn btn-primary btn-sm" data-review-moderate="approve" data-review-id="${review.id}">Одобрить</button><button class="btn btn-ghost btn-sm" data-review-moderate="hide" data-review-id="${review.id}">Скрыть</button><button class="btn btn-ghost btn-sm admin-danger-btn" data-review-delete="${review.id}">Удалить</button></div></article>`).join('') || '<p>Отзывов пока нет</p>'}</div></section></section>`;
+
+      <section class="admin-section" data-admin-section="users">
+        <div class="admin-block">
+          <div class="admin-section-header"><h2>Пользователи (${users.length})</h2></div>
+          <div class="admin-table-wrap"><table><thead><tr><th>ID</th><th>Логин</th><th>Email</th><th>Имя</th><th>Админ</th><th>Забанен</th><th>Регистрация</th><th>Действия</th></tr></thead><tbody>
+          ${users.map(item => `<tr class="${item.is_banned ? 'admin-row-banned' : ''}" data-user-id="${item.id}">
+            <td>${item.id}</td>
+            <td>${esc(item.username)}${item.is_admin ? ' <span class="admin-badge admin-badge-admin">ADMIN</span>' : ''}</td>
+            <td>${esc(item.email)}</td>
+            <td>${esc(item.full_name || '—')}</td>
+            <td>${item.is_admin ? '✓' : '—'}</td>
+            <td>${item.is_banned ? '<span class="admin-badge admin-badge-red">ЗАБАНЕН</span>' : '—'}</td>
+            <td>${date(item.created_at)}</td>
+            <td class="admin-actions-cell">
+              <button class="btn btn-ghost btn-xs" onclick="viewUser(${item.id})">Профиль</button>
+              <button class="btn btn-ghost btn-xs" onclick="editUser(${item.id})">Изменить</button>
+              ${item.email !== 'janibekkaz3@gmail.com' ? `
+                <button class="btn btn-ghost btn-xs" onclick="toggleBanUser(${item.id}, ${item.is_banned ? 0 : 1})">${item.is_banned ? 'Разбанить' : 'Забанить'}</button>
+                <button class="btn btn-ghost btn-xs" onclick="toggleAdminUser(${item.id}, ${item.is_admin ? 0 : 1})">${item.is_admin ? 'Снять админа' : 'Сделать админом'}</button>
+                <button class="btn btn-ghost btn-xs admin-danger-btn" onclick="deleteUser(${item.id})">Удалить</button>
+                <button class="btn btn-ghost btn-xs" onclick="resetUserPassword(${item.id})">Сброс пароля</button>
+              ` : ''}
+            </td>
+          </tr>`).join('')}
+          </tbody></table></div>
+        </div>
+      </section>
+
+      <section class="admin-section" data-admin-section="universities">
+        <div class="admin-block">
+          <div class="admin-section-header"><h2>Каталог вузов (${universities.length})</h2><button class="btn btn-primary btn-sm" onclick="createUniversity()">+ Добавить вуз</button></div>
+          <div class="admin-table-wrap"><table><thead><tr><th>ID</th><th>Название</th><th>Город</th><th>Статус</th><th>Цена от</th><th>Цена до</th><th>Обновлён</th><th>Действия</th></tr></thead><tbody>
+          ${universities.map(item => `<tr data-uni-id="${item.id}">
+            <td>${item.id}</td>
+            <td>${esc(item.short_name || item.name)}</td>
+            <td>${esc(item.city || '—')}</td>
+            <td><select class="admin-status-select" onchange="changeUniversityStatus(${item.id}, this.value)"><option value="active" ${item.data_status === 'active' ? 'selected' : ''}>Активен</option><option value="pending" ${item.data_status === 'pending' ? 'selected' : ''}>На проверке</option><option value="inactive" ${item.data_status === 'inactive' ? 'selected' : ''}>Скрыт</option></select></td>
+            <td>${item.price_from ? item.price_from.toLocaleString('ru-RU') + ' ₸' : '—'}</td>
+            <td>${item.price_to ? item.price_to.toLocaleString('ru-RU') + ' ₸' : '—'}</td>
+            <td>${date(item.last_updated_at)}</td>
+            <td class="admin-actions-cell">
+              <button class="btn btn-ghost btn-xs" onclick="viewUniversity(${item.id})">Подробнее</button>
+              <button class="btn btn-ghost btn-xs" onclick="editUniversity(${item.id})">Изменить</button>
+              <button class="btn btn-ghost btn-xs admin-danger-btn" onclick="deleteUniversity(${item.id})">Удалить</button>
+            </td>
+          </tr>`).join('')}
+          </tbody></table></div>
+        </div>
+      </section>
+
+      <section class="admin-section" data-admin-section="applications">
+        <div class="admin-block"><h2>Последние заявки (${applications.length})</h2><div class="admin-table-wrap"><table><thead><tr><th>Пользователь</th><th>Вуз</th><th>Статус</th><th>Год</th><th>Создана</th></tr></thead><tbody>${applications.map(item => `<tr><td>${esc(item.username || item.email)}</td><td>${esc(item.short_name || item.university_name)}</td><td>${esc(statusLabels[item.status] || item.status)}</td><td>${esc(item.academic_year)}</td><td>${date(item.created_at)}</td></tr>`).join('') || '<tr><td colspan="5">Нет заявок</td></tr>'}</tbody></table></div></div>
+      </section>
+
+      <section class="admin-section" data-admin-section="reviews">
+        <div class="admin-block">
+          <h2>Модерация отзывов <small>${o.pendingReviews} требуют проверки</small></h2>
+          <label>Статус: <select id="admin-review-status" class="admin-status-select"><option value="all">Все</option><option value="pending">На проверке</option><option value="approved">Одобрены</option><option value="hidden">Скрыты</option></select></label>
+          <div class="admin-review-list">${reviews.map(review => `<article class="admin-review-item" data-review-status="${review.moderation_status || 'pending'}"><div class="admin-review-top"><strong>${esc(review.short_name || review.university_name)}</strong><span>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span></div><div class="admin-review-meta">${esc(review.user_name)} · ${date(review.created_at)} · ${esc(review.moderation_status || 'pending')}</div><p>${esc(review.comment || review.pros || review.cons || 'Без текста')}</p><div class="admin-review-actions"><button class="btn btn-primary btn-xs" onclick="moderate(${review.id}, true)">Одобрить</button><button class="btn btn-ghost btn-xs" onclick="moderate(${review.id}, false)">Скрыть</button><button class="btn btn-ghost btn-xs admin-danger-btn" onclick="removeReview(${review.id})">Удалить</button></div></article>`).join('') || '<p>Отзывов пока нет</p>'}</div>
+        </div>
+      </section>
+
+      <section class="admin-section" data-admin-section="audit">
+        <div class="admin-block"><h2>Журнал действий</h2><div class="admin-table-wrap"><table><thead><tr><th>Дата</th><th>Таблица</th><th>ID</th><th>Действие</th><th>Администратор</th></tr></thead><tbody>${audit.map(item => `<tr><td>${dateFull(item.created_at)}</td><td>${esc(item.table_name)}</td><td>${item.record_id || '—'}</td><td>${esc(item.action)}</td><td>${esc(item.email || 'system')}</td></tr>`).join('') || '<tr><td colspan="5">Действий пока нет</td></tr>'}</tbody></table></div></div>
+      </section>
+
+      <section class="admin-section" data-admin-section="verification"><div class="admin-block" id="verification-admin"></div></section>`;
+
     const reviewSection = root.querySelector('[data-admin-section="reviews"] .admin-block');
     root.insertAdjacentHTML('beforeend', '<section class="admin-section" data-admin-section="verification"><div class="admin-block" id="verification-admin"></div></section>');
-    Verification.admin();
-    reviewSection.querySelector('h2').insertAdjacentHTML('afterend', `
-      <label>Статус отзывов
-        <select id="admin-review-status" class="admin-status-select">
-          <option value="all">Все</option><option value="pending">На проверке</option>
-          <option value="approved">Одобрены</option><option value="hidden">Скрыты</option>
-        </select>
-      </label>`);
-    const labels = { pending: 'На проверке', approved: 'Одобрен', hidden: 'Скрыт' };
-    reviewSection.querySelectorAll('.admin-review-item').forEach((item, index) => {
-      item.dataset.reviewStatus = reviews[index].moderation_status || 'pending';
-      const badge = document.createElement('span');
-      badge.textContent = ' · ' + labels[item.dataset.reviewStatus];
-      item.querySelector('.admin-review-meta').append(badge);
-    });
-    const statusSelect = document.getElementById('admin-review-status');
-    statusSelect.value = reviewStatusFilter;
-    statusSelect.addEventListener('change', () => {
-      reviewStatusFilter = statusSelect.value;
-      filterAdminRows(document.getElementById('admin-search').value);
-    });
-    root.querySelectorAll('[data-university-status]').forEach(select => select.addEventListener('change', () => changeUniversityStatus(Number(select.dataset.universityStatus), select.value)));
-    root.querySelectorAll('[data-review-moderate]').forEach(button => button.addEventListener('click', () => moderate(Number(button.dataset.reviewId), button.dataset.reviewModerate === 'approve')));
-    root.querySelectorAll('[data-review-delete]').forEach(button => button.addEventListener('click', () => removeReview(Number(button.dataset.reviewDelete))));
+    if (typeof Verification !== 'undefined') Verification.admin();
+
+    const reviewStatusSelect = document.getElementById('admin-review-status');
+    if (reviewStatusSelect) {
+      reviewStatusSelect.value = reviewStatusFilter;
+      reviewStatusSelect.addEventListener('change', () => {
+        reviewStatusFilter = reviewStatusSelect.value;
+        filterAdminRows(document.getElementById('admin-search').value);
+      });
+    }
+
     showAdminTab(activeAdminTab);
     document.getElementById('admin-search').value = search;
     filterAdminRows(search);
-  } catch (error) { root.innerHTML = `<div class="admin-error">${esc(error.message)}<br><a href="/">Вернуться на сайт</a></div>`; }
+  } catch (error) {
+    root.innerHTML = `<div class="admin-error">${esc(error.message)}<br><a href="/">Вернуться на сайт</a></div>`;
+  }
 }
 
-async function moderate(id, approved) { try { await api(`/admin/reviews/${id}/moderate`, { method: 'PATCH', body: JSON.stringify({ approved }) }); loadAdmin(); } catch (error) { alert(error.message); } }
-async function removeReview(id) { if (!confirm('Удалить отзыв?')) return; try { await api(`/admin/reviews/${id}`, { method: 'DELETE' }); loadAdmin(); } catch (error) { alert(error.message); } }
-async function changeUniversityStatus(id, status) { try { await api(`/admin/universities/${id}`, { method: 'PATCH', body: JSON.stringify({ data_status: status }) }); } catch (error) { alert(error.message); loadAdmin(); } }
+// ─── USER ACTIONS ──────────────────────────────
+
+async function viewUser(id) {
+  try {
+    const data = await api(`/admin/users/${id}`);
+    const u = data.user;
+    showModal(`Профиль: ${esc(u.username)}`, `
+      <div class="admin-profile-grid">
+        <div><strong>Email:</strong> ${esc(u.email)}</div>
+        <div><strong>Имя:</strong> ${esc(u.full_name || '—')}</div>
+        <div><strong>Телефон:</strong> ${esc(u.phone || '—')}</div>
+        <div><strong>Bio:</strong> ${esc(u.bio || '—')}</div>
+        <div><strong>ЕНТ балл:</strong> ${u.ent_score || '—'}</div>
+        <div><strong>Админ:</strong> ${u.is_admin ? 'Да' : 'Нет'}</div>
+        <div><strong>Забанен:</strong> ${u.is_banned ? 'Да' : 'Нет'}</div>
+        <div><strong>Заявок:</strong> ${u.applications}</div>
+        <div><strong>Чатов:</strong> ${u.chats}</div>
+        <div><strong>Сохранённых вузов:</strong> ${u.saved}</div>
+        <div><strong>Зарегистрирован:</strong> ${dateFull(u.created_at)}</div>
+      </div>
+    `);
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function editUser(id) {
+  try {
+    const data = await api(`/admin/users/${id}`);
+    const u = data.user;
+    showModal(`Редактировать: ${esc(u.username)}`, `
+      <form id="edit-user-form" class="admin-form">
+        <label>Имя <input name="full_name" value="${esc(u.full_name || '')}" /></label>
+        <label>Логин <input name="username" value="${esc(u.username || '')}" /></label>
+        <label>Телефон <input name="phone" value="${esc(u.phone || '')}" /></label>
+        <label>Bio <textarea name="bio" rows="3">${esc(u.bio || '')}</textarea></label>
+        <label>ЕНТ балл <input name="ent_score" type="number" value="${u.ent_score || ''}" /></label>
+        <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Сохранить</button><button type="button" class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>
+      </form>
+    `);
+    document.getElementById('edit-user-form').onsubmit = async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = {};
+      for (const [k, v] of fd.entries()) body[k] = v;
+      try { await api(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify(body) }); closeModal(); showToast('Пользователь обновлён'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
+    };
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function toggleBanUser(id, ban) {
+  showModal(ban ? 'Забанить пользователя?' : 'Разбанить пользователя?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Да</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  document.getElementById('modal-confirm').onclick = async () => {
+    try { await api(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify({ is_banned: ban }) }); closeModal(); showToast(ban ? 'Пользователь забанен' : 'Пользователь разбанен'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
+  };
+}
+
+async function toggleAdminUser(id, admin) {
+  showModal(admin ? 'Сделать админом?' : 'Снять админа?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Да</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  document.getElementById('modal-confirm').onclick = async () => {
+    try { await api(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify({ is_admin: admin }) }); closeModal(); showToast(admin ? 'Права администратора выданы' : 'Права администратора сняты'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
+  };
+}
+
+async function deleteUser(id) {
+  showModal('Удалить пользователя?', `<p>Это действие необратимо. Все данные пользователя будут удалены.</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  document.getElementById('modal-confirm').onclick = async () => {
+    try { await api(`/admin/users/${id}`, { method: 'DELETE' }); closeModal(); showToast('Пользователь удалён'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
+  };
+}
+
+async function resetUserPassword(id) {
+  showModal('Сбросить пароль?', `<p>Новый пароль будет сгенерирован автоматически.</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Сбросить</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  document.getElementById('modal-confirm').onclick = async () => {
+    try {
+      const data = await api(`/admin/users/${id}/reset-password`, { method: 'POST' });
+      closeModal();
+      showModal('Новый пароль', `<div class="admin-new-password"><code>${esc(data.newPassword)}</code><p>Скопируйте и передайте пользователю.</p></div>`);
+      showToast('Пароль сброшен');
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+}
+
+// ─── UNIVERSITY ACTIONS ──────────────────────────────
+
+async function viewUniversity(id) {
+  try {
+    const data = await api(`/admin/universities/${id}`);
+    const u = data.university;
+    const specs = data.specialties || [];
+    const revs = data.reviews || [];
+    showModal(`Вуз: ${esc(u.short_name || u.name)}`, `
+      <div class="admin-profile-grid">
+        <div><strong>Название:</strong> ${esc(u.name)}</div>
+        <div><strong>Короткое:</strong> ${esc(u.short_name || '—')}</div>
+        <div><strong>Город:</strong> ${esc(u.city_name || '—')}</div>
+        <div><strong>Адрес:</strong> ${esc(u.address || '—')}</div>
+        <div><strong>Сайт:</strong> ${u.website ? `<a href="${esc(u.website)}" target="_blank">${esc(u.website)}</a>` : '—'}</div>
+        <div><strong>Телефон:</strong> ${esc(u.admission_phone || '—')}</div>
+        <div><strong>Email:</strong> ${esc(u.admission_email || '—')}</div>
+        <div><strong>Цена от:</strong> ${u.price_from ? u.price_from.toLocaleString('ru-RU') + ' ₸' : '—'}</div>
+        <div><strong>Цена до:</strong> ${u.price_to ? u.price_to.toLocaleString('ru-RU') + ' ₸' : '—'}</div>
+        <div><strong>Основан:</strong> ${u.founded_year || '—'}</div>
+        <div><strong>Студентов:</strong> ${u.total_students || '—'}</div>
+        <div><strong>Общежитие:</strong> ${u.dormitory ? 'Есть' : 'Нет'}</div>
+        <div><strong>Статус:</strong> ${esc(u.data_status)}</div>
+        <div><strong>Обновлён:</strong> ${dateFull(u.last_updated_at)}</div>
+      </div>
+      ${specs.length ? `<h3 style="margin-top:16px">Специальности (${specs.length})</h3><div class="admin-spec-list">${specs.map(s => `<div class="admin-spec-item"><span>${esc(s.name)}</span><small>${esc(s.code || '')}</small></div>`).join('')}</div>` : ''}
+      ${revs.length ? `<h3 style="margin-top:16px">Последние отзывы</h3>${revs.map(r => `<div class="admin-review-mini"><span>${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span> <strong>${esc(r.user_name)}</strong> <small>(${esc(r.moderation_status)})</small><p>${esc(r.comment || '—')}</p></div>`).join('')}` : ''}
+    `);
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function editUniversity(id) {
+  try {
+    const data = await api(`/admin/universities/${id}`);
+    const u = data.university;
+    showModal(`Редактировать: ${esc(u.short_name || u.name)}`, `
+      <form id="edit-uni-form" class="admin-form admin-form-grid">
+        <label>Полное название <input name="name" value="${esc(u.name)}" required /></label>
+        <label>Короткое <input name="short_name" value="${esc(u.short_name || '')}" /></label>
+        <label>Сайт <input name="website" value="${esc(u.website || '')}" /></label>
+        <label>Адрес <input name="address" value="${esc(u.address || '')}" /></label>
+        <label>Телефон <input name="admission_phone" value="${esc(u.admission_phone || '')}" /></label>
+        <label>Email <input name="admission_email" value="${esc(u.admission_email || '')}" /></label>
+        <label>Цена от <input name="price_from" type="number" value="${u.price_from || ''}" /></label>
+        <label>Цена до <input name="price_to" type="number" value="${u.price_to || ''}" /></label>
+        <label>Год основания <input name="founded_year" type="number" value="${u.founded_year || ''}" /></label>
+        <label>Студентов <input name="total_students" type="number" value="${u.total_students || ''}" /></label>
+        <label>Широта <input name="latitude" type="number" step="any" value="${u.latitude || ''}" /></label>
+        <label>Долгота <input name="longitude" type="number" step="any" value="${u.longitude || ''}" /></label>
+        <label>Статус <select name="data_status"><option value="active" ${u.data_status === 'active' ? 'selected' : ''}>Активен</option><option value="pending" ${u.data_status === 'pending' ? 'selected' : ''}>На проверке</option><option value="inactive" ${u.data_status === 'inactive' ? 'selected' : ''}>Скрыт</option></select></label>
+        <label class="admin-checkbox-label"><input type="checkbox" name="dormitory" ${u.dormitory ? 'checked' : ''} /> Общежитие</label>
+        <label>Описание <textarea name="description" rows="3">${esc(u.description || '')}</textarea></label>
+        <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Сохранить</button><button type="button" class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>
+      </form>
+    `);
+    document.getElementById('edit-uni-form').onsubmit = async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = {};
+      for (const [k, v] of fd.entries()) body[k] = v;
+      body.dormitory = fd.has('dormitory');
+      try { await api(`/admin/universities/${id}`, { method: 'PUT', body: JSON.stringify(body) }); closeModal(); showToast('Вуз обновлён'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
+    };
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+function createUniversity() {
+  showModal('Новый вуз', `
+    <form id="create-uni-form" class="admin-form admin-form-grid">
+      <label>Полное название <input name="name" required /></label>
+      <label>Короткое <input name="short_name" /></label>
+      <label>Сайт <input name="website" /></label>
+      <label>Адрес <input name="address" /></label>
+      <label>Телефон <input name="admission_phone" /></label>
+      <label>Email <input name="admission_email" /></label>
+      <label>Цена от <input name="price_from" type="number" /></label>
+      <label>Цена до <input name="price_to" type="number" /></label>
+      <label>Статус <select name="data_status"><option value="pending">На проверке</option><option value="active">Активен</option></select></label>
+      <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Создать</button><button type="button" class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>
+    </form>
+  `);
+  document.getElementById('create-uni-form').onsubmit = async e => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const body = {};
+    for (const [k, v] of fd.entries()) body[k] = v;
+    try { await api('/admin/universities', { method: 'POST', body: JSON.stringify(body) }); closeModal(); showToast('Вуз создан'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
+  };
+}
+
+async function deleteUniversity(id) {
+  showModal('Удалить вуз?', `<p>Это действие необратимо. Все специальности и отзывы будут удалены.</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  document.getElementById('modal-confirm').onclick = async () => {
+    try { await api(`/admin/universities/${id}`, { method: 'DELETE' }); closeModal(); showToast('Вуз удалён'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
+  };
+}
+
+async function changeUniversityStatus(id, status) {
+  try { await api(`/admin/universities/${id}`, { method: 'PATCH', body: JSON.stringify({ data_status: status }) }); showToast('Статус обновлён'); } catch (error) { showToast(error.message, 'error'); loadAdmin(); }
+}
+
+// ─── REVIEW ACTIONS ──────────────────────────────
+
+async function moderate(id, approved) { try { await api(`/admin/reviews/${id}/moderate`, { method: 'PATCH', body: JSON.stringify({ approved }) }); showToast(approved ? 'Отзыв одобрен' : 'Отзыв скрыт'); loadAdmin(); } catch (error) { showToast(error.message, 'error'); } }
+async function removeReview(id) {
+  showModal('Удалить отзыв?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  document.getElementById('modal-confirm').onclick = async () => {
+    try { await api(`/admin/reviews/${id}`, { method: 'DELETE' }); closeModal(); showToast('Отзыв удалён'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
+  };
+}
+
+// ─── NAVIGATION & FILTERS ──────────────────────────────
+
 function showAdminTab(tab) {
   activeAdminTab = tab;
   document.querySelectorAll('.admin-tab').forEach(button => button.classList.toggle('active', button.dataset.adminTab === tab));
@@ -84,6 +353,7 @@ function showAdminTab(tab) {
   document.getElementById('admin-search').value = '';
   filterAdminRows('');
 }
+
 function filterAdminRows(value) {
   const query = value.trim().toLowerCase();
   document.querySelectorAll('.admin-section.active .admin-row, .admin-section.active tbody tr, .admin-section.active .admin-review-item').forEach(row => {
@@ -91,6 +361,7 @@ function filterAdminRows(value) {
     row.style.display = matchesStatus && (!query || row.textContent.toLowerCase().includes(query)) ? '' : 'none';
   });
 }
+
 document.querySelectorAll('.admin-tab').forEach(button => button.addEventListener('click', () => showAdminTab(button.dataset.adminTab)));
 document.getElementById('admin-search').addEventListener('input', event => filterAdminRows(event.target.value));
 document.getElementById('admin-refresh').addEventListener('click', loadAdmin);
