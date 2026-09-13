@@ -35,13 +35,14 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
     LEFT JOIN cities c ON u.city_id = c.id
   `;
 
-  const conditions = [];
+  const conditions = ["COALESCE(u.data_status, 'active') = 'active'"];
   const params = [];
 
   // ТОП-20: 20 лучших по QS (мировой → азиатский → число студентов)
   if (is_top === 'top') {
     conditions.push(`u.id IN (
       SELECT id FROM universities
+      WHERE COALESCE(data_status, 'active') = 'active'
       ORDER BY
         CASE WHEN qs_world IS NULL THEN 1 ELSE 0 END,
         qs_world ASC,
@@ -132,10 +133,17 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
     let accreditations = [];
     
     try {
-      languages = u.languages ? JSON.parse(u.languages) : [];
+      if (!u.languages) {
+        languages = [];
+      } else if (Array.isArray(u.languages)) {
+        languages = u.languages;
+      } else {
+        const parsed = JSON.parse(u.languages);
+        languages = Array.isArray(parsed) ? parsed : [parsed];
+      }
     } catch (e) {
-      console.warn(`Invalid languages JSON for university ${u.id}:`, u.languages);
-      languages = ['Русский'];
+      // Comma-separated string format (e.g. "ru,kk,en")
+      languages = u.languages.split(',').map(s => s.trim()).filter(Boolean);
     }
     
     try {
@@ -175,7 +183,7 @@ function getUniversity(id, lang) {
       c.name as city_name
     FROM universities u
     LEFT JOIN cities c ON u.city_id = c.id
-    WHERE u.id = ?
+    WHERE u.id = ? AND COALESCE(u.data_status, 'active') = 'active'
   `);
 
   const u = stmt.get(parseInt(id));
@@ -195,10 +203,16 @@ function getUniversity(id, lang) {
   let accreditations = [];
   
   try {
-    languages = u.languages ? JSON.parse(u.languages) : [];
+    if (!u.languages) {
+      languages = [];
+    } else if (Array.isArray(u.languages)) {
+      languages = u.languages;
+    } else {
+      const parsed = JSON.parse(u.languages);
+      languages = Array.isArray(parsed) ? parsed : [parsed];
+    }
   } catch (e) {
-    console.warn(`Invalid languages JSON for university ${u.id}:`, u.languages);
-    languages = ['Русский'];
+    languages = u.languages.split(',').map(s => s.trim()).filter(Boolean);
   }
   
   try {

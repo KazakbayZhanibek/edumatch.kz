@@ -474,6 +474,23 @@ function getSavedUniversityIds(userId) {
 
 const APPLICATION_STATUSES = ['collecting', 'submitted', 'waiting', 'accepted', 'enrolled', 'rejected'];
 
+function validateApplication(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return 'Некорректная заявка';
+  if (data.status !== undefined && !APPLICATION_STATUSES.includes(data.status)) return 'Некорректный статус';
+  if (data.academicYear !== undefined) {
+    const match = typeof data.academicYear === 'string' && /^(\d{4})-(\d{4})$/.exec(data.academicYear);
+    if (!match || Number(match[2]) !== Number(match[1]) + 1) return 'Учебный год: YYYY-YYYY, например 2026-2027';
+  }
+  for (const field of ['deadline', 'submittedAt']) {
+    const value = data[field];
+    if (value == null || value === '') continue;
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
+      !Number.isFinite(Date.parse(value)) || new Date(value).toISOString().slice(0, 10) !== value) return 'Укажите корректную дату';
+  }
+  if (data.notes !== undefined && (typeof data.notes !== 'string' || data.notes.length > 2000)) return 'Заметка должна содержать не более 2000 символов';
+  return null;
+}
+
 function getApplications(userId) {
   try {
     return getDb().prepare(`
@@ -492,6 +509,8 @@ function getApplications(userId) {
 }
 
 function addApplication(userId, data = {}, lang = 'ru') {
+  const error = validateApplication(data);
+  if (error) return { success: false, error };
   const universityId = Number.parseInt(data.universityId, 10);
   const status = APPLICATION_STATUSES.includes(data.status) ? data.status : 'collecting';
   const academicYear = String(data.academicYear || '2025-2026').slice(0, 20);
@@ -519,6 +538,8 @@ function addApplication(userId, data = {}, lang = 'ru') {
 }
 
 function updateApplication(userId, applicationId, data = {}, lang = 'ru') {
+  const error = validateApplication(data);
+  if (error) return { success: false, error };
   const id = Number.parseInt(applicationId, 10);
   if (!Number.isInteger(id) || id < 1) return { success: false, error: 'Некорректный ID заявки' };
   const fields = [];

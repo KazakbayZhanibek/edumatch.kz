@@ -113,31 +113,25 @@ async function handleTrackerRemove(id, button) {
 }
 
 async function updateTrackerStatus(id, status) {
-  const item = state.trackerList.find(t => t.id === id);
-  if (item) {
-    if (Auth.isLoggedIn()) await Auth.updateApplication(id, { status });
-    item.status = status;
-    saveTracker();
-  }
+  return updateTrackerField(id, 'status', status);
 }
 
 async function updateTrackerNotes(id, notes) {
-  const item = state.trackerList.find(t => t.id === id);
-  if (item) {
-    if (Auth.isLoggedIn()) Auth.updateApplication(id, { notes }).catch(error => showToast(error.message, 'error'));
-    item.notes = notes;
-    saveTracker();
-  }
+  return updateTrackerField(id, 'notes', notes);
 }
 
-function updateTrackerField(id, field, value) {
+async function updateTrackerField(id, field, value) {
   const item = state.trackerList.find(t => t.id === id);
   if (!item) return;
-  if (field === 'academicYear') item.academic_year = value;
-  if (field === 'deadline') item.deadline = value;
-  saveTracker();
-  if (Auth.isLoggedIn()) {
-    Auth.updateApplication(id, { [field]: value }).catch(error => showToast(error.message, 'error'));
+  try {
+    if (Auth.isLoggedIn()) await Auth.updateApplication(id, { [field]: value });
+    item[field === 'academicYear' ? 'academic_year' : field] = value;
+    saveTracker();
+    return true;
+  } catch (error) {
+    showToast(error.message || 'Не удалось сохранить заявку', 'error');
+    await renderProfileTracker();
+    return false;
   }
 }
 

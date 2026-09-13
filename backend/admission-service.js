@@ -290,7 +290,7 @@ function getAdmissionPrediction(params) {
   const attestat = params.attestat ? parseFloat(params.attestat) : null;
   const lang = params.lang || 'ru';
 
-  if (ent === null || ent === undefined || ent < 0 || ent > 140) {
+  if (!Number.isInteger(ent) || ent < 0 || ent > 140) {
     return { success: false, error: tr('ent_too_high', lang) || 'Укажите балл ЕНТ от 0 до 140' };
   }
   if (!specialtyCategory) {
@@ -312,7 +312,7 @@ function getAdmissionPrediction(params) {
     JOIN universities u ON ar.university_id = u.id
     JOIN specialties s ON ar.specialty_id = s.id
     LEFT JOIN cities c ON u.city_id = c.id
-    WHERE s.category = ?
+    WHERE s.category = ? AND COALESCE(u.data_status, 'active') = 'active'
   `;
   const queryParams = [specialtyCategory];
 
@@ -469,8 +469,13 @@ function getAdmissionPrediction(params) {
 }
 
 function savePredictionHistory(userId, input, matches) {
-  if (!userId || !matches.length) return;
+  if (!userId || !matches.length) return 0;
   const db = getDb();
+  const ent = Number(input.ent ?? input.entScore);
+  const specialty = input.specialty || db.prepare('SELECT category FROM specialties WHERE id = ?').get(input.specialtyId ?? null)?.category;
+  if (!Number.isInteger(ent) || ent < 0 || ent > 140 || !specialty) {
+    throw new Error('Invalid prediction history input');
+  }
   const stmt = db.prepare(`
     INSERT INTO prediction_history (user_id, ent, specialty_category, university_id, predicted_chance)
     SELECT ?, ?, ?, ?, ?
@@ -482,14 +487,19 @@ function savePredictionHistory(userId, input, matches) {
     )
   `);
   const tx = db.transaction(() => {
+    let saved = 0;
     for (const m of matches.slice(0, 5)) {
-      stmt.run(
-        userId, input.ent, input.specialty, m.university_id, m.chance,
-        userId, input.ent, input.specialty, m.university_id, m.chance
-      );
+      const universityId = m.university_id ?? m.universityId;
+      const chance = m.chance ?? m.chancePercent;
+      if (!Number.isInteger(universityId) || !Number.isFinite(chance) || chance < 0 || chance > 100) {
+        throw new Error('Invalid prediction history match');
+      }
+      saved += stmt.run(userId, ent, specialty, universityId, chance,
+        userId, ent, specialty, universityId, chance).changes;
     }
+    return saved;
   });
-  tx();
+  return tx();
 }
 
 async function explainAdmissionChance(payload) {

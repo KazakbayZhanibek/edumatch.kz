@@ -5,8 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "load-grants": "node scripts/load-grants-data.js"
+    "test": "node --test _tests/regression.test.js",
+    "load-grants": "node scripts/load-grants-data.js",
+    "admin:grant": "node scripts/grant-admin.js"
   },
   "keywords": [],
   "author": "",

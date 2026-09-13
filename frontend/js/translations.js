@@ -263,6 +263,7 @@ const translations = {
       card_tests_title: 'Результаты тестов',
       card_tests_empty: 'Пройдите ЕНТ-калькулятор или профориентацию — результаты появятся здесь.',
       ent_title: 'Результат ЕНТ',
+      verification_title: 'Проверка документов',
       ent_score_label: 'Балл ЕНТ',
       ent_verified: 'Верифицировано',
       ent_update: 'Обновить балл',
@@ -325,6 +326,7 @@ const translations = {
     },
     footer: {
       desc: 'Платформа для сравнения университетов Казахстана — цены, рейтинги, специальности и ИИ-советник.',
+      grants: 'Гранты и стипендии',
       sections: 'Разделы',
       universities: 'Университеты',
       comparison: 'Сравнение',
@@ -1036,6 +1038,7 @@ const translations = {
       card_tests_title: 'Тест нәтижелері',
       card_tests_empty: 'ҰБТ-калькулятор немесе кәсіби бағдарлауды тапсырыңыз — нәтижелер осында пайда болады.',
       ent_title: 'ҰБТ нәтижесі',
+      verification_title: 'Құжаттарды тексеру',
       ent_score_label: 'ҰБТ ұпайы',
       ent_verified: 'Расталған',
       ent_update: 'Ұпайды жаңарту',
@@ -1098,6 +1101,7 @@ const translations = {
     },
     footer: {
       desc: 'Қазақстан университеттерін салыстыру платформасы — бағалар, рейтингтер, мамандықтар және ҚИ-кеңесші.',
+      grants: 'Гранттар мен стипендиялар',
       sections: 'Бөлімдер',
       universities: 'Университеттер',
       comparison: 'Салыстыру',
@@ -1961,6 +1965,7 @@ const translations = {
       card_tests_title: 'Test Results',
       card_tests_empty: 'Take the ENT calculator or career test — results will appear here.',
       ent_title: 'ENT Result',
+      verification_title: 'Document verification',
       ent_score_label: 'ENT Score',
       ent_verified: 'Verified',
       ent_update: 'Update score',
@@ -2023,6 +2028,7 @@ const translations = {
     },
     footer: {
       desc: 'Platform for comparing universities in Kazakhstan — prices, rankings, specialties, and AI advisor.',
+      grants: 'Grants & Scholarships',
       sections: 'Sections',
       universities: 'Universities',
       comparison: 'Compare',

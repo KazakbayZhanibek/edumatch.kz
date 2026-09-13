@@ -18,7 +18,7 @@ function validateAdmissionInput(input) {
   const errors = [];
 
   // entScore
-  const entScore = parseInt(input.entScore, 10);
+  const entScore = input.entScore == null || input.entScore === '' ? NaN : Number(input.entScore);
   if (!Number.isInteger(entScore) || entScore < 0 || entScore > 140) {
     errors.push('entScore должен быть от 0 до 140');
   }
@@ -101,7 +101,7 @@ function validateAdmissionInput(input) {
 function findHistoricalStats(query) {
   const db = getDb();
   const {
-    entScore, gpa, specialtyId, cityId, budgetMax, language, needsDorm
+    entScore, gpa, specialtyId, cityId, budgetMax, language, needsDorm, universityId
   } = query;
 
   const currentYear = new Date().getFullYear();
@@ -116,6 +116,10 @@ function findHistoricalStats(query) {
       AND ent_score_to >= ?
   `;
   const params = [specialtyId, currentYear, entScore, entScore];
+  if (universityId != null) {
+    sql += ' AND (university_id = ? OR university_id IS NULL)';
+    params.push(universityId);
+  }
 
   // Фильтруем по городу (если указан)
   if (cityId) {
@@ -141,14 +145,15 @@ function findHistoricalStats(query) {
   }
 
   // Фильтруем по GPA, если есть
-  if (gpa !== null) {
+  if (gpa != null) {
     sql += ` AND (gpa_from IS NULL OR gpa_from <= ?)`;
     params.push(gpa);
     sql += ` AND (gpa_to IS NULL OR gpa_to >= ?)`;
     params.push(gpa);
   }
 
-  sql += ` ORDER BY confidence_level DESC, applicants_count DESC`;
+  sql += ` ORDER BY CASE WHEN university_id IS NOT NULL THEN 0 ELSE 1 END,
+    CASE confidence_level WHEN 'high' THEN 0 WHEN 'medium' THEN 1 ELSE 2 END, applicants_count DESC`;
 
   const stmt = db.prepare(sql);
   const results = stmt.all(...params);
@@ -434,7 +439,7 @@ function calculateAdmissionChance(input) {
     JOIN university_specialties us ON u.id = us.university_id
     JOIN specialties s ON us.specialty_id = s.id
     LEFT JOIN cities c ON u.city_id = c.id
-    WHERE us.specialty_id = ?
+    WHERE us.specialty_id = ? AND COALESCE(u.data_status, 'active') = 'active'
   `;
   const universityParams = [query.specialtyId];
 
@@ -460,6 +465,7 @@ function calculateAdmissionChance(input) {
     // Ищем историческую статистику
     const historicalStats = findHistoricalStats({
       ...query,
+      universityId: uni.id,
       cityId: uni.city_id || query.cityId
     });
 

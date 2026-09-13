@@ -17,7 +17,8 @@
     "data:batch": "cd backend && node scripts/import-verified-batch.js",
     "data:rich-batch": "cd backend && node scripts/import-rich-university-batch.js",
     "security:audit": "cd backend && node scripts/audit-secrets.js",
-    "test": "cd backend && node test-automated.js"
+    "admin:grant": "npm --prefix backend run admin:grant --",
+    "test": "npm --prefix backend test"
   },
   "keywords": [
     "education",

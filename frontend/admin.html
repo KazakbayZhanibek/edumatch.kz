@@ -36,24 +36,6 @@
     .admin-error { color:#ef4444; padding:16px; background:rgba(239,68,68,.06); border:1px solid rgba(239,68,68,.25); border-radius:10px; }
     @media(max-width:700px) { .admin-page{padding:22px 14px}.admin-header{align-items:flex-start;flex-direction:column}.admin-metrics,.admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-block{grid-column:1/-1} }
   </style>
-  <script>
-    // Auto-logout after 15 minutes of inactivity
-    (function() {
-      const TIMEOUT = 15 * 60 * 1000;
-      let timer;
-      function resetTimer() {
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-          document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-          window.location.href = '/?session_expired=1';
-        }, TIMEOUT);
-      }
-      ['click', 'keypress', 'scroll', 'mousemove'].forEach(function(evt) {
-        document.addEventListener(evt, resetTimer, { passive: true });
-      });
-      resetTimer();
-    })();
-  </script>
 </head>
 <body>
   <main class="admin-page">
@@ -73,6 +55,7 @@
     <input class="admin-search" id="admin-search" type="search" placeholder="Поиск по текущему разделу..." aria-label="Поиск">
     <section id="admin-root"><div class="loading-state"><div class="spinner"></div></div></section>
   </main>
+  <script src="js/admin-session.js"></script>
   <script src="js/verification.js"></script>
   <script src="js/admin.js"></script>
 </body>

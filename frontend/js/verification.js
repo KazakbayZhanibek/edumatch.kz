@@ -69,12 +69,18 @@ const Verification = (() => {
     try {
       const data = await request('/' + type + '/status');
       if (!container.isConnected) return;
+      // Refresh the saved score without overwriting a user's unsaved edit.
+      const scoreInput = type === 'ent' ? document.getElementById('profile-ent-score') : null;
+      if (scoreInput && scoreInput.value === scoreInput.defaultValue) {
+        scoreInput.value = data.entScore ?? '';
+        scoreInput.defaultValue = scoreInput.value;
+      }
       const latest = data.request;
       container.innerHTML = '<section class="verification-card"><h3>' + tr(type) + '</h3>' +
         '<p>' + (type === 'ent' ? esc(data.entScore ?? '—') + ' / 140 · ' : '') +
         tr(data.verified ? 'approved' : type === 'ent' && data.entScore != null ? 'manual' : 'empty') + '</p>' +
         (type === 'military' ? '<p class="verification-muted">' + tr('noPromise') + '</p>' : '') +
-        (latest ? '<p><strong>' + tr(latest.status) + '</strong> · ' + esc(date(latest.created_at)) + '</p>' +
+        (latest ? '<p><strong>' + tr(latest.status) + '</strong> · ' + esc(date(latest.reviewed_at || latest.created_at)) + '</p>' +
           (latest.review_note ? '<p>' + esc(latest.review_note) + '</p>' : '') : '') +
         '<div class="verification-actions">' +
         (latest?.status === 'pending' ? '<button class="btn btn-outline" data-v-cancel>' + tr('cancel') + '</button>'

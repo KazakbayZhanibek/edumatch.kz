@@ -120,8 +120,8 @@ async function handleAIAdvice(req, res) {
         const profile = authService.getUserProfile(req.userId);
         if (profile) {
           const profileContext = [];
-          if (profile.ent_score) profileContext.push(`Балл ЕНТ: ${profile.ent_score}`);
-          if (profile.military_service) profileContext.push('Проходил военную службу (льготы при поступлении)');
+          if (profile.ent_score != null) profileContext.push(`Балл ЕНТ: ${profile.ent_score} (${profile.ent_verified_at ? 'проверен администратором' : 'указан пользователем'})`);
+          if (profile.military_service) profileContext.push('Военная служба подтверждена администратором. Не обещай льготы или повышенные шансы: условия конкретного вуза требуют отдельной проверки.');
           if (profile.bio) profileContext.push(`О себе: ${profile.bio}`);
           if (profileContext.length > 0) {
             validHistory.push({

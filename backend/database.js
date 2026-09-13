@@ -8,7 +8,7 @@ const Database = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, 'edumatch.db');
+const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'edumatch.db');
 
 let db = null;
 
@@ -16,19 +16,22 @@ let db = null;
  * Инициализирует БД и создает схему
  */
 function initDatabase() {
+  if (db) return db;
   // Если БД существует и не повреждена, просто открываем
   if (fs.existsSync(DB_PATH)) {
     try {
       db = new Database(DB_PATH);
       // Проверяем, что БД валидна
-      db.exec('SELECT 1');
+      if (db.pragma('quick_check', { simple: true }) !== 'ok') {
+        throw new Error('SQLite integrity check failed');
+      }
       console.log('✓ Подключено к существующей БД:', DB_PATH);
       migrateExistingDb(db);
       return db;
     } catch (e) {
-      // БД повреждена, удаляем и пересоздаем
-      console.warn('⚠ БД повреждена, пересоздаю...', e.message);
-      fs.unlinkSync(DB_PATH);
+      db?.close();
+      db = null;
+      throw new Error(`Cannot initialize database; original file preserved: ${e.message}`, { cause: e });
     }
   }
 
@@ -86,11 +89,6 @@ function migrateExistingDb(db) {
       // Игнорируем если колонка уже существует или таблица не найдена
     }
   }
-
-  // Единственный владелец админского профиля задаётся по подтверждённой почте.
-  try {
-    db.prepare("UPDATE users SET is_admin = 1 WHERE lower(email) = 'janibekkaz3@gmail.com'").run();
-  } catch (e) { /* users table may not exist yet */ }
 
   // Создаём таблицу reviews если нет
   try {
@@ -176,6 +174,34 @@ function migrateExistingDb(db) {
     )`);
     db.exec('CREATE INDEX IF NOT EXISTS idx_ent_uploads_user ON ent_uploads(user_id)');
   } catch (e) { /* verification tables may already exist */ }
+
+  // Required by the admin panel, including databases created before audit support.
+  // Run these migrations atomically and propagate errors instead of silently skipping them.
+  db.transaction(() => {
+    const userColumns = db.prepare('PRAGMA table_info(users)').all();
+    for (const [name, type] of [['ent_verified_score', 'INTEGER'], ['ent_verified_at', 'TEXT']]) {
+      if (!userColumns.some(column => column.name === name)) db.exec(`ALTER TABLE users ADD COLUMN ${name} ${type}`);
+    }
+    db.exec(`CREATE TABLE IF NOT EXISTS audit_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      table_name TEXT NOT NULL,
+      record_id INTEGER,
+      action TEXT NOT NULL CHECK(action IN ('INSERT', 'UPDATE', 'DELETE')),
+      old_values TEXT, new_values TEXT, user_id INTEGER, ip_address TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_audit_log_table ON audit_log(table_name);
+    CREATE INDEX IF NOT EXISTS idx_audit_log_record ON audit_log(record_id);
+    CREATE INDEX IF NOT EXISTS idx_audit_log_user ON audit_log(user_id);
+    CREATE INDEX IF NOT EXISTS idx_audit_log_created ON audit_log(created_at);`);
+    const columns = db.prepare('PRAGMA table_info(reviews)').all();
+    if (!columns.some(column => column.name === 'moderation_status')) {
+      db.exec("ALTER TABLE reviews ADD COLUMN moderation_status TEXT NOT NULL DEFAULT 'pending' CHECK(moderation_status IN ('pending', 'approved', 'hidden'))");
+      db.exec("UPDATE reviews SET moderation_status = 'approved' WHERE moderated_at IS NOT NULL");
+    }
+    db.exec('CREATE INDEX IF NOT EXISTS idx_reviews_moderation_status ON reviews(moderation_status)');
+  })();
 }
 
 /**

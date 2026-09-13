@@ -648,7 +648,7 @@ async function loadProfilePage() {
 
           <!-- ENT Upload & Military Verification -->
           <section class="profile-section">
-            <h2 class="profile-section-title">${t('profile_page.ent_title') || 'Верификация'}</h2>
+            <h2 class="profile-section-title">${t('profile_page.verification_title')}</h2>
             <div id="ent-upload-content" style="margin-bottom:16px"></div>
             <div id="military-content"></div>
           </section>
@@ -952,7 +952,6 @@ async function clearAdmissionHistory() {
   const overlay = document.createElement('div');
   overlay.className = 'sheet-overlay open';
   overlay.style.cssText = 'z-index:999;display:block;opacity:1;pointer-events:auto';
-  overlay.onclick = () => overlay.remove();
 
   const sheet = document.createElement('div');
   sheet.className = 'bottom-sheet open';
@@ -966,15 +965,19 @@ async function clearAdmissionHistory() {
         <line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
       </svg>
       <div style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--text)">Очистить всю историю?</div>
-      <div style="font-size:13px;color:var(--text-muted)">Это действие нельзя отменить. Будут удалены все ${document.querySelector('.profile-section-badge')?.textContent || ''} расчётов.</div>
+      <div style="font-size:13px;color:var(--text-muted)">Это действие нельзя отменить. Будут удалены все сохранённые расчёты.</div>
     </div>
     <div style="display:flex;gap:10px">
-      <button class="btn btn-ghost" style="flex:1" onclick="this.closest('.bottom-sheet').remove();document.querySelector('.sheet-overlay[style*=\\'z-index:999\\']')?.remove()">Отмена</button>
+      <button class="btn btn-ghost" style="flex:1" id="cancel-clear-history">Отмена</button>
       <button class="btn" style="flex:1;background:var(--error,#ef4444);color:#fff;border-color:var(--error,#ef4444)" id="confirm-clear-history">Очистить</button>
     </div>`;
 
   document.body.appendChild(overlay);
   document.body.appendChild(sheet);
+
+  const close = () => { sheet.remove(); overlay.remove(); };
+  overlay.onclick = close;
+  sheet.querySelector('#cancel-clear-history').onclick = close;
 
   document.getElementById('confirm-clear-history').onclick = async () => {
     sheet.remove();
@@ -993,10 +996,7 @@ async function deleteAdmissionHistoryItem(id, btn) {
   btn.disabled = true;
   try {
     await Auth.deleteAdmissionHistoryItem(id);
-    card.remove();
-    const section = document.getElementById('profile-admission-history');
-    const badge = section?.querySelector('.profile-section-badge');
-    if (badge) badge.textContent = Math.max(0, parseInt(badge.textContent) - 1);
+    await renderAdmissionHistory();
   } catch (e) {
     card.style.opacity = '1';
     btn.disabled = false;
@@ -1132,7 +1132,11 @@ function handleProfileSave(e) {
     bio: document.getElementById('profile-bio').value.trim(),
     entScore: entVal === '' ? null : Number(entVal)
   })
-    .then(() => { showToast(t('profile_page.toast_profile_saved'), 'success'); renderProfileStatusRow(); renderEntUpload(); })
+    .then(() => {
+      const scoreInput = document.getElementById('profile-ent-score');
+      scoreInput.defaultValue = scoreInput.value;
+      showToast(t('profile_page.toast_profile_saved'), 'success'); renderProfileStatusRow(); renderEntUpload();
+    })
     .catch(e => { err.textContent = e.message; });
 }
 
