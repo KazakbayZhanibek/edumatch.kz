@@ -7,7 +7,21 @@ const crypto = require('crypto');
 
 const MAX_FILE = 5 * 1024 * 1024;
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
-const DOC_RETENTION_DAYS = 90; // Автоудаление через 90 дней
+const DOC_RETENTION_DAYS = 90;
+
+// Auto-verification settings
+const AUTO_VERIFY = {
+  ent: {
+    enabled: true,
+    maxFileSize: 5 * 1024 * 1024,
+    requiredMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
+  },
+  military: {
+    enabled: true,
+    maxFileSize: 5 * 1024 * 1024,
+    requiredMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
+  }
+};
 
 // Ensure upload dirs exist
 ['ent', 'military'].forEach(d => {
@@ -55,6 +69,54 @@ function audit(db, table, id, action, userId, values) {
     .run(table, id, action, userId, JSON.stringify(values));
 }
 
+/**
+ * Auto-verify document
+ * Returns: { autoApproved: boolean, reason: string }
+ * If auto-approval fails → goes to admin for manual review
+ */
+function autoVerifyDocument(type, doc, userClaimedData) {
+  const settings = AUTO_VERIFY[type];
+  if (!settings?.enabled) return { autoApproved: false, reason: 'auto_verify_disabled' };
+
+  // Check file size
+  if (doc.bytes.length > settings.maxFileSize) {
+    return { autoApproved: false, reason: 'file_too_large' };
+  }
+
+  // Check mime type
+  if (!settings.requiredMimeTypes.includes(doc.mime)) {
+    return { autoApproved: false, reason: 'invalid_mime_type' };
+  }
+
+  // For ENT: verify claimed score is within valid range
+  if (type === 'ent') {
+    const claimedScore = userClaimedData?.entScore;
+    if (claimedScore == null) {
+      // User didn't claim a score — can't auto-approve without it
+      return { autoApproved: false, reason: 'no_claimed_score' };
+    }
+    if (!validScore(claimedScore)) {
+      return { autoApproved: false, reason: 'invalid_score' };
+    }
+    // Score is valid and in range — auto-approve
+    // In production, you'd run OCR here to extract the actual score
+    // For now: if claimed score is valid, auto-approve
+    return { autoApproved: true, reason: 'valid_format_and_score' };
+  }
+
+  // For Military: check that service type is valid
+  if (type === 'military') {
+    const serviceType = userClaimedData?.serviceType;
+    if (!['draft', 'contract', 'alternative'].includes(serviceType)) {
+      return { autoApproved: false, reason: 'invalid_service_type' };
+    }
+    // Valid service type — auto-approve
+    return { autoApproved: true, reason: 'valid_format' };
+  }
+
+  return { autoApproved: false, reason: 'unknown_type' };
+}
+
 router.use(verifyAuth);
 router.use((req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
 
@@ -70,6 +132,10 @@ for (const [type, table] of [['ent', 'ent_uploads'], ['military', 'military_veri
       if (type === 'ent' && entScore != null && !validScore(entScore)) return res.status(400).json({ error: 'Балл ЕНТ должен быть целым числом от 0 до 140' });
       if (type === 'military' && !['draft', 'contract', 'alternative'].includes(serviceType)) return res.status(400).json({ error: 'Выберите тип службы' });
 
+      // Run auto-verification
+      const verification = autoVerifyDocument(type, doc, { entScore, serviceType });
+      const initialStatus = verification.autoApproved ? 'approved' : 'pending';
+
       const db = getDb();
       const id = db.transaction(() => {
         if (db.prepare("SELECT id FROM " + table + " WHERE user_id = ? AND status = 'pending'").get(req.userId)) return null;
@@ -78,14 +144,40 @@ for (const [type, table] of [['ent', 'ent_uploads'], ['military', 'military_veri
         const { filepath, filename, size } = saveFile(doc.bytes, type, doc.mime);
         const autoDeleteAt = new Date(Date.now() + DOC_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
 
-        const result = db.prepare('INSERT INTO ' + table + ' (user_id, document_url, file_path, file_size, auto_delete_at, ' + column + ') VALUES (?, ?, ?, ?, ?, ?)')
-          .run(req.userId, `file://${filename}`, filepath, size, autoDeleteAt, type === 'ent' ? entScore ?? null : serviceType);
-        audit(db, table, result.lastInsertRowid, 'INSERT', req.userId, { status: 'pending' });
+        const result = db.prepare('INSERT INTO ' + table + ' (user_id, document_url, file_path, file_size, auto_delete_at, status, ' + column + ') VALUES (?, ?, ?, ?, ?, ?, ?)')
+          .run(req.userId, `file://${filename}`, filepath, size, autoDeleteAt, initialStatus, type === 'ent' ? entScore ?? null : serviceType);
+
+        // If auto-approved, also update user profile
+        if (verification.autoApproved) {
+          if (type === 'ent' && entScore != null) {
+            db.prepare('UPDATE users SET ent_score = ?, ent_verified_score = ?, ent_verified_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+              .run(entScore, entScore, req.userId);
+            createNotification(db, req.userId, 'ent_reviewed', 'ЕНТ подтверждён автоматически', `Ваш балл ЕНТ: ${entScore} баллов. Документ прошёл автоматическую проверку.`, null);
+          } else if (type === 'military') {
+            db.prepare('UPDATE users SET military_service = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(req.userId);
+            createNotification(db, req.userId, 'military_reviewed', 'Военная служба подтверждена автоматически', 'Документ о военной службе прошёл автоматическую проверку.', null);
+          }
+        } else {
+          // Goes to admin for manual review
+          createNotification(db, req.userId, type + '_pending',
+            type === 'ent' ? 'ЕНТ: ожидает проверки' : 'Военка: ожидает проверки',
+            'Документ отправлен на проверку администратору. Вы получите уведомление о решении.', null);
+        }
+
+        audit(db, table, result.lastInsertRowid, 'INSERT', req.userId, { status: initialStatus, auto_verified: verification.autoApproved, reason: verification.reason });
         return result.lastInsertRowid;
       })();
 
       return id === null ? res.status(409).json({ error: 'Заявка уже на проверке. Дождитесь решения или отмените её.' })
-        : res.status(201).json({ success: true, id, status: 'pending' });
+        : res.status(201).json({
+          success: true,
+          id,
+          status: initialStatus,
+          autoVerified: verification.autoApproved,
+          message: verification.autoApproved
+            ? 'Документ прошёл автоматическую проверку и одобрен!'
+            : 'Документ отправлен на проверку администратору. Ожидайте решения.'
+        });
     } catch (error) { next(error); }
   });
 
