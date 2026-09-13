@@ -23,15 +23,6 @@ function validateAdmissionInput(input) {
     errors.push('entScore должен быть от 0 до 140');
   }
 
-  // gpa
-  let gpa = null;
-  if (input.gpa !== undefined && input.gpa !== null) {
-    gpa = parseFloat(input.gpa);
-    if (!Number.isFinite(gpa) || gpa < 0 || gpa > 5) {
-      errors.push('gpa должна быть от 0 до 5');
-    }
-  }
-
   // specialtyId
   const specialtyId = parseInt(input.specialtyId, 10);
   if (!Number.isInteger(specialtyId) || specialtyId <= 0) {
@@ -81,7 +72,6 @@ function validateAdmissionInput(input) {
     valid: true,
     data: {
       entScore,
-      gpa,
       specialtyId,
       cityId,
       budgetMax,
@@ -95,13 +85,13 @@ function validateAdmissionInput(input) {
 
 /**
  * Ищет историческую статистику для заданного поступления
- * @param {object} query - { entScore, gpa, specialtyId, cityId, budgetMax, language, needsDorm }
+ * @param {object} query - { entScore, specialtyId, cityId, budgetMax, language, needsDorm }
  * @returns {array} - массив matching rows из admission_chance_stats
  */
 function findHistoricalStats(query) {
   const db = getDb();
   const {
-    entScore, gpa, specialtyId, cityId, budgetMax, language, needsDorm, universityId
+    entScore, specialtyId, cityId, budgetMax, language, needsDorm, universityId
   } = query;
 
   const currentYear = new Date().getFullYear();
@@ -144,14 +134,6 @@ function findHistoricalStats(query) {
     sql += ` AND (requires_dorm_support IS NULL OR requires_dorm_support = 1)`;
   }
 
-  // Фильтруем по GPA, если есть
-  if (gpa != null) {
-    sql += ` AND (gpa_from IS NULL OR gpa_from <= ?)`;
-    params.push(gpa);
-    sql += ` AND (gpa_to IS NULL OR gpa_to >= ?)`;
-    params.push(gpa);
-  }
-
   sql += ` ORDER BY CASE WHEN university_id IS NOT NULL THEN 0 ELSE 1 END,
     CASE confidence_level WHEN 'high' THEN 0 WHEN 'medium' THEN 1 ELSE 2 END, applicants_count DESC`;
 
@@ -165,13 +147,13 @@ function findHistoricalStats(query) {
 
 /**
  * Расчитывает шанс поступления на основе правил (fallback)
- * @param {object} input - { entScore, gpa, specialtyId, ... }
+ * @param {object} input - { entScore, specialtyId, ... }
  * @param {object} universityData - { id, price_from, price_to, languages, has_dorm, ... }
  * @returns {number} - chance percentage (0-95)
  */
 function calculateRulesScore(input, universityData) {
-  const { entScore, gpa, budgetMax, language, needsDorm } = input;
-  let score = 50; // базовое значение
+  const { entScore, budgetMax, language, needsDorm } = input;
+  let score = 50;
 
   // ENT score - основной фактор
   if (entScore >= 120) score += 25;
@@ -179,14 +161,6 @@ function calculateRulesScore(input, universityData) {
   else if (entScore >= 80) score += 5;
   else if (entScore >= 60) score -= 5;
   else score -= 15;
-
-  // GPA
-  if (gpa) {
-    if (gpa >= 4.5) score += 8;
-    else if (gpa >= 4.0) score += 5;
-    else if (gpa >= 3.5) score += 2;
-    else if (gpa < 3.0) score -= 5;
-  }
 
   // Budget
   if (universityData && budgetMax) {
@@ -342,7 +316,7 @@ function normalizeChance(chance) {
  */
 function buildReasoning(data) {
   const {
-    entScore, gpa, calculationMode, historicalMatch, university,
+    entScore, calculationMode, historicalMatch, university,
     budgetMatch, dormMatch, languageMatch, competitionLevel
   } = data;
 
@@ -357,17 +331,6 @@ function buildReasoning(data) {
     reasoning.push(`ЕНТ ${entScore} — ниже среднего, требуется внимание`);
   } else {
     reasoning.push(`ЕНТ ${entScore} — значительно ниже требований`);
-  }
-
-  // GPA
-  if (gpa) {
-    if (gpa >= 4.5) {
-      reasoning.push(`GPA ${gpa} — отличный школьный результат`);
-    } else if (gpa >= 4.0) {
-      reasoning.push(`GPA ${gpa} — хороший школьный результат`);
-    } else if (gpa >= 3.5) {
-      reasoning.push(`GPA ${gpa} — удовлетворительный результат`);
-    }
   }
 
   // Историческая статистика
@@ -410,7 +373,7 @@ function buildReasoning(data) {
 
 /**
  * Основная функция расчета шанса поступления
- * @param {object} input - { entScore, gpa, cityId, specialtyId, budgetMax, language, needsDorm }
+ * @param {object} input - { entScore, cityId, specialtyId, budgetMax, language, needsDorm }
  * @returns {object} - { matches: [], summary: {} }
  */
 function calculateAdmissionChance(input) {
@@ -508,15 +471,6 @@ function calculateAdmissionChance(input) {
         );
       }
 
-      if (query.gpa && historicalMatch.gpa_from) {
-        chancePercent = applyGpaModifier(
-          chancePercent,
-          query.gpa,
-          historicalMatch.gpa_from,
-          historicalMatch.gpa_to
-        );
-      }
-
       // Применяем modifier за confidence level
       chancePercent = applyConfidenceModifier(chancePercent, confidenceLevel);
     } else {
@@ -566,7 +520,6 @@ function calculateAdmissionChance(input) {
 
     const reasoning = buildReasoning({
       entScore: query.entScore,
-      gpa: query.gpa,
       calculationMode,
       historicalMatch,
       university: uni,
@@ -621,7 +574,6 @@ module.exports = {
   applyBudgetModifier,
   applyDormModifier,
   applyLanguageModifier,
-  applyGpaModifier,
   applyConfidenceModifier,
   normalizeChance,
   buildReasoning,

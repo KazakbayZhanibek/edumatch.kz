@@ -89,7 +89,6 @@ router.post('/predict', verifyAuthOptional, (req, res) => {
   try {
     const {
       ent,
-      attestat,
       cityId,
       specialty,
       budget,
@@ -99,7 +98,6 @@ router.post('/predict', verifyAuthOptional, (req, res) => {
 
     const result = getAdmissionPrediction({
       ent,
-      attestat,
       cityId,
       specialty,
       budget,
@@ -166,13 +164,12 @@ router.post('/explain', verifyAuthOptional, async (req, res) => {
  * Input:
  * {
  *   "entScore": 110,
- *   "gpa": 4.5,
  *   "cityId": 1,
  *   "specialtyId": 1,
  *   "budgetMax": 2500000,
  *   "language": "ru",
  *   "needsDorm": true,
- *   "useAiExplanation": false  // ← NEW: опционально добавить AI объяснение
+ *   "useAiExplanation": false
  * }
  * 
  * Output:
@@ -232,7 +229,6 @@ router.post('/calculate', verifyAuthOptional, async (req, res) => {
           budget: input.budgetMax,
           language: input.language,
           needDorm: input.needsDorm,
-          attestat: input.gpa,
         };
 
         // Получаем объяснение
@@ -259,7 +255,7 @@ router.post('/calculate', verifyAuthOptional, async (req, res) => {
  * 
  * Требует:
  * - userId (из auth token или не требуется если анонимный)
- * - input: { entScore, specialtyId, gpa, cityId, budgetMax, language, needsDorm }
+ * - input: { entScore, specialtyId, cityId, budgetMax, language, needsDorm }
  * - matches: массив из результатов расчета
  */
 router.post('/save-history', verifyAuthOptional, (req, res) => {

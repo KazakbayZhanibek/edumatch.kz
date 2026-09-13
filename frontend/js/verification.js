@@ -56,9 +56,9 @@ const Verification = (() => {
     try {
       const rows = await Promise.all(['ent', 'military'].map(type => request('/' + type + '/status')));
       container.innerHTML = rows.map((row, i) => {
-        const label = row.verified ? tr('approved') : row.request?.status === 'pending' ? tr('pending') : i === 0 && row.entScore != null ? tr('manual') : tr(row.request?.status || 'empty');
+        const label = row.verified ? tr('approved') : row.request?.status === 'pending' ? tr('pending') : tr(row.request?.status || 'empty');
         return '<div class="profile-status-card"><div class="profile-status-info"><div class="profile-status-value">' +
-          (i === 0 && row.entScore != null ? esc(row.entScore) + ' · ' : '') + esc(label) + '</div><div class="profile-status-label">' + tr(i === 0 ? 'ent' : 'military') + '</div></div></div>';
+          (i === 0 && row.verified && row.entScore != null ? esc(row.entScore) + ' · ' : '') + esc(label) + '</div><div class="profile-status-label">' + tr(i === 0 ? 'ent' : 'military') + '</div></div></div>';
       }).join('');
     } catch (e) { container.textContent = e.message; }
   }
@@ -69,16 +69,10 @@ const Verification = (() => {
     try {
       const data = await request('/' + type + '/status');
       if (!container.isConnected) return;
-      // Refresh the saved score without overwriting a user's unsaved edit.
-      const scoreInput = type === 'ent' ? document.getElementById('profile-ent-score') : null;
-      if (scoreInput && scoreInput.value === scoreInput.defaultValue) {
-        scoreInput.value = data.entScore ?? '';
-        scoreInput.defaultValue = scoreInput.value;
-      }
       const latest = data.request;
       container.innerHTML = '<section class="verification-card"><h3>' + tr(type) + '</h3>' +
         '<p>' + (type === 'ent' ? esc(data.entScore ?? '—') + ' / 140 · ' : '') +
-        tr(data.verified ? 'approved' : type === 'ent' && data.entScore != null ? 'manual' : 'empty') + '</p>' +
+        tr(data.verified ? 'approved' : 'empty') + '</p>' +
         (type === 'military' ? '<p class="verification-muted">' + tr('noPromise') + '</p>' : '') +
         (latest ? '<p><strong>' + tr(latest.status) + '</strong> · ' + esc(date(latest.reviewed_at || latest.created_at)) + '</p>' +
           (latest.review_note ? '<p>' + esc(latest.review_note) + '</p>' : '') : '') +

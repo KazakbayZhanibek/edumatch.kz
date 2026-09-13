@@ -130,11 +130,28 @@ CREATE TABLE IF NOT EXISTS users (
   military_service INTEGER DEFAULT 0, -- 0 = не служил, 1 = проходил службу
   preferences TEXT,                  -- JSON: {"theme": "light", "language": "kk"}
   is_admin INTEGER DEFAULT 0,        -- 0 или 1
+  role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user', 'moderator_reviews', 'moderator_docs', 'admin')),
+  two_factor_enabled INTEGER NOT NULL DEFAULT 0,
+  two_factor_secret TEXT,
+  two_factor_backup_codes TEXT,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+
+-- Одноразовые токены сброса пароля. В базе хранится только хеш токена.
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  token_hash TEXT NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  used INTEGER NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_password_resets_user ON password_resets(user_id);
 
 -- Сохранённые вузы (избранные)
 CREATE TABLE IF NOT EXISTS saved_universities (
@@ -347,6 +364,9 @@ CREATE TABLE IF NOT EXISTS military_verifications (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
   document_url TEXT NOT NULL,           -- base64 или путь к файлу
+  file_path TEXT,
+  file_size INTEGER,
+  auto_delete_at DATETIME,
   service_type TEXT DEFAULT 'draft',    -- draft=по призыву, contract=контракт, alternative=альтернативная
   status TEXT DEFAULT 'pending',        -- pending / approved / rejected
   reviewed_by INTEGER,                  -- admin user_id
@@ -364,6 +384,9 @@ CREATE TABLE IF NOT EXISTS ent_uploads (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
   document_url TEXT NOT NULL,           -- base64 или путь к файлу
+  file_path TEXT,
+  file_size INTEGER,
+  auto_delete_at DATETIME,
   ent_score INTEGER,                    -- распознанный балл (0-140)
   status TEXT DEFAULT 'pending',        -- pending / approved / rejected
   reviewed_by INTEGER,
@@ -374,3 +397,16 @@ CREATE TABLE IF NOT EXISTS ent_uploads (
   FOREIGN KEY(reviewed_by) REFERENCES users(id) ON DELETE SET NULL
 );
 CREATE INDEX IF NOT EXISTS idx_ent_uploads_user ON ent_uploads(user_id);
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  link TEXT,
+  is_read INTEGER NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON notifications(user_id, created_at);

@@ -59,6 +59,10 @@ function migrateExistingDb(db) {
   const migrations = [
     // is_admin колонка в users
     { table: 'users', col: 'is_admin', sql: "ALTER TABLE users ADD COLUMN is_admin INTEGER DEFAULT 0" },
+    { table: 'users', col: 'role', sql: "ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'" },
+    { table: 'users', col: 'two_factor_enabled', sql: 'ALTER TABLE users ADD COLUMN two_factor_enabled INTEGER NOT NULL DEFAULT 0' },
+    { table: 'users', col: 'two_factor_secret', sql: 'ALTER TABLE users ADD COLUMN two_factor_secret TEXT' },
+    { table: 'users', col: 'two_factor_backup_codes', sql: 'ALTER TABLE users ADD COLUMN two_factor_backup_codes TEXT' },
     { table: 'users', col: 'ent_score', sql: 'ALTER TABLE users ADD COLUMN ent_score INTEGER' },
     { table: 'users', col: 'military_service', sql: 'ALTER TABLE users ADD COLUMN military_service INTEGER DEFAULT 0' },
     { table: 'reviews', col: 'moderated_at', sql: 'ALTER TABLE reviews ADD COLUMN moderated_at DATETIME' },
@@ -89,6 +93,20 @@ function migrateExistingDb(db) {
       // Игнорируем если колонка уже существует или таблица не найдена
     }
   }
+
+  // Keep legacy administrators functional while introducing explicit roles.
+  db.prepare("UPDATE users SET role = 'admin' WHERE is_admin = 1 AND (role IS NULL OR role = 'user')").run();
+  db.exec(`CREATE TABLE IF NOT EXISTS password_resets (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    token_hash TEXT NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+    used INTEGER NOT NULL DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+  CREATE INDEX IF NOT EXISTS idx_password_resets_user ON password_resets(user_id);
+  CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);`);
 
   // Создаём таблицу reviews если нет
   try {
@@ -174,6 +192,27 @@ function migrateExistingDb(db) {
     )`);
     db.exec('CREATE INDEX IF NOT EXISTS idx_ent_uploads_user ON ent_uploads(user_id)');
   } catch (e) { /* verification tables may already exist */ }
+
+  // File-backed verification uploads were introduced after the original
+  // document_url-only schema. Add the fields to real, pre-existing databases.
+  for (const table of ['ent_uploads', 'military_verifications']) {
+    const columns = db.prepare(`PRAGMA table_info(${table})`).all();
+    for (const [name, type] of [['file_path', 'TEXT'], ['file_size', 'INTEGER'], ['auto_delete_at', 'DATETIME']]) {
+      if (!columns.some(column => column.name === name)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${name} ${type}`);
+    }
+  }
+  db.exec(`CREATE TABLE IF NOT EXISTS notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    type TEXT NOT NULL,
+    title TEXT NOT NULL,
+    message TEXT NOT NULL,
+    link TEXT,
+    is_read INTEGER NOT NULL DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+  CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON notifications(user_id, created_at);`);
 
   // Required by the admin panel, including databases created before audit support.
   // Run these migrations atomically and propagate errors instead of silently skipping them.

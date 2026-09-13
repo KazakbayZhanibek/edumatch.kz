@@ -8,6 +8,26 @@ const router = express.Router();
 const authService = require('./auth-service');
 const { verifyAuth } = require('./auth-middleware');
 const { tr, getLang } = require('./i18n');
+const { generateToken: generateCsrfToken } = require('./csrf');
+
+function setSessionCookies(res, token) {
+  const secure = process.env.NODE_ENV === 'production';
+  res.cookie('auth_token', token, {
+    httpOnly: true,
+    secure,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+  // A new login has a new session key, so rotate its CSRF token too.
+  res.cookie('csrf_token', generateCsrfToken(token), {
+    httpOnly: false,
+    secure,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 60 * 60 * 1000
+  });
+}
 
 // ============== RATE LIMITING ==============
 const loginAttempts = new Map();
@@ -99,14 +119,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: result.error });
     }
 
-    // Set httpOnly cookie with JWT token
-    res.cookie('auth_token', result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 дней
-    });
+    setSessionCookies(res, result.token);
 
     return res.status(201).json({
       success: true,
@@ -157,14 +170,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: result.error });
     }
 
-    // Set httpOnly cookie with JWT token
-    res.cookie('auth_token', result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 дней
-    });
+    setSessionCookies(res, result.token);
 
     return res.json({
       success: true,
@@ -205,6 +211,12 @@ router.post('/logout', verifyAuth, (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      path: '/'
+    });
+    res.clearCookie('csrf_token', {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
       path: '/'
     });
 
@@ -291,12 +303,12 @@ router.get('/profile', verifyAuth, (req, res) => {
  * PUT /api/users/profile
  * Обновить профиль
  * Header: Authorization: Bearer <token>
- * Body: { fullName?, phone?, bio?, entScore?, preferences?, profilePicture? }
+ * Body: { fullName?, phone?, bio?, preferences?, profilePicture? }
  */
 router.put('/profile', verifyAuth, (req, res) => {
   const lang = getLang(req);
   try {
-    const { fullName, phone, bio, entScore, preferences, profilePicture } = req.body;
+    const { fullName, phone, bio, preferences, profilePicture } = req.body;
 
     if (profilePicture && !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(profilePicture)) {
       return res.status(400).json({ error: 'Недопустимый формат аватара' });
@@ -309,7 +321,6 @@ router.put('/profile', verifyAuth, (req, res) => {
       fullName,
       phone,
       bio,
-      entScore,
       preferences,
       profilePicture
     }, lang);
@@ -771,7 +782,11 @@ router.post('/2fa/enable', verifyAuth, (req, res) => {
 
 router.post('/2fa/disable', verifyAuth, (req, res) => {
   try {
-    const { disableTwoFactor } = require('./auth-extended');
+    const { code } = req.body;
+    if (!code) return res.status(400).json({ error: 'Введите код 2FA или резервный код' });
+    const { disableTwoFactor, verifyTwoFactorCode } = require('./auth-extended');
+    const verification = verifyTwoFactorCode(req.userId, String(code));
+    if (!verification.valid) return res.status(400).json({ error: verification.error || 'Неверный код' });
     disableTwoFactor(req.userId);
     return res.json({ success: true, message: '2FA отключена' });
   } catch (error) {
@@ -822,6 +837,7 @@ router.patch('/users/:id/role', verifyAuth, verifyAdmin, (req, res) => {
     const id = parseInt(req.params.id, 10);
     const { role } = req.body;
     if (!id || !role) return res.status(400).json({ error: 'ID и роль обязательны' });
+    if (id === req.userId && role !== 'admin') return res.status(400).json({ error: 'Нельзя снять с себя роль полного администратора' });
 
     const { setUserRole } = require('./auth-extended');
     const result = setUserRole(id, role);

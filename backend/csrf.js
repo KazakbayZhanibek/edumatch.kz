@@ -46,27 +46,34 @@ function validateToken(token, sessionId) {
   return true;
 }
 
-// Middleware: set CSRF token in cookie and validate on mutations
+function sessionKey(req) {
+  // The token is bound to the actual server-side session token, not merely an
+  // IP address. This prevents a token issued before login from authorizing a
+  // logged-in session and works before verifyAuth runs.
+  return req.cookies?.auth_token || `anonymous:${req.ip || 'unknown'}`;
+}
+
+function isSafeMethod(method) {
+  return ['GET', 'HEAD', 'OPTIONS'].includes(method);
+}
+
+// Middleware: set a readable double-submit token and validate mutations.
 function csrfProtection(req, res, next) {
-  // Skip for GET, HEAD, OPTIONS
-  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
-    // Generate and set CSRF token for safe methods
-    const sessionId = req.userId || req.ip || 'anonymous';
-    const token = generateToken(sessionId);
+  const key = sessionKey(req);
+  if (isSafeMethod(req.method)) {
+    const token = generateToken(key);
     res.cookie('csrf_token', token, {
-      httpOnly: false, // JS needs to read it
+      httpOnly: false,
       sameSite: 'strict',
       secure: process.env.NODE_ENV === 'production',
+      path: '/',
       maxAge: CSRF_EXPIRY,
     });
     return next();
   }
 
-  // Validate on POST, PUT, PATCH, DELETE
   const csrfToken = req.headers['x-csrf-token'] || req.body?._csrf;
-  const sessionId = req.userId || req.ip || 'anonymous';
-
-  if (!csrfToken || !validateToken(csrfToken, sessionId)) {
+  if (typeof csrfToken !== 'string' || !validateToken(csrfToken, key)) {
     console.warn(`[CSRF] Invalid token from ${req.ip} at ${req.path}`);
     return res.status(403).json({ error: 'CSRF токен недействителен' });
   }

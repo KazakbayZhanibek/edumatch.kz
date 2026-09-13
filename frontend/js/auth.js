@@ -117,8 +117,8 @@ const Auth = {
     return data;
   },
 
-  async updateProfile({ fullName, phone, bio, entScore, preferences, profilePicture }) {
-    const body = { fullName, phone, bio, entScore };
+  async updateProfile({ fullName, phone, bio, preferences, profilePicture }) {
+    const body = { fullName, phone, bio };
     if (preferences) body.preferences = preferences;
     if (profilePicture) body.profilePicture = profilePicture;
     const res = await this.fetch('/users/profile', {
@@ -602,12 +602,6 @@ async function loadProfilePage() {
                 <textarea id="profile-bio" class="form-input" rows="2" maxlength="300" oninput="document.getElementById('profile-bio-count').textContent = this.value.length" placeholder="${t('profile_page.card_bio_placeholder') || 'Кратко о целях поступления'}">${escapeHtml(profile.bio || '')}</textarea>
                 <div class="form-hint" style="text-align:right;font-size:12px;color:var(--text-muted,#888)"><span id="profile-bio-count">${(profile.bio || '').length}</span>/300</div>
               </div>
-              <div class="profile-form-row">
-                <div class="form-field">
-                  <label>${t('profile_page.card_ent_score') || 'Балл ЕНТ'}</label>
-                  <input type="number" id="profile-ent-score" value="${profile.entScore ?? ''}" class="form-input" min="0" max="140" step="1" placeholder="0–140">
-                </div>
-              </div>
               <p class="form-error" id="profile-error"></p>
               <div class="profile-form-actions">
                 <button type="submit" class="btn btn-primary">${t('profile_page.card_save') || 'Сохранить'}</button>
@@ -821,8 +815,18 @@ async function renderProfileTracker() {
   if (countEl) countEl.textContent = state.trackerList.length || '';
 
   if (state.trackerList.length === 0) {
-    container.innerHTML = `<p class="profile-empty">${t('tracker.empty_desc') || 'Добавляйте вузы из результатов поступления, чтобы отслеживать статус заявок'}</p>
-    <button class="btn btn-primary btn-sm" onclick="navigate('advisor')">${t('tracker.go_advisor') || 'Перейти к советнику'}</button>`;
+    container.innerHTML = `
+      <div class="tracker-empty">
+        <div class="tracker-empty-icon">📋</div>
+        <p class="tracker-empty-title">${t('tracker.empty_title') || 'Нет заявок'}</p>
+        <p class="tracker-empty-desc">${t('tracker.empty_desc') || 'Добавляйте вузы в трекер из результатов расчёта шансов поступления, чтобы отслеживать статус заявок'}</p>
+        <div class="tracker-empty-steps">
+          <div class="tracker-empty-step"><span class="tracker-step-num">1</span> ${t('tracker.step1') || 'Рассчитайте шансы в разделе «Мои шансы»'}</div>
+          <div class="tracker-empty-step"><span class="tracker-step-num">2</span> ${t('tracker.step2') || 'Нажмите «В трекер» на карточке вуза'}</div>
+          <div class="tracker-empty-step"><span class="tracker-step-num">3</span> ${t('tracker.step3') || 'Отслеживайте статус здесь'}</div>
+        </div>
+        <button class="btn btn-primary" onclick="navigate('admission')">${t('tracker.go_admission') || 'Перейти к расчёту шансов'}</button>
+      </div>`;
     return;
   }
 
@@ -1125,16 +1129,12 @@ function handleProfileSave(e) {
   e.preventDefault();
   const err = document.getElementById('profile-error');
   err.textContent = '';
-  const entVal = document.getElementById('profile-ent-score').value;
   Auth.updateProfile({
     fullName: document.getElementById('profile-fullname').value.trim(),
     phone: document.getElementById('profile-phone').value.trim(),
-    bio: document.getElementById('profile-bio').value.trim(),
-    entScore: entVal === '' ? null : Number(entVal)
+    bio: document.getElementById('profile-bio').value.trim()
   })
     .then(() => {
-      const scoreInput = document.getElementById('profile-ent-score');
-      scoreInput.defaultValue = scoreInput.value;
       showToast(t('profile_page.toast_profile_saved'), 'success'); renderProfileStatusRow(); renderEntUpload();
     })
     .catch(e => { err.textContent = e.message; });

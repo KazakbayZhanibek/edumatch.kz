@@ -302,11 +302,8 @@ function getUserProfile(userId) {
  */
 function updateUserProfile(userId, data, lang = 'ru') {
   try {
-    const { fullName, phone, bio, entScore, preferences, profilePicture } = data;
+    const { fullName, phone, bio, preferences, profilePicture } = data;
 
-    if (entScore !== undefined && entScore !== null && (!Number.isInteger(entScore) || entScore < 0 || entScore > 140)) {
-      return { success: false, error: 'Балл ЕНТ должен быть целым числом от 0 до 140' };
-    }
     for (const [value, limit] of [[fullName, 150], [phone, 40], [bio, 2000]]) {
       if (value != null && (typeof value !== 'string' || value.length > limit)) return { success: false, error: 'Проверьте поля профиля и длину текста' };
     }
@@ -315,23 +312,16 @@ function updateUserProfile(userId, data, lang = 'ru') {
     const preferencesJson = preferences ? JSON.stringify(preferences) : null;
 
     const db = getDb();
-    db.transaction(() => {
-    if (entScore !== undefined) {
-      db.prepare(`UPDATE users SET ent_verified_score = CASE WHEN ent_score IS ? THEN ent_verified_score ELSE NULL END,
-        ent_verified_at = CASE WHEN ent_score IS ? THEN ent_verified_at ELSE NULL END, ent_score = ? WHERE id = ?`)
-        .run(entScore, entScore, entScore, userId);
-    }
     db.prepare(
       `UPDATE users 
        SET full_name = COALESCE(?, full_name),
            phone = COALESCE(?, phone),
            bio = COALESCE(?, bio),
            preferences = COALESCE(?, preferences),
-              profile_picture = COALESCE(?, profile_picture),
+           profile_picture = COALESCE(?, profile_picture),
            updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`
-            ).run(fullName ?? null, phone ?? null, bio ?? null, preferencesJson, profilePicture ?? null, userId);
-    })();
+    ).run(fullName ?? null, phone ?? null, bio ?? null, preferencesJson, profilePicture ?? null, userId);
 
     const updatedUser = getUserProfile(userId);
 

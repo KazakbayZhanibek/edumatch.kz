@@ -6,6 +6,8 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const { getDb } = require('./database');
 
+const hashToken = token => crypto.createHash('sha256').update(token).digest('hex');
+
 // ─── PASSWORD RECOVERY ──────────────────────────────
 
 function generateResetToken(userId) {
@@ -16,8 +18,8 @@ function generateResetToken(userId) {
   const token = crypto.randomBytes(32).toString('hex');
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
 
-  db.prepare('INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, ?)')
-    .run(userId, token, expiresAt);
+  db.prepare('INSERT INTO password_resets (user_id, token_hash, expires_at) VALUES (?, ?, ?)')
+    .run(userId, hashToken(token), expiresAt);
 
   return { token, expiresAt };
 }
@@ -28,8 +30,8 @@ function validateResetToken(token) {
     SELECT pr.*, u.email, u.username
     FROM password_resets pr
     JOIN users u ON u.id = pr.user_id
-    WHERE pr.token = ? AND pr.used = 0 AND pr.expires_at > datetime('now')
-  `).get(token);
+    WHERE pr.token_hash = ? AND pr.used = 0 AND pr.expires_at > datetime('now')
+  `).get(hashToken(token));
 
   if (!row) return { valid: false };
   return { valid: true, userId: row.user_id, email: row.email, username: row.username };
@@ -40,14 +42,15 @@ function resetPassword(token, newPassword) {
   const validation = validateResetToken(token);
   if (!validation.valid) return { success: false, error: 'Ссылка недействительна или истекла' };
 
-  if (!newPassword || newPassword.length < 8) {
-    return { success: false, error: 'Пароль должен содержать минимум 8 символов' };
+  if (!newPassword || newPassword.length < 12 || !/[A-Z]/.test(newPassword) || !/\d/.test(newPassword) || !/[!@#$%^&*\-_=+]/.test(newPassword)) {
+    return { success: false, error: 'Пароль должен содержать не менее 12 символов, заглавную букву, цифру и спецсимвол' };
   }
 
   const hash = bcrypt.hashSync(newPassword, 12);
   db.transaction(() => {
     db.prepare('UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(hash, validation.userId);
-    db.prepare('UPDATE password_resets SET used = 1 WHERE token = ?').run(token);
+    db.prepare('UPDATE password_resets SET used = 1 WHERE user_id = ? AND used = 0').run(validation.userId);
+    db.prepare('DELETE FROM user_sessions WHERE user_id = ?').run(validation.userId);
     db.prepare(`INSERT INTO audit_log (table_name, record_id, action, new_values, user_id) VALUES ('users', ?, 'UPDATE', ?, ?)`)
       .run(validation.userId, JSON.stringify({ action: 'password_reset' }), validation.userId);
   })();
@@ -163,8 +166,9 @@ function hasPermission(userId, permission) {
 function setUserRole(userId, role) {
   if (!ROLES[role]) return { success: false, error: 'Некорректная роль' };
   const db = getDb();
-  db.prepare('UPDATE users SET role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(role, userId);
-  return { success: true };
+  const result = db.prepare('UPDATE users SET role = ?, is_admin = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?')
+    .run(role, role === 'admin' ? 1 : 0, userId);
+  return result.changes ? { success: true } : { success: false, error: 'Пользователь не найден' };
 }
 
 // Middleware: check role permission

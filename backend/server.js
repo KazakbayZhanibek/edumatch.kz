@@ -30,6 +30,7 @@ const admissionRoutes = require('./admission-routes');
 const adminRoutes = require('./admin-routes');
 const dataRoutes = require('./data-routes');
 const { verifyAuth, verifyAdmin } = require('./auth-middleware');
+const { csrfProtection } = require('./csrf');
 
 const app = express();
 
@@ -109,6 +110,9 @@ if (process.env.NODE_ENV === 'production') {
 app.use('/api/verify', express.json({ limit: '8mb' }));
 app.use(express.json({ limit: '4mb' }));
 app.use(cookieParser());
+
+// CSRF protection for cookie-based requests
+app.use(csrfProtection);
 
 // Add logging middleware
 app.use((req, res, next) => {

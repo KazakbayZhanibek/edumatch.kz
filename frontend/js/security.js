@@ -158,6 +158,24 @@ function initSecurity() {
   
 }
 
+// Attach the CSRF token to every same-origin state-changing request. The
+// token is intentionally readable; the authentication cookie remains httpOnly.
+(() => {
+  const nativeFetch = window.fetch.bind(window);
+  const readCookie = name => document.cookie.split('; ').find(row => row.startsWith(name + '='))?.slice(name.length + 1);
+  window.fetch = (input, init = {}) => {
+    const method = String(init.method || (input instanceof Request ? input.method : 'GET')).toUpperCase();
+    const url = typeof input === 'string' ? input : input.url;
+    const sameOrigin = !url || url.startsWith('/') || new URL(url, window.location.href).origin === window.location.origin;
+    if (!sameOrigin || ['GET', 'HEAD', 'OPTIONS'].includes(method)) return nativeFetch(input, init);
+    const token = readCookie('csrf_token');
+    if (!token) return nativeFetch(input, init);
+    const headers = new Headers(init.headers || (input instanceof Request ? input.headers : undefined));
+    if (!headers.has('X-CSRF-Token')) headers.set('X-CSRF-Token', decodeURIComponent(token));
+    return nativeFetch(input, { ...init, headers });
+  };
+})();
+
 // Auto-init когда DOM готов
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initSecurity);

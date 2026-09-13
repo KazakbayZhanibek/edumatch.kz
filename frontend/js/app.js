@@ -147,7 +147,7 @@ const TRACKER_STATUSES = {
 async function handleTrackerAdd(universityId, universityName) {
   const existing = state.trackerList.find(t => t.university_id === universityId);
   if (existing) {
-    navigate('profile');
+    showToast(universityName + ' уже в трекере', 'info');
     return;
   }
   try {
@@ -156,11 +156,12 @@ async function handleTrackerAdd(universityId, universityName) {
     showToast(error.message || 'Не удалось добавить заявку', 'error');
     return;
   }
-  showToast(`${universityName} добавлен в трекер`);
-  document.querySelectorAll('.tracker-add-btn').forEach(btn => {
-    if (btn.onclick && btn.onclick.toString().includes(universityId)) {
+  showToast(universityName + ' добавлен в трекер');
+  document.querySelectorAll(`.tracker-add-btn`).forEach(btn => {
+    const onclickStr = btn.getAttribute('onclick') || '';
+    if (onclickStr.includes(universityId)) {
       btn.classList.add('added');
-      btn.textContent = t('tracker.added') || 'В трекере';
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ${t('tracker.added') || 'В трекере'}`;
     }
   });
 }
@@ -242,12 +243,10 @@ function updateBackButton() {
 }
 
 function navigateBack() {
-  const previous = state.pageHistory.pop() || { page: 'home', param: null };
-  state.skipPageHistory = true;
-  navigate(previous.page, previous.param);
+  history.back();
 }
 
-function navigate(page, param) {
+function navigate(page, param, pushBrowserHistory) {
   const isMobile = window.innerWidth <= 768;
 
   if (!state.skipPageHistory && (state.currentPage !== page || state.currentParam !== param)) {
@@ -255,6 +254,11 @@ function navigate(page, param) {
     if (state.pageHistory.length > 20) state.pageHistory.shift();
   }
   state.skipPageHistory = false;
+
+  if (pushBrowserHistory !== false) {
+    const url = param ? `#${page}/${param}` : `#${page}`;
+    history.pushState({ page, param: param || null }, '', url);
+  }
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -1528,7 +1532,7 @@ function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
       <div class="chat-admission-meta">
         <span class="portfolio-badge ${portfolioClass}">${escapeAdmissionHtml(m.portfolioLabel || '')}</span>
         <span class="chat-admission-rec">${escapeAdmissionHtml(m.recommendation)}</span>
-        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === m.university_id) ? 'added' : ''}" onclick="event.stopPropagation(); handleTrackerAdd(${m.university_id}, '${escapeAdmissionHtml(m.university)}')">${state.trackerList.some(t => t.university_id === m.university_id) ? (t('tracker.added') || 'В трекере') : (t('tracker.add_to_tracker') || 'В трекер')}</button>
+        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === m.university_id) ? 'added' : ''}" onclick="event.stopPropagation(); handleTrackerAdd(${m.university_id}, '${escapeAdmissionHtml(m.university)}')">${state.trackerList.some(t => t.university_id === m.university_id) ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ${t('tracker.added') || 'В трекере'}` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> ${t('tracker.add_to_tracker') || 'В трекер'}`}</button>
       </div>`;
 
     if (m.scoreBreakdown && m.scoreBreakdown.length > 0) {
@@ -2004,6 +2008,16 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCities();
 
   const isMobile = window.innerWidth <= 768;
+
+  // Handle browser back/forward buttons (mouse side buttons)
+  window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.page) {
+      navigate(e.state.page, e.state.param, false);
+    } else {
+      navigate('home', null, false);
+    }
+  });
+
   navigate('home');
   loadAcademicYear();
 
@@ -2224,7 +2238,6 @@ async function calculateAdmissionChance() {
   // Получаем значения из формы
   const entValue = document.getElementById('admit-ent').value;
   const entScore = entValue === '' ? NaN : Number(entValue);
-  const gpa = parseFloat(document.getElementById('admit-gpa').value);
   const specialtyId = parseInt(document.getElementById('admit-specialty').value, 10);
   const cityId = document.getElementById('admit-city').value ? parseInt(document.getElementById('admit-city').value, 10) : null;
   const budgetMax = document.getElementById('admit-budget').value ? parseInt(document.getElementById('admit-budget').value, 10) : null;
@@ -2234,10 +2247,6 @@ async function calculateAdmissionChance() {
   // Валидация
   if (!Number.isInteger(entScore) || entScore < 0 || entScore > 140) {
     showToast(t('admission_page.ent_must_be'), 'warning');
-    return;
-  }
-  if (!gpa || gpa < 0 || gpa > 5) {
-    showToast(t('admission_page.gpa_must_be'), 'warning');
     return;
   }
   if (!specialtyId) {
@@ -2251,13 +2260,12 @@ async function calculateAdmissionChance() {
   try {
     const payload = {
       entScore,
-      gpa,
       specialtyId,
       cityId,
       budgetMax,
       language,
       needsDorm,
-      useAiExplanation: true,  // Запрашиваем AI объяснение
+      useAiExplanation: true,
     };
 
     const res = await Auth.fetch('/admission/calculate', {
@@ -2381,22 +2389,23 @@ function renderAdmissionCard(match, index) {
         </div>
       </div>
 
-      <div class="admission-card-confidence" style="margin: 8px 0; font-size: 0.85rem; color: var(--gray, #666);">
+      <div class="admission-card-confidence">
         <strong>${t('admission_page.reliability')}</strong> ${escapeHtml(confidenceLevel || t('admission_page.reliability_mid'))}
       </div>
 
-      <div class="admission-card-specialty" style="margin: 8px 0; font-size: 0.9rem; color: var(--blue, #3b82f6);">
+      <div class="admission-card-specialty">
         <strong>${t('admission_page.spec_label')}</strong> ${escapeHtml(specialtyName)}
       </div>
 
-      <ul class="admission-reasons" style="margin: 12px 0; padding-left: 20px; list-style: none;">
+      <ul class="admission-reasons">
         ${reasoningHtml}
       </ul>
 
       ${contactsHtml}
 
       <div class="admission-card-actions" style="margin-top: 12px; display: flex; gap: 8px;">
-        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${universityId})" style="flex: 1;">
+        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === universityId) ? 'added' : ''}" onclick="event.stopPropagation(); handleTrackerAdd(${universityId}, '${escapeAdmissionHtml(universityName)}')">${state.trackerList.some(t => t.university_id === universityId) ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ${t('tracker.added') || 'В трекере'}` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> ${t('tracker.add_to_tracker') || 'В трекер'}`}</button>
+        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${universityId})">
           ${t('admission_page.uni_details')}
         </button>
       </div>

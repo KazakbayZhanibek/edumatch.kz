@@ -17,10 +17,12 @@ process.env.ALLOWED_ORIGINS = 'http://localhost:3000';
 process.env.DOTENV_CONFIG_PATH = path.join(fixture, 'absent.env');
 
 let server, db, base, adminToken, userToken;
+const csrfTokens = new Map();
 async function request(url, { token, ...options } = {}) {
+  const csrfToken = csrfTokens.get(token || 'anonymous');
   const response = await fetch(base + url, {
     ...options,
-    headers: { 'Content-Type': 'application/json', ...(token ? { Cookie: `auth_token=${token}` } : {}), ...options.headers },
+    headers: { 'Content-Type': 'application/json', ...(token ? { Cookie: `auth_token=${token}` } : {}), ...(csrfToken ? { 'X-CSRF-Token': csrfToken } : {}), ...options.headers },
   });
   const data = response.status === 204 ? null : await response.json();
   return { status: response.status, headers: response.headers, data };
@@ -61,6 +63,13 @@ before(async () => {
   server = app.listen(0, '127.0.0.1');
   await new Promise(resolve => server.once('listening', resolve));
   base = `http://127.0.0.1:${server.address().port}`;
+  for (const token of ['anonymous', adminToken, userToken]) {
+    const response = await fetch(base + '/health', { headers: token === 'anonymous' ? {} : { Cookie: `auth_token=${token}` } });
+    const cookie = response.headers.get('set-cookie') || '';
+    const value = /csrf_token=([^;]+)/.exec(cookie)?.[1];
+    if (!value) throw new Error('Test server did not issue a CSRF token');
+    csrfTokens.set(token, decodeURIComponent(value));
+  }
 });
 
 after(async () => {
@@ -172,6 +181,16 @@ test('CORS preflight allows PATCH used by admin and application tracker', async 
   const response = await request('/api/admin/universities/1', { method: 'OPTIONS', headers: { Origin: 'http://localhost:3000', 'Access-Control-Request-Method': 'PATCH' } });
   assert.equal(response.status, 204);
   assert.match(response.headers.get('access-control-allow-methods'), /PATCH/);
+});
+
+test('cookie-authenticated changes require a CSRF token bound to that session', async () => {
+  const denied = await fetch(base + '/api/users/profile', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Cookie: `auth_token=${userToken}` },
+    body: JSON.stringify({ fullName: 'Blocked request' }),
+  });
+  assert.equal(denied.status, 403);
+  assert.equal((await profileUpdate({ fullName: 'CSRF protected' })).status, 200);
 });
 
 test('corrupt databases are preserved byte-for-byte on startup failure', () => {

@@ -12,12 +12,12 @@ const DOC_RETENTION_DAYS = 90;
 // Auto-verification settings
 const AUTO_VERIFY = {
   ent: {
-    enabled: true,
+    enabled: false,
     maxFileSize: 5 * 1024 * 1024,
     requiredMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
   },
   military: {
-    enabled: true,
+    enabled: false,
     maxFileSize: 5 * 1024 * 1024,
     requiredMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
   }
@@ -198,7 +198,7 @@ for (const [type, table] of [['ent', 'ent_uploads'], ['military', 'military_veri
       const status = req.query.status || 'pending';
       if (!['pending', 'approved', 'rejected', 'cancelled', 'all'].includes(status)) return res.status(400).json({ error: 'Некорректный статус' });
       const requests = getDb().prepare("SELECT r.id, r.user_id, r.status, r.review_note, r.created_at, r.reviewed_at, r." + column +
-        ", r.file_path, r.auto_delete_at, u.username, u.full_name FROM " + table +
+        ", r.file_path, r.auto_delete_at, CASE WHEN r.file_path IS NOT NULL OR r.document_url LIKE 'data:%' THEN 1 ELSE 0 END AS has_document, u.username, u.full_name FROM " + table +
         " r JOIN users u ON u.id = r.user_id WHERE (? = 'all' OR r.status = ?) ORDER BY r.id DESC LIMIT 100").all(status, status);
       res.json({ requests });
     } catch (error) { next(error); }
