@@ -283,4 +283,101 @@ router.post('/save-history', verifyAuthOptional, (req, res) => {
   }
 });
 
+// ─── PERSONAL DOCUMENT PLAN ──────────────────────────────
+
+router.get('/document-plan', verifyAuth, (req, res, next) => {
+  try {
+    const db = getDb();
+    const user = db.prepare('SELECT ent_score, ent_verified_score, military_service, full_name, phone FROM users WHERE id = ?').get(req.userId);
+    const applications = db.prepare(`
+      SELECT a.*, u.short_name, u.name AS university_name
+      FROM application_tracker a
+      JOIN universities u ON u.id = a.university_id
+      WHERE a.user_id = ?
+      ORDER BY a.deadline ASC NULLS LAST
+    `).all(req.userId);
+
+    const entVerified = user?.ent_verified_at != null && user.ent_score === user.ent_verified_score;
+    const militaryVerified = user?.military_service === 1;
+
+    // Document checklist based on admission requirements
+    const documents = [
+      { id: 'ent_result', name: 'Результаты ЕНТ', nameKk: 'ҰБТ нәтижелері', required: true, verified: entVerified, category: 'exam' },
+      { id: 'attestat', name: 'Аттестат о среднем образовании', nameKk: 'Орта білім туралы аттестат', required: true, verified: false, category: 'education' },
+      { id: 'passport', name: 'Копия удостоверения личности', nameKk: 'Жеке куәліктің көшірмесі', required: true, verified: false, category: 'identity' },
+      { id: 'photos', name: 'Фотографии 3×4 (6 шт.)', nameKk: 'Суреттер 3×4 (6 дана)', required: true, verified: false, category: 'identity' },
+      { id: 'medical', name: 'Медицинская справка', nameKk: 'Медициналық анықтама', required: true, verified: false, category: 'health' },
+      { id: 'military', name: 'Документ о военной службе', nameKk: 'Әскери қызмет туралы құжат', required: false, verified: militaryVerified, category: 'military', conditional: 'Для юношей' },
+    ];
+
+    // Add grant-specific documents if applicable
+    const hasGrant = applications.some(a => a.notes?.toLowerCase().includes('грант'));
+    if (hasGrant) {
+      documents.push({ id: 'grant_docs', name: 'Документы для гранта', nameKk: 'Грант құжаттары', required: true, verified: false, category: 'grant' });
+    }
+
+    // Check deadlines
+    const upcomingDeadlines = db.prepare(`
+      SELECT d.*, u.short_name FROM deadlines d
+      LEFT JOIN universities u ON u.id = d.university_id
+      WHERE d.deadline_date > datetime('now')
+      ORDER BY d.deadline_date ASC LIMIT 10
+    `).all();
+
+    const completedCount = documents.filter(d => d.verified).length;
+    const progress = Math.round((completedCount / documents.length) * 100);
+
+    res.json({
+      success: true,
+      plan: {
+        documents,
+        applications: applications.map(a => ({
+          id: a.id,
+          university: a.short_name || a.university_name,
+          status: a.status,
+          deadline: a.deadline,
+          notes: a.notes,
+        })),
+        deadlines: upcomingDeadlines,
+        progress,
+        completedCount,
+        totalCount: documents.length,
+        profile: {
+          name: user?.full_name || null,
+          phone: user?.phone || null,
+          entScore: user?.ent_score || null,
+          entVerified,
+          militaryVerified,
+        }
+      }
+    });
+  } catch (error) { next(error); }
+});
+
+// ─── DEADLINES CALENDAR (for authenticated users) ──────────────────────────────
+
+router.get('/deadlines', verifyAuthOptional, (req, res, next) => {
+  try {
+    const days = Math.min(Math.max(Number.parseInt(req.query.days, 10) || 90, 1), 365);
+    const until = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+    const deadlines = getDb().prepare(`
+      SELECT d.*, u.short_name, u.name AS university_name
+      FROM deadlines d
+      LEFT JOIN universities u ON u.id = d.university_id
+      WHERE d.deadline_date BETWEEN datetime('now') AND ?
+      ORDER BY d.deadline_date ASC
+    `).all(until);
+
+    // Group by month
+    const grouped = {};
+    for (const d of deadlines) {
+      const month = d.deadline_date.slice(0, 7);
+      if (!grouped[month]) grouped[month] = [];
+      grouped[month].push(d);
+    }
+
+    res.json({ success: true, deadlines, grouped });
+  } catch (error) { next(error); }
+});
+
 module.exports = router;

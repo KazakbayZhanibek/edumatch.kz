@@ -1,12 +1,16 @@
 const { getAIAdvice } = require('./ai-service');
 const authService = require('./auth-service');
 const { evaluateSubmission } = require('./validation-utils');
+const { getDb } = require('./database');
 
 // Rate limiting: store user request timestamps
 const requestLogs = new Map();
 const MAX_REQUESTS = 30; // max requests per time window
 const TIME_WINDOW = 60000; // 60 seconds
 const MAX_KEYS = 5000; // Limit map size to prevent memory leak
+
+// Daily limit per user
+const DAILY_LIMIT = 100;
 
 function checkRateLimit(userId) {
   const key = userId || 'anonymous';
@@ -17,31 +21,57 @@ function checkRateLimit(userId) {
   }
   
   const log = requestLogs.get(key);
-  // Remove old entries
   const recentRequests = log.filter(t => now - t < TIME_WINDOW);
   requestLogs.set(key, recentRequests);
   
   if (recentRequests.length >= MAX_REQUESTS) {
-    return false;
+    return { allowed: false, reason: 'rate_limit_minute' };
   }
   
   recentRequests.push(now);
   
-  // Memory leak prevention: cleanup old entries when map gets too large
   if (requestLogs.size > MAX_KEYS) {
-    const now = Date.now();
     const keysToDelete = [];
     for (const [k, v] of requestLogs.entries()) {
       const active = v.filter(t => now - t < TIME_WINDOW);
-      if (active.length === 0) {
-        keysToDelete.push(k);
-      }
+      if (active.length === 0) keysToDelete.push(k);
     }
     keysToDelete.forEach(k => requestLogs.delete(k));
   }
   
-  return true;
+  return { allowed: true };
 }
+
+function checkDailyLimit(userId) {
+  if (!userId) return { allowed: true };
+  try {
+    const db = getDb();
+    const today = new Date().toISOString().slice(0, 10);
+    const row = db.prepare('SELECT request_count FROM ai_usage WHERE user_id = ? AND request_date = ?').get(userId, today);
+    if (row && row.request_count >= DAILY_LIMIT) {
+      return { allowed: false, remaining: 0 };
+    }
+    return { allowed: true, remaining: DAILY_LIMIT - (row?.request_count || 0) };
+  } catch (e) {
+    return { allowed: true };
+  }
+}
+
+function incrementDailyUsage(userId) {
+  if (!userId) return;
+  try {
+    const db = getDb();
+    const today = new Date().toISOString().slice(0, 10);
+    db.prepare(`INSERT INTO ai_usage (user_id, request_date, request_count) VALUES (?, ?, 1)
+      ON CONFLICT(user_id, request_date) DO UPDATE SET request_count = request_count + 1`).run(userId, today);
+  } catch (e) { /* ignore */ }
+}
+
+const AI_DISCLAIMER = {
+  ru: '⚠️ Ответы ИИ носят рекомендательный характер и не являются официальной консультацией. Для точной информации обращайтесь в приёмную комиссию вуза.',
+  kk: '⚠️ Жасанды интеллект жауаптары ұсыныс сипатында және ресми кеңес болып табылмайды. Нақты ақпарат үшін университетке хабарласыңыз.',
+  en: '⚠️ AI responses are advisory only and do not constitute official consultation. For accurate information, contact the university admissions office.'
+};
 
 async function handleAIAdvice(req, res) {
   const startTime = Date.now();
@@ -50,27 +80,32 @@ async function handleAIAdvice(req, res) {
     const { message, history, applications, replyTo } = req.body;
 
     // Rate limiting check
-    if (!checkRateLimit(req.userId)) {
+    const rateCheck = checkRateLimit(req.userId);
+    if (!rateCheck.allowed) {
       return res.status(429).json({
         success: false,
-        error: 'Too many requests. Please wait a moment before sending another message.',
+        error: 'Слишком много запросов. Подождите минуту.',
+        errorKey: 'rate_limit',
+      });
+    }
+
+    // Daily limit check
+    const dailyCheck = checkDailyLimit(req.userId);
+    if (!dailyCheck.allowed) {
+      return res.status(429).json({
+        success: false,
+        error: 'Достигнут дневной лимит запросов (100). Попробуйте завтра.',
+        errorKey: 'daily_limit',
       });
     }
 
     if (!message || typeof message !== 'string') {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid message',
-      });
+      return res.status(400).json({ success: false, error: 'Некорректное сообщение' });
     }
 
     const msg = message.trim();
-    if (msg.length < 2) {
-      return res.status(400).json({ success: false, error: 'Message too short' });
-    }
-    if (msg.length > 2000) {
-      return res.status(400).json({ success: false, error: 'Message too long (max 2000 chars)' });
-    }
+    if (msg.length < 2) return res.status(400).json({ success: false, error: 'Сообщение слишком короткое' });
+    if (msg.length > 2000) return res.status(400).json({ success: false, error: 'Сообщение слишком длинное (макс. 2000 символов)' });
 
     const submissionCheck = evaluateSubmission(msg, {
       maxLength: 1000,
@@ -206,7 +241,12 @@ async function handleAIAdvice(req, res) {
         intent: result.intent,
         matches_count: result.matches?.length || 0,
       });
+      incrementDailyUsage(req.userId);
     }
+
+    // Add disclaimer and usage info
+    response.disclaimer = AI_DISCLAIMER[lang] || AI_DISCLAIMER.ru;
+    response.dailyLimit = { used: (dailyCheck.remaining !== undefined ? DAILY_LIMIT - dailyCheck.remaining : 0), limit: DAILY_LIMIT };
 
     return res.json(response);
   } catch (err) {

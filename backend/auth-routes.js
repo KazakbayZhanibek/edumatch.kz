@@ -648,4 +648,37 @@ router.delete('/test-results/:id', verifyAuth, (req, res) => {
   }
 });
 
+/**
+ * DELETE /api/chat-history
+ * Удалить всю историю чатов пользователя
+ */
+router.delete('/chat-history', verifyAuth, (req, res) => {
+  try {
+    const { getDb } = require('./database');
+    const db = getDb();
+    const result = db.prepare('DELETE FROM chat_history WHERE user_id = ?').run(req.userId);
+    return res.json({ success: true, deleted: result.changes });
+  } catch (error) {
+    console.error('Delete chat history error:', error);
+    return res.status(500).json({ error: 'Ошибка удаления истории' });
+  }
+});
+
+/**
+ * DELETE /api/chat-history/:id
+ * Удалить один диалог из истории
+ */
+router.delete('/chat-history/:id', verifyAuth, (req, res) => {
+  try {
+    const { getDb } = require('./database');
+    const id = parseInt(req.params.id, 10);
+    if (!id) return res.status(400).json({ error: 'Некорректный ID' });
+    const result = getDb().prepare('DELETE FROM chat_history WHERE id = ? AND user_id = ?').run(id, req.userId);
+    return result.changes ? res.json({ success: true }) : res.status(404).json({ error: 'Диалог не найден' });
+  } catch (error) {
+    console.error('Delete chat message error:', error);
+    return res.status(500).json({ error: 'Ошибка удаления' });
+  }
+});
+
 module.exports = router;
