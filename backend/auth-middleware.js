@@ -128,17 +128,20 @@ function verifyAdmin(req, res, next) {
   try {
     const lang = getLang(req);
     const db = require('./database').getDb();
-    const user = db.prepare('SELECT is_admin FROM users WHERE id = ?').get(req.userId);
-    const isAdmin = user && user.is_admin;
+    const user = db.prepare('SELECT is_admin, role FROM users WHERE id = ?').get(req.userId);
+
+    // Support both old is_admin and new role system
+    const isAdmin = user && (user.is_admin === 1 || user.role === 'admin');
 
     if (!isAdmin) {
-      console.warn(`[SECURITY] Non-admin user ${req.userId} attempted admin access from ${req.ip} at ${new Date().toISOString()}`);
+      console.warn(`[SECURITY] Non-admin user ${req.userId} (role: ${user?.role}) attempted admin access from ${req.ip} at ${new Date().toISOString()}`);
       return res.status(403).json({
         error: tr('auth_admin_required', lang) || 'Требуются права администратора'
       });
     }
 
     req.isAdmin = true;
+    req.userRole = user.role || 'admin';
     next();
   } catch (error) {
     console.error('Admin check error:', error);
@@ -147,9 +150,36 @@ function verifyAdmin(req, res, next) {
   }
 }
 
+/**
+ * Middleware для проверки роли
+ * Использование: router.get('/moderate', verifyAuth, requireRole('moderator_reviews'), handler)
+ */
+function requireRole(...roles) {
+  return (req, res, next) => {
+    try {
+      const lang = getLang(req);
+      const db = require('./database').getDb();
+      const user = db.prepare('SELECT is_admin, role FROM users WHERE id = ?').get(req.userId);
+      const userRole = user?.role || (user?.is_admin ? 'admin' : 'user');
+
+      if (userRole === 'admin' || roles.includes(userRole)) {
+        req.userRole = userRole;
+        return next();
+      }
+
+      return res.status(403).json({
+        error: tr('auth_admin_required', lang) || 'Недостаточно прав'
+      });
+    } catch (error) {
+      return res.status(500).json({ error: 'Ошибка проверки роли' });
+    }
+  };
+}
+
 module.exports = {
   verifyAuth,
   verifyAuthOptional,
   verifyOwnership,
-  verifyAdmin
+  verifyAdmin,
+  requireRole,
 };
