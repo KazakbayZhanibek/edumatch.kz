@@ -70,17 +70,17 @@ function verifyAuthOptional(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    const token = req.cookies?.auth_token || (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null);
+
+    if (!token) {
       // Токен не предоставлен, продолжаем без него
       return next();
     }
 
-    const token = authHeader.slice(7);
-
     const validation = authService.validateSessionToken(token);
     const verification = authService.verifyToken(token);
 
-    if (validation.valid && verification.valid) {
+    if (validation.valid && verification.valid && validation.userId === verification.userId) {
       req.userId = verification.userId;
       req.token = token;
       req.authenticated = true;
@@ -132,6 +132,7 @@ function verifyAdmin(req, res, next) {
     const isAdmin = user && user.is_admin;
 
     if (!isAdmin) {
+      console.warn(`[SECURITY] Non-admin user ${req.userId} attempted admin access from ${req.ip} at ${new Date().toISOString()}`);
       return res.status(403).json({
         error: tr('auth_admin_required', lang) || 'Требуются права администратора'
       });

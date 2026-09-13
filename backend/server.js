@@ -116,7 +116,12 @@ app.use((req, res, next) => {
 });
 
 app.get('/admin.html', verifyAuth, verifyAdmin, (req, res) => {
-  res.set('Cache-Control', 'no-store');
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('X-Frame-Options', 'DENY');
+  res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com;");
   res.sendFile(path.join(__dirname, '../frontend/admin.html'));
 });
 
@@ -221,8 +226,8 @@ app.put('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {
   }
 });
 
-// Admin: Get current academic year
-app.get('/api/admin/academic-year', (req, res) => {
+// Admin: Get current academic year (requires admin)
+app.get('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {
   try {
     const db = require('./database').getDb();
     const row = db.prepare('SELECT academic_year FROM admission_requirements LIMIT 1').get();

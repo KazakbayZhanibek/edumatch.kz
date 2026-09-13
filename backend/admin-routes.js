@@ -3,7 +3,28 @@ const router = express.Router();
 const { getDb } = require('./database');
 const { verifyAuth, verifyAdmin } = require('./auth-middleware');
 
-router.use(verifyAuth, verifyAdmin);
+// Rate limiting for admin: 60 requests per minute per user
+const adminRateMap = new Map();
+const ADMIN_RATE_WINDOW = 60000;
+const ADMIN_RATE_MAX = 60;
+
+function adminRateLimit(req, res, next) {
+  const userId = req.userId;
+  const now = Date.now();
+  const record = adminRateMap.get(userId);
+  if (!record || now - record.start > ADMIN_RATE_WINDOW) {
+    adminRateMap.set(userId, { start: now, count: 1 });
+    return next();
+  }
+  record.count++;
+  if (record.count > ADMIN_RATE_MAX) {
+    console.warn(`Admin rate limit exceeded: userId=${userId} ip=${req.ip}`);
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
+  }
+  next();
+}
+
+router.use(verifyAuth, verifyAdmin, adminRateLimit);
 
 router.get('/overview', (req, res) => {
   try {
@@ -17,7 +38,7 @@ router.get('/overview', (req, res) => {
       applications: db.prepare('SELECT COUNT(*) AS count FROM application_tracker').get().count,
       reviews: db.prepare('SELECT COUNT(*) AS count FROM reviews').get().count,
       chatMessages: db.prepare('SELECT COUNT(*) AS count FROM chat_history').get().count,
-      pendingReviews: db.prepare("SELECT COUNT(*) AS count FROM reviews WHERE moderated_at IS NULL").get().count,
+      pendingReviews: db.prepare("SELECT COUNT(*) AS count FROM reviews WHERE moderation_status = 'pending'").get().count,
       period: days,
       periodChats: db.prepare('SELECT COUNT(*) AS count FROM chat_history WHERE created_at >= ?').get(since).count,
       periodUsers: db.prepare('SELECT COUNT(*) AS count FROM users WHERE created_at >= ?').get(since).count,
@@ -123,9 +144,14 @@ router.patch('/universities/:id', (req, res) => {
     }
     if (!fields.length) return res.status(400).json({ error: 'Нет данных для обновления' });
     fields.push('last_updated_at = CURRENT_TIMESTAMP');
-    db.prepare(`UPDATE universities SET ${fields.join(', ')} WHERE id = ?`).run(...values, id);
-    db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES (?, ?, 'UPDATE', ?, ?, ?, ?)`)
-      .run('universities', id, JSON.stringify(Object.fromEntries(allowed.map(field => [field, current[field]]))), JSON.stringify(req.body), req.userId, req.ip);
+    const nextPriceFrom = req.body.price_from === undefined ? current.price_from : Number(req.body.price_from);
+    const nextPriceTo = req.body.price_to === undefined ? current.price_to : Number(req.body.price_to);
+    if (nextPriceFrom > nextPriceTo) return res.status(400).json({ error: 'Минимальная цена не может превышать максимальную' });
+    db.transaction(() => {
+      db.prepare(`UPDATE universities SET ${fields.join(', ')} WHERE id = ?`).run(...values, id);
+      db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES (?, ?, 'UPDATE', ?, ?, ?, ?)`)
+        .run('universities', id, JSON.stringify(Object.fromEntries(allowed.map(field => [field, current[field]]))), JSON.stringify(req.body), req.userId, req.ip);
+    })();
     return res.json({ success: true });
   } catch (error) {
     console.error('Admin university update error:', error);
@@ -154,7 +180,7 @@ router.get('/reviews', (req, res) => {
     const reviews = getDb().prepare(`
       SELECT r.id, r.university_id, u.short_name, u.name AS university_name,
              r.user_name, r.rating, r.pros, r.cons, r.comment, r.faculty,
-             r.study_year, r.created_at, r.moderated_at
+             r.study_year, r.created_at, r.moderated_at, r.moderation_status
       FROM reviews r
       JOIN universities u ON u.id = r.university_id
       ORDER BY r.created_at DESC
@@ -170,11 +196,18 @@ router.get('/reviews', (req, res) => {
 router.patch('/reviews/:id/moderate', (req, res) => {
   try {
     const id = Number.parseInt(req.params.id, 10);
-    const moderated = req.body.approved === false ? 0 : 1;
-    const result = getDb().prepare(
-      'UPDATE reviews SET moderated_at = ?, moderated_by = ? WHERE id = ?'
-    ).run(moderated ? new Date().toISOString() : null, moderated ? req.userId : null, id);
-    return result.changes ? res.json({ success: true, approved: Boolean(moderated) }) : res.status(404).json({ error: 'Отзыв не найден' });
+    if (typeof req.body.approved !== 'boolean') return res.status(400).json({ error: 'Укажите решение о публикации отзыва' });
+    const status = req.body.approved ? 'approved' : 'hidden';
+    const db = getDb();
+    const current = db.prepare('SELECT moderation_status FROM reviews WHERE id = ?').get(id);
+    if (!current) return res.status(404).json({ error: 'Отзыв не найден' });
+    db.transaction(() => {
+      db.prepare('UPDATE reviews SET moderated_at = ?, moderated_by = ?, moderation_status = ? WHERE id = ?')
+        .run(new Date().toISOString(), req.userId, status, id);
+      db.prepare("INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES ('reviews', ?, 'UPDATE', ?, ?, ?, ?)")
+        .run(id, JSON.stringify(current), JSON.stringify({ moderation_status: status }), req.userId, req.ip);
+    })();
+    return res.json({ success: true, approved: req.body.approved, moderation_status: status });
   } catch (error) {
     console.error('Moderate review error:', error);
     return res.status(500).json({ error: 'Ошибка модерации отзыва' });
