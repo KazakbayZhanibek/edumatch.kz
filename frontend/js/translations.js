@@ -36,7 +36,8 @@ const translations = {
       stat_unis: 'университетов',
       stat_specs: 'специальностей',
       stat_price: 'тенге/год',
-      badge: 'Казахстан · 2025–2026',
+      badge: 'Казахстан · 2026–2027',
+      mobile_heading: 'Найди свой университет',
       hero_heading1: 'Выбор университета —',
       hero_heading2: 'главное финансовое решение',
       card_cost: 'Стоимость',
@@ -337,7 +338,7 @@ const translations = {
       contacts: 'Контакты',
       data_section: 'Данные',
       location: 'Казахстан',
-      year: '2025–2026 учебный год',
+      year: '2026–2027 учебный год',
       unis_count: '152 университета'
     },
     modal: {
@@ -348,7 +349,7 @@ const translations = {
       about_text2_cont: 'EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов страны в одном месте.',
       about_stack: 'Стек:',
       about_data: 'Данные:',
-      about_data_val: 'Данные по университетам Казахстана, актуальные на 2025–2026 учебный год',
+      about_data_val: 'Данные по университетам Казахстана, актуальные на 2026–2027 учебный год',
       contacts_title: 'Контакты',
       contacts_sub: 'По вопросам сотрудничества, предложениям и обратной связи:',
       privacy_title: 'Политика конфиденциальности',
@@ -425,7 +426,8 @@ const translations = {
       lang_kk: 'Казахский',
       dorm_label: 'Нужно общежитие',
       submit_btn: 'Рассчитать шансы',
-      empty_state: 'Заполните форму и нажмите «Рассчитать шансы»'
+      empty_state: 'Заполните форму и нажмите «Рассчитать шансы»',
+      disclaimer: 'Данные на основе открытых источников и статистики 2026 года. Расчёт носит ориентировочный характер — рекомендуется уточнять информацию на официальных сайтах вузов.'
     },
     career: {
       badge: 'Профориентация',
@@ -451,7 +453,7 @@ const translations = {
     },
     universities: {
       title: 'Университеты Казахстана',
-      sub: 'Данные актуальны на 2025–2026 учебный год',
+      sub: 'Данные актуальны на 2026–2027 учебный год',
       search: 'Поиск университета...',
       filters_btn: 'Фильтры',
       loading: 'Загружаем данные...',
@@ -571,7 +573,7 @@ const translations = {
       official_site: 'Официальный сайт',
       add_compare: 'Добавить в сравнение',
       ask_ai: 'Спросить ИИ',
-      price_title: 'Стоимость обучения 2025–2026',
+      price_title: 'Стоимость обучения 2026–2027',
       min_price_note: 'минимальная стоимость в год',
       max_year: 'Максимум/год',
       four_years: 'За 4 года обучения',
@@ -675,7 +677,7 @@ const translations = {
       avg_salary: 'Средняя зарплата',
       market_growth: 'Рост рынка',
       demand: 'Спрос',
-      disclaimer: 'Данные основаны на анализе рынка труда Казахстана и международных тенденций 2025–2026 гг.'
+      disclaimer: 'Данные основаны на анализе рынка труда Казахстана и международных тенденций 2026–2027 гг.'
     },
     career_questions: {
       q1: 'Что вам больше всего нравится делать?',
@@ -813,7 +815,8 @@ const translations = {
       stat_unis: 'университеттер',
       stat_specs: 'мамандықтар',
       stat_price: 'теңге/жыл',
-      badge: 'Қазақстан · 2025–2026',
+      badge: 'Қазақстан · 2026–2027',
+      mobile_heading: 'Өз университетіңді тап',
       hero_heading1: 'Университетті таңдау —',
       hero_heading2: 'ең маңызды қаржылық шешім',
       card_cost: 'Бағасы',
@@ -1114,7 +1117,7 @@ const translations = {
       contacts: 'Байланыс',
       data_section: 'Деректер',
       location: 'Қазақстан',
-      year: '2025–2026 оқу жылы',
+      year: '2026–2027 оқу жылы',
       unis_count: '152 университет'
     },
     modal: {
@@ -1125,7 +1128,7 @@ const translations = {
       about_text2_cont: 'EduMatch KZ барлық жетекші университеттердің бағаларын, QS рейтингісін және мамандықтарын салыстыруға көмектеседі.',
       about_stack: 'Стек:',
       about_data: 'Деректер:',
-      about_data_val: 'Қазақстан университеттері туралы деректер, 2025–2026 оқу жылына өзекті',
+      about_data_val: 'Қазақстан университеттері туралы деректер, 2026–2027 оқу жылына өзекті',
       contacts_title: 'Байланыс',
       contacts_sub: 'Ынтымақтастық, ұсыныстар және кері байланыс туралы сұрақтар бойынша:',
       privacy_title: 'Құпиялылық саясаты',
@@ -1202,7 +1205,8 @@ const translations = {
       lang_kk: 'Қазақ',
       dorm_label: 'Жатақхана қажет',
       submit_btn: 'Мүмкіндікті есептеу',
-      empty_state: 'Форманы толтырып, «Мүмкіндікті есептеу» басыңыз'
+      empty_state: 'Форманы толтырып, «Мүмкіндікті есептеу» басыңыз',
+      disclaimer: 'Деректер ашық көздер мен 2026 жылдың статистикасына негізделген. Есептеу шамалы сипатта болады — ресми сайттерден нақтылауды ұсынамыз.'
     },
     career: {
       badge: 'Кәсіби бағдарлама',
@@ -1228,7 +1232,7 @@ const translations = {
     },
     universities: {
       title: 'Қазақстан университеттері',
-      sub: 'Деректер 2025–2026 оқу жылына өзекті',
+      sub: 'Деректер 2026–2027 оқу жылына өзекті',
       search: 'Университетті іздеу...',
       filters_btn: 'Сүзгілер',
       loading: 'Деректер жүктелуде...',
@@ -1348,7 +1352,7 @@ const translations = {
       official_site: 'Ресми сайт',
       add_compare: 'Салыстыруға қосу',
       ask_ai: 'ЖИ-ден сұрау',
-      price_title: 'Оқу ақысы 2025–2026',
+      price_title: 'Оқу ақысы 2026–2027',
       min_price_note: 'жылына минималды баға',
       max_year: 'Максимум/жыл',
       four_years: '4 жылдық оқу',
@@ -1452,7 +1456,7 @@ const translations = {
       avg_salary: 'Орташа жалақы',
       market_growth: 'Нарық өсуі',
       demand: 'Сұраныс',
-      disclaimer: 'Мәліметтер Қазақстан еңбек нарығын талдау және 2025–2026 халықаралық үрдістері негізінде.'
+      disclaimer: 'Мәліметтер Қазақстан еңбек нарығын талдау және 2026–2027 халықаралық үрдістері негізінде.'
     },
     career_questions: {
       q1: 'Сізге ең ұнайтын нәрсе не?',
@@ -1742,7 +1746,8 @@ const translations = {
       stat_unis: 'universities',
       stat_specs: 'specialties',
       stat_price: 'tenge/year',
-      badge: 'Kazakhstan · 2025–2026',
+      badge: 'Kazakhstan · 2026–2027',
+      mobile_heading: 'Find your university',
       hero_heading1: 'Choosing a university —',
       hero_heading2: 'is the most important financial decision',
       card_cost: 'Cost',
@@ -2043,7 +2048,7 @@ const translations = {
       contacts: 'Contact',
       data_section: 'Data',
       location: 'Kazakhstan',
-      year: '2025–2026 Academic Year',
+      year: '2026–2027 Academic Year',
       unis_count: '152 universities'
     },
     modal: {
@@ -2054,7 +2059,7 @@ const translations = {
       about_text2_cont: 'EduMatch KZ helps compare prices, QS rankings, and specialties of all leading universities in the country in one place.',
       about_stack: 'Stack:',
       about_data: 'Data:',
-      about_data_val: 'Data for universities in Kazakhstan, current for the 2025–2026 academic year',
+      about_data_val: 'Data for universities in Kazakhstan, current for the 2026–2027 academic year',
       contacts_title: 'Contact',
       contacts_sub: 'For collaboration, suggestions, and feedback:',
       privacy_title: 'Privacy Policy',
@@ -2131,7 +2136,8 @@ const translations = {
       lang_kk: 'Kazakh',
       dorm_label: 'Need Dormitory',
       submit_btn: 'Calculate Chances',
-      empty_state: 'Fill in the form and click "Calculate Chances"'
+      empty_state: 'Fill in the form and click "Calculate Chances"',
+      disclaimer: 'Data based on open sources and 2026 statistics. Calculations are approximate — we recommend verifying information on official university websites.'
     },
     career: {
       badge: 'Career Guidance',
@@ -2173,7 +2179,7 @@ const translations = {
     },
     universities: {
       title: 'Universities of Kazakhstan',
-      sub: 'Data current for the 2025–2026 academic year',
+      sub: 'Data current for the 2026–2027 academic year',
       search: 'Search university...',
       filters_btn: 'Filters',
       loading: 'Loading data...',
@@ -2293,7 +2299,7 @@ const translations = {
       official_site: 'Official website',
       add_compare: 'Add to compare',
       ask_ai: 'Ask AI',
-      price_title: 'Tuition fees 2025–2026',
+      price_title: 'Tuition fees 2026–2027',
       min_price_note: 'minimum annual cost',
       max_year: 'Max/year',
       four_years: 'For 4 years of study',
@@ -2397,7 +2403,7 @@ const translations = {
       avg_salary: 'Average Salary',
       market_growth: 'Market Growth',
       demand: 'Demand',
-      disclaimer: 'Data based on Kazakhstan labor market analysis and international trends 2025–2026.'
+      disclaimer: 'Data based on Kazakhstan labor market analysis and international trends 2026–2027.'
     },
     career_questions: {
       q1: 'What do you enjoy doing most?',

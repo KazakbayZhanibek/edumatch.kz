@@ -1,0 +1,88 @@
+#grant-catalog { padding-bottom: 36px; }
+.opportunity-tabs { display:flex; gap:8px; margin-bottom:20px; border-bottom:1px solid var(--border); }
+.opportunity-tab { border:0; border-bottom:3px solid transparent; background:transparent; color:var(--text-secondary); cursor:pointer; padding:12px 14px; font:inherit; font-weight:600; }
+.opportunity-tab.active { border-bottom-color:var(--accent); color:var(--text); }
+.opportunity-intro,.opportunity-caveat { padding:16px 20px; border:1px solid var(--border); border-radius:14px; background:var(--bg-secondary); color:var(--text-secondary); }
+.opportunity-form { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:20px 0 28px; padding:20px; border:1px solid var(--border); border-radius:16px; background:var(--bg-secondary); }
+.opportunity-form label { display:flex; flex-direction:column; gap:6px; min-width:0; color:var(--text-secondary); font-size:13px; }
+.opportunity-form .form-input,.opportunity-form .form-select { width:100%; min-height:44px; }
+.opportunity-form .opportunity-checkbox { flex-direction:row; align-items:center; gap:10px; align-self:end; min-height:44px; }
+.opportunity-form .opportunity-checkbox input { width:20px; height:20px; }
+.opportunity-form button { align-self:end; min-height:44px; }
+.opportunity-caveat { margin-bottom:24px; border-color:var(--gold); background:var(--gold-light); font-size:13px; }
+.opportunity-group { margin:24px 0 32px; }
+.opportunity-group h2 { display:flex; align-items:baseline; gap:8px; margin-bottom:14px; font-size:20px; }
+.opportunity-group h2 span { color:var(--text-muted); font-size:14px; font-weight:500; }
+.opportunity-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+.opportunity-card { display:flex; flex-direction:column; gap:12px; min-width:0; padding:20px; border:1px solid var(--border); border-top:4px solid var(--accent); border-radius:14px; background:var(--card); box-shadow:var(--shadow-sm); }
+.opportunity-review { border-top-color:var(--gold); }
+.opportunity-blocked { border-top-color:var(--danger); }
+.opportunity-card-head,.opportunity-actions { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+.opportunity-card-head { color:var(--text-secondary); font-size:13px; }
+.opportunity-state { color:var(--text); font-weight:700; }
+.opportunity-card h3 { font-size:21px; line-height:1.2; }
+.opportunity-name { color:var(--text-secondary); font-size:13px; }
+.opportunity-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.opportunity-facts div { min-width:0; padding:10px; border-radius:8px; background:var(--bg-secondary); }
+.opportunity-facts dt { color:var(--text-secondary); font-size:11px; }
+.opportunity-facts dd { margin-top:2px; overflow-wrap:anywhere; font-size:14px; font-weight:600; }
+.opportunity-reasons { display:flex; flex-direction:column; gap:5px; padding-left:18px; color:var(--text-secondary); font-size:13px; }
+.opportunity-reasons .reason-good::marker { color:var(--accent); }
+.opportunity-reasons .reason-bad::marker { color:var(--danger); }
+.opportunity-reasons .reason-unknown::marker { color:var(--gold); }
+.opportunity-card details { border-top:1px solid var(--border); }
+.opportunity-card details summary { cursor:pointer; padding-top:10px; font-size:13px; font-weight:600; }
+.opportunity-actions { justify-content:flex-start; margin-top:auto; }
+.opportunity-actions .btn { min-height:42px; white-space:normal; }
+.opportunity-empty { padding:28px 0; color:var(--text-secondary); text-align:center; }
+.grant-data-notice { padding: 20px; border: 1px solid var(--gold); border-radius: 16px; background: var(--gold-light); }
+.grant-data-notice strong { color: var(--text); font-size: 17px; }
+.grant-data-notice p { margin-top: 8px; color: var(--text-secondary); font-size: 14px; }
+.grant-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin: 20px 0; }
+.grant-stats div { background: var(--bg-secondary); border: 1px solid var(--border); padding: 16px; border-radius: 14px; }
+.grant-stats strong { display:block; font-size: 26px; color:var(--text); }
+.grant-stats span { font-size:13px; color:var(--text-secondary); }
+.grant-controls { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; padding:20px; border:1px solid var(--border); border-radius:16px; background:var(--bg-secondary); margin:20px 0 8px; }
+.grant-controls label { display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--text-secondary); min-width:0; }
+.grant-controls .grant-search { grid-column:1/-1; }
+.grant-controls .form-select,.grant-controls .form-input { width:100%; min-height:44px; min-width:0; }
+.grant-controls .grant-saved-toggle { flex-direction:row; align-items:center; min-height:44px; gap:10px; }
+.grant-saved-toggle input { width:20px; height:20px; }
+.grant-storage-note { font-size:12px; color:var(--text-secondary); }
+#grant-results-count { margin:20px 0 12px; font-weight:600; }
+#grant-cards { grid-template-columns:repeat(3,minmax(0,1fr)); align-items:start; }
+.grant-catalog-card { min-width:0; gap:12px; padding:20px; overflow-wrap:anywhere; }
+.grant-catalog-card .grant-card-header { gap:8px; flex-wrap:wrap; }
+.grant-year,.grant-organiser,.grant-recorded-date { font-size:13px; color:var(--text-secondary); }
+.grant-state { display:inline-block; font-size:12px; padding:5px 8px; border-radius:8px; background:var(--bg-tertiary); color:var(--text); }
+.grant-state-expired { border-left:3px solid var(--gold); }
+.grant-state-future { border-left:3px solid var(--accent); }
+.grant-unchecked { font-size:12px; color:var(--text-secondary); }
+.grant-catalog-card summary,.grant-guide summary { cursor:pointer; min-height:44px; padding:10px 0; font-weight:600; }
+.grant-catalog-card summary:focus-visible,.grant-guide summary:focus-visible { outline:2px solid var(--accent); outline-offset:3px; }
+.grant-catalog-card details p,.grant-catalog-card details ul { margin-top:10px; }
+.grant-catalog-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.grant-catalog-actions .btn { min-height:44px; white-space:normal; font-size:13px; }
+.grant-catalog-actions [aria-pressed=true] { background:var(--accent-light); border-color:var(--accent); }
+.grant-guide { padding:16px 20px; border:1px solid var(--border); border-radius:14px; margin:20px 0; font-size:14px; }
+.grant-guide h2 { font-size:18px; margin-bottom:8px; }
+.grant-guide p { margin:8px 0; }
+.grant-guide a { color:var(--accent); text-decoration:underline; text-underline-offset:3px; }
+.grant-empty { grid-column:1/-1; padding:32px 16px; text-align:center; }
+.grant-empty .btn { margin-top:16px; }
+#grant-more { margin:20px auto; min-height:44px; }
+#grant-more[hidden] { display:none; }
+@media(max-width:1000px) { #grant-cards {grid-template-columns:repeat(2,minmax(0,1fr));} .grant-controls {grid-template-columns:repeat(2,minmax(0,1fr));} }
+@media(max-width:1000px) { .opportunity-grid {grid-template-columns:repeat(2,minmax(0,1fr));} .opportunity-form {grid-template-columns:repeat(2,minmax(0,1fr));} }
+@media(max-width:600px) {
+  #grant-cards {grid-template-columns:minmax(0,1fr);}
+  .grant-controls {padding:14px; gap:12px; grid-template-columns:repeat(2,minmax(0,1fr));}
+  .grant-stats {gap:6px;} .grant-stats div {padding:10px 8px;} .grant-stats span {font-size:12px;}
+  .grant-data-notice {padding:16px;} .grant-catalog-card {padding:16px;}
+  .grant-controls input,.grant-controls select {font-size:16px;}
+  .opportunity-tabs { overflow-x:auto; }
+  .opportunity-tab { white-space:nowrap; }
+  .opportunity-grid,.opportunity-form {grid-template-columns:minmax(0,1fr);}
+  .opportunity-form {padding:14px;}
+  .opportunity-card {padding:16px;}
+}

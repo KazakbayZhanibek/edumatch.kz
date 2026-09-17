@@ -51,7 +51,7 @@ router.get('/specialties', (req, res) => {
   try {
     console.log('GET /specialties called');
     const db = getDb();
-    const specialties = db.prepare('SELECT id, name FROM specialties ORDER BY name').all();
+    const specialties = db.prepare('SELECT id, name, code, category FROM specialties ORDER BY category, name').all();
     console.log(`Found ${specialties.length} specialties`);
     res.json({ specialties });
   } catch (err) {

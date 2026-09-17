@@ -381,7 +381,7 @@ function applyTranslations() {
     { selector: '.mobile-menu-title', path: 'menu.title' },
     
     // Главная страница
-    { selector: '.hero-title', path: 'home.hero_title' },
+    { selector: '.hero-title .desktop-copy', path: 'home.hero_title' },
     { selector: '.hero-subtitle', path: 'home.hero_sub' },
     
     // Кнопки на главной странице
@@ -483,7 +483,7 @@ async function loadSpecialties() {
     const data = await res.json();
     const specs = data.specialties || data;
 
-    // Filter bar + mobile filter sheet (category-based)
+    // Filter bar + mobile filter sheet (category-based with codes)
     const filterSelects = [
       document.getElementById('filter-specialty'),
       document.getElementById('sheet-specialty'),
@@ -495,9 +495,11 @@ async function loadSpecialties() {
         const cat = spec.category || spec;
         if (seen.has(cat)) return;
         seen.add(cat);
+        const catSpecs = specs.filter(s => (s.category || s) === cat);
         const opt = document.createElement('option');
         opt.value = cat;
-        opt.textContent = cat;
+        const codes = catSpecs.map(s => s.code).filter(Boolean);
+        opt.textContent = codes.length > 0 ? `${cat} (${codes.length} прогр.)` : cat;
         sel.appendChild(opt);
       });
     });
@@ -507,12 +509,23 @@ async function loadSpecialties() {
     if (admitSelect) {
       while (admitSelect.options.length > 1) admitSelect.remove(1);
       if (Array.isArray(specs)) {
+        const groupedByCategory = {};
         specs.forEach(spec => {
-          const opt = document.createElement('option');
-          opt.value = spec.id;
-          opt.textContent = trRu(spec.name || spec);
-          admitSelect.appendChild(opt);
+          const cat = spec.category || 'Другое';
+          if (!groupedByCategory[cat]) groupedByCategory[cat] = [];
+          groupedByCategory[cat].push(spec);
         });
+        for (const [cat, catSpecs] of Object.entries(groupedByCategory)) {
+          const optgroup = document.createElement('optgroup');
+          optgroup.label = cat;
+          catSpecs.forEach(spec => {
+            const opt = document.createElement('option');
+            opt.value = spec.id;
+            opt.textContent = spec.code ? `${spec.code} ${spec.name}` : spec.name;
+            optgroup.appendChild(opt);
+          });
+          admitSelect.appendChild(optgroup);
+        }
       }
     }
   } catch (e) { /* silent */ }
@@ -648,10 +661,13 @@ function renderUniversityCard(u) {
       ${u.data_status === 'pending' ? `<div class="uni-data-pending">${t('card.data_pending') || 'Данные уточняются'}</div>` : ''}
       <div class="uni-description">${u.description || ''}</div>
       <div class="uni-price-row">
-        <span class="price-label">${t('card.from')}</span>
-        <span class="price-from">${fmtPrice(u.price_from)}</span>
-        <span class="price-to"> — ${fmtPrice(u.price_to)}</span>
-        <span class="price-period">${t('card.tenge_year')}</span>
+        ${u.is_free
+          ? `<span class="price-from" style="color:#16a34a;font-weight:700">${t('card.free') || 'Бесплатно'}</span>`
+          : `<span class="price-label">${t('card.from')}</span>
+             <span class="price-from">${fmtPrice(u.price_from)}</span>
+             <span class="price-to"> — ${fmtPrice(u.price_to)}</span>
+             <span class="price-period">${t('card.tenge_year')}</span>`
+        }
       </div>
       ${u.address ? `<div class="uni-address">${escapeHtml(u.address)}</div>` : ''}
       ${contactLine}
@@ -1010,16 +1026,20 @@ function renderUniversityDetail(u, container) {
         <div>
           <div class="detail-card">
             <div class="detail-card-title">${t('uni_detail_page.price_title')}</div>
-            <div class="detail-price-main">${fmtPrice(u.price_from)} ${t('common.tenge')}</div>
-            <div class="detail-price-note">${t('uni_detail_page.min_price_note')}</div>
-            <div class="detail-stat-row">
-              <span class="detail-stat-label">${t('uni_detail_page.max_year')}</span>
-              <span class="detail-stat-val">${fmtPrice(u.price_to)} ${t('common.tenge')}</span>
-            </div>
-            <div class="detail-price-total">
-              <div class="detail-price-total-label">${t('uni_detail_page.four_years')}</div>
-              <div class="detail-price-total-val">${fmtPrice(qs4)} — ${fmtPrice(qsMax4)} ${t('common.tenge')}</div>
-            </div>
+            ${u.is_free
+              ? `<div class="detail-price-main" style="color:#16a34a">${t('card.free') || 'Бесплатно'}</div>
+                 <div class="detail-price-note">${t('uni_detail_page.free_note') || 'Государственное обучение'}</div>`
+              : `<div class="detail-price-main">${fmtPrice(u.price_from)} ${t('common.tenge')}</div>
+                 <div class="detail-price-note">${t('uni_detail_page.min_price_note')}</div>
+                 <div class="detail-stat-row">
+                   <span class="detail-stat-label">${t('uni_detail_page.max_year')}</span>
+                   <span class="detail-stat-val">${fmtPrice(u.price_to)} ${t('common.tenge')}</span>
+                 </div>
+                 <div class="detail-price-total">
+                   <div class="detail-price-total-label">${t('uni_detail_page.four_years')}</div>
+                   <div class="detail-price-total-val">${fmtPrice(qs4)} — ${fmtPrice(qsMax4)} ${t('common.tenge')}</div>
+                 </div>`
+            }
             ${u.students_count ? `
               <div class="detail-stat-row" style="margin-top:16px">
                 <span class="detail-stat-label">${t('uni_detail_page.students_count')}</span>
@@ -1264,13 +1284,13 @@ async function sendMessage(retryMessage = null) {
           university_id: item.university_id,
           name: item.name,
           status: item.status,
-          academic_year: item.academic_year || '2025-2026',
+          academic_year: item.academic_year || '2026-2027',
           deadline: item.deadline || null,
           notes: item.notes || ''
         })) : [],
         lang: window.currentLanguage || 'ru',
       }),
-      timeoutMs: 60000,
+      timeoutMs: 120000,
     });
 
     if (!res.ok && res.status === 429) {
@@ -1925,10 +1945,15 @@ function showToast(msg, type = 'default') {
 
 /* ─── MARKED — markdown in chat ──────────── */
 function renderMarkdown(text) {
-  if (typeof marked === 'undefined') return escapeHtml(text);
-  marked.setOptions({ breaks: true, gfm: true });
-  const rawHtml = marked.parse(text);
-  return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(rawHtml) : rawHtml;
+  if (!text) return '';
+  if (typeof marked === 'undefined') return `<p>${escapeHtml(text)}</p>`;
+  try {
+    const rawHtml = marked.parse(text, { breaks: true, gfm: true });
+    return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(rawHtml) : rawHtml;
+  } catch (e) {
+    console.warn('Markdown render failed:', e);
+    return `<p>${escapeHtml(text).replace(/\n/g, '<br>')}</p>`;
+  }
 }
 
 function wrapExpandableAiMessage(html, text) {
@@ -2793,60 +2818,7 @@ function restartCareerTest() {
   initCareerTest();
 }
 // ─── GRANTS ──────────────────────────────────
-let allGrants = [];
-
-async function loadGrants() {
-  const grid = document.getElementById('grants-grid');
-  if (!grid) return;
-  try {
-    const res = await fetch(`${API}/grants?lang=${window.currentLanguage || 'ru'}`);
-    allGrants = await res.json();
-    renderGrants(allGrants);
-    initGrantMatching();
-  } catch(e) {
-    if(grid) grid.innerHTML = `<div class="loading-state"><p>${t('grants_page_js.load_error')}</p></div>`;
-  }
-}
-
-function filterGrants(type, btn) {
-  document.querySelectorAll('.grant-filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  const filtered = type === 'all' ? allGrants : allGrants.filter(g => g.type === type);
-  renderGrants(filtered);
-}
-
-function renderGrants(grants) {
-  const grid = document.getElementById('grants-grid');
-  if (!grid) return;
-  if (!grants.length) { grid.innerHTML = `<div class="loading-state"><p>${t('grants_page_js.no_grants_category')}</p></div>`; return; }
-
-  const typeLabels = { government: t('grants_page_js.type_government'), regional: t('grants_page_js.type_regional'), corporate: t('grants_page_js.type_corporate'), university: t('grants_page_js.type_university') };
-  const typeColors = { government: 'accent', regional: 'gold', corporate: 'blue', university: 'purple' };
-
-  grid.innerHTML = grants.map(g => `
-    <div class="grant-card">
-      <div class="grant-card-header">
-        <span class="grant-type grant-type-${typeColors[g.type] || 'accent'}">${typeLabels[g.type] || g.type}</span>
-        <span class="grant-amount">${g.amount}</span>
-      </div>
-      <h3 class="grant-name">${g.name}</h3>
-      <p class="grant-desc">${g.description}</p>
-      <div class="grant-requirements">
-        <div class="grant-req-title">${t('grants_page_js.requirements')}</div>
-        <ul class="grant-req-list">
-          ${(g.requirements || []).map(r => `<li>${r}</li>`).join('')}
-        </ul>
-      </div>
-      <div class="grant-footer">
-        <div class="grant-deadline">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          ${t('grants_page_js.deadline')} ${g.deadline}
-        </div>
-        ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">${t('grants_page_js.more_details')}</a>` : ''}
-      </div>
-    </div>
-  `).join('');
-}
+function loadGrants() { return window.GrantsPage.load(); }
 
 // ─── PROFESSION ANALYSIS ─────────────────────
 const professionData = {
@@ -2942,83 +2914,6 @@ function showProfessionAnalysis(name) {
   openModal('modal-profession');
 }
 
-// ─── GRANT MATCHING ───────────────────────────
-function initGrantMatching() {
-  const sel = document.getElementById('grant-ai-spec');
-  if (!sel || sel.options.length > 1) return;
-  const names = new Set();
-  state.universities.forEach(u => {
-    (u.specialties || []).forEach(s => names.add(s.name));
-  });
-  [...names].sort().forEach(n => {
-    const opt = document.createElement('option');
-    opt.value = n;
-    opt.textContent = trRu(n);
-    sel.appendChild(opt);
-  });
-}
-
-function runGrantMatching() {
-  const ent = parseInt(document.getElementById('grant-ai-ent').value) || 0;
-  const spec = document.getElementById('grant-ai-spec').value;
-  const resultEl = document.getElementById('grant-ai-result');
-
-  if (!ent || !spec) {
-    showToast(t('admission_page.ent_must_be') + ' / ' + t('admission_page.choose_spec'));
-    return;
-  }
-
-  const matched = allGrants.filter(g => {
-    const reqs = (g.requirements || []).join(' ').toLowerCase();
-    const desc = (g.description || '').toLowerCase();
-    const name = (g.name || '').toLowerCase();
-    const specLower = spec.toLowerCase();
-    return reqs.includes(specLower) || desc.includes(specLower) || name.includes(specLower);
-  });
-
-  const professionTitle = professionData[spec]?.title || spec;
-  const hasDemand = professionData[spec];
-
-  const demandHTML = hasDemand ? `
-    <div class="gm-demand">
-      <span>${t('grants_page_js.demand_label')} <strong style="color:${demandColors[hasDemand.demand] || 'var(--text)'}">${hasDemand.demand}</strong></span>
-      <span>${t('grants_page_js.growth_label')} <strong style="color:#52b788">${hasDemand.growth}</strong></span>
-      <span>${t('grants_page_js.salary_label')} <strong>${hasDemand.salary}</strong></span>
-    </div>
-  ` : '';
-
-  resultEl.style.display = 'block';
-
-  if (matched.length === 0) {
-    resultEl.innerHTML = `
-      <div class="gm-empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-        <span>${t('grants_page_js.for_spec')} <strong>${spec}</strong> ${t('grants_page_js.not_found_yet')}</span>
-      </div>
-    `;
-    return;
-  }
-
-  resultEl.innerHTML = `
-    <div class="gm-header">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span>${t('grants_page_js.ai_grants')} <strong>${matched.length}</strong> ${t('grants_page_js.grants_for_you')}</span>
-    </div>
-    ${demandHTML}
-    <div class="gm-list">
-      ${matched.map(g => `
-        <div class="gm-item">
-          <div class="gm-check"></div>
-          <div class="gm-info">
-            <div class="gm-name">${g.name}</div>
-            <div class="gm-meta">${g.type === 'university' ? t('grants_page_js.type_university') : g.type} · ${g.amount}</div>
-          </div>
-          ${g.link ? `<a href="${g.link}" target="_blank" class="btn btn-sm btn-outline">${t('grants_page_js.more_details')}</a>` : ''}
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
 
 // ─── MAP ─────────────────────────────────────
 let mapInstance = window.mapInstance = null;

@@ -268,9 +268,23 @@ const INTENT_PATTERNS = [
                'қанша тұрады','бағасы','жатақхана','рейтинг',
                'how much','cost','price','tuition','dormitory','ranking'],
   },
+  {
+    name: 'specialty_list',
+    patterns: [
+      /(?:каки[еяй]\s+(?:специальност|направлен|программ)|список\s+(?:специальност|направлен|программ)|что\s+(?:можно\s+)?(?:учить|изучать|учиться)|какие\s+есть\s+(?:специальност|направлен|программ)|все\s+специальност|все\s+направлен|все\s+программ)/i,
+      /(?:что\s+выбрать|какую\s+специальность|какое\s+направление|чему\s+учиться|на\s+каком\s+факультете)/i,
+      // KK
+      /(?:қандай\s+мамандық|мамандық\s+тізімі|не\s+оқуға\s+болады|барлық\s+мамандық|барлық\s+бағыттар)/i,
+      // EN
+      /(?:what\s+(?:majors?|programs?|specialties)|list\s+of\s+(?:majors?|programs?|specialties)|all\s+(?:majors?|programs?|specialties)|which\s+(?:major|program|specialty))/i,
+    ],
+    keywords: ['специальност','направлен','программ','учить','изучать','выбрать',
+               'мамандық','бағыт','оқуға','мамандықтар',
+               'majors','programs','specialties','study','learn','choose'],
+  },
 ];
 
-const VALID_INTENTS = ['greeting', 'help', 'comparison', 'admission', 'recommendation', 'grant', 'uni_info', 'city', 'onboarding', 'deadlines', 'profession', 'general'];
+const VALID_INTENTS = ['greeting', 'help', 'comparison', 'admission', 'recommendation', 'grant', 'uni_info', 'city', 'onboarding', 'deadlines', 'profession', 'specialty_list', 'general'];
 
 function classifyIntent(message, history = []) {
   const q = (message || '').toLowerCase().trim();
@@ -398,6 +412,14 @@ function classifyIntent(message, history = []) {
   // "список вузов", "какие вузы", "дай список", "помоги выбрать" → recommendation
   if (/(?:список|дай список|перечень|назови|помоги выбрать|выбрать вуз|выбрать университет)/i.test(q)) {
     return 'recommendation';
+  }
+
+  // Список специальностей
+  const specListCheck = INTENT_PATTERNS.find(i => i.name === 'specialty_list');
+  if (specListCheck && (specListCheck.patterns.some(p => p.test(q)) || specListCheck.keywords.some(k => q.includes(k)))) {
+    if (!/(?:вуз|университет|кбт|казну|ну|ену|муит|кимэп|туран|сд)/i.test(q)) {
+      return 'specialty_list';
+    }
   }
 
   // Вопросы не по теме → general (чтобы "какая погода" не ловилось как recommendation из-за fuzzy "какая"→"какой")
@@ -969,18 +991,27 @@ function extractSpecialties(question) {
   const db = getDb();
   const allSpecialties = [];
   const categoryMap = {};
+  const codeToSpecMap = {};
   try {
-    const stmt = db.prepare('SELECT DISTINCT name, category FROM specialties');
+    const stmt = db.prepare('SELECT DISTINCT name, category, code FROM specialties');
     const rows = stmt.all();
     rows.forEach(row => {
       allSpecialties.push(row.name, row.category);
       categoryMap[row.category.toLowerCase()] = row.category;
+      if (row.code) codeToSpecMap[row.code.toLowerCase()] = row.category;
     });
   } catch (err) {
     console.error('[ai-service] error fetching specialties:', err.message);
   }
 
   const matched = [];
+
+  for (const [code, category] of Object.entries(codeToSpecMap)) {
+    if (q_lower.includes(code)) {
+      matched.push(category);
+    }
+  }
+
   allSpecialties.forEach(spec => {
     const spec_lower = spec.toLowerCase();
     if (q_lower.includes(spec_lower)) {
@@ -2145,7 +2176,16 @@ async function handleComparisonQuery(msg, history = [], lang = 'ru') {
       LEFT JOIN cities c ON u.city_id = c.id
       WHERE u.id = ?
     `).get(uni.id);
-    if (full) fulls.push(full);
+    if (full) {
+      const topSpecs = db.prepare(`
+        SELECT s.code, s.name FROM specialties s
+        JOIN university_specialties us ON s.id = us.specialty_id
+        WHERE us.university_id = ?
+        ORDER BY s.name LIMIT 8
+      `).all(uni.id);
+      full.top_specialties = topSpecs.map(s => s.code ? `${s.code} ${s.name}` : s.name);
+      fulls.push(full);
+    }
   }
 
   if (fulls.length < 2) {
@@ -2171,6 +2211,7 @@ async function handleComparisonQuery(msg, history = [], lang = 'ru') {
     price_to: u.price_to,
     students_count: u.students_count,
     specialties_count: u.spec_count,
+    top_specialties: u.top_specialties || [],
     has_dorm: !!u.has_dorm,
     languages: u.languages ? JSON.parse(u.languages) : [],
     description: descriptions[idx],
@@ -2178,7 +2219,8 @@ async function handleComparisonQuery(msg, history = [], lang = 'ru') {
 
   const systemPrompt = `Ты — EduMatch KZ, консультант по вузам Казахстана.
 Ниже РЕАЛЬНЫЕ данные о вузах (JSON) для сравнения. Не выдумывай цифры, которых нет в DATA.
-Оформи ответ как КОРОТКУЮ markdown-таблицу (5-7 строк: название, город, рейтинг, цена, ЕНТ) + 2-3 предложения вывод.
+Оформи ответ как КОРОТКУЮ markdown-таблицу (5-7 строк: название, город, рейтинг, цена, кол-во программ) + 2-3 предложения вывод.
+Упомяни ключевые специальности с кодами (например, 6B06101 Информатика).
 НЕ пиши длинные описания — будь максимально лаконичен. Максимум 500 слов.
 Если пользователь спросил про что-то конкретное — отвечай прямо на это, без полной таблицы.
 Отвечай на языке: ${lang === 'kk' ? 'казахском' : lang === 'en' ? 'английском' : 'русском'}. Не используй русский, если пользователь пишет на казахском или английском.
@@ -2243,12 +2285,12 @@ async function handleRecommendationQuery(msg, history = [], lang = 'ru') {
         u.price_from, u.price_to, u.city_id, u.has_dorm, u.founded,
         u.students_count, u.languages,
         c.name as city_name,
-        s.name as spec_name, s.category as spec_category,
+        s.name as spec_name, s.code as spec_code, s.category as spec_category,
         ar.avg_ent, ar.min_ent, ar.grant_min_ent, ar.competition_level
       FROM universities u
       JOIN university_specialties us ON u.id = us.university_id
       JOIN specialties s ON us.specialty_id = s.id
-      JOIN admission_requirements ar ON ar.university_id = u.id AND ar.specialty_id = s.id
+      LEFT JOIN admission_requirements ar ON ar.university_id = u.id AND ar.specialty_id = s.id
       LEFT JOIN cities c ON u.city_id = c.id
       WHERE s.category = ?
     `;
@@ -2321,7 +2363,10 @@ async function handleRecommendationQuery(msg, history = [], lang = 'ru') {
       });
     }
     const entry = byUni.get(u.id);
-    if (u.spec_name && !entry.specs.includes(u.spec_name)) entry.specs.push(u.spec_name);
+    const specLabel = u.spec_code ? `${u.spec_code} ${u.spec_name}` : u.spec_name;
+    if (u.spec_name && !entry.specs.some(s => s.name === u.spec_name)) {
+      entry.specs.push({ name: u.spec_name, code: u.spec_code, label: specLabel });
+    }
   }
 
   const grouped = [...byUni.values()]
@@ -2343,7 +2388,7 @@ async function handleRecommendationQuery(msg, history = [], lang = 'ru') {
     price_to: u.price_to,
     has_dorm: !!u.has_dorm,
     languages: u.languages ? JSON.parse(u.languages) : [],
-    specialties: u.specs,
+    specialties: u.specs.map(s => s.label),
     avg_ent: u.avg_ents.length ? Math.round(u.avg_ents.reduce((a, b) => a + b, 0) / u.avg_ents.length) : null,
     min_ent: u.min_ents.filter(v => v !== null && v !== undefined).length ? Math.min(...u.min_ents.filter(v => v !== null && v !== undefined)) : null,
     grant_min_ent: u.grant_ents.filter(v => v !== null && v !== undefined).length ? Math.max(...u.grant_ents.filter(v => v !== null && v !== undefined)) : null,
@@ -2464,7 +2509,7 @@ function retrieveRelevantUniversities(question) {
     const rows = stmt.all(...params_sql);
     rows.forEach(u => {
       const specs = db.prepare(
-        `SELECT s.id, s.name, s.category FROM specialties s
+        `SELECT s.id, s.name, s.code, s.category FROM specialties s
          JOIN university_specialties us ON s.id = us.specialty_id
          WHERE us.university_id = ?`
       ).all(u.id);
@@ -2501,7 +2546,7 @@ function retrieveRelevantGrants(specialties, universities_ids) {
   const db = getDb();
   let grants = [];
   try {
-    const stmt = db.prepare('SELECT * FROM grants');
+    const stmt = db.prepare('SELECT * FROM grants WHERE is_active = 1 OR is_active IS NULL');
     const allGrants = stmt.all();
     grants = allGrants.map(g => ({
       id: g.id,
@@ -2519,16 +2564,95 @@ function retrieveRelevantGrants(specialties, universities_ids) {
   return grants;
 }
 
+async function handleSpecialtyListQuery(msg, lang = 'ru') {
+  const startTime = Date.now();
+  const db = getDb();
+
+  const categories = db.prepare(`
+    SELECT s.category, COUNT(DISTINCT s.id) as spec_count,
+           GROUP_CONCAT(DISTINCT s.code || ' ' || s.name) as specs
+    FROM specialties s
+    JOIN university_specialties us ON s.id = us.specialty_id
+    GROUP BY s.category
+    ORDER BY spec_count DESC
+  `).all();
+
+  if (!categories.length) {
+    return {
+      answer: 'Список специальностей временно недоступен.',
+      matches: [],
+      usedData: {},
+      fallback: true,
+      confidence: 0.5,
+      took_ms: Date.now() - startTime,
+      intent: 'specialty_list',
+    };
+  }
+
+  const totalSpecs = categories.reduce((sum, c) => sum + c.spec_count, 0);
+  const totalUnis = db.prepare('SELECT COUNT(*) as c FROM universities u JOIN university_specialties us ON u.id = us.university_id').get().c;
+
+  let text = '';
+  if (lang === 'kk') {
+    text = `## 📚 Қол жетімді мамандықтар (${totalSpecs} мамандық, ${categories.length} бағыт)\n\n`;
+    text += `${totalUnis} университетте мамандықтар ұсынылған.\n\n`;
+  } else if (lang === 'en') {
+    text = `## 📚 Available Specialties (${totalSpecs} programs, ${categories.length} areas)\n\n`;
+    text += `Programs available at ${totalUnis} universities.\n\n`;
+  } else {
+    text = `## 📚 Доступные специальности (${totalSpecs} программ, ${categories.length} направлений)\n\n`;
+    text += `Программы представлены в ${totalUnis} университетах.\n\n`;
+  }
+
+  for (const cat of categories) {
+    const catLabel = lang === 'kk' ? `${cat.category} (${cat.spec_count} мамандық)` :
+                     lang === 'en' ? `${cat.category} (${cat.spec_count} programs)` :
+                     `${cat.category} (${cat.spec_count} программ)`;
+    text += `### ${catLabel}\n`;
+
+    const specs = cat.specs.split(',').slice(0, 8);
+    for (const spec of specs) {
+      text += `• ${spec.trim()}\n`;
+    }
+    if (cat.spec_count > 8) {
+      text += `• ... и ещё ${cat.spec_count - 8}\n`;
+    }
+    text += '\n';
+  }
+
+  if (lang === 'kk') {
+    text += `💡 Белгілі бір мамандық туралы сұраңыз, мысалы: *"6B06101 Информатика туралы айтыңыз"*`;
+  } else if (lang === 'en') {
+    text += `💡 Ask about a specific program, e.g.: *"Tell me about 6B06101 Computer Science"*`;
+  } else {
+    text += `💡 Спросите о конкретной программе, например: *"Расскажи про 6B06101 Информатика"*`;
+  }
+
+  return {
+    answer: text,
+    matches: [],
+    usedData: { categories_count: categories.length, total_specs: totalSpecs },
+    fallback: false,
+    confidence: 0.9,
+    took_ms: Date.now() - startTime,
+    intent: 'specialty_list',
+  };
+}
+
 function formatUniversitiesForContext(universities) {
   return universities.map(u => {
     const langs = u.languages ? (typeof u.languages === 'string' ? JSON.parse(u.languages) : u.languages).join(', ') : '—';
-    const unique_specs = [...new Set((u.specialties || []).map(s => s.category))];
-    const specs = unique_specs.slice(0, 3).join(', ');
+    const specs = (u.specialties || []).map(s => s.code ? `${s.code} ${s.name}` : s.name);
+    const uniqueSpecs = [...new Set(specs)];
+    const specList = uniqueSpecs.length > 12
+      ? uniqueSpecs.slice(0, 12).join(', ') + ` (+ещё ${uniqueSpecs.length - 12})`
+      : uniqueSpecs.join(', ') || 'различные';
     const dorm_info = u.has_dorm ? ` + общежитие ${u.dorm_price}тг/мес` : '';
+    const priceInfo = u.is_free ? 'Бесплатно (государственное обучение)' : `${u.price_from}-${u.price_to} тг/год`;
     return `• ${u.name} (${u.short_name}):
-    - Цена: ${u.price_from}-${u.price_to} тг/год
+    - Цена: ${priceInfo}
     - QS World: ${u.qs_world || 'не ранжирован'}
-    - Специальности: ${specs || 'различные'}
+    - Специальности (${uniqueSpecs.length}): ${specList}
     - Языки: ${langs}
     - Средняя зарплата выпускников: ${u.avg_salary}тг/мес${dorm_info}
     - Сайт: ${u.website}`;
@@ -2545,6 +2669,28 @@ function formatGrantsForContext(grants) {
 }
 
 async function callOpenRouter(systemPrompt, userMessage, history, options = {}) {
+  const { completeAnswer } = require('./ai-completion');
+  const deadline = Date.now() + 100000;
+  const result = await completeAnswer(
+    maxTokens => requestOpenRouter(systemPrompt, userMessage, history, { ...options, maxTokens, deadline }),
+    options.maxTokens ?? 4096,
+    { expand: (options.maxTokens ?? 4096) >= 1024 },
+  );
+  if (result.truncated) {
+    // Short classification calls must never parse incomplete structured output.
+    if ((options.maxTokens ?? 4096) < 1024) throw new Error('AI short response exceeded token limit');
+    const lang = detectLanguage(userMessage);
+    const note = lang === 'en'
+      ? 'The answer reached the length limit. Ask about fewer universities or one topic to get the complete details.'
+      : lang === 'kk'
+        ? 'Жауап ұзындық шегіне жетті. Толық ақпарат алу үшін азырақ университет немесе бір тақырып туралы сұраңыз.'
+        : 'Ответ достиг ограничения длины. Спросите о меньшем числе вузов или об одной теме, чтобы получить полные сведения.';
+    result.text += `\n\n---\n\n${note}`;
+  }
+  return result;
+}
+
+async function requestOpenRouter(systemPrompt, userMessage, history, options = {}) {
   const apiKey = process.env.OPENROUTER_API_KEY;
   const baseUrl = process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1';
 
@@ -2552,7 +2698,14 @@ async function callOpenRouter(systemPrompt, userMessage, history, options = {}) 
     throw new Error('OPENROUTER_API_KEY not set in .env');
   }
 
-  const messages = [{ role: 'system', content: systemPrompt }];
+  const markdownInstruction = `\n\nВАЖНО: Форматируй ответ используя Markdown:
+- **жирный текст** для ключевых слов и названий
+- *курсив* для уточнений
+- списки через • или нумерованные
+- разделяй абзацы пустой строкой
+Не используй заголовки #. Отвечай структурировано и читабельно.`;
+
+  const messages = [{ role: 'system', content: systemPrompt + markdownInstruction }];
   (history || []).slice(-8).forEach(msg => {
     messages.push({
       role: msg.role === 'user' ? 'user' : 'assistant',
@@ -2568,7 +2721,7 @@ async function callOpenRouter(systemPrompt, userMessage, history, options = {}) 
     model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash',
     messages,
     temperature: options.temperature ?? 0.75,
-    max_tokens: options.maxTokens ?? 1500,
+    max_tokens: options.maxTokens ?? 4096,
   };
 
   console.log('[ai-service] OpenRouter request:', JSON.stringify({
@@ -2583,8 +2736,10 @@ async function callOpenRouter(systemPrompt, userMessage, history, options = {}) 
   let lastErr = null;
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const remainingMs = (options.deadline || Date.now() + 100000) - Date.now();
+    if (remainingMs <= 0) throw new Error('OpenRouter answer deadline exceeded');
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutId = setTimeout(() => controller.abort(), Math.min(45000, remainingMs));
 
     try {
       const response = await fetch(`${baseUrl}/chat/completions`, {
@@ -2597,10 +2752,10 @@ async function callOpenRouter(systemPrompt, userMessage, history, options = {}) 
         body: JSON.stringify(requestBody),
         signal: controller.signal,
       });
-      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorText = await response.text();
+        clearTimeout(timeoutId);
         if ((response.status === 429 || response.status >= 500) && attempt < MAX_RETRIES) {
           lastErr = new Error(`OpenRouter error ${response.status}: ${errorText}`);
           await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
@@ -2610,6 +2765,7 @@ async function callOpenRouter(systemPrompt, userMessage, history, options = {}) 
       }
 
       const data = await response.json();
+      clearTimeout(timeoutId);
       if (!data.choices || !data.choices[0] || !data.choices[0].message) {
         throw new Error('Unexpected OpenRouter response format');
       }
@@ -2618,13 +2774,14 @@ async function callOpenRouter(systemPrompt, userMessage, history, options = {}) 
 
       return {
         text: data.choices[0].message.content,
+        finish_reason: data.choices[0].finish_reason,
         model_used: data.model,
         usage: data.usage,
       };
     } catch (err) {
       clearTimeout(timeoutId);
       if (err.name === 'AbortError') {
-        lastErr = new Error('OpenRouter request timed out after 15s');
+        lastErr = new Error('OpenRouter request timed out');
         if (attempt < MAX_RETRIES) continue;
         throw lastErr;
       }
@@ -2963,7 +3120,7 @@ async function handleAdmissionChatQuery(msg, history, lang = 'ru') {
       grant_min_ent: m.requirement?.grant_min_ent,
       price_from: m.price_from,
     })),
-    academicYear: prediction.academicYear || '2025-2026',
+    academicYear: prediction.academicYear || '2026-2027',
     whatIf: prediction.whatIf || [],
   };
 
@@ -3028,7 +3185,7 @@ DATA: ${JSON.stringify(admissionData)}`;
       matches: filtered.slice(0, 8),
       input: prediction.input,
       whatIf: prediction.whatIf || [],
-      academicYear: prediction.academicYear || '2025-2026',
+academicYear: prediction.academicYear || '2026-2027',
     },
   };
 }
@@ -3053,7 +3210,7 @@ function handleDeadlinesQuery(lang = 'ru') {
 
   const deadlines = {
     ru: {
-      title: '📅 Календарь поступления 2025-2026',
+      title: '📅 Календарь поступления 2026-2027',
       items: [
         { date: 'Февраль–Март', event: 'Подготовка к ЕНТ', desc: 'Регистрация на курсы, сбор документов' },
         { date: '1 Мая', event: 'Регистрация на ЕНТ', desc: 'Подача заявки через testcenter.kz' },
@@ -3065,7 +3222,7 @@ function handleDeadlinesQuery(lang = 'ru') {
       ],
     },
     kk: {
-      title: '📅 Тіркеу күнтізбесі 2025-2026',
+      title: '📅 Тіркеу күнтізбесі 2026-2027',
       items: [
         { date: 'Ақпан–Наурыз', event: 'ҰБТ-ға дайындық', desc: 'Курстарға тіркеу, құжаттар жинау' },
         { date: '1 Мамыр', event: 'ҰБТ-ға тіркеу', desc: 'testcenter.kz арқылы өтініш беру' },
@@ -3077,7 +3234,7 @@ function handleDeadlinesQuery(lang = 'ru') {
       ],
     },
     en: {
-      title: '📅 Admission Calendar 2025-2026',
+      title: '📅 Admission Calendar 2026-2027',
       items: [
         { date: 'Feb–Mar', event: 'ENT Preparation', desc: 'Course registration, document collection' },
         { date: 'May 1', event: 'ENT Registration', desc: 'Apply via testcenter.kz' },
@@ -3338,6 +3495,11 @@ DATA: ${JSON.stringify(onboardingData)}`;
     return handleDeadlinesQuery(lang);
   }
 
+  if (intent === 'specialty_list') {
+    console.log('[ai-service] Routing to specialty_list handler');
+    return await handleSpecialtyListQuery(msg, lang);
+  }
+
   // Приветствие — через LLM
   if (intent === 'greeting') {
     const startTimeGreeting = Date.now();
@@ -3422,7 +3584,7 @@ DATA: ${JSON.stringify(onboardingData)}`;
 
   if (!dataFound && unisForContext.length === 0) {
     return {
-      answer: tr('not_found_unis', lang) || `Я не нашёл университеты, соответствующие вашему запросу. Попробуйте:\n- Указать конкретный вуз или специальность\n- Уточнить бюджет\n\nВ моей базе есть информация о вузах Казахстана, 35+ специальностях и грантах.`,
+      answer: tr('not_found_unis', lang) || `Я не нашёл университеты, соответствующие вашему запросу. Попробуйте:\n- Указать конкретный вуз или специальность\n- Уточнить бюджет\n\nВ моей базе есть информация о 150+ вузах Казахстана, 230 специальностях с кодами и грантах.`,
       matches: [],
       usedData: { universities_count: 0, grants_count: 0, extraction_params: extractedParams },
       fallback: true,
@@ -3490,12 +3652,17 @@ function logTokenUsage(model, usage) {
     const db = getDb();
     db.exec(`CREATE TABLE IF NOT EXISTS token_usage_log (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT,
       model TEXT,
       prompt_tokens INTEGER,
       completion_tokens INTEGER,
       total_tokens INTEGER,
+      checked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+    // Add user_id column if missing (migration)
+    try { db.exec(`ALTER TABLE token_usage_log ADD COLUMN user_id TEXT`); } catch (_) {}
+    try { db.exec(`ALTER TABLE token_usage_log ADD COLUMN checked_at DATETIME DEFAULT CURRENT_TIMESTAMP`); } catch (_) {}
     db.prepare(
       'INSERT INTO token_usage_log (model, prompt_tokens, completion_tokens, total_tokens) VALUES (?, ?, ?, ?)'
     ).run(

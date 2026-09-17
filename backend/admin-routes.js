@@ -280,7 +280,11 @@ router.patch('/users/:id', (req, res) => {
 
 router.delete('/users/:id', (req, res) => {
   try {
-    const id = Number.parseInt(req.params.id, 10);
+    const id = Number(req.params.id);
+    if (!/^\d+$/.test(req.params.id) || !Number.isSafeInteger(id) || id <= 0) {
+      return res.status(400).json({ error: 'Некорректный ID пользователя' });
+    }
+    if (id === req.userId) return res.status(400).json({ error: 'Нельзя удалить собственный аккаунт' });
     const db = getDb();
     const user = db.prepare('SELECT email, is_admin FROM users WHERE id = ?').get(id);
     if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
@@ -320,6 +324,61 @@ router.post('/users/:id/reset-password', (req, res) => {
   } catch (error) {
     console.error('Admin reset password error:', error);
     return res.status(500).json({ error: 'Ошибка сброса пароля' });
+  }
+});
+
+// ─── SOURCE MANAGEMENT ──────────────────────────────
+
+router.get('/sources', (req, res) => {
+  try {
+    const { sources } = require('./planner-catalogue');
+    const { createSourceStore } = require('./planner-source-store');
+    const store = createSourceStore(() => getDb());
+    const states = store.all();
+    const result = Object.values(sources).map(src => {
+      const state = states[src.id] || {};
+      return {
+        id: src.id,
+        url: src.url,
+        title: src.title,
+        dataType: src.dataType,
+        reviewedAt: src.reviewedAt,
+        notes: src.notes,
+        checkedMs: state.checked_ms || null,
+        status: state.status || 'unchecked',
+        reviewRequired: state.reviewRequired || false,
+        changeStatus: state.changeStatus || 'unchanged',
+        contentHash: state.contentHash || null,
+        missingMarkers: state.missingMarkers || [],
+      };
+    });
+    return res.json({ success: true, sources: result });
+  } catch (error) {
+    console.error('Admin sources error:', error);
+    return res.status(500).json({ error: 'Ошибка загрузки источников' });
+  }
+});
+
+router.get('/sources/:id/history', (req, res) => {
+  try {
+    const { createSourceStore } = require('./planner-source-store');
+    const store = createSourceStore(() => getDb());
+    const history = store.history(req.params.id);
+    return res.json({ success: true, history });
+  } catch (error) {
+    console.error('Admin source history error:', error);
+    return res.status(500).json({ error: 'Ошибка загрузки истории источника' });
+  }
+});
+
+router.post('/sources/:id/check', async (req, res) => {
+  try {
+    const { checkSource } = require('./planner-tools');
+    const result = await checkSource(req.params.id, { now: Date.now() });
+    return res.json({ success: true, result });
+  } catch (error) {
+    console.error('Admin source check error:', error);
+    return res.status(500).json({ error: 'Ошибка проверки источника' });
   }
 });
 

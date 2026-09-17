@@ -26,6 +26,8 @@
 
 <link rel="stylesheet" href="css/main.css">
 <link rel="stylesheet" href="css/verification.css">
+<link rel="stylesheet" href="css/grants.css">
+<link rel="stylesheet" href="css/planner.css">
 <style>
   /* --- Патчи профиля: добавь в css/main.css и удали этот блок --- */
   .profile-user-banner, .profile-user-avatar { cursor: pointer; }
@@ -165,16 +167,16 @@
     <section class="hero">
       <div class="hero-inner">
         <div class="hero-badge" data-aos="fade-down" data-aos-duration="600" data-i18n="home.badge" data-academic-year>Казахстан · 2025–2026</div>
-        <h1 class="hero-title" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100"><span data-i18n="home.hero_heading1">Выбор университета —</span><br><em><span data-i18n="home.hero_heading2">главное финансовое решение</span></em></h1>
+        <h1 class="hero-title" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100"><span class="mobile-copy" data-i18n="home.mobile_heading">Найди свой университет</span><span class="desktop-copy"><span data-i18n="home.hero_heading1">Выбор университета —</span><br><em><span data-i18n="home.hero_heading2">главное финансовое решение</span></em></span></h1>
         <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200" data-i18n="home.hero_sub">Сравните стоимость, рейтинги и специальности ведущих вузов Казахстана. Получите персональный совет от ИИ-советника.</p>
         <div class="hero-actions" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
           <button class="btn btn-primary hero-primary-btn" onclick="navigate('advisor')" data-i18n="home.hero_btn1">Получить совет ИИ<span class="hero-primary-arrow" aria-hidden="true">&#8594;</span></button>
           <button class="btn btn-ghost hero-btn-scroll" onclick="document.getElementById('universities-section').scrollIntoView({behavior:'smooth'})" data-i18n="home.hero_btn2">Смотреть вузы</button>
         </div>
         <div class="hero-stats" data-aos="fade-up" data-aos-duration="700" data-aos-delay="400">
-          <div class="stat"><span class="stat-num" id="stat-unis" data-target="15">15</span><span class="stat-label" data-i18n="home.stat_unis">университетов</span></div>
+          <div class="stat"><span class="stat-num" id="stat-unis" data-target="152">152</span><span class="stat-label" data-i18n="home.stat_unis">университетов</span></div>
           <div class="stat-div"></div>
-          <div class="stat"><span class="stat-num" id="stat-specs" data-target="35">35</span><span class="stat-label" data-i18n="home.stat_specs">специальностей</span></div>
+          <div class="stat"><span class="stat-num" id="stat-specs" data-target="230">230</span><span class="stat-label" data-i18n="home.stat_specs">специальностей</span></div>
           <div class="stat-div"></div>
           <div class="stat"><span class="stat-num">от 580K</span><span class="stat-label" data-i18n="home.stat_price">тенге/год</span></div>
         </div>
@@ -334,6 +336,7 @@
       </div>
 
       <div class="chat-area">
+        <div id="planner-assistant"></div>
         <div class="chat-messages" id="chat-messages">
           <div class="chat-welcome">
             <div class="chat-welcome-icon" aria-hidden="true"></div>
@@ -457,6 +460,7 @@
           </div>
           
           <button class="btn btn-primary" style="width:100%;margin-top:8px" id="admit-submit" onclick="calculateAdmissionChance()" data-i18n="admission.submit_btn">Рассчитать шансы</button>
+          <p style="font-size:11px;color:#888;margin-top:8px;text-align:center;line-height:1.4" data-i18n="admission.disclaimer">Данные на основе открытых источников и статистики 2026 года. Расчёт носит ориентировочный характер — рекомендуется уточнять информацию на официальных сайтах вузов.</p>
         </div>
 
         <div class="admission-results" id="admission-results">
@@ -502,40 +506,10 @@
   <div id="page-grants" class="page">
     <div class="container">
       <div class="page-head">
-        <h1 class="page-title" data-i18n="grants.title">Гранты и стипендии</h1>
-        <p class="page-sub" data-i18n="grants.sub">Финансовая поддержка для студентов Казахстана</p>
+        <h1 class="page-title" data-i18n="grants.title">Возможности поступления</h1>
+        <p class="page-sub" data-i18n="grants.sub">Подберите вуз, требования и варианты финансирования по своим данным</p>
       </div>
-      <div class="grant-ai-section">
-        <div class="grant-ai-header">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/></svg>
-          <span data-i18n="grants.ai_header">AI-подбор грантов</span>
-        </div>
-        <div class="grant-ai-form">
-          <div class="grant-ai-field">
-            <label class="form-label" data-i18n="grants.ent_label">Балл ЕНТ</label>
-            <input type="number" class="form-input" id="grant-ai-ent" placeholder="например: 110" data-i18n-placeholder="grants.ent_placeholder" min="0" max="140">
-          </div>
-          <div class="grant-ai-field">
-            <label class="form-label" data-i18n="grants.spec_label">Специальность</label>
-            <select class="form-select" id="grant-ai-spec">
-              <option value="" data-i18n="grants.spec_placeholder">— выберите —</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" onclick="runGrantMatching()" data-i18n="grants.submit_btn">Подобрать гранты</button>
-        </div>
-        <div class="grant-ai-result" id="grant-ai-result" style="display:none"></div>
-      </div>
-
-      <div class="grants-filters">
-        <button class="grant-filter-btn active" onclick="filterGrants('all', this)" data-i18n="grants.filter_all">Все</button>
-        <button class="grant-filter-btn" onclick="filterGrants('government', this)" data-i18n="grants.filter_gov">Государственные</button>
-        <button class="grant-filter-btn" onclick="filterGrants('regional', this)" data-i18n="grants.filter_regional">Региональные</button>
-        <button class="grant-filter-btn" onclick="filterGrants('corporate', this)" data-i18n="grants.filter_corp">Корпоративные</button>
-        <button class="grant-filter-btn" onclick="filterGrants('university', this)" data-i18n="grants.filter_uni">Вузовские</button>
-      </div>
-      <div class="grants-grid" id="grants-grid">
-        <div class="loading-state"><div class="spinner"></div></div>
-      </div>
+      <div id="grant-catalog"></div>
     </div>
   </div>
 
@@ -925,6 +899,7 @@
         <p class="page-sub" data-i18n="profile.sub">Сохранённые вузы, история ИИ и результаты тестов</p>
       </div>
       <div id="profile-content"></div>
+      <details id="planner-saved" class="planner-panel"><summary>Мои планы поступления</summary><div id="planner-saved-list"></div></details>
     </div>
   </div>
 
@@ -991,7 +966,7 @@
   </div>
   <div class="footer-bottom">
     <div class="footer-bottom-inner">
-      <span>© 2025 EduMatch KZ</span>
+      <span>© 2026 EduMatch KZ</span>
       <div class="footer-bottom-links">
         <a onclick="event.preventDefault(); openModal('modal-about')">Политика</a>
         <span class="footer-dot">·</span>
@@ -1011,7 +986,7 @@
   <h2 class="modal-title" data-i18n="modal.about_title">О проекте</h2>
   <p class="modal-text" data-i18n="modal.about_text1">EduMatch KZ — учебный проект по финансовой грамотности, созданный чтобы помочь абитуриентам Казахстана осознанно выбирать университет.</p>
   <p class="modal-text"><span data-i18n="modal.about_text2">Выбор вуза — это крупное финансовое решение на 4 года. Разница между самым дешёвым и самым дорогим университетом Казахстана составляет более</span> <strong data-i18n="modal.about_text2_strong">13 миллионов тенге</strong>. <span data-i18n="modal.about_text2_cont">EduMatch KZ помогает сравнить цены, рейтинги QS и специальности всех ведущих вузов страны в одном месте.</span></p>
-  <p class="modal-text"><strong data-i18n="modal.about_stack">Стек:</strong> Node.js, Express, HTML/CSS/JS, Google Gemma AI</p>
+  <p class="modal-text"><strong data-i18n="modal.about_stack">Стек:</strong> Node.js, Express, HTML/CSS/JS, OpenRouter (Gemini 2.5 Flash)</p>
   <p class="modal-text"><strong data-i18n="modal.about_data">Данные:</strong> <span data-i18n="modal.about_data_val">Данные по университетам Казахстана, актуальные на 2025–2026 учебный год</span></p>
 </div>
 
@@ -1209,7 +1184,9 @@
 <script src="js/translations.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/verification.js"></script>
+<script src="js/grants.js"></script>
 <script src="js/app.js"></script>
+<script src="js/planner.js"></script>
 <button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Наверх" data-i18n-aria="scroll.top">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
 </button>

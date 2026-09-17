@@ -303,7 +303,7 @@ router.get('/profile', verifyAuth, (req, res) => {
  * PUT /api/users/profile
  * Обновить профиль
  * Header: Authorization: Bearer <token>
- * Body: { fullName?, phone?, bio?, preferences?, profilePicture? }
+ * Body: { fullName?, phone?, bio?, preferences?, profilePicture?, entScore? }
  */
 router.put('/profile', verifyAuth, (req, res) => {
   const lang = getLang(req);
@@ -317,13 +317,16 @@ router.put('/profile', verifyAuth, (req, res) => {
       return res.status(400).json({ error: 'Размер аватара не должен превышать 2 МБ' });
     }
 
-    const result = authService.updateUserProfile(req.userId, {
+    const profileUpdate = {
       fullName,
       phone,
       bio,
       preferences,
       profilePicture
-    }, lang);
+    };
+    if (Object.prototype.hasOwnProperty.call(req.body, 'entScore')) profileUpdate.entScore = req.body.entScore;
+
+    const result = authService.updateUserProfile(req.userId, profileUpdate, lang);
 
     if (!result.success) {
       return res.status(400).json({ error: result.error });
@@ -692,131 +695,11 @@ router.delete('/chat-history/:id', verifyAuth, (req, res) => {
   }
 });
 
-// ─── PASSWORD RECOVERY ──────────────────────────────
-
-router.post('/forgot-password', (req, res) => {
-  try {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ error: 'Укажите email' });
-
-    const db = getDb();
-    const user = db.prepare('SELECT id, email FROM users WHERE email = ?').get(String(email).trim().toLowerCase());
-
-    // Always return success to prevent email enumeration
-    if (!user) return res.json({ success: true, message: 'Если email зарегистрирован, ссылка для сброса отправлена' });
-
-    const { token, expiresAt } = require('./auth-extended').generateResetToken(user.id);
-
-    // In production, send email here. For now, return token in response
-    console.log(`[PASSWORD RESET] User: ${user.email}, Token: ${token}, Expires: ${expiresAt}`);
-
-    // TODO: Send email with reset link: /reset-password?token=${token}
-    // For demo purposes, return the link
-    return res.json({
-      success: true,
-      message: 'Ссылка для сброса пароля отправлена на email',
-      // Remove this in production:
-      _dev_link: `/reset-password?token=${token}`,
-    });
-  } catch (error) {
-    console.error('Forgot password error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
-  }
-});
-
-router.post('/reset-password', (req, res) => {
-  try {
-    const { token, newPassword } = req.body;
-    if (!token || !newPassword) return res.status(400).json({ error: 'Токен и новый пароль обязательны' });
-
-    const result = require('./auth-extended').resetPassword(token, newPassword);
-    if (!result.success) return res.status(400).json({ error: result.error });
-
-    return res.json({ success: true, message: 'Пароль успешно изменён' });
-  } catch (error) {
-    console.error('Reset password error:', error);
-    return res.status(500).json({ error: 'Ошибка сервера' });
-  }
-});
-
-router.get('/reset-password/validate', (req, res) => {
-  try {
-    const { token } = req.query;
-    if (!token) return res.status(400).json({ valid: false });
-
-    const result = require('./auth-extended').validateResetToken(token);
-    return res.json({ valid: result.valid, email: result.email ? result.email.replace(/(.{2}).*(@.*)/, '$1***$2') : null });
-  } catch (error) {
-    return res.json({ valid: false });
-  }
-});
-
-// ─── TWO-FACTOR AUTHENTICATION ──────────────────────────────
-
-router.post('/2fa/setup', verifyAuth, (req, res) => {
-  try {
-    const { generateTwoFactorSecret } = require('./auth-extended');
-    const result = generateTwoFactorSecret(req.userId);
-    return res.json({ success: true, secret: result.secret, backupCodes: result.backupCodes });
-  } catch (error) {
-    console.error('2FA setup error:', error);
-    return res.status(500).json({ error: 'Ошибка настройки 2FA' });
-  }
-});
-
-router.post('/2fa/enable', verifyAuth, (req, res) => {
-  try {
-    const { code } = req.body;
-    if (!code) return res.status(400).json({ error: 'Введите код подтверждения' });
-
-    const { enableTwoFactor } = require('./auth-extended');
-    const result = enableTwoFactor(req.userId, String(code));
-    if (!result.success) return res.status(400).json({ error: result.error });
-
-    return res.json({ success: true, message: '2FA включена' });
-  } catch (error) {
-    console.error('2FA enable error:', error);
-    return res.status(500).json({ error: 'Ошибка включения 2FA' });
-  }
-});
-
-router.post('/2fa/disable', verifyAuth, (req, res) => {
-  try {
-    const { code } = req.body;
-    if (!code) return res.status(400).json({ error: 'Введите код 2FA или резервный код' });
-    const { disableTwoFactor, verifyTwoFactorCode } = require('./auth-extended');
-    const verification = verifyTwoFactorCode(req.userId, String(code));
-    if (!verification.valid) return res.status(400).json({ error: verification.error || 'Неверный код' });
-    disableTwoFactor(req.userId);
-    return res.json({ success: true, message: '2FA отключена' });
-  } catch (error) {
-    console.error('2FA disable error:', error);
-    return res.status(500).json({ error: 'Ошибка отключения 2FA' });
-  }
-});
-
-router.post('/2fa/verify', verifyAuth, (req, res) => {
-  try {
-    const { code } = req.body;
-    if (!code) return res.status(400).json({ error: 'Введите код' });
-
-    const { verifyTwoFactorCode } = require('./auth-extended');
-    const result = verifyTwoFactorCode(req.userId, String(code));
-    return res.json({ valid: result.valid, type: result.type });
-  } catch (error) {
-    console.error('2FA verify error:', error);
-    return res.status(500).json({ error: 'Ошибка проверки 2FA' });
-  }
-});
-
-router.get('/2fa/status', verifyAuth, (req, res) => {
-  try {
-    const { isTwoFactorEnabled } = require('./auth-extended');
-    const enabled = isTwoFactorEnabled(req.userId);
-    return res.json({ enabled });
-  } catch (error) {
-    return res.status(500).json({ error: 'Ошибка' });
-  }
+// Unfinished recovery and 2FA must not issue secrets or claim protection.
+router.get('/capabilities', (req,res)=>res.json({passwordRecovery:false,twoFactor:false}));
+router.use(['/forgot-password','/reset-password','/2fa'], (req,res)=>{
+  res.set('Cache-Control','no-store');
+  res.status(503).json({code:'FEATURE_UNAVAILABLE',error:'Функция временно отключена до завершения безопасной реализации / Қауіпсіз нұсқа дайын болғанша қызмет өшірілген'});
 });
 
 // ─── ROLES (admin only) ──────────────────────────────

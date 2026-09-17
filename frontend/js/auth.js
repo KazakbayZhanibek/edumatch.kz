@@ -376,6 +376,7 @@ const Auth = {
   },
 
   updateNavUI() {
+    window.dispatchEvent(new Event('edumatch-auth-changed'));
     const guest = document.getElementById('nav-auth-guest');
     const user = document.getElementById('nav-auth-user');
     const label = document.getElementById('nav-auth-username');
@@ -877,7 +878,7 @@ async function renderProfileTracker() {
             </select>
           </label>
           <label class="tracker-field-label">Учебный год
-            <input class="tracker-year-input" value="${escapeAdmissionHtml(item.academic_year || '2025-2026')}" maxlength="20" onchange="updateTrackerField(${item.id}, 'academicYear', this.value)">
+            <input class="tracker-year-input" value="${escapeAdmissionHtml(item.academic_year || '2026-2027')}" maxlength="20" onchange="updateTrackerField(${item.id}, 'academicYear', this.value)">
           </label>
           <label class="tracker-field-label">Дедлайн
             <input type="date" class="tracker-date-input" value="${escapeAdmissionHtml(item.deadline || '')}" onchange="updateTrackerField(${item.id}, 'deadline', this.value)">

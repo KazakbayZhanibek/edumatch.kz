@@ -43,8 +43,8 @@ async function loadAdmin() {
   try {
     const search = document.getElementById('admin-search').value;
     const days = Number(daysSelect.value);
-    const [data, reviewsData, applicationsData, usersData, universitiesData, auditData] = await Promise.all([
-      api(`/admin/overview?days=${days}`), api('/admin/reviews?limit=100'), api('/admin/applications?limit=100'), api('/admin/users?limit=200'), api('/admin/universities?limit=300'), api('/admin/audit?limit=100')
+    const [data, reviewsData, applicationsData, usersData, universitiesData, auditData, sourcesData] = await Promise.all([
+      api(`/admin/overview?days=${days}`), api('/admin/reviews?limit=100'), api('/admin/applications?limit=100'), api('/admin/users?limit=200'), api('/admin/universities?limit=300'), api('/admin/audit?limit=100'), api('/admin/sources')
     ]);
     const o = data.overview;
     const reviews = reviewsData.reviews || [];
@@ -52,6 +52,7 @@ async function loadAdmin() {
     const users = usersData.users || [];
     const universities = universitiesData.universities || [];
     const audit = auditData.audit || [];
+    const sources = sourcesData.sources || [];
 
     root.innerHTML = `
       <section class="admin-section active" data-admin-section="overview">
@@ -77,13 +78,13 @@ async function loadAdmin() {
             <td>${item.is_banned ? '<span class="admin-badge admin-badge-red">ЗАБАНЕН</span>' : '—'}</td>
             <td>${date(item.created_at)}</td>
             <td class="admin-actions-cell">
-              <button class="btn btn-ghost btn-xs" onclick="viewUser(${item.id})">Профиль</button>
-              <button class="btn btn-ghost btn-xs" onclick="editUser(${item.id})">Изменить</button>
+              <button class="btn btn-ghost btn-xs" data-admin-action="viewUser" data-id="${item.id}">Профиль</button>
+              <button class="btn btn-ghost btn-xs" data-admin-action="editUser" data-id="${item.id}">Изменить</button>
               ${item.email !== 'janibekkaz3@gmail.com' ? `
-                <button class="btn btn-ghost btn-xs" onclick="toggleBanUser(${item.id}, ${item.is_banned ? 0 : 1})">${item.is_banned ? 'Разбанить' : 'Забанить'}</button>
-                <button class="btn btn-ghost btn-xs" onclick="toggleAdminUser(${item.id}, ${item.is_admin ? 0 : 1})">${item.is_admin ? 'Снять админа' : 'Сделать админом'}</button>
-                <button class="btn btn-ghost btn-xs admin-danger-btn" onclick="deleteUser(${item.id})">Удалить</button>
-                <button class="btn btn-ghost btn-xs" onclick="resetUserPassword(${item.id})">Сброс пароля</button>
+                <button class="btn btn-ghost btn-xs" data-admin-action="toggleBanUser" data-id="${item.id}" data-value="${item.is_banned ? 0 : 1}">${item.is_banned ? 'Разбанить' : 'Забанить'}</button>
+                <button class="btn btn-ghost btn-xs" data-admin-action="toggleAdminUser" data-id="${item.id}" data-value="${item.is_admin ? 0 : 1}">${item.is_admin ? 'Снять админа' : 'Сделать админом'}</button>
+                <button class="btn btn-ghost btn-xs admin-danger-btn" data-admin-action="deleteUser" data-id="${item.id}">Удалить</button>
+                <button class="btn btn-ghost btn-xs" data-admin-action="resetUserPassword" data-id="${item.id}">Сброс пароля</button>
               ` : ''}
             </td>
           </tr>`).join('')}
@@ -93,20 +94,20 @@ async function loadAdmin() {
 
       <section class="admin-section" data-admin-section="universities">
         <div class="admin-block">
-          <div class="admin-section-header"><h2>Каталог вузов (${universities.length})</h2><button class="btn btn-primary btn-sm" onclick="createUniversity()">+ Добавить вуз</button></div>
+          <div class="admin-section-header"><h2>Каталог вузов (${universities.length})</h2><button class="btn btn-primary btn-sm" data-admin-action="createUniversity">+ Добавить вуз</button></div>
           <div class="admin-table-wrap"><table><thead><tr><th>ID</th><th>Название</th><th>Город</th><th>Статус</th><th>Цена от</th><th>Цена до</th><th>Обновлён</th><th>Действия</th></tr></thead><tbody>
           ${universities.map(item => `<tr data-uni-id="${item.id}">
             <td>${item.id}</td>
             <td>${esc(item.short_name || item.name)}</td>
             <td>${esc(item.city || '—')}</td>
-            <td><select class="admin-status-select" onchange="changeUniversityStatus(${item.id}, this.value)"><option value="active" ${item.data_status === 'active' ? 'selected' : ''}>Активен</option><option value="pending" ${item.data_status === 'pending' ? 'selected' : ''}>На проверке</option><option value="inactive" ${item.data_status === 'inactive' ? 'selected' : ''}>Скрыт</option></select></td>
+            <td><select class="admin-status-select" data-admin-change="university-status" data-id="${item.id}"><option value="active" ${item.data_status === 'active' ? 'selected' : ''}>Активен</option><option value="pending" ${item.data_status === 'pending' ? 'selected' : ''}>На проверке</option><option value="inactive" ${item.data_status === 'inactive' ? 'selected' : ''}>Скрыт</option></select></td>
             <td>${item.price_from ? item.price_from.toLocaleString('ru-RU') + ' ₸' : '—'}</td>
             <td>${item.price_to ? item.price_to.toLocaleString('ru-RU') + ' ₸' : '—'}</td>
             <td>${date(item.last_updated_at)}</td>
             <td class="admin-actions-cell">
-              <button class="btn btn-ghost btn-xs" onclick="viewUniversity(${item.id})">Подробнее</button>
-              <button class="btn btn-ghost btn-xs" onclick="editUniversity(${item.id})">Изменить</button>
-              <button class="btn btn-ghost btn-xs admin-danger-btn" onclick="deleteUniversity(${item.id})">Удалить</button>
+              <button class="btn btn-ghost btn-xs" data-admin-action="viewUniversity" data-id="${item.id}">Подробнее</button>
+              <button class="btn btn-ghost btn-xs" data-admin-action="editUniversity" data-id="${item.id}">Изменить</button>
+              <button class="btn btn-ghost btn-xs admin-danger-btn" data-admin-action="deleteUniversity" data-id="${item.id}">Удалить</button>
             </td>
           </tr>`).join('')}
           </tbody></table></div>
@@ -121,7 +122,7 @@ async function loadAdmin() {
         <div class="admin-block">
           <h2>Модерация отзывов <small>${o.pendingReviews} требуют проверки</small></h2>
           <label>Статус: <select id="admin-review-status" class="admin-status-select"><option value="all">Все</option><option value="pending">На проверке</option><option value="approved">Одобрены</option><option value="hidden">Скрыты</option></select></label>
-          <div class="admin-review-list">${reviews.map(review => `<article class="admin-review-item" data-review-status="${review.moderation_status || 'pending'}"><div class="admin-review-top"><strong>${esc(review.short_name || review.university_name)}</strong><span>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span></div><div class="admin-review-meta">${esc(review.user_name)} · ${date(review.created_at)} · ${esc(review.moderation_status || 'pending')}</div><p>${esc(review.comment || review.pros || review.cons || 'Без текста')}</p><div class="admin-review-actions"><button class="btn btn-primary btn-xs" onclick="moderate(${review.id}, true)">Одобрить</button><button class="btn btn-ghost btn-xs" onclick="moderate(${review.id}, false)">Скрыть</button><button class="btn btn-ghost btn-xs admin-danger-btn" onclick="removeReview(${review.id})">Удалить</button></div></article>`).join('') || '<p>Отзывов пока нет</p>'}</div>
+          <div class="admin-review-list">${reviews.map(review => `<article class="admin-review-item" data-review-status="${review.moderation_status || 'pending'}"><div class="admin-review-top"><strong>${esc(review.short_name || review.university_name)}</strong><span>${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}</span></div><div class="admin-review-meta">${esc(review.user_name)} · ${date(review.created_at)} · ${esc(review.moderation_status || 'pending')}</div><p>${esc(review.comment || review.pros || review.cons || 'Без текста')}</p><div class="admin-review-actions"><button class="btn btn-primary btn-xs" data-admin-action="moderate" data-id="${review.id}" data-value="true">Одобрить</button><button class="btn btn-ghost btn-xs" data-admin-action="moderate" data-id="${review.id}" data-value="false">Скрыть</button><button class="btn btn-ghost btn-xs admin-danger-btn" data-admin-action="removeReview" data-id="${review.id}">Удалить</button></div></article>`).join('') || '<p>Отзывов пока нет</p>'}</div>
         </div>
       </section>
 
@@ -129,7 +130,36 @@ async function loadAdmin() {
         <div class="admin-block"><h2>Журнал действий</h2><div class="admin-table-wrap"><table><thead><tr><th>Дата</th><th>Таблица</th><th>ID</th><th>Действие</th><th>Администратор</th></tr></thead><tbody>${audit.map(item => `<tr><td>${dateFull(item.created_at)}</td><td>${esc(item.table_name)}</td><td>${item.record_id || '—'}</td><td>${esc(item.action)}</td><td>${esc(item.email || 'system')}</td></tr>`).join('') || '<tr><td colspan="5">Действий пока нет</td></tr>'}</tbody></table></div></div>
       </section>
 
-      <section class="admin-section" data-admin-section="verification"><div class="admin-block" id="verification-admin"></div></section>`;
+      <section class="admin-section" data-admin-section="verification"><div class="admin-block" id="verification-admin"></div></section>
+
+      <section class="admin-section" data-admin-section="sources">
+        <div class="admin-block">
+          <div class="admin-section-header"><h2>Источники данных (${sources.length})</h2><button class="btn btn-ghost btn-sm" data-admin-action="checkAllSources">Проверить все</button></div>
+          <div class="admin-table-wrap"><table><thead><tr><th>Источник</th><th>Тип</th><th>Статус</th><th>Проверка</th><th>Изменения</th><th>Действия</th></tr></thead><tbody>
+          ${sources.map(s => {
+            const statusBadge = s.status === 'reachable'
+              ? (s.reviewRequired ? '<span class="admin-badge admin-badge-yellow">ТРЕБУЕТ ПРОВЕРКИ</span>' : '<span class="admin-badge admin-badge-green">ОК</span>')
+              : s.status === 'unavailable'
+                ? '<span class="admin-badge admin-badge-red">НЕДОСТУПЕН</span>'
+                : '<span class="admin-badge admin-badge-gray">НЕ ПРОВЕРЕН</span>';
+            const changeBadge = s.changeStatus === 'changed' ? '<span class="admin-badge admin-badge-yellow">ИЗМЕНЁН</span>' : s.changeStatus === 'first_observation' ? '<span class="admin-badge admin-badge-gray">ПЕРВЫЙ</span>' : '';
+            const lastCheck = s.checkedMs ? new Date(s.checkedMs).toLocaleString('ru-RU') : '—';
+            const typeLabels = { admission: 'Поступление', tuition: 'Стоимость', subjects: 'Предметы', ent_thresholds: 'ЕНТ пороги', dorm: 'Общежитие', funding: 'Гранты' };
+            return `<tr>
+              <td><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a></td>
+              <td>${esc(typeLabels[s.dataType] || s.dataType)}</td>
+              <td>${statusBadge}</td>
+              <td>${lastCheck}</td>
+              <td>${changeBadge || '—'}</td>
+              <td class="admin-actions-cell">
+                <button class="btn btn-ghost btn-xs" data-admin-action="checkSource" data-id="${s.id}">Проверить</button>
+                <button class="btn btn-ghost btn-xs" data-admin-action="viewSourceHistory" data-id="${s.id}">История</button>
+              </td>
+            </tr>`;
+          }).join('')}
+          </tbody></table></div>
+        </div>
+      </section>`;
 
     const reviewSection = root.querySelector('[data-admin-section="reviews"] .admin-block');
     root.insertAdjacentHTML('beforeend', '<section class="admin-section" data-admin-section="verification"><div class="admin-block" id="verification-admin"></div></section>');
@@ -187,7 +217,7 @@ async function editUser(id) {
         <label>Телефон <input name="phone" value="${esc(u.phone || '')}" /></label>
         <label>Bio <textarea name="bio" rows="3">${esc(u.bio || '')}</textarea></label>
         <label>ЕНТ балл <input name="ent_score" type="number" value="${u.ent_score || ''}" /></label>
-        <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Сохранить</button><button type="button" class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>
+        <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Сохранить</button><button type="button" class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>
       </form>
     `);
     document.getElementById('edit-user-form').onsubmit = async e => {
@@ -201,28 +231,28 @@ async function editUser(id) {
 }
 
 async function toggleBanUser(id, ban) {
-  showModal(ban ? 'Забанить пользователя?' : 'Разбанить пользователя?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Да</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  showModal(ban ? 'Забанить пользователя?' : 'Разбанить пользователя?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Да</button><button class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>`);
   document.getElementById('modal-confirm').onclick = async () => {
     try { await api(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify({ is_banned: ban }) }); closeModal(); showToast(ban ? 'Пользователь забанен' : 'Пользователь разбанен'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
   };
 }
 
 async function toggleAdminUser(id, admin) {
-  showModal(admin ? 'Сделать админом?' : 'Снять админа?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Да</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  showModal(admin ? 'Сделать админом?' : 'Снять админа?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Да</button><button class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>`);
   document.getElementById('modal-confirm').onclick = async () => {
     try { await api(`/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify({ is_admin: admin }) }); closeModal(); showToast(admin ? 'Права администратора выданы' : 'Права администратора сняты'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
   };
 }
 
 async function deleteUser(id) {
-  showModal('Удалить пользователя?', `<p>Это действие необратимо. Все данные пользователя будут удалены.</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  showModal('Удалить пользователя?', `<p>Это действие необратимо. Все данные пользователя будут удалены.</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>`);
   document.getElementById('modal-confirm').onclick = async () => {
     try { await api(`/admin/users/${id}`, { method: 'DELETE' }); closeModal(); showToast('Пользователь удалён'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
   };
 }
 
 async function resetUserPassword(id) {
-  showModal('Сбросить пароль?', `<p>Новый пароль будет сгенерирован автоматически.</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Сбросить</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  showModal('Сбросить пароль?', `<p>Новый пароль будет сгенерирован автоматически.</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Сбросить</button><button class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>`);
   document.getElementById('modal-confirm').onclick = async () => {
     try {
       const data = await api(`/admin/users/${id}/reset-password`, { method: 'POST' });
@@ -285,7 +315,7 @@ async function editUniversity(id) {
         <label>Статус <select name="data_status"><option value="active" ${u.data_status === 'active' ? 'selected' : ''}>Активен</option><option value="pending" ${u.data_status === 'pending' ? 'selected' : ''}>На проверке</option><option value="inactive" ${u.data_status === 'inactive' ? 'selected' : ''}>Скрыт</option></select></label>
         <label class="admin-checkbox-label"><input type="checkbox" name="dormitory" ${u.dormitory ? 'checked' : ''} /> Общежитие</label>
         <label>Описание <textarea name="description" rows="3">${esc(u.description || '')}</textarea></label>
-        <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Сохранить</button><button type="button" class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>
+        <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Сохранить</button><button type="button" class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>
       </form>
     `);
     document.getElementById('edit-uni-form').onsubmit = async e => {
@@ -311,7 +341,7 @@ function createUniversity() {
       <label>Цена от <input name="price_from" type="number" /></label>
       <label>Цена до <input name="price_to" type="number" /></label>
       <label>Статус <select name="data_status"><option value="pending">На проверке</option><option value="active">Активен</option></select></label>
-      <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Создать</button><button type="button" class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>
+      <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Создать</button><button type="button" class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>
     </form>
   `);
   document.getElementById('create-uni-form').onsubmit = async e => {
@@ -324,7 +354,7 @@ function createUniversity() {
 }
 
 async function deleteUniversity(id) {
-  showModal('Удалить вуз?', `<p>Это действие необратимо. Все специальности и отзывы будут удалены.</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  showModal('Удалить вуз?', `<p>Это действие необратимо. Все специальности и отзывы будут удалены.</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>`);
   document.getElementById('modal-confirm').onclick = async () => {
     try { await api(`/admin/universities/${id}`, { method: 'DELETE' }); closeModal(); showToast('Вуз удалён'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
   };
@@ -338,10 +368,61 @@ async function changeUniversityStatus(id, status) {
 
 async function moderate(id, approved) { try { await api(`/admin/reviews/${id}/moderate`, { method: 'PATCH', body: JSON.stringify({ approved }) }); showToast(approved ? 'Отзыв одобрен' : 'Отзыв скрыт'); loadAdmin(); } catch (error) { showToast(error.message, 'error'); } }
 async function removeReview(id) {
-  showModal('Удалить отзыв?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" onclick="closeModal()">Отмена</button></div>`);
+  showModal('Удалить отзыв?', `<p>Вы уверены?</p><div class="admin-form-actions"><button class="btn btn-danger btn-sm" id="modal-confirm">Удалить</button><button class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>`);
   document.getElementById('modal-confirm').onclick = async () => {
     try { await api(`/admin/reviews/${id}`, { method: 'DELETE' }); closeModal(); showToast('Отзыв удалён'); loadAdmin(); } catch (err) { showToast(err.message, 'error'); }
   };
+}
+
+// ─── SOURCE ACTIONS ──────────────────────────────
+
+async function checkSource(id) {
+  try {
+    showToast('Проверяю источник...', 'info');
+    const data = await api(`/admin/sources/${id}/check`, { method: 'POST' });
+    const r = data.result;
+    const msg = r.status === 'reachable'
+      ? (r.reviewRequired ? 'Источник доступен, но требует проверки контента' : 'Источник доступен, всё ОК')
+      : 'Источник недоступен';
+    showToast(msg, r.status === 'reachable' ? 'success' : 'error');
+    loadAdmin();
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function checkAllSources() {
+  showToast('Проверяю все источники...', 'info');
+  try {
+    const data = await api('/admin/sources');
+    const sources = data.sources || [];
+    let ok = 0, fail = 0;
+    for (const s of sources) {
+      try {
+        await api(`/admin/sources/${s.id}/check`, { method: 'POST' });
+        ok++;
+      } catch { fail++; }
+    }
+    showToast(`Проверено: ${ok} ОК, ${fail} ошибок`, fail > 0 ? 'error' : 'success');
+    loadAdmin();
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function viewSourceHistory(id) {
+  try {
+    const data = await api(`/admin/sources/${id}/history`);
+    const history = data.history || [];
+    showModal(`История: ${esc(id)}`, `
+      <div class="admin-source-history">
+        ${history.length ? history.map(h => {
+          const statusBadge = h.status === 'reachable'
+            ? (h.reviewRequired ? '<span class="admin-badge admin-badge-yellow">ПРОВЕРКА</span>' : '<span class="admin-badge admin-badge-green">ОК</span>')
+            : '<span class="admin-badge admin-badge-red">НЕДОСТУПЕН</span>';
+          const time = h.checkedAt ? new Date(h.checkedAt).toLocaleString('ru-RU') : '—';
+          const missing = h.missingMarkers && h.missingMarkers.length ? `<br><small>Отсутствуют: ${esc(h.missingMarkers.join(', '))}</small>` : '';
+          return `<div class="admin-source-history-item"><span>${time}</span> ${statusBadge}${missing}</div>`;
+        }).join('') : '<p>Нет истории проверок</p>'}
+      </div>
+    `);
+  } catch (error) { showToast(error.message, 'error'); }
 }
 
 // ─── NAVIGATION & FILTERS ──────────────────────────────
@@ -361,6 +442,39 @@ function filterAdminRows(value) {
     row.style.display = matchesStatus && (!query || row.textContent.toLowerCase().includes(query)) ? '' : 'none';
   });
 }
+
+
+const adminClickActions = {
+  viewUser: button => viewUser(Number(button.dataset.id)),
+  editUser: button => editUser(Number(button.dataset.id)),
+  toggleBanUser: button => toggleBanUser(Number(button.dataset.id), Number(button.dataset.value)),
+  toggleAdminUser: button => toggleAdminUser(Number(button.dataset.id), Number(button.dataset.value)),
+  deleteUser: button => deleteUser(Number(button.dataset.id)),
+  resetUserPassword: button => resetUserPassword(Number(button.dataset.id)),
+  createUniversity: () => createUniversity(),
+  viewUniversity: button => viewUniversity(Number(button.dataset.id)),
+  editUniversity: button => editUniversity(Number(button.dataset.id)),
+  deleteUniversity: button => deleteUniversity(Number(button.dataset.id)),
+  moderate: button => moderate(Number(button.dataset.id), button.dataset.value === 'true'),
+  removeReview: button => removeReview(Number(button.dataset.id)),
+  closeModal: () => closeModal(),
+  checkSource: button => checkSource(button.dataset.id),
+  checkAllSources: () => checkAllSources(),
+  viewSourceHistory: button => viewSourceHistory(button.dataset.id),
+};
+
+// Delegation also covers controls rendered after refresh and inside modals.
+// Only explicitly allowed actions run; no inline JavaScript or eval is needed.
+document.addEventListener('click', event => {
+  const button = event.target.closest('[data-admin-action]');
+  if (!button || button.disabled || !Object.hasOwn(adminClickActions, button.dataset.adminAction)) return;
+  event.preventDefault();
+  adminClickActions[button.dataset.adminAction](button);
+});
+document.addEventListener('change', event => {
+  const select = event.target.closest('[data-admin-change="university-status"]');
+  if (select) changeUniversityStatus(Number(select.dataset.id), select.value);
+});
 
 document.querySelectorAll('.admin-tab').forEach(button => button.addEventListener('click', () => showAdminTab(button.dataset.adminTab)));
 document.getElementById('admin-search').addEventListener('input', event => filterAdminRows(event.target.value));

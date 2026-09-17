@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node --test _tests/regression.test.js",
+    "test": "node --test _tests/regression.test.js _tests/ai-completion.test.js _tests/grants.test.js _tests/programme-planner.test.js _tests/planner-source-store.test.js _tests/planner-agent.test.js",
     "load-grants": "node scripts/load-grants-data.js",
     "admin:grant": "node scripts/grant-admin.js"
   },

@@ -160,7 +160,7 @@ router.post('/deadlines', verifyAuth, verifyAdmin, (req, res, next) => {
       String(deadline_date).slice(0, 30),
       String(category || 'general').slice(0, 50),
       Number(university_id) || null,
-      String(academic_year || '2025-2026').slice(0, 20)
+      String(academic_year || '2026-2027').slice(0, 20)
     );
     res.status(201).json({ success: true, id: result.lastInsertRowid });
   } catch (error) { next(error); }

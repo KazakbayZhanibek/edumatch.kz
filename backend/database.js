@@ -65,19 +65,30 @@ function migrateExistingDb(db) {
     { table: 'users', col: 'two_factor_backup_codes', sql: 'ALTER TABLE users ADD COLUMN two_factor_backup_codes TEXT' },
     { table: 'users', col: 'ent_score', sql: 'ALTER TABLE users ADD COLUMN ent_score INTEGER' },
     { table: 'users', col: 'military_service', sql: 'ALTER TABLE users ADD COLUMN military_service INTEGER DEFAULT 0' },
+    { table: 'specialties', col: 'code', sql: 'ALTER TABLE specialties ADD COLUMN code TEXT' },
     { table: 'reviews', col: 'moderated_at', sql: 'ALTER TABLE reviews ADD COLUMN moderated_at DATETIME' },
     { table: 'reviews', col: 'moderated_by', sql: 'ALTER TABLE reviews ADD COLUMN moderated_by INTEGER' },
     // description_kk/en в universities
     { table: 'universities', col: 'description_kk', sql: "ALTER TABLE universities ADD COLUMN description_kk TEXT" },
     { table: 'universities', col: 'description_en', sql: "ALTER TABLE universities ADD COLUMN description_en TEXT" },
+    { table: 'universities', col: 'is_free', sql: 'ALTER TABLE universities ADD COLUMN is_free INTEGER NOT NULL DEFAULT 0' },
     // academic_year в admission_requirements
     { table: 'admission_requirements', col: 'academic_year', sql: "ALTER TABLE admission_requirements ADD COLUMN academic_year TEXT DEFAULT '2025-2026'" },
     // description_kk/en и university_id, city_id, academic_year в grants
+    { table: 'grants', col: 'name_kk', sql: 'ALTER TABLE grants ADD COLUMN name_kk TEXT' },
+    { table: 'grants', col: 'name_en', sql: 'ALTER TABLE grants ADD COLUMN name_en TEXT' },
+    { table: 'grants', col: 'requirements_kk', sql: 'ALTER TABLE grants ADD COLUMN requirements_kk TEXT' },
+    { table: 'grants', col: 'requirements_en', sql: 'ALTER TABLE grants ADD COLUMN requirements_en TEXT' },
     { table: 'grants', col: 'description_kk', sql: "ALTER TABLE grants ADD COLUMN description_kk TEXT" },
     { table: 'grants', col: 'description_en', sql: "ALTER TABLE grants ADD COLUMN description_en TEXT" },
     { table: 'grants', col: 'university_id', sql: "ALTER TABLE grants ADD COLUMN university_id INTEGER" },
     { table: 'grants', col: 'city_id', sql: "ALTER TABLE grants ADD COLUMN city_id INTEGER" },
     { table: 'grants', col: 'academic_year', sql: "ALTER TABLE grants ADD COLUMN academic_year TEXT DEFAULT '2025-2026'" },
+    { table: 'grants', col: 'is_active', sql: 'ALTER TABLE grants ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1' },
+    { table: 'grants', col: 'source_url', sql: 'ALTER TABLE grants ADD COLUMN source_url TEXT' },
+    { table: 'grants', col: 'source_title', sql: 'ALTER TABLE grants ADD COLUMN source_title TEXT' },
+    { table: 'grants', col: 'verification_status', sql: "ALTER TABLE grants ADD COLUMN verification_status TEXT NOT NULL DEFAULT 'needs_review'" },
+    { table: 'grants', col: 'verified_at', sql: 'ALTER TABLE grants ADD COLUMN verified_at TEXT' },
     { table: 'universities', col: 'address', sql: 'ALTER TABLE universities ADD COLUMN address TEXT' },
     { table: 'universities', col: 'source_record_id', sql: 'ALTER TABLE universities ADD COLUMN source_record_id INTEGER' },
   ];
@@ -91,6 +102,14 @@ function migrateExistingDb(db) {
       }
     } catch (e) {
       // Игнорируем если колонка уже существует или таблица не найдена
+    }
+  }
+
+  // Do not let a partially migrated database start and fail later in public APIs.
+  for (const [table, required] of Object.entries({ universities: ['is_free'], grants: ['is_active'] })) {
+    const columns = db.prepare(`PRAGMA table_info(${table})`).all().map(column => column.name);
+    for (const column of required) {
+      if (!columns.includes(column)) throw new Error(`Database migration incomplete: missing ${table}.${column}`);
     }
   }
 
@@ -201,6 +220,13 @@ function migrateExistingDb(db) {
       if (!columns.some(column => column.name === name)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${name} ${type}`);
     }
   }
+  db.exec(require('./planner-source-store').schema);
+  db.exec(`CREATE TABLE IF NOT EXISTS admission_plans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    payload TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ); CREATE INDEX IF NOT EXISTS idx_admission_plans_user ON admission_plans(user_id);`);
   db.exec(`CREATE TABLE IF NOT EXISTS notifications (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,

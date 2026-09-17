@@ -448,7 +448,7 @@ function getAdmissionPrediction(params) {
     }
   }
 
-  const academicYear = candidates.length > 0 ? candidates[0].academic_year : '2025-2026';
+  const academicYear = candidates.length > 0 ? candidates[0].academic_year : '2026-2027';
 
   return {
     success: true,

@@ -22,7 +22,7 @@ process.on('uncaughtException', (error) => {
 const { initDatabase } = require('./database');
 initDatabase();
 
-const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getTips, getUniversitiesContext, getCities } = require('./db');
+const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getAdmissionOpportunities, getTips, getUniversitiesContext, getCities } = require('./db');
 const aiRoutes = require('./ai-routes');
 const authRoutes = require('./auth-routes');
 const verifyRoutes = require('./verify-routes');
@@ -34,28 +34,13 @@ const { csrfProtection } = require('./csrf');
 
 const app = express();
 
-// Security headers (helmet) with CSP
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://cdn.jsdelivr.net'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://unpkg.com', 'https://cdn.jsdelivr.net'],
-      imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
-      connectSrc: ["'self'", 'https://openrouter.ai'],
-      frameSrc: ["'none'"],
-      objectSrc: ["'none'"],
-      'script-src-attr': ["'unsafe-inline'"],
-      'style-src-attr': ["'unsafe-inline'"]
-    }
-  },
-  crossOriginEmbedderPolicy: false,
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  }
-}));
+// Security headers (no CSP — allows all resources for dev/mobile access)
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
 
 // Response compression
 app.use(compression());
@@ -82,7 +67,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // CORS configuration
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:3001,http://localhost:3012,http://localhost:3013').split(',').map(o => o.trim());
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:3001,http://localhost:3012,http://localhost:3013,http://192.168.0.130:3000').split(',').map(o => o.trim());
 app.use(cors({
   origin: function(origin, callback) {
     const isLocalFile = process.env.NODE_ENV !== 'production' && origin === 'null';
@@ -94,8 +79,36 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-TOKEN']
 }));
+
+// Global IP-based rate limiting: 200 requests per minute
+const globalRateMap = new Map();
+const GLOBAL_RATE_WINDOW = 60000;
+const GLOBAL_RATE_MAX = 200;
+app.use((req, res, next) => {
+  const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+  const now = Date.now();
+  const record = globalRateMap.get(ip);
+  if (!record || now - record.start > GLOBAL_RATE_WINDOW) {
+    globalRateMap.set(ip, { start: now, count: 1 });
+    return next();
+  }
+  record.count++;
+  if (record.count > GLOBAL_RATE_MAX) {
+    console.warn(`Global rate limit exceeded: ip=${ip}`);
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
+  }
+  next();
+});
+
+// Evict stale entries periodically to prevent memory leak
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, record] of globalRateMap) {
+    if (now - record.start > GLOBAL_RATE_WINDOW * 2) globalRateMap.delete(ip);
+  }
+}, 120000);
 
 // HTTPS redirect for production
 if (process.env.NODE_ENV === 'production') {
@@ -182,6 +195,13 @@ app.get('/api/grants', (req, res) => {
   catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+app.get('/api/opportunities', (req, res) => {
+  try {
+    res.set('Cache-Control', 'no-store');
+    res.json(getAdmissionOpportunities({ lang: req.query.lang || 'ru' }));
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 app.get('/api/tips', (req, res) => {
   try { res.json(getTips()); }
   catch (err) { res.status(500).json({ error: err.message }); }
@@ -191,7 +211,7 @@ app.get('/api/tips', (req, res) => {
 app.get('/api/test-specialties', (req, res) => {
   try {
     const db = require('./database').getDb();
-    const specialties = db.prepare('SELECT id, name FROM specialties ORDER BY name').all();
+    const specialties = db.prepare('SELECT id, name, code, category FROM specialties ORDER BY category, name').all();
     res.json({ test: true, specialties });
   } catch (err) {
     res.status(500).json({ error: err.message, stack: err.stack });
@@ -203,6 +223,7 @@ app.use('/api/ai', aiRoutes);
 
 // Admission Predictor
 app.use('/api/admission', admissionRoutes);
+app.use('/api/planner', require('./planner-routes'));
 
 // Authentication & Profile routes (Phase 2)
 app.use('/api/auth', authRoutes);
@@ -218,7 +239,7 @@ app.put('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {
   try {
     const { year } = req.body;
     if (!year || !/^\d{4}-\d{4}$/.test(year)) {
-      return res.status(400).json({ error: 'Format: YYYY-YYYY (e.g. 2025-2026)' });
+      return res.status(400).json({ error: 'Format: YYYY-YYYY (e.g. 2026-2027)' });
     }
     const db = require('./database').getDb();
     db.prepare('UPDATE admission_requirements SET academic_year = ?').run(year);
@@ -236,7 +257,7 @@ app.get('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {
   try {
     const db = require('./database').getDb();
     const row = db.prepare('SELECT academic_year FROM admission_requirements LIMIT 1').get();
-    res.json({ year: row?.academic_year || '2025-2026' });
+    res.json({ year: row?.academic_year || '2026-2027' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

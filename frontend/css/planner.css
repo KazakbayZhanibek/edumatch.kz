@@ -1,0 +1,24 @@
+.planner-panel,.planner-saved {padding:16px;border:1px solid var(--border);border-radius:14px;background:var(--bg-secondary);margin:12px 0;}
+.planner-panel summary,#planner-saved summary {cursor:pointer;padding:12px 0;font-weight:600;min-height:44px;}
+.planner-form {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0;}
+.planner-form label,.planner-options label {display:flex;flex-direction:column;gap:8px;min-width:0;}
+.planner-form input,.planner-form select {min-width:0;width:100%;min-height:44px;padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font-size:16px;}
+.planner-form .planner-check {flex-direction:row;align-items:center;}.planner-check input,.planner-options input{width:20px;min-height:20px;}
+.planner-options {display:grid;gap:12px;margin:16px 0;}.planner-options label{border:1px solid var(--border);padding:14px;border-radius:12px;}.planner-options a{color:var(--accent);text-decoration:underline;}
+#planner-result ol,#planner-result ul,.planner-saved ul,.planner-saved ol{padding-left:24px;margin:12px 0;}#planner-result .btn{margin:8px 0;}
+.planner-table{overflow:auto;}.planner-table table{width:100%;border-collapse:collapse;}.planner-table td,.planner-table th{padding:10px;border:1px solid var(--border);text-align:left;}
+@media(max-width:600px){.planner-form{grid-template-columns:minmax(0,1fr);}#planner-result{overflow-wrap:anywhere;}}
+.chat-area > #planner-assistant {flex:0 0 auto;overflow:auto;padding:0 12px;}
+.chat-area:has(#planner-panel[open]) > #planner-assistant {flex:1;min-height:0;}
+.chat-area:has(#planner-panel[open]) > .chat-messages,.chat-area:has(#planner-panel[open]) > .chat-input-area{display:none;}
+.planner-panel textarea{width:100%;min-height:96px;font:inherit;padding:12px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;}
+.planner-option{border:1px solid var(--border);border-radius:12px;padding:14px;min-width:0;}
+.planner-option .planner-check,.planner-saved .planner-check{display:flex;align-items:flex-start;gap:10px;margin:12px 0;}
+.planner-check input{flex:0 0 20px;}
+.planner-warning{border-left:3px solid var(--accent);padding-left:12px;}
+.planner-reference{font-size:13px;opacity:.8;}
+.planner-sources{font-size:13px;overflow-wrap:anywhere;}.planner-sources a{text-decoration:underline;}
+#planner-result button,.planner-saved button{white-space:normal;margin-right:8px;}
+.planner-options .planner-option > label{border:0;padding:0;flex-direction:row;}
+.planner-table table{min-width:520px;overflow-wrap:normal;}
+#planner-panel > summary{position:sticky;top:0;z-index:2;background:var(--bg-secondary);border-bottom:1px solid var(--border);}

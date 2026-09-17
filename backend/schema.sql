@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS cities (
 CREATE TABLE IF NOT EXISTS specialties (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL UNIQUE,
+  code TEXT,
   category TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_specialties_category ON specialties(category);
@@ -41,6 +42,7 @@ CREATE TABLE IF NOT EXISTS universities (
   lat REAL,
   lng REAL,
   is_top INTEGER DEFAULT 0,          -- 0 или 1 (входит ли в ТОП-20)
+  is_free INTEGER NOT NULL DEFAULT 0,-- 0 или 1 (есть бесплатное обучение)
   last_updated_at DATETIME,          -- future-field
   data_status TEXT,                  -- future-field: 'active', 'inactive', 'pending'
   admission_phone TEXT,              -- future-field
@@ -74,17 +76,26 @@ CREATE INDEX IF NOT EXISTS idx_university_specialties_spec ON university_special
 CREATE TABLE IF NOT EXISTS grants (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
+  name_kk TEXT,
+  name_en TEXT,
   type TEXT NOT NULL,                -- 'government', 'regional', 'corporate', 'university'
   amount TEXT NOT NULL,
   description TEXT,
   description_kk TEXT,
   description_en TEXT,
   requirements TEXT NOT NULL,        -- JSON array: ["Требование 1", "Требование 2", ...]
+  requirements_kk TEXT,
+  requirements_en TEXT,
   deadline TEXT,
   link TEXT,
+  source_url TEXT,
+  source_title TEXT,
+  verification_status TEXT NOT NULL DEFAULT 'needs_review',
+  verified_at TEXT,
   university_id INTEGER,
   city_id INTEGER,
   academic_year TEXT DEFAULT '2025-2026',
+  is_active INTEGER NOT NULL DEFAULT 1,
   FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE SET NULL,
   FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE SET NULL
 );

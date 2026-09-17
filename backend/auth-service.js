@@ -297,23 +297,28 @@ function getUserProfile(userId) {
 /**
  * Обновить профиль пользователя
  * @param {number} userId - ID пользователя
- * @param {object} data - {fullName, phone, bio, preferences, profilePicture}
+ * @param {object} data - {fullName, phone, bio, preferences, profilePicture, entScore?}
  * @returns {object} - {success: true/false, user: {...}, error: "..."}
  */
 function updateUserProfile(userId, data, lang = 'ru') {
   try {
     const { fullName, phone, bio, preferences, profilePicture } = data;
+    const hasEntScore = Object.prototype.hasOwnProperty.call(data, 'entScore');
 
     for (const [value, limit] of [[fullName, 150], [phone, 40], [bio, 2000]]) {
       if (value != null && (typeof value !== 'string' || value.length > limit)) return { success: false, error: 'Проверьте поля профиля и длину текста' };
     }
     if (preferences != null && (typeof preferences !== 'object' || Array.isArray(preferences))) return { success: false, error: 'Некорректные настройки профиля' };
+    if (hasEntScore && data.entScore !== null && (!Number.isInteger(data.entScore) || data.entScore < 0 || data.entScore > 140)) {
+      return { success: false, error: 'Балл ЕНТ должен быть целым числом от 0 до 140 или null' };
+    }
 
     const preferencesJson = preferences ? JSON.stringify(preferences) : null;
 
     const db = getDb();
-    db.prepare(
-      `UPDATE users 
+    const update = db.transaction(() => {
+      db.prepare(
+        `UPDATE users
        SET full_name = COALESCE(?, full_name),
            phone = COALESCE(?, phone),
            bio = COALESCE(?, bio),
@@ -321,7 +326,21 @@ function updateUserProfile(userId, data, lang = 'ru') {
            profile_picture = COALESCE(?, profile_picture),
            updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`
-    ).run(fullName ?? null, phone ?? null, bio ?? null, preferencesJson, profilePicture ?? null, userId);
+        ).run(fullName ?? null, phone ?? null, bio ?? null, preferencesJson, profilePicture ?? null, userId);
+
+      if (hasEntScore) {
+        const current = db.prepare('SELECT ent_verified_score, ent_verified_at FROM users WHERE id = ?').get(userId);
+        const keepVerification = data.entScore !== null && current?.ent_verified_at && data.entScore === current.ent_verified_score;
+        db.prepare(`UPDATE users
+          SET ent_score = ?,
+              ent_verified_score = ?,
+              ent_verified_at = ?,
+              updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?`)
+          .run(data.entScore, keepVerification ? current.ent_verified_score : null, keepVerification ? current.ent_verified_at : null, userId);
+      }
+    });
+    update();
 
     const updatedUser = getUserProfile(userId);
 
@@ -503,7 +522,7 @@ function addApplication(userId, data = {}, lang = 'ru') {
   if (error) return { success: false, error };
   const universityId = Number.parseInt(data.universityId, 10);
   const status = APPLICATION_STATUSES.includes(data.status) ? data.status : 'collecting';
-  const academicYear = String(data.academicYear || '2025-2026').slice(0, 20);
+  const academicYear = String(data.academicYear || '2026-2027').slice(0, 20);
   const notes = String(data.notes || '').slice(0, 2000);
   if (!Number.isInteger(universityId) || universityId < 1) return { success: false, error: 'Некорректный ID вуза' };
 

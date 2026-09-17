@@ -40,7 +40,7 @@ function getCachedCounts() {
   _countsCache = {
     uniCount: db.prepare('SELECT COUNT(*) as c FROM universities').get().c,
     specCount: db.prepare('SELECT COUNT(*) as c FROM specialties').get().c,
-    grantCount: db.prepare('SELECT COUNT(*) as c FROM grants').get().c,
+    grantCount: db.prepare('SELECT COUNT(*) as c FROM grants WHERE is_active = 1 OR is_active IS NULL').get().c,
   };
   _countsCacheTime = Date.now();
   return _countsCache;
@@ -105,7 +105,7 @@ function buildGeneralPrompt(uniCount, specCount, grantCount, lang = 'ru') {
   const langHint = lang === 'kk' ? 'Қазақ тілінде жауап бер.' : lang === 'en' ? 'Respond in English.' : 'Отвечай на русском языке.';
   const dbLabel = lang === 'kk' ? 'Деректер қорында бар:' : lang === 'en' ? 'Database contains:' : 'У тебя есть доступ к базе данных с:';
   const uniLabel = lang === 'kk' ? 'университеттер (бағалар, QS рейтингтер, тілдер, жатақханалар)' : lang === 'en' ? 'universities (prices, QS rankings, languages, dorms)' : 'университетами (цены, рейтинги, языки, общежития)';
-  const specLabel = lang === 'kk' ? 'мамандықтар' : lang === 'en' ? 'specialties' : 'специальностями';
+  const specLabel = lang === 'kk' ? 'мамандықтар (кодтарымен)' : lang === 'en' ? 'specialties (with codes)' : 'специальностями (с кодами 6Bxxxx)';
   const grantLabel = lang === 'kk' ? 'гранттар мен стипендиялар' : lang === 'en' ? 'grants and scholarships' : 'грантами и стипендиями';
   return `${tr('prompt_general', lang) || 'Ты — EduMatch KZ, ИИ-консультант по вузам Казахстана.'}
 
@@ -337,10 +337,18 @@ function buildRecommendationPrompt(lang = 'ru', uniData, params) {
 
 ${tone.instruction}
 
-Пользователь просит подобрать/порекомендовать вузы.
+Пользователь просит подобрать/порекомендовать вузы и специальности.
 Ниже РЕАЛЬНЫЕ данные о вузах из базы данных. Не выдумывай цифры, которых нет в DATA.
-Сгруппируй вузы по городам или категориям для удобства.
-Дай краткую рекомендацию по каждому вузу (цена, рейтинг, язык).
+Каждая специальность имеет код (например, 6B06101) — ОБЯЗАТЕЛЬНО указывай его в рекомендациях.
+
+Формат рекомендации:
+- Название вуза (город, рейтинг QS)
+- Конкретные программы с КОДАМИ: "6B06101 Информатика", "6B07501 Финансы"
+- Цена обучения
+- Баллы ЕНТ (если есть)
+- Язык обучения
+
+Сгруппируй вузы по шансам или городам. Дай 3-5 лучших вариантов с конкретными программами.
 В конце предложи уточнить запрос для более точного подбора.
 
 ${paramHint}${cityHint}${budgetHint}${entHint}

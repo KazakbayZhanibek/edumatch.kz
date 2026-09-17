@@ -11,6 +11,7 @@
     "db:backup": "cd backend && node scripts/backup-db.js",
     "db:rollback": "cd backend && node scripts/rollback-db.js",
     "db:audit": "cd backend && node scripts/audit-mvp-data.js",
+    "grants:audit": "node backend/scripts/audit-grants.js",
     "data:pending": "cd backend && node scripts/export-pending-universities.js",
     "data:import": "cd backend && node scripts/import-verified-universities.js",
     "data:official-directory": "cd backend && node scripts/import-official-university-directory.js",

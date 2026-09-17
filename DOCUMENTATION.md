@@ -57,7 +57,7 @@ edumatch-kz/
 │   ├── auth-middleware.js   ← verifyAuth, verifyAuthOptional
 │   ├── auth-routes.js      ← API авторизации
 │   ├── translate-descriptions.js  ← Перевод описаний вузов (44 шт.)
-│   ├── translate-grants.js        ← Перевод грантов (351 шт.)
+│   ├── translate-grants.js        ← Перевод грантов (94 шт.)
 │   ├── translate-requirements.js  ← Перевод требований грантов
 │   ├── edumatch.db         ← SQLite база данных
 │   └── scripts/            ← Скрипты загрузки данных
@@ -177,7 +177,7 @@ edumatch-kz/
 4. Фильтрация по типу через кнопки
 5. Карточка гранта показывает: тип, сумму, название, описание, требования (JSON-массив), дедлайн, ссылку
 
-**Данные**: 351 грант, переведённые на KK/EN (name, description, requirements).
+**Данные**: 94 гранта, переведённые на KK/EN (name, description, requirements).
 
 ---
 
@@ -255,8 +255,8 @@ edumatch-kz/
 | Таблица | Колонки перевода | Кол-во | Скрипт |
 |---------|-----------------|--------|--------|
 | universities | `description_kk`, `description_en` | 44 | `translate-descriptions.js` |
-| grants | `name_kk`, `name_en`, `description_kk`, `description_en` | 351 | `translate-grants.js` |
-| grants | `requirements_kk`, `requirements_en` | 351 | `translate-requirements.js` |
+| grants | `name_kk`, `name_en`, `description_kk`, `description_en` | 94 | `translate-grants.js` |
+| grants | `requirements_kk`, `requirements_en` | 94 | `translate-requirements.js` |
 
 - Все скрипты используют OpenRouter API (gpt-3.5-turbo)
 - Резумируемые: пропускают уже переведённые записи
@@ -275,11 +275,11 @@ cities ──────────────────────── 
        ├── admission_chance_stats ── историческая статистика
        └── prediction_history   ── история расчётов пользователей
 
-specialties ─────────────────── 35 специальностей (8 категорий)
+specialties ─────────────────── 230 специальностей (12 категорий, коды 6Bxxxx)
   ├── university_specialties   ── M2M
   └── grant_specialties        ── M2M
 
-grants ──────────────────────── 351 грант
+grants ──────────────────────── 94 гранта (15 активных)
   ├── name_kk/en               ── переводы названий
   ├── description_kk/en        ── переводы описаний
   ├── requirements_kk/en       ── переводы требований
@@ -418,6 +418,6 @@ node scripts/seed-admission-stats.js
 ### Переводы
 ```bash
 node translate-descriptions.js   # 44 вуза × 2 языка
-node translate-grants.js         # 351 грант × 2 языка
-node translate-requirements.js   # 351 требование × 2 языка
+node translate-grants.js         # 94 гранта × 2 языка
+node translate-requirements.js   # 94 требования × 2 языка
 ```

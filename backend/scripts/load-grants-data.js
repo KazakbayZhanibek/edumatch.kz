@@ -1,184 +1,138 @@
-const db = require('better-sqlite3')('edumatch.db');
+const Database = require('better-sqlite3');
 const fs = require('fs');
+const path = require('path');
+const db = new Database(process.env.DB_PATH || path.join(__dirname, '..', 'edumatch.db'));
+const sourcePath = path.join(__dirname, '..', '..', 'universities_grants_full.jsonl');
+const linksPath = path.join(__dirname, '..', '..', 'universities_links_all_now_visible.jsonl');
+const academicYear = process.env.GRANTS_ACADEMIC_YEAR || '2026-2027';
 
-// Синонимы названий специальностей для лучшего поиска
 const synonyms = {
-  'Computer Science': ['Компьютерные науки', 'Информатика', 'CS', 'Computer Science'],
-  'Программная инженерия': ['Software Engineering', 'Разработка программного обеспечения', 'Программная инженерия'],
-  'Информационные системы': ['Information Systems', 'ИС', 'Информационные системы'],
+  'Computer Science': ['Компьютерные науки', 'Информатика', 'CS'],
+  'Программная инженерия': ['Software Engineering', 'Разработка программного обеспечения'],
+  'Информационные системы': ['Information Systems', 'ИС'],
   'Вычислительная техника и программное обеспечение': ['Computer Engineering', 'Вычислительная техника', 'ВТиПО'],
-  'Data Science': ['Data Science', 'Наука о данных', 'Аналитика данных'],
-  'Cybersecurity': ['Кибербезопасность', 'Информационная безопасность', 'Cybersecurity'],
+  'Data Science': ['Наука о данных', 'Аналитика данных'],
+  'Cybersecurity': ['Кибербезопасность', 'Информационная безопасность'],
 };
 
+function readJsonLines(filePath) {
+  return fs.readFileSync(filePath, 'utf8').split(/\r?\n/).map((line, index) => {
+    const jsonStart = line.indexOf('{');
+    if (jsonStart < 0 || !line.trim()) return null;
+    try { return JSON.parse(line.slice(jsonStart)); }
+    catch (error) { throw new Error(`JSON parse error in ${path.basename(filePath)} line ${index + 1}: ${error.message}`); }
+  }).filter(Boolean);
+}
+
+function safeUrl(value) {
+  try {
+    const url = new URL(value);
+    return ['http:', 'https:'].includes(url.protocol) && !url.username && !url.password ? url.href : null;
+  } catch { return null; }
+}
+
+function classifyScholarship(name) {
+  const lower = String(name).toLocaleLowerCase();
+  if (lower.includes('государственный') && lower.includes('грант')) return 'government';
+  if (lower.includes('болашак')) return 'government';
+  if (/(корпоратив|shell|chevron|kazakhmys|kaspi|kolesa|нефтян)/i.test(lower)) return 'corporate';
+  if (/(региональ|акимат)/i.test(lower)) return 'regional';
+  return 'university';
+}
+
+function unique(values) { return [...new Set(values.filter(Boolean))]; }
 try {
-  const lines = fs.readFileSync('../../universities_grants_full.jsonl', 'utf8').trim().split('\n');
-  const universities = lines.map((line, i) => {
-    try { return JSON.parse(line); }
-    catch (e) { throw new Error(`JSON parse error on line ${i + 1}: ${e.message}`); }
-  });
+  const universities = readJsonLines(sourcePath);
+  const links = new Map(readJsonLines(linksPath).map(item => [item.id, safeUrl(item.official_website)]));
+  if (!universities.length) throw new Error('Grant source contains no valid university records');
 
-  console.log(`Loaded ${universities.length} universities from JSONL`);
-
-  // Clear old grants
-  db.prepare('DELETE FROM grant_specialties').run();
-  db.prepare('DELETE FROM grants').run();
-  console.log('Cleared old grants data');
-
-  const insertGrant = db.prepare(`
-    INSERT INTO grants (id, name, type, amount, description, requirements, deadline, link)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-  const insertGrantSpecialty = db.prepare(`
-    INSERT OR IGNORE INTO grant_specialties (grant_id, specialty_id)
-    VALUES (?, ?)
-  `);
-  const findSpecialty = db.prepare('SELECT id, name FROM specialties WHERE name = ?');
-  const findSpecialtyLike = db.prepare("SELECT id, name FROM specialties WHERE name LIKE ?");
-
-  let grantId = 1;
-  let totalGrants = 0;
-  let totalLinks = 0;
-
-  for (const uni of universities) {
-    // 1. Main government grant for the university
-    if (uni.has_grants && uni.ent_threshold > 0) {
-      const reqs = [`Порог ЕНТ: ${uni.ent_threshold}+`];
-      if (uni.total_budget_seats > 0) {
-        reqs.push(`Всего бюджетных мест в вузе: ${uni.total_budget_seats}`);
-      }
-      insertGrant.run(
-        grantId++,
-        `Государственный образовательный грант — ${uni.short_name}`,
-        'government',
-        'Полное покрытие',
-        `Государственный грант для обучения в ${uni.name}. Проходной балл зависит от выбранной программы. Порог ЕНТ: ${uni.ent_threshold}.`,
-        JSON.stringify(reqs),
-        '',
-        ''
-      );
-      totalGrants++;
-    }
-
-    // 2. Named scholarships (skip generic state grants already covered above)
-    for (const scholarship of (uni.scholarships || [])) {
-      const lower = scholarship.toLowerCase();
-      if (lower.includes('государственный') && (lower.includes('грант') || lower.includes('образовательный'))) continue;
-
-      let type = 'university';
-      if (lower.includes('болашак')) type = 'government';
-      if (lower.includes('корпоратив') || lower.includes('shell') || lower.includes('chevron') || lower.includes('kazakhmys')) type = 'corporate';
-      if (lower.includes('it-грант') || lower.includes('kaspi') || lower.includes('kolesa')) type = 'corporate';
-
-      insertGrant.run(
-        grantId++,
-        scholarship,
-        type,
-        'variable',
-        `Стипендия/грант для студентов ${uni.name}`,
-        JSON.stringify([`Доступно в ${uni.name}`, `ЕНТ от ${uni.ent_threshold}`]),
-        '',
-        ''
-      );
-      totalGrants++;
-    }
-
-    // 3. Per-program grants from faculties
-    for (const faculty of (uni.faculties || [])) {
-      for (const program of (faculty.programs || [])) {
-        const reqs = [`ЕНТ: ${uni.ent_threshold}+`, `Бюджетных мест: ${program.budget_seats}`];
-        if (program.passing_score_2023) {
-          reqs.push(`Проходной балл 2023: ${program.passing_score_2023}`);
-        }
-
-        // Добавляем синонимы для лучшего поиска
-        const synonymsList = synonyms[program.program] || [];
-        for (const syn of synonymsList) {
-          if (syn !== program.program) {
-            reqs.push(syn);
-          }
-        }
-
-        // Добавляем категорию специальности из faculty
-        if (faculty.specialties && Array.isArray(faculty.specialties)) {
-          for (const spec of faculty.specialties) {
-            if (spec === 'IT' || spec === 'Здоровье' || spec === 'Инженерия') {
-              // Не добавляем слишком общие категории, они не помогут поиску
-            } else {
-              reqs.push(spec);
-            }
-          }
-        }
-
-        const desc = `Государственный грант на программу «${program.program}» (${faculty.faculty}) в ${uni.name}. Бюджетных мест: ${program.budget_seats}.${program.passing_score_2023 ? ` Проходной балл 2023: ${program.passing_score_2023}.` : ''} Уровень: ${program.level}.`;
-
-        insertGrant.run(
-          grantId++,
-          `Грант на «${program.program}» — ${uni.short_name}`,
-          'government',
-          'Полное покрытие',
-          desc,
-          JSON.stringify(reqs),
-          '',
-          ''
-        );
-        totalGrants++;
-
-        // Link to specialty: try exact match first, then LIKE
-        let spec = findSpecialty.get(program.program);
-        if (spec) {
-          insertGrantSpecialty.run(grantId - 1, spec.id);
-          totalLinks++;
-        } else {
-          // Try synonyms
-          for (const syn of synonymsList) {
-            spec = findSpecialty.get(syn);
-            if (spec) {
-              insertGrantSpecialty.run(grantId - 1, spec.id);
-              totalLinks++;
-              break;
-            }
-          }
-          if (!spec) {
-            // Try partial match
-            spec = findSpecialtyLike.get(`%${program.program}%`);
-            if (spec) {
-              insertGrantSpecialty.run(grantId - 1, spec.id);
-              totalLinks++;
-            }
-          }
-        }
-      }
-    }
-
-    // 4. Corporate grants extracted from scholarship names
-    const corpMatch = (uni.scholarships || []).join(' ').match(/(?:гранты\s+компаний|корпоративные\s+стипендии|IT-гранты)\s*([^.]+)/i);
-    if (corpMatch) {
-      const companies = corpMatch[1].trim();
-      if (companies) {
-        insertGrant.run(
-          grantId++,
-          `Корпоративные гранты — ${uni.short_name}`,
-          'corporate',
-          'variable',
-          `Гранты от компаний ${companies} для студентов ${uni.name}.`,
-          JSON.stringify([`ЕНТ: ${uni.ent_threshold}+`, `Компании: ${companies}`]),
-          '',
-          ''
-        );
-        totalGrants++;
-      }
+  const cityByName = new Map(db.prepare('SELECT id, name FROM cities').all().map(row => [row.name, row.id]));
+  const specialties = db.prepare('SELECT id, name, category FROM specialties').all();
+  const specialtyIds = new Map();
+  for (const specialty of specialties) {
+    for (const key of [specialty.name, specialty.category]) {
+      if (!key) continue;
+      const normalized = String(key).trim().toLocaleLowerCase();
+      if (!specialtyIds.has(normalized)) specialtyIds.set(normalized, []);
+      specialtyIds.get(normalized).push(specialty.id);
     }
   }
 
-  console.log(`\nSummary:`);
-  console.log(`  Grants inserted: ${totalGrants}`);
-  console.log(`  Grant-specialty links: ${totalLinks}`);
+  const insert = db.prepare(`INSERT INTO grants
+  (id, name, type, amount, description, requirements, deadline, link, source_url, source_title,
+   verification_status, verified_at, university_id, city_id, academic_year, is_active)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)`);
+  const insertLink = db.prepare('INSERT OR IGNORE INTO grant_specialties (grant_id, specialty_id) VALUES (?, ?)');
+  const findExistingUniversity = db.prepare('SELECT id FROM universities WHERE id = ? AND COALESCE(data_status, \'active\') = \'active\'');
 
-  const grantCheck = db.prepare('SELECT COUNT(*) as cnt FROM grants').get();
-  console.log(`  Total grants in DB: ${grantCheck.cnt}`);
+  function linkSpecialties(grantId, names) {
+    for (const name of unique(names)) {
+      const candidates = unique([name, ...(synonyms[name] || [])]).flatMap(value => specialtyIds.get(String(value).trim().toLocaleLowerCase()) || []);
+      for (const specialtyId of candidates) insertLink.run(grantId, specialtyId);
+    }
+  }
 
-} catch (err) {
-  console.error('Error:', err.message);
-  console.error(err.stack);
+  let grantId = 1;
+  let inserted = 0;
+  let linked = 0;
+  const importAll = db.transaction(() => {
+  db.prepare('DELETE FROM grant_specialties').run();
+  db.prepare('DELETE FROM grants').run();
+
+  for (const university of universities) {
+  const universityId = findExistingUniversity.get(university.id)?.id || null;
+  const cityId = cityByName.get(university.city) || null;
+  const sourceUrl = links.get(university.id);
+  const commonRequirements = [`ЕНТ от ${university.ent_threshold || 'не указан'}`];
+  const sourceTitle = sourceUrl ? `Официальный сайт ${university.short_name || university.name}` : null;
+
+  const addGrant = ({ name, type, amount = 'Уточняется', description, requirements = commonRequirements, specialties: grantSpecialties = [] }) => {
+        const id = grantId++;
+        insert.run(id, name, type, amount, description, JSON.stringify(unique(requirements)), null, sourceUrl || '', sourceUrl, sourceTitle,
+          'needs_review', null, universityId, cityId, academicYear);
+  linkSpecialties(id, grantSpecialties);
+  inserted++;
+  return id;
+  };
+
+  if (university.has_grants && university.ent_threshold > 0) {
+        addGrant({
+          name: `Государственный образовательный грант — ${university.short_name}`,
+          type: 'government', amount: 'Полное покрытие',
+          description: `Запись из исходного каталога для ${university.name}. Условия конкурса и распределение мест требуют проверки по официальному источнику.`,
+          requirements: [...commonRequirements, university.total_budget_seats ? `Бюджетных мест в вузе: ${university.total_budget_seats}` : null],
+          specialties: (university.faculties || []).flatMap(faculty => faculty.specialties || []),
+        });
+      }
+
+      for (const scholarship of university.scholarships || []) {
+        if (/государственный.*грант|образовательный.*грант/i.test(scholarship)) continue;
+        addGrant({
+          name: scholarship,
+          type: classifyScholarship(scholarship),
+          description: `Финансирование, указанное для ${university.name}. Размер, конкурсные условия и срок требуют проверки у организатора.`,
+          requirements: [...commonRequirements, `Доступно в ${university.name}`],
+          specialties: (university.faculties || []).flatMap(faculty => faculty.specialties || []),
+        });
+      }
+
+      for (const faculty of university.faculties || []) {
+        for (const program of faculty.programs || []) {
+          addGrant({
+            name: `Грант на «${program.program}» — ${university.short_name}`,
+            type: 'government', amount: 'Полное покрытие',
+            description: `Каталожная запись для программы «${program.program}» (${faculty.faculty}) в ${university.name}. Исторический проходной балл не является текущим конкурсным баллом.`,
+            requirements: [...commonRequirements, `Бюджетных мест: ${program.budget_seats ?? 'не указано'}`, program.passing_score_2023 ? `Проходной балл 2023: ${program.passing_score_2023}` : null, ...(synonyms[program.program] || [])],
+            specialties: [...(faculty.specialties || []), program.program],
+          });
+        }
+      }
+    }
+  });
+
+  importAll();
+  linked = db.prepare('SELECT COUNT(*) AS count FROM grant_specialties').get().count;
+  console.log(JSON.stringify({ sourceUniversities: universities.length, grantsInserted: inserted, specialtyLinks: linked, academicYear, verificationStatus: 'needs_review' }, null, 2));
+} finally {
+  db.close();
 }

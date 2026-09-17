@@ -95,7 +95,7 @@ async function requestAIExplanation(matches, input, lang = 'ru') {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash',
         max_tokens: 1200,
         temperature: 0.7,
         messages: [

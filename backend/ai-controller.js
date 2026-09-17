@@ -9,8 +9,14 @@ const MAX_REQUESTS = 30; // max requests per time window
 const TIME_WINDOW = 60000; // 60 seconds
 const MAX_KEYS = 5000; // Limit map size to prevent memory leak
 
-// Daily limit per user
+// Daily limit per user (requests)
 const DAILY_LIMIT = 100;
+// Daily token budget per user (approximate cost control)
+const DAILY_TOKEN_LIMIT = 500000;
+// Anonymous daily request limit (stricter than authenticated)
+const ANONYMOUS_DAILY_LIMIT = 20;
+// Anonymous daily usage tracked in-memory (no DB row needed)
+const anonymousDailyUsage = new Map();
 
 function checkRateLimit(userId) {
   const key = userId || 'anonymous';
@@ -43,7 +49,14 @@ function checkRateLimit(userId) {
 }
 
 function checkDailyLimit(userId) {
-  if (!userId) return { allowed: true };
+  if (!userId) {
+    // Anonymous: use in-memory map
+    const today = new Date().toISOString().slice(0, 10);
+    const key = `anon_${today}`;
+    const count = anonymousDailyUsage.get(key) || 0;
+    if (count >= ANONYMOUS_DAILY_LIMIT) return { allowed: false, remaining: 0 };
+    return { allowed: true, remaining: ANONYMOUS_DAILY_LIMIT - count };
+  }
   try {
     const db = getDb();
     const today = new Date().toISOString().slice(0, 10);
@@ -57,13 +70,48 @@ function checkDailyLimit(userId) {
   }
 }
 
+function checkTokenBudget(userId) {
+  if (!userId) return { allowed: true };
+  try {
+    const db = getDb();
+    const today = new Date().toISOString().slice(0, 10);
+    const row = db.prepare('SELECT COALESCE(SUM(total_tokens), 0) as tokens FROM token_usage_log WHERE user_id = ? AND date(checked_at) = ?').get(userId, today);
+    if (row && row.tokens >= DAILY_TOKEN_LIMIT) {
+      return { allowed: false, remaining: 0, used: row.tokens };
+    }
+    return { allowed: true, remaining: DAILY_TOKEN_LIMIT - (row?.tokens || 0), used: row?.tokens || 0 };
+  } catch (e) {
+    return { allowed: true };
+  }
+}
+
 function incrementDailyUsage(userId) {
-  if (!userId) return;
+  if (!userId) {
+    // Anonymous: increment in-memory
+    const today = new Date().toISOString().slice(0, 10);
+    const key = `anon_${today}`;
+    anonymousDailyUsage.set(key, (anonymousDailyUsage.get(key) || 0) + 1);
+    // Evict old entries daily
+    if (anonymousDailyUsage.size > 10000) {
+      for (const [k] of anonymousDailyUsage) {
+        if (!k.endsWith(`_${today}`)) anonymousDailyUsage.delete(k);
+      }
+    }
+    return;
+  }
   try {
     const db = getDb();
     const today = new Date().toISOString().slice(0, 10);
     db.prepare(`INSERT INTO ai_usage (user_id, request_date, request_count) VALUES (?, ?, 1)
       ON CONFLICT(user_id, request_date) DO UPDATE SET request_count = request_count + 1`).run(userId, today);
+  } catch (e) { /* ignore */ }
+}
+
+function logTokenUsage(userId, promptTokens, completionTokens, model) {
+  try {
+    const db = getDb();
+    db.prepare('INSERT INTO token_usage_log (user_id, prompt_tokens, completion_tokens, total_tokens, model, checked_at) VALUES (?, ?, ?, ?, ?, ?)')
+      .run(userId || 'anonymous', promptTokens || 0, completionTokens || 0, (promptTokens || 0) + (completionTokens || 0), model || 'unknown', new Date().toISOString());
   } catch (e) { /* ignore */ }
 }
 
@@ -94,8 +142,18 @@ async function handleAIAdvice(req, res) {
     if (!dailyCheck.allowed) {
       return res.status(429).json({
         success: false,
-        error: 'Достигнут дневной лимит запросов (100). Попробуйте завтра.',
+        error: req.userId ? 'Достигнут дневной лимит запросов (100). Попробуйте завтра.' : 'Достигнут дневной лимит для гостевого доступа (20). Зарегистрируйтесь для увеличения лимита.',
         errorKey: 'daily_limit',
+      });
+    }
+
+    // Token budget check (authenticated users only)
+    const tokenCheck = checkTokenBudget(req.userId);
+    if (!tokenCheck.allowed) {
+      return res.status(429).json({
+        success: false,
+        error: 'Достигнут дневной лимит по токенам. Попробуйте завтра.',
+        errorKey: 'token_limit',
       });
     }
 
@@ -139,7 +197,7 @@ async function handleAIAdvice(req, res) {
       const safeApplications = applications.slice(0, 30).map(application => ({
         name: String(application.name || '').slice(0, 120),
         status: String(application.status || 'collecting').slice(0, 20),
-        academic_year: String(application.academic_year || '2025-2026').slice(0, 20),
+        academic_year: String(application.academic_year || '2026-2027').slice(0, 20),
         deadline: application.deadline ? String(application.deadline).slice(0, 30) : null,
         notes: String(application.notes || '').slice(0, 300),
       }));
@@ -246,7 +304,17 @@ async function handleAIAdvice(req, res) {
 
     // Add disclaimer and usage info
     response.disclaimer = AI_DISCLAIMER[lang] || AI_DISCLAIMER.ru;
-    response.dailyLimit = { used: (dailyCheck.remaining !== undefined ? DAILY_LIMIT - dailyCheck.remaining : 0), limit: DAILY_LIMIT };
+    response.dailyLimit = {
+      used: (dailyCheck.remaining !== undefined ? (req.userId ? DAILY_LIMIT : ANONYMOUS_DAILY_LIMIT) - dailyCheck.remaining : 0),
+      limit: req.userId ? DAILY_LIMIT : ANONYMOUS_DAILY_LIMIT,
+      tokenUsed: tokenCheck.used || 0,
+      tokenLimit: DAILY_TOKEN_LIMIT,
+    };
+
+    // Log token usage for cost tracking
+    if (result.metadata?.prompt_tokens || result.metadata?.completion_tokens) {
+      logTokenUsage(req.userId, result.metadata.prompt_tokens, result.metadata.completion_tokens, result.metadata?.model);
+    }
 
     return res.json(response);
   } catch (err) {
