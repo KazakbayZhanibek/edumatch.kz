@@ -43,14 +43,15 @@ async function loadAdmin() {
   try {
     const search = document.getElementById('admin-search').value;
     const days = Number(daysSelect.value);
-    const [data, reviewsData, applicationsData, usersData, universitiesData, auditData, sourcesData] = await Promise.all([
-      api(`/admin/overview?days=${days}`), api('/admin/reviews?limit=100'), api('/admin/applications?limit=100'), api('/admin/users?limit=200'), api('/admin/universities?limit=300'), api('/admin/audit?limit=100'), api('/admin/sources')
+    const [data, reviewsData, applicationsData, usersData, universitiesData, grantsData, auditData, sourcesData] = await Promise.all([
+      api(`/admin/overview?days=${days}`), api('/admin/reviews?limit=100'), api('/admin/applications?limit=100'), api('/admin/users?limit=200'), api('/admin/universities?limit=300'), api('/admin/grants?limit=500'), api('/admin/audit?limit=100'), api('/admin/sources')
     ]);
     const o = data.overview;
     const reviews = reviewsData.reviews || [];
     const applications = applicationsData.applications || [];
     const users = usersData.users || [];
     const universities = universitiesData.universities || [];
+    const grants = grantsData.grants || [];
     const audit = auditData.audit || [];
     const sources = sourcesData.sources || [];
 
@@ -114,6 +115,20 @@ async function loadAdmin() {
         </div>
       </section>
 
+      <section class="admin-section" data-admin-section="grants">
+        <div class="admin-block">
+          <div class="admin-section-header"><h2>Гранты и финансирование (${grants.length})</h2><span class="admin-badge admin-badge-yellow">needs_review: ${grants.filter(item => item.verification_status === 'needs_review').length}</span></div>
+          <div class="admin-table-wrap"><table><thead><tr><th>Название</th><th>Вуз</th><th>Тип</th><th>Статус</th><th>Источник</th><th>Проверено</th><th>Действия</th></tr></thead><tbody>
+          ${grants.map(item => `<tr data-grant-id="${item.id}">
+            <td>${esc(item.name)}</td><td>${esc(item.university_name || '—')}</td><td>${esc(item.type)}</td>
+            <td><span class="admin-badge ${item.verification_status === 'verified' ? 'admin-badge-green' : item.verification_status === 'expired' ? 'admin-badge-red' : 'admin-badge-yellow'}">${esc(item.verification_status)}</span></td>
+            <td>${item.source_url ? `<a href="${esc(item.source_url)}" target="_blank" rel="noopener">Открыть</a>` : '—'}</td><td>${esc(item.verified_at || '—')}</td>
+            <td><button class="btn btn-ghost btn-xs" data-admin-action="verifyGrant" data-id="${item.id}">Проверить</button></td>
+          </tr>`).join('') || '<tr><td colspan="7">Грантов нет</td></tr>'}
+          </tbody></table></div>
+        </div>
+      </section>
+
       <section class="admin-section" data-admin-section="applications">
         <div class="admin-block"><h2>Последние заявки (${applications.length})</h2><div class="admin-table-wrap"><table><thead><tr><th>Пользователь</th><th>Вуз</th><th>Статус</th><th>Год</th><th>Создана</th></tr></thead><tbody>${applications.map(item => `<tr><td>${esc(item.username || item.email)}</td><td>${esc(item.short_name || item.university_name)}</td><td>${esc(statusLabels[item.status] || item.status)}</td><td>${esc(item.academic_year)}</td><td>${date(item.created_at)}</td></tr>`).join('') || '<tr><td colspan="5">Нет заявок</td></tr>'}</tbody></table></div></div>
       </section>
@@ -154,6 +169,41 @@ async function loadAdmin() {
               <td class="admin-actions-cell">
                 <button class="btn btn-ghost btn-xs" data-admin-action="checkSource" data-id="${s.id}">Проверить</button>
                 <button class="btn btn-ghost btn-xs" data-admin-action="viewSourceHistory" data-id="${s.id}">История</button>
+              </td>
+            </tr>`;
+          }).join('')}
+          </tbody></table></div>
+        </div>
+      </section>
+
+      <section class="admin-section" data-admin-section="grantsAdmin">
+        <div class="admin-block">
+          <div class="admin-section-header"><h2>Гранты (${grantsAdmin.length})</h2>
+            <div style="display:flex;gap:6px">
+              <select id="admin-grant-status" class="admin-status-select"><option value="">Все статусы</option><option value="needs_review">Требует проверки</option><option value="verified">Проверено</option><option value="expired">Истёк</option></select>
+            </div>
+          </div>
+          <div class="admin-table-wrap"><table><thead><tr><th>ID</th><th>Название</th><th>Вуз</th><th>Тип</th><th>Покрытие</th><th>Дедлайн</th><th>Статус</th><th>Действия</th></tr></thead><tbody>
+          ${grantsAdmin.map(g => {
+            const statusBadge = g.verification_status === 'verified'
+              ? '<span class="admin-badge admin-badge-green">ПРОВЕРЕНО</span>'
+              : g.verification_status === 'expired'
+                ? '<span class="admin-badge admin-badge-red">ИСТЁК</span>'
+                : '<span class="admin-badge admin-badge-yellow">ТРЕБУЕТ ПРОВЕРКИ</span>';
+            const typeLabels = { government:'Гос.', university:'Вуз', corporate:'Корп.', regional:'Рег.', foundation:'Фонд', international:'Межд.', discount:'Скидка' };
+            const coverageLabels = { full:'100%', partial:'Частичн.', tuition_only:'Учёба', tuition_dorm:'Учёба+общ.', stipend_only:'Стип.', unknown:'?' };
+            return `<tr>
+              <td>${g.id}</td>
+              <td>${esc(g.name)}</td>
+              <td>${esc(g.uni_short_name || '—')}</td>
+              <td>${esc(typeLabels[g.type] || g.type)}</td>
+              <td>${esc(coverageLabels[g.coverage_type] || g.coverage_type || '—')}</td>
+              <td>${esc(g.deadline || '—')}</td>
+              <td>${statusBadge}</td>
+              <td class="admin-actions-cell">
+                ${g.source_url ? `<a class="btn btn-ghost btn-xs" href="${esc(g.source_url)}" target="_blank" rel="noopener">Источник ↗</a>` : ''}
+                <button class="btn btn-ghost btn-xs" data-admin-action="editGrant" data-id="${g.id}">Изменить</button>
+                ${g.verification_status !== 'verified' ? `<button class="btn btn-ghost btn-xs" data-admin-action="verifyGrant" data-id="${g.id}">✓ Проверено</button>` : ''}
               </td>
             </tr>`;
           }).join('')}
@@ -364,6 +414,32 @@ async function changeUniversityStatus(id, status) {
   try { await api(`/admin/universities/${id}`, { method: 'PATCH', body: JSON.stringify({ data_status: status }) }); showToast('Статус обновлён'); } catch (error) { showToast(error.message, 'error'); loadAdmin(); }
 }
 
+async function verifyGrant(id) {
+  try {
+    const grant = (await api('/admin/grants?limit=500')).grants.find(item => item.id === id);
+    if (!grant) throw new Error('Грант не найден');
+    showModal(`Проверка гранта: ${esc(grant.name)}`, `
+      <form id="verify-grant-form" class="admin-form admin-form-grid">
+        <label>Статус <select name="verification_status"><option value="needs_review" ${grant.verification_status === 'needs_review' ? 'selected' : ''}>Требует проверки</option><option value="verified" ${grant.verification_status === 'verified' ? 'selected' : ''}>Подтверждён</option><option value="expired" ${grant.verification_status === 'expired' ? 'selected' : ''}>Истёк</option></select></label>
+        <label>Официальная страница конкурса <input name="source_url" type="url" value="${esc(grant.source_url || '')}" required /></label>
+        <label>Название источника <input name="source_title" value="${esc(grant.source_title || '')}" /></label>
+        <label>Дата проверки <input name="verified_at" type="date" value="${esc(grant.verified_at || '')}" /></label>
+        <label>Дедлайн <input name="deadline" type="date" value="${esc(grant.deadline || '')}" /></label>
+        <label>Покрытие / размер <input name="amount" value="${esc(grant.amount || '')}" required /></label>
+        <label>Требования, по одному в строке <textarea name="requirements" rows="5" required>${esc((grant.requirements || []).join('\n'))}</textarea></label>
+        <div class="admin-form-actions"><button type="submit" class="btn btn-primary btn-sm">Сохранить проверку</button><button type="button" class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>
+      </form>
+    `);
+    document.getElementById('verify-grant-form').onsubmit = async event => {
+      event.preventDefault();
+      const form = event.target;
+      const body = Object.fromEntries(new FormData(form));
+      body.requirements = body.requirements.split(/\r?\n/).map(value => value.trim()).filter(Boolean);
+      try { await api(`/admin/grants/${id}/verify`, { method: 'PATCH', body: JSON.stringify(body) }); closeModal(); showToast('Проверка гранта сохранена'); loadAdmin(); } catch (error) { showToast(error.message, 'error'); }
+    };
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
 // ─── REVIEW ACTIONS ──────────────────────────────
 
 async function moderate(id, approved) { try { await api(`/admin/reviews/${id}/moderate`, { method: 'PATCH', body: JSON.stringify({ approved }) }); showToast(approved ? 'Отзыв одобрен' : 'Отзыв скрыт'); loadAdmin(); } catch (error) { showToast(error.message, 'error'); } }
@@ -425,6 +501,66 @@ async function viewSourceHistory(id) {
   } catch (error) { showToast(error.message, 'error'); }
 }
 
+// ─── GRANT ACTIONS ──────────────────────────────
+
+async function editGrant(id) {
+  try {
+    const data = await api(`/grants/${id}`);
+    const g = data.grant;
+    showModal(`Грант #${g.id}: ${esc(g.name)}`, `
+      <form id="edit-grant-form" class="admin-form admin-form-grid">
+        <label>Название <input name="name" value="${esc(g.name)}" required /></label>
+        <label>Тип <select name="type">
+          ${['government','university','corporate','regional','foundation','international','discount'].map(v => `<option value="${v}" ${g.type===v?'selected':''}>${v}</option>`).join('')}
+        </select></label>
+        <label>Организатор <input name="provider_name" value="${esc(g.provider_name || '')}" /></label>
+        <label>Покрытие <select name="coverage_type">
+          <option value="">Неизвестно</option>
+          ${['full','partial','tuition_only','tuition_dorm','stipend_only'].map(v => `<option value="${v}" ${g.coverage_type===v?'selected':''}>${v}</option>`).join('')}
+        </select></label>
+        <label>Размер покрытия <input name="coverage_amount" value="${esc(g.coverage_amount || '')}" placeholder="100%, 500000 ₸/год…" /></label>
+        <label>Дедлайн <input name="deadline" type="date" value="${esc(g.deadline || '')}" /></label>
+        <label>Источник URL <input name="source_url" value="${esc(g.source_url || '')}" /></label>
+        <label>Источник название <input name="source_title" value="${esc(g.source_title || '')}" /></label>
+        <label>URL подачи <input name="application_url" value="${esc(g.application_url || '')}" /></label>
+        <label>Способ подачи <select name="application_method">
+          <option value="">Неизвестно</option>
+          ${['online','offline','portal','email'].map(v => `<option value="${v}" ${g.application_method===v?'selected':''}>${v}</option>`).join('')}
+        </select></label>
+        <label>Учебный год <input name="academic_year" value="${esc(g.academic_year || '')}" /></label>
+        <label>Статус <select name="verification_status">
+          ${['needs_review','verified','expired','rejected','source_unavailable'].map(v => `<option value="${v}" ${g.verification_status===v?'selected':''}>${v}</option>`).join('')}
+        </select></label>
+        <label>Заметки <textarea name="review_notes" rows="3">${esc(g.review_notes || '')}</textarea></label>
+        <div class="admin-form-actions">
+          <button type="submit" class="btn btn-primary btn-sm">Сохранить</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button>
+        </div>
+      </form>
+    `);
+    document.getElementById('edit-grant-form').onsubmit = async e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const body = {};
+      for (const [k, v] of fd.entries()) body[k] = v;
+      try {
+        await api(`/admin/grants/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+        closeModal(); showToast('Грант обновлён'); loadAdmin();
+      } catch (err) { showToast(err.message, 'error'); }
+    };
+  } catch (error) { showToast(error.message, 'error'); }
+}
+
+async function verifyGrant(id) {
+  showModal('Подтвердить грант?', `<p>Грант будет отмечен как проверенный. Убедитесь, что заполнены: источник, дедлайн, покрытие, требования.</p><div class="admin-form-actions"><button class="btn btn-primary btn-sm" id="modal-confirm">Да, проверено</button><button class="btn btn-ghost btn-sm" data-admin-action="closeModal">Отмена</button></div>`);
+  document.getElementById('modal-confirm').onclick = async () => {
+    try {
+      await api(`/admin/grants/${id}`, { method: 'PATCH', body: JSON.stringify({ verification_status: 'verified' }) });
+      closeModal(); showToast('Грант подтверждён'); loadAdmin();
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+}
+
 // ─── NAVIGATION & FILTERS ──────────────────────────────
 
 function showAdminTab(tab) {
@@ -455,12 +591,15 @@ const adminClickActions = {
   viewUniversity: button => viewUniversity(Number(button.dataset.id)),
   editUniversity: button => editUniversity(Number(button.dataset.id)),
   deleteUniversity: button => deleteUniversity(Number(button.dataset.id)),
+  verifyGrant: button => verifyGrant(Number(button.dataset.id)),
   moderate: button => moderate(Number(button.dataset.id), button.dataset.value === 'true'),
   removeReview: button => removeReview(Number(button.dataset.id)),
   closeModal: () => closeModal(),
   checkSource: button => checkSource(button.dataset.id),
   checkAllSources: () => checkAllSources(),
   viewSourceHistory: button => viewSourceHistory(button.dataset.id),
+  editGrant: button => editGrant(Number(button.dataset.id)),
+  verifyGrant: button => verifyGrant(Number(button.dataset.id)),
 };
 
 // Delegation also covers controls rendered after refresh and inside modals.

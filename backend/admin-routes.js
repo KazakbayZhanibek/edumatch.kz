@@ -122,6 +122,79 @@ router.get('/universities', (req, res) => {
   }
 });
 
+router.get('/grants', (req, res) => {
+  try {
+    const limit = Math.min(Math.max(Number.parseInt(req.query.limit, 10) || 100, 1), 500);
+    const query = String(req.query.q || '').trim().slice(0, 100);
+    const status = ['needs_review', 'verified', 'expired'].includes(req.query.status) ? req.query.status : null;
+    const grants = getDb().prepare(`
+      SELECT g.id, g.name, g.type, g.amount, g.deadline, g.academic_year,
+             g.source_url, g.source_title, g.verification_status, g.verified_at,
+             g.requirements, u.short_name AS university_name, c.name AS city_name
+      FROM grants g
+      LEFT JOIN universities u ON u.id = g.university_id
+      LEFT JOIN cities c ON c.id = g.city_id
+      WHERE (? IS NULL OR g.verification_status = ?)
+        AND (? = '' OR g.name LIKE ? OR COALESCE(u.name, '') LIKE ? OR COALESCE(c.name, '') LIKE ?)
+      ORDER BY CASE g.verification_status WHEN 'needs_review' THEN 0 WHEN 'verified' THEN 1 ELSE 2 END, g.id
+      LIMIT ?
+    `).all(status, status, query, `%${query}%`, `%${query}%`, `%${query}%`, limit)
+      .map(grant => {
+        let requirements = [];
+        try { requirements = JSON.parse(grant.requirements || '[]'); } catch { requirements = []; }
+        return { ...grant, requirements: Array.isArray(requirements) ? requirements : [] };
+      });
+    return res.json({ success: true, grants });
+  } catch (error) {
+    console.error('Admin grants error:', error);
+    return res.status(500).json({ error: 'Ошибка загрузки грантов' });
+  }
+});
+
+router.patch('/grants/:id/verify', (req, res) => {
+  try {
+    const id = Number.parseInt(req.params.id, 10);
+    const db = getDb();
+    const current = db.prepare('SELECT * FROM grants WHERE id = ?').get(id);
+    if (!current) return res.status(404).json({ error: 'Грант не найден' });
+    const status = String(req.body.verification_status || '').trim();
+    if (!['needs_review', 'verified', 'expired'].includes(status)) return res.status(400).json({ error: 'Некорректный статус проверки' });
+    const sourceUrl = String(req.body.source_url || '').trim();
+    let parsedUrl;
+    try { parsedUrl = new URL(sourceUrl); } catch { parsedUrl = null; }
+    if (status === 'verified' && (!parsedUrl || !['http:', 'https:'].includes(parsedUrl.protocol) || parsedUrl.username || parsedUrl.password)) {
+      return res.status(400).json({ error: 'Для подтверждения нужен официальный URL без учётных данных' });
+    }
+    const verifiedAt = String(req.body.verified_at || '').trim();
+    if (status === 'verified' && !/^\d{4}-\d{2}-\d{2}$/.test(verifiedAt)) return res.status(400).json({ error: 'Укажите дату проверки в формате YYYY-MM-DD' });
+    const deadline = String(req.body.deadline || '').trim();
+    if (status === 'verified' && !/^\d{4}-\d{2}-\d{2}$/.test(deadline)) return res.status(400).json({ error: 'Для подтверждения нужен дедлайн YYYY-MM-DD' });
+    const amount = String(req.body.amount || '').trim().slice(0, 500);
+    if (status === 'verified' && !amount) return res.status(400).json({ error: 'Для подтверждения укажите покрытие или размер поддержки' });
+    const requirements = Array.isArray(req.body.requirements) ? req.body.requirements.map(value => String(value).trim().slice(0, 500)).filter(Boolean).slice(0, 30) : [];
+    if (status === 'verified' && !requirements.length) return res.status(400).json({ error: 'Для подтверждения укажите требования' });
+    const next = {
+      source_url: sourceUrl || current.source_url || null,
+      source_title: String(req.body.source_title || current.source_title || '').trim().slice(0, 500) || null,
+      verification_status: status,
+      verified_at: status === 'verified' ? verifiedAt : null,
+      deadline: deadline || null,
+      amount: amount || current.amount,
+      requirements: requirements.length ? JSON.stringify(requirements) : current.requirements,
+    };
+    db.transaction(() => {
+      db.prepare(`UPDATE grants SET source_url = ?, source_title = ?, verification_status = ?, verified_at = ?, deadline = ?, amount = ?, requirements = ? WHERE id = ?`)
+        .run(next.source_url, next.source_title, next.verification_status, next.verified_at, next.deadline, next.amount, next.requirements, id);
+      db.prepare(`INSERT INTO audit_log (table_name, record_id, action, old_values, new_values, user_id, ip_address) VALUES (?, ?, 'UPDATE', ?, ?, ?, ?)`)
+        .run('grants', id, JSON.stringify({ verification_status: current.verification_status, verified_at: current.verified_at, deadline: current.deadline }), JSON.stringify(next), req.userId, req.ip);
+    })();
+    return res.json({ success: true, grant: { id, ...next, requirements } });
+  } catch (error) {
+    console.error('Admin grant verification error:', error);
+    return res.status(500).json({ error: 'Ошибка обновления проверки гранта' });
+  }
+});
+
 router.patch('/universities/:id', (req, res) => {
   const id = Number.parseInt(req.params.id, 10);
   const allowed = ['name', 'short_name', 'website', 'address', 'admission_phone', 'admission_email', 'data_status', 'price_from', 'price_to'];

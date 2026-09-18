@@ -29,6 +29,8 @@ const verifyRoutes = require('./verify-routes');
 const admissionRoutes = require('./admission-routes');
 const adminRoutes = require('./admin-routes');
 const dataRoutes = require('./data-routes');
+const grantsRoutes = require('./grants-routes');
+const { adminRouter: grantsAdminRouter } = require('./grants-routes');
 const { verifyAuth, verifyAdmin } = require('./auth-middleware');
 const { csrfProtection } = require('./csrf');
 
@@ -264,7 +266,9 @@ app.get('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {
 });
 
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin/grants', grantsAdminRouter);
 app.use('/api/data', dataRoutes);
+app.use('/api/grants', grantsRoutes);
 
 // ─── REVIEWS API ──────────────────────────────
 const reviewRateLimit = new Map();

@@ -2818,7 +2818,7 @@ function restartCareerTest() {
   initCareerTest();
 }
 // ─── GRANTS ──────────────────────────────────
-function loadGrants() { return window.GrantsPage.load(); }
+function loadGrants() { return window.GrantsPage.load(document.getElementById('grant-catalog')); }
 
 // ─── PROFESSION ANALYSIS ─────────────────────
 const professionData = {

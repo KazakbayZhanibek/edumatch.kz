@@ -30,6 +30,7 @@ function getUniversities({ sort, price_max, specialty, language, city_id, is_top
       u.students_count, u.languages, u.accreditations, u.has_dorm,
       u.dorm_price, u.avg_salary, u.lat, u.lng,
       u.admission_phone, u.admission_email, u.data_status, u.address,
+      u.is_free,
       c.name as city_name
     FROM universities u
     LEFT JOIN cities c ON u.city_id = c.id
@@ -180,6 +181,7 @@ function getUniversity(id, lang) {
       u.students_count, u.languages, u.accreditations, u.has_dorm,
       u.dorm_price, u.avg_salary, u.lat, u.lng,
       u.admission_phone, u.admission_email, u.admission_whatsapp, u.data_status, u.address,
+      u.is_free,
       c.name as city_name
     FROM universities u
     LEFT JOIN cities c ON u.city_id = c.id
@@ -240,7 +242,7 @@ function getUniversity(id, lang) {
 function getSpecialtyCategories() {
   const db = getDb();
   const stmt = db.prepare(`
-    SELECT DISTINCT s.id, s.name, s.category
+    SELECT DISTINCT s.id, s.name, s.code, s.category
     FROM specialties s
     JOIN university_specialties us ON s.id = us.specialty_id
     ORDER BY s.category ASC, s.name ASC
@@ -264,9 +266,14 @@ function getGrants({ lang } = {}) {
       g.type, g.amount,
       g.description, g.description_kk, g.description_en,
       g.requirements, g.requirements_kk, g.requirements_en,
-      g.deadline, g.link
+      g.deadline, g.link, g.source_url, g.source_title, g.verification_status, g.verified_at,
+      g.academic_year, g.university_id, g.city_id, g.is_active,
+      u.name AS university_name, c.name AS city_name
     FROM grants g
-    ORDER BY g.id ASC
+    LEFT JOIN universities u ON u.id = g.university_id
+    LEFT JOIN cities c ON c.id = g.city_id
+    WHERE g.is_active = 1 OR g.is_active IS NULL
+    ORDER BY g.deadline ASC NULLS LAST, g.id ASC
   `);
 
   let grants = stmt.all();
@@ -288,6 +295,7 @@ function getGrants({ lang } = {}) {
         : lang === 'en' && g.requirements_en ? g.requirements_en
         : g.requirements;
       requirements = reqField ? JSON.parse(reqField) : [];
+      if (!Array.isArray(requirements)) requirements = [];
     } catch (e) {
       console.warn(`Invalid requirements JSON for grant ${g.id}:`, g.requirements);
       requirements = [];
@@ -317,6 +325,56 @@ function getGrants({ lang } = {}) {
   });
 
   return grants;
+}
+
+/**
+ * Consolidated read model for the admission opportunities page.
+ * It intentionally returns stored facts, not an admission decision.
+ */
+function getAdmissionOpportunities({ lang } = {}) {
+  const db = getDb();
+  const universities = getUniversities({ lang });
+  const grants = getGrants({ lang });
+  const specialties = getSpecialtyCategories();
+  const requirements = db.prepare(`
+    SELECT ar.university_id, ar.specialty_id, ar.min_ent, ar.avg_ent,
+           ar.grant_min_ent, ar.competition_level, ar.academic_year,
+           s.name AS specialty_name, s.code AS specialty_code, s.category
+    FROM admission_requirements ar
+    JOIN specialties s ON s.id = ar.specialty_id
+    JOIN universities u ON u.id = ar.university_id
+    WHERE COALESCE(u.data_status, 'active') = 'active'
+    ORDER BY ar.university_id, s.category, s.name
+  `).all();
+
+  const requirementsByUniversity = new Map();
+  for (const requirement of requirements) {
+    if (!requirementsByUniversity.has(requirement.university_id)) requirementsByUniversity.set(requirement.university_id, []);
+    requirementsByUniversity.get(requirement.university_id).push(requirement);
+  }
+  const grantsByUniversity = new Map();
+  for (const grant of grants) {
+    if (!grant.university_id) continue;
+    if (!grantsByUniversity.has(grant.university_id)) grantsByUniversity.set(grant.university_id, []);
+    grantsByUniversity.get(grant.university_id).push(grant);
+  }
+
+  return {
+    universities: universities.map(university => ({
+      ...university,
+      requirements: requirementsByUniversity.get(university.id) || [],
+      grants: grantsByUniversity.get(university.id) || [],
+    })),
+    specialties,
+    grants,
+    meta: {
+      universityCount: universities.length,
+      grantCount: grants.length,
+      requirementCount: requirements.length,
+      academicYears: [...new Set([...requirements.map(row => row.academic_year), ...grants.map(row => row.academic_year)].filter(Boolean))].sort().reverse(),
+      note: 'Stored catalogue data; applicants must verify current rules with official sources.',
+    },
+  };
 }
 
 /**
@@ -373,6 +431,7 @@ module.exports = {
   getUniversity,
   getSpecialtyCategories,
   getGrants,
+  getAdmissionOpportunities,
   getTips,
   getUniversitiesContext,
   getCities
