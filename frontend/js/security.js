@@ -44,36 +44,8 @@ function setSafeHtml(element, html) {
 function sanitizeHtml(html) {
   if (!html || typeof html !== 'string') return '';
   
-  // Создаём temporary element для парсинга
-  const temp = document.createElement('div');
-  temp.innerHTML = html;
-  
-  // Удаляем опасные теги
-  const dangerousTags = ['script', 'iframe', 'style', 'object', 'embed', 'form', 'input', 'button'];
-  for (const tag of dangerousTags) {
-    temp.querySelectorAll(tag).forEach(el => el.remove());
-  }
-  
-  // Удаляем event handlers и javascript: ссылки
-  temp.querySelectorAll('[on*]').forEach(el => {
-    for (const attr of el.attributes) {
-      if (attr.name.startsWith('on')) {
-        el.removeAttribute(attr.name);
-      }
-    }
-  });
-  
-  // Очищаем javascript: ссылки
-  temp.querySelectorAll('a, img, source').forEach(el => {
-    for (const attr of ['href', 'src', 'srcset']) {
-      const value = el.getAttribute(attr);
-      if (value && value.includes('javascript:')) {
-        el.removeAttribute(attr);
-      }
-    }
-  });
-  
-  return temp.innerHTML;
+  // Without the maintained sanitizer, preserve content as text.
+  return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(html) : escapeHtml(html);
 }
 
 /**

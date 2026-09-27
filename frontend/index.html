@@ -28,18 +28,22 @@
 <link rel="stylesheet" href="css/verification.css">
 <link rel="stylesheet" href="css/grants.css">
 <link rel="stylesheet" href="css/planner.css">
+<link rel="stylesheet" href="css/site-ux.css">
+<link rel="stylesheet" href="css/profile-polish.css">
+<link rel="stylesheet" href="css/catalog-chat.css">
 <style>
   /* --- Патчи профиля: добавь в css/main.css и удали этот блок --- */
   .profile-user-banner, .profile-user-avatar { cursor: pointer; }
   .pw-hints { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 12px; }
   .pw-hints li { color: var(--text-muted, #999); position: relative; padding-left: 14px; }
   .pw-hints li::before { content: "○"; position: absolute; left: 0; }
-  .pw-hints li.pw-hint-ok { color: var(--success, #1a9c5c); }
+  .pw-hints li.pw-hint-ok { color: var(--accent); }
   .pw-hints li.pw-hint-ok::before { content: "●"; }
   #chat-show-more { margin-top: 10px; }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#app">Перейти к содержимому</a>
 
 <!-- NAVIGATION -->
 <nav class="nav" id="nav">
@@ -51,6 +55,7 @@
       <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('home')" data-i18n="nav.universities">Вузы</a>
       <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('compare')"><span data-i18n="nav.comparison">Сравнение</span> <span class="compare-badge" id="compare-badge" style="display:none">0</span></a>
       <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('advisor')" data-i18n="nav.advisor">ИИ-советник</a>
+      <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('planner')" data-i18n="nav.planner">План поступления</a>
       <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('admission')" data-i18n="nav.admission">Мои шансы</a>
       <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('career')" data-i18n="nav.career">Профориентация</a>
       <a href="#" class="nav-link" onclick="event.preventDefault(); navigate('grants')" data-i18n="nav.grants">Гранты</a>
@@ -109,6 +114,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span data-i18n="menu.advisor">ИИ-советник</span>
     </a>
+    <a class="mobile-nav-link" data-page="planner" onclick="navigate('planner');closeMobileMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span data-i18n="menu.planner">План поступления</span>
+    </a>
     <a class="mobile-nav-link" data-page="admission" onclick="navigate('admission');closeMobileMenu()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
       <span data-i18n="menu.admission">Мои шансы на поступление</span>
@@ -157,37 +166,44 @@
 
 <!-- PAGES -->
 <main id="app">
+<div class="page-back-row container">
 <button class="global-back-button" id="global-back-button" onclick="navigateBack()" aria-label="Назад" data-i18n-aria="buttons.back">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
   <span data-i18n="buttons.back">Назад</span>
 </button>
+</div>
 
   <!-- HOME PAGE -->
   <div id="page-home" class="page active">
     <section class="hero">
       <div class="hero-inner">
-        <div class="hero-badge" data-aos="fade-down" data-aos-duration="600" data-i18n="home.badge" data-academic-year>Казахстан · 2025–2026</div>
-        <h1 class="hero-title" data-aos="fade-up" data-aos-duration="700" data-aos-delay="100"><span class="mobile-copy" data-i18n="home.mobile_heading">Найди свой университет</span><span class="desktop-copy"><span data-i18n="home.hero_heading1">Выбор университета —</span><br><em><span data-i18n="home.hero_heading2">главное финансовое решение</span></em></span></h1>
-        <p class="hero-subtitle" data-aos="fade-up" data-aos-duration="700" data-aos-delay="200" data-i18n="home.hero_sub">Сравните стоимость, рейтинги и специальности ведущих вузов Казахстана. Получите персональный совет от ИИ-советника.</p>
-        <div class="hero-actions" data-aos="fade-up" data-aos-duration="700" data-aos-delay="300">
-          <button class="btn btn-primary hero-primary-btn" onclick="navigate('advisor')" data-i18n="home.hero_btn1">Получить совет ИИ<span class="hero-primary-arrow" aria-hidden="true">&#8594;</span></button>
-          <button class="btn btn-ghost hero-btn-scroll" onclick="document.getElementById('universities-section').scrollIntoView({behavior:'smooth'})" data-i18n="home.hero_btn2">Смотреть вузы</button>
+        <h1 class="hero-title"><span data-i18n="home.hero_heading1">Найди свой</span><br><em data-i18n="home.hero_heading2">университет</em></h1>
+        <p class="hero-subtitle" data-i18n="home.hero_sub">Найдите университет, проверьте условия грантов и соберите понятный план поступления.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary hero-primary-btn" onclick="navigate('planner')" data-i18n="home.hero_btn1">Подобрать программы</button>
+          <button class="btn btn-ghost hero-btn-scroll" onclick="document.getElementById('universities-section').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})" data-i18n="home.hero_btn2">Смотреть вузы</button>
         </div>
-        <div class="hero-stats" data-aos="fade-up" data-aos-duration="700" data-aos-delay="400">
-          <div class="stat"><span class="stat-num" id="stat-unis" data-target="152">152</span><span class="stat-label" data-i18n="home.stat_unis">университетов</span></div>
-          <div class="stat-div"></div>
-          <div class="stat"><span class="stat-num" id="stat-specs" data-target="230">230</span><span class="stat-label" data-i18n="home.stat_specs">специальностей</span></div>
-          <div class="stat-div"></div>
-          <div class="stat"><span class="stat-num">от 580K</span><span class="stat-label" data-i18n="home.stat_price">тенге/год</span></div>
-        </div>
+        <a class="hero-advisor-link" href="#advisor" onclick="navigate('advisor')"><span data-i18n="menu.advisor">ИИ-советник</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></a>
       </div>
-      <div class="hero-visual" data-aos="fade-left" data-aos-duration="900" data-aos-delay="200">
+      <nav class="hero-visual" aria-label="Маршрут поступления">
         <div class="hero-card-stack">
-          <div class="hcard hcard-1"><div class="hcard-label">QS World</div><div class="hcard-val">#163</div><div class="hcard-uni">КазНУ</div></div>
-          <div class="hcard hcard-2"><div class="hcard-label" data-i18n="home.card_cost">Стоимость</div><div class="hcard-val">580K–3.8M</div><div class="hcard-uni" data-i18n="home.stat_price">тенге/год</div></div>
-          <div class="hcard hcard-3"><div class="hcard-label" data-i18n="home.card_unis">Вузов в Казахстане</div><div class="hcard-val">15</div><div class="hcard-uni" data-i18n="home.card_in_db">в базе данных</div></div>
+          <a class="hcard hcard-1" href="#career" onclick="navigate('career')">
+            <svg class="home-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m16 8-2 6-6 2 2-6Z"/></svg>
+            <span class="hcard-val" data-i18n="home.explore">Направление</span>
+            <span class="hcard-uni" data-i18n="home.explore_sub">Найди то, что тебе интересно</span>
+          </a>
+          <a class="hcard hcard-2" href="#grants" onclick="navigate('grants')">
+            <svg class="home-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5Zm4 2v6c4 3 8 3 12 0v-6m4-2v8"/></svg>
+            <span class="hcard-val" data-i18n="nav.grants">Гранты</span>
+            <span class="hcard-uni" data-i18n="home.funding_sub">Условия, сроки и источники</span>
+          </a>
+          <a class="hcard hcard-3" href="#planner" onclick="navigate('planner')">
+            <svg class="home-feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M8 11l2 2 5-5m-6 9h6"/></svg>
+            <span class="hcard-val" data-i18n="home.your_plan">Твой план</span>
+            <span class="hcard-uni" data-i18n="home.plan_sub">Понятные шаги к поступлению</span>
+          </a>
         </div>
-      </div>
+      </nav>
     </section>
 
     <section class="universities-section" id="universities-section">
@@ -262,6 +278,7 @@
           </div>
         </div>
 
+        <p id="university-results-status" class="site-inline-status" role="status" aria-live="polite"></p>
         <div class="uni-grid" id="uni-grid">
           <div class="loading-state">
             <div class="spinner"></div>
@@ -303,6 +320,17 @@
     </div>
   </div>
 
+  <!-- PERSONAL ADMISSION PLAN PAGE -->
+  <div id="page-planner" class="page">
+    <div class="container planner-page-shell">
+      <div class="page-head planner-page-head">
+        <h1 class="page-title" data-i18n="planner.title">План поступления</h1>
+        <p class="page-sub" data-i18n="planner.sub">Заполните анкету, сравните программы и сохраните персональный чек-лист.</p>
+      </div>
+      <div id="planner-assistant"></div>
+    </div>
+  </div>
+
   <!-- AI ADVISOR PAGE -->
   <div id="page-advisor" class="page">
     <div class="advisor-layout">
@@ -318,6 +346,7 @@
             </div>
           </div>
           <p class="advisor-desc" data-i18n="advisor.desc">Опишите ваши интересы, бюджет и цели. Я помогу выбрать подходящий университет с учётом финансовой стороны.</p>
+          <button class="btn btn-primary advisor-plan-link" onclick="navigate('planner')" data-i18n="advisor.open_planner">Составить план поступления</button>
           
 
           <div class="advisor-chances-prompts">
@@ -336,7 +365,6 @@
       </div>
 
       <div class="chat-area">
-        <div id="planner-assistant"></div>
         <div class="chat-messages" id="chat-messages">
           <div class="chat-welcome">
             <div class="chat-welcome-icon" aria-hidden="true"></div>
@@ -406,7 +434,7 @@
 
       <div class="admission-layout">
         <div class="tool-card admission-form-card">
-          <h3 class="tool-card-title" data-i18n="admission.form_title">Ваши данные</h3>
+          <h2 class="tool-card-title" data-i18n="admission.form_title">Ваши данные</h2>
           
           <div class="form-field">
             <label class="form-label" data-i18n="admission.ent_label">Балл ЕНТ *</label>
@@ -460,7 +488,7 @@
           </div>
           
           <button class="btn btn-primary" style="width:100%;margin-top:8px" id="admit-submit" onclick="calculateAdmissionChance()" data-i18n="admission.submit_btn">Рассчитать шансы</button>
-          <p style="font-size:11px;color:#888;margin-top:8px;text-align:center;line-height:1.4" data-i18n="admission.disclaimer">Данные на основе открытых источников и статистики 2026 года. Расчёт носит ориентировочный характер — рекомендуется уточнять информацию на официальных сайтах вузов.</p>
+          <p class="admission-disclaimer" data-i18n="admission.disclaimer">Данные на основе открытых источников и статистики 2026 года. Расчёт носит ориентировочный характер — рекомендуется уточнять информацию на официальных сайтах вузов.</p>
         </div>
 
         <div class="admission-results" id="admission-results">
@@ -542,12 +570,12 @@
       </div>
       <div class="tips-grid" id="tips-grid">
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">01</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-purple" data-i18n="tips.t1_category">Выбор вуза</span>
-              <h3 class="tip-title" data-i18n="tips.t1_title">Выбирай специальность, а не название вуза</h3>
+              <h2 class="tip-title" data-i18n="tips.t1_title">Выбирай специальность, а не название вуза</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -570,12 +598,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">02</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-orange" data-i18n="tips.t2_category">ЕНТ</span>
-              <h3 class="tip-title" data-i18n="tips.t2_title">Не откладывай подготовку к ЕНТ на последний год</h3>
+              <h2 class="tip-title" data-i18n="tips.t2_title">Не откладывай подготовку к ЕНТ на последний год</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -597,12 +625,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">03</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-orange" data-i18n="tips.t3_category">ЕНТ</span>
-              <h3 class="tip-title" data-i18n="tips.t3_title">Анализируй ошибки, а не количество тестов</h3>
+              <h2 class="tip-title" data-i18n="tips.t3_title">Анализируй ошибки, а не количество тестов</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -622,12 +650,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">04</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-teal" data-i18n="tips.t4_category">Стратегия</span>
-              <h3 class="tip-title" data-i18n="tips.t4_title">Составь список из трёх категорий вузов</h3>
+              <h2 class="tip-title" data-i18n="tips.t4_title">Составь список из трёх категорий вузов</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -660,12 +688,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">05</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-accent" data-i18n="tips.t5_category">Финансы</span>
-              <h3 class="tip-title" data-i18n="tips.t5_title">Изучи гранты заранее</h3>
+              <h2 class="tip-title" data-i18n="tips.t5_title">Изучи гранты заранее</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -687,12 +715,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">06</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-pink" data-i18n="tips.t6_category">Развитие</span>
-              <h3 class="tip-title" data-i18n="tips.t6_title">Развивай английский</h3>
+              <h2 class="tip-title" data-i18n="tips.t6_title">Развивай английский</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -714,12 +742,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">07</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-pink" data-i18n="tips.t7_category">Развитие</span>
-              <h3 class="tip-title" data-i18n="tips.t7_title">Собирай портфолио ещё в школе</h3>
+              <h2 class="tip-title" data-i18n="tips.t7_title">Собирай портфолио ещё в школе</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -744,12 +772,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">08</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-teal" data-i18n="tips.t8_category">Карьера</span>
-              <h3 class="tip-title" data-i18n="tips.t8_title">Смотри на трудоустройство выпускников</h3>
+              <h2 class="tip-title" data-i18n="tips.t8_title">Смотри на трудоустройство выпускников</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -770,12 +798,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">09</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-blue" data-i18n="tips.t9_category">Технологии</span>
-              <h3 class="tip-title" data-i18n="tips.t9_title">Учись пользоваться ИИ</h3>
+              <h2 class="tip-title" data-i18n="tips.t9_title">Учись пользоваться ИИ</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -793,12 +821,12 @@
           </div>
         </div>
 
-        <div class="tip-card" onclick="this.classList.toggle('open')">
+        <div class="tip-card">
           <div class="tip-card-header">
             <div class="tip-num">10</div>
             <div class="tip-info">
               <span class="tip-cat tip-cat-gold" data-i18n="tips.t10_category">Мотивация</span>
-              <h3 class="tip-title" data-i18n="tips.t10_title">Не измеряй свой успех одним результатом ЕНТ</h3>
+              <h2 class="tip-title" data-i18n="tips.t10_title">Не измеряй свой успех одним результатом ЕНТ</h2>
             </div>
             <div class="tip-arrow">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -946,6 +974,7 @@
           <a class="footer-link" onclick="event.preventDefault(); navigate('home')" data-i18n="footer.universities">Университеты</a>
           <a class="footer-link" onclick="event.preventDefault(); navigate('compare')" data-i18n="footer.comparison">Сравнение</a>
           <a class="footer-link" onclick="event.preventDefault(); navigate('advisor')" data-i18n="footer.advisor">ИИ-советник</a>
+          <a class="footer-link" onclick="event.preventDefault(); navigate('planner')" data-i18n="footer.planner">План поступления</a>
           <a class="footer-link" onclick="event.preventDefault(); navigate('career')">Профориентация</a>
           <a class="footer-link" onclick="event.preventDefault(); navigate('grants')" data-i18n="footer.grants">Гранты</a>
         </div>
@@ -968,7 +997,7 @@
     <div class="footer-bottom-inner">
       <span>© 2026 EduMatch KZ</span>
       <div class="footer-bottom-links">
-        <a onclick="event.preventDefault(); openModal('modal-about')">Политика</a>
+        <a onclick="event.preventDefault(); openModal('modal-privacy')">Политика</a>
         <span class="footer-dot">·</span>
         <a onclick="event.preventDefault(); openModal('modal-contacts')">Связаться</a>
       </div>
@@ -1119,6 +1148,9 @@
     <button class="sheet-grid-item sheet-grid-highlight" onclick="navigate('admission');closeToolsSheet()">
       <div class="sheet-grid-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><span data-i18n="sheet.chances">Шансы</span>
     </button>
+    <button class="sheet-grid-item" onclick="navigate('planner');closeToolsSheet()">
+      <div class="sheet-grid-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><span data-i18n="sheet.planner">План</span>
+    </button>
     <button class="sheet-grid-item" onclick="navigate('career');closeToolsSheet()">
       <div class="sheet-grid-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88"/></svg></div><span data-i18n="sheet.career">Профориент.</span>
     </button>
@@ -1170,6 +1202,25 @@
   </div>
 </div>
 
+<!-- Mobile navigation -->
+<nav class="mobile-tabs" id="mobile-tabs" aria-label="Основные разделы">
+  <a class="mobile-tab" href="#home" data-route="home" onclick="navigate('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 9 9-6 9 6M5 10v10h14V10M9 20v-7h6v7"/></svg><span>Каталог</span>
+  </a>
+  <a class="mobile-tab" href="#planner" data-route="planner" onclick="navigate('planner')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="16" height="17" rx="2"/><path d="M9 3h6v4H9zM8 12l2 2 5-5M8 18h8"/></svg><span>План</span>
+  </a>
+  <a class="mobile-tab" href="#grants" data-route="grants" onclick="navigate('grants')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m2 8 10-5 10 5-10 5zM6 10v6c4 3 8 3 12 0v-6M22 8v8"/></svg><span>Гранты</span>
+  </a>
+  <a class="mobile-tab" href="#advisor" data-route="advisor" onclick="navigate('advisor')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M7 8h10M7 12h6"/></svg><span>Чат</span>
+  </a>
+  <a class="mobile-tab" href="#profile" data-route="profile" onclick="navigate('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/></svg><span>Профиль</span>
+  </a>
+</nav>
+
 <!-- Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
@@ -1187,6 +1238,7 @@
 <script src="js/grants.js"></script>
 <script src="js/app.js"></script>
 <script src="js/planner.js"></script>
+<script src="js/site-ux.js"></script>
 <button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Наверх" data-i18n-aria="scroll.top">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
 </button>

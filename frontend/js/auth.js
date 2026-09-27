@@ -63,6 +63,7 @@ const Auth = {
   },
 
   setSession(user) {
+    if (this.user?.id !== user?.id) window.resetAdvisorSession?.();
     this.user = user;
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
     this.updateNavUI();
@@ -70,6 +71,7 @@ const Auth = {
 
   clearSession() {
     this.user = null;
+    window.resetAdvisorSession?.();
     localStorage.removeItem(AUTH_USER_KEY);
     this.updateNavUI();
   },
@@ -414,6 +416,11 @@ const Auth = {
 function handleRegister(e) {
   e.preventDefault();
   const err = document.getElementById('register-error');
+  err.setAttribute('role', 'alert');
+  e.target.querySelectorAll('input').forEach(input => {
+    const descriptions = new Set((input.getAttribute('aria-describedby') || '').split(' ').filter(Boolean));
+    descriptions.add('register-error');input.setAttribute('aria-describedby', [...descriptions].join(' '));
+  });
   err.textContent = '';
   const consent = document.getElementById('reg-consent');
   if (!consent?.checked) {
@@ -441,6 +448,8 @@ function handleRegister(e) {
 function handleLogin(e) {
   e.preventDefault();
   const err = document.getElementById('login-error');
+  err.setAttribute('role', 'alert');
+  ['login-email', 'login-password'].forEach(id => document.getElementById(id).setAttribute('aria-describedby', 'login-error'));
   err.textContent = '';
   const btn = document.getElementById('login-submit');
   btn.disabled = true;
@@ -506,7 +515,7 @@ async function loadProfilePage() {
     return;
   }
 
-  content.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+  content.innerHTML = `<div class="loading-state" role="status"><div class="spinner" aria-hidden="true"></div><p>${profileCopy('Загружаем ваш профиль…', 'Профиліңіз жүктелуде…', 'Loading your profile…')}</p></div>`;
 
   try {
     const profile = await Auth.getProfile();
@@ -731,17 +740,17 @@ async function loadProfilePage() {
             <form id="password-form" class="auth-form" onsubmit="handlePasswordChange(event)">
               <div class="profile-pw-fields">
                 <div class="form-field">
-                  <label>${t('profile_page.card_pw_current') || 'Текущий пароль'}</label>
+                  <label for="pw-current">${t('profile_page.card_pw_current') || 'Текущий пароль'}</label>
                   <div class="pw-toggle-wrap">
-                    <input type="password" id="pw-current" class="form-input" required minlength="1">
-                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">Показать</button>
+                    <input type="password" id="pw-current" class="form-input" required minlength="1" autocomplete="current-password" aria-describedby="password-error">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" aria-controls="pw-current" aria-label="${t('profile_page.card_pw_show')}: ${t('profile_page.card_pw_current')}">Показать</button>
                   </div>
                 </div>
                 <div class="form-field">
-                  <label>${t('profile_page.card_pw_new') || 'Новый пароль'}</label>
+                  <label for="pw-new">${t('profile_page.card_pw_new') || 'Новый пароль'}</label>
                   <div class="pw-toggle-wrap">
-                    <input type="password" id="pw-new" class="form-input" required minlength="12" pattern="(?=.*[A-ZА-Я])(?=.*\d)(?=.*[^A-Za-zА-Яа-я0-9]).{12,}" oninput="updatePasswordHints('pw-new','pw-new-hints')">
-                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">Показать</button>
+                    <input type="password" id="pw-new" class="form-input" required minlength="12" pattern="(?=.*[A-ZА-Я])(?=.*[0-9])(?=.*[^A-Za-zА-Яа-я0-9]).{12,}" oninput="updatePasswordHints('pw-new','pw-new-hints')" autocomplete="new-password" aria-describedby="pw-new-hints password-error">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" aria-controls="pw-new" aria-label="${t('profile_page.card_pw_show')}: ${t('profile_page.card_pw_new')}">Показать</button>
                   </div>
                   <ul class="pw-hints" id="pw-new-hints">
                     <li data-rule="len">Минимум 12 символов</li>
@@ -751,14 +760,14 @@ async function loadProfilePage() {
                   </ul>
                 </div>
                 <div class="form-field">
-                  <label>${t('profile_page.card_pw_confirm') || 'Подтвердите пароль'}</label>
+                  <label for="pw-confirm">${t('profile_page.card_pw_confirm') || 'Подтвердите пароль'}</label>
                   <div class="pw-toggle-wrap">
-                    <input type="password" id="pw-confirm" class="form-input" required minlength="12">
-                    <button type="button" class="pw-toggle" onclick="togglePW(this)" tabindex="-1">Показать</button>
+                    <input type="password" id="pw-confirm" class="form-input" required minlength="12" autocomplete="new-password" aria-describedby="password-error">
+                    <button type="button" class="pw-toggle" onclick="togglePW(this)" aria-controls="pw-confirm" aria-label="${t('profile_page.card_pw_show')}: ${t('profile_page.card_pw_confirm')}">Показать</button>
                   </div>
                 </div>
               </div>
-              <p class="form-error" id="password-error"></p>
+              <p class="form-error" id="password-error" role="alert"></p>
               <div class="profile-form-actions">
                 <button type="submit" class="btn btn-primary">${t('profile_page.card_pw_change') || 'Сменить пароль'}</button>
               </div>
@@ -768,6 +777,8 @@ async function loadProfilePage() {
         </div>
       </div>
     `;
+
+    enhanceProfileOverview(saved, chats, tests);
 
     // Рендер трекера в профиле
     renderProfileTracker();
@@ -783,7 +794,71 @@ async function loadProfilePage() {
     renderAdmissionHistory();
 
   } catch (e) {
-    content.innerHTML = `<p class="form-error">${e.message}</p>`;
+    content.innerHTML = `<div class="profile-empty" role="alert"><p class="form-error">${escapeHtml(e.message)}</p><button class="btn btn-primary" onclick="loadProfilePage()">${profileCopy('Повторить загрузку', 'Қайта жүктеу', 'Try again')}</button></div>`;
+  }
+}
+
+function profileCopy(ru, kk, en) {
+  return window.currentLanguage === 'kk' ? kk : window.currentLanguage === 'en' ? en : ru;
+}
+
+function revealProfileSection(id) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  if (target.matches('details')) target.open = true;
+  const disclosure = target.querySelector('details');
+  if (disclosure) disclosure.open = true;
+  target.scrollIntoView({ block: 'start', behavior: 'auto' });
+  const focus = target.querySelector('summary, input, button') || target;
+  if (!focus.hasAttribute('tabindex') && focus === target) focus.tabIndex = -1;
+  focus.focus({ preventScroll: true });
+}
+
+function enhanceProfileOverview(saved, chats, tests) {
+  const main = document.querySelector('#profile-content .profile-main');
+  if (!main) return;
+  const sections = [...main.querySelectorAll(':scope > .profile-section')];
+  const savedSection = document.getElementById('saved-badge')?.closest('section');
+  if (savedSection) savedSection.id = 'profile-saved-section';
+  const tracker = document.getElementById('profile-tracker-content')?.closest('section');
+  if (tracker) tracker.id = 'profile-tracker-section';
+  const edit = document.getElementById('profile-form')?.closest('section');
+  if (edit) edit.id = 'profile-edit-section';
+  const overview = document.createElement('section');
+  overview.className = 'profile-overview';
+  overview.setAttribute('aria-label', profileCopy('Обзор поступления', 'Түсуге шолу', 'Admission overview'));
+  overview.innerHTML = `<h2>${profileCopy('Ваш следующий шаг', 'Келесі қадамыңыз', 'Your next step')}</h2>
+    <p>${saved.length ? profileCopy('Вузы уже в избранном. Соберите план и проверьте условия перед подачей.', 'Университеттер сақталды. Жоспар құрып, өтініш алдында талаптарды тексеріңіз.', 'Your shortlist is ready. Build a plan and check requirements before applying.') : profileCopy('Начните с выбора вузов — сохраните подходящие варианты для сравнения.', 'Университеттерді таңдаудан бастаңыз — салыстыру үшін қолайлы нұсқаларды сақтаңыз.', 'Start by choosing universities and save the options you want to compare.')}</p>
+    <div class="profile-overview-actions"><button type="button" class="btn btn-primary" onclick="navigate('${saved.length ? 'planner' : 'home'}')">${saved.length ? profileCopy('Составить план', 'Жоспар құру', 'Build a plan') : profileCopy('Выбрать вузы', 'Университет таңдау', 'Explore universities')}</button>
+    <button type="button" class="btn btn-ghost" onclick="revealProfileSection('planner-saved')">${profileCopy('Открыть мои планы', 'Жоспарларымды ашу', 'Open my plans')}</button></div>
+    <div class="profile-overview-links"><button type="button" onclick="revealProfileSection('profile-saved-section')">${profileCopy('Сохранённые вузы', 'Сақталған университеттер', 'Saved universities')} <span>${saved.length}</span></button><button type="button" onclick="revealProfileSection('profile-tracker-section')">${profileCopy('Заявки и сроки', 'Өтініштер мен мерзімдер', 'Applications and deadlines')}</button><button type="button" onclick="revealProfileSection('profile-edit-section')">${profileCopy('Редактировать профиль', 'Профильді өңдеу', 'Edit profile')}</button></div>`;
+  main.prepend(overview);
+  // Keep every existing field, ID and listener in place; native details supplies
+  // keyboard activation and an accessible expanded state without a second nav.
+  for (const section of sections) {
+    const isEdit = section === edit;
+    const isHistory = section.querySelector('#chat-badge, #tests-badge');
+    if (!isEdit && !isHistory) continue;
+    const header = section.querySelector(':scope > .profile-section-header, :scope > h2');
+    if (!header) continue;
+    const details = document.createElement('details');
+    details.className = 'profile-disclosure';
+    const summary = document.createElement('summary');
+    summary.append(header);
+    details.append(summary);
+    while (section.firstChild) details.append(section.firstChild);
+    section.append(details);
+  }
+  for (const [badge, route, label] of [
+    ['saved-badge', 'home', profileCopy('Выбрать вузы', 'Университет таңдау', 'Explore universities')],
+    ['chat-badge', 'advisor', profileCopy('Задать вопрос', 'Сұрақ қою', 'Ask a question')],
+    ['tests-badge', 'career', profileCopy('Пройти тест', 'Тест тапсыру', 'Take a test')]
+  ]) {
+    const empty = document.getElementById(badge)?.closest('section')?.querySelector('.profile-empty');
+    if (!empty) continue;
+    const button = document.createElement('button');
+    button.type = 'button'; button.className = 'btn btn-ghost'; button.textContent = label;
+    button.addEventListener('click', () => navigate(route)); empty.append(button);
   }
 }
 
@@ -954,11 +1029,14 @@ async function renderAdmissionHistory() {
 }
 
 async function clearAdmissionHistory() {
+  if (document.getElementById('clear-history-sheet')) return;
   const overlay = document.createElement('div');
+  overlay.id = 'clear-history-sheet-overlay';
   overlay.className = 'sheet-overlay open';
   overlay.style.cssText = 'z-index:999;display:block;opacity:1;pointer-events:auto';
 
   const sheet = document.createElement('div');
+  sheet.id = 'clear-history-sheet';
   sheet.className = 'bottom-sheet open';
   sheet.style.cssText = 'z-index:1000;max-height:auto;border-radius:20px;bottom:auto;top:50%;left:50%;transform:translate(-50%,-50%);width:min(380px,90vw);padding:28px 24px;text-align:center';
   sheet.onclick = e => e.stopPropagation();
@@ -969,29 +1047,37 @@ async function clearAdmissionHistory() {
         <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
         <line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>
       </svg>
-      <div style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--text)">Очистить всю историю?</div>
+      <h2 id="clear-history-title" style="font-size:17px;font-weight:700;margin-bottom:6px;color:var(--text)">Очистить всю историю?</h2>
       <div style="font-size:13px;color:var(--text-muted)">Это действие нельзя отменить. Будут удалены все сохранённые расчёты.</div>
     </div>
     <div style="display:flex;gap:10px">
       <button class="btn btn-ghost" style="flex:1" id="cancel-clear-history">Отмена</button>
       <button class="btn" style="flex:1;background:var(--error,#ef4444);color:#fff;border-color:var(--error,#ef4444)" id="confirm-clear-history">Очистить</button>
-    </div>`;
+    </div><p id="clear-history-error" role="alert"></p>`;
 
   document.body.appendChild(overlay);
   document.body.appendChild(sheet);
 
-  const close = () => { sheet.remove(); overlay.remove(); };
+  const close = () => { sheet.remove(); overlay.remove(); window.syncSiteDialog?.(); };
+  sheet.closeDialog = close;
   overlay.onclick = close;
   sheet.querySelector('#cancel-clear-history').onclick = close;
+  document.body.style.overflow = 'hidden';
+  window.syncSiteDialog?.();
 
-  document.getElementById('confirm-clear-history').onclick = async () => {
-    sheet.remove();
-    overlay.remove();
+  document.getElementById('confirm-clear-history').onclick = async event => {
+    const confirmButton = event.currentTarget;
+    confirmButton.disabled = true;
+    sheet.querySelector('#clear-history-error').textContent = '';
     try {
       await Auth.clearAdmissionHistory();
+      close();
       showToast('История очищена', 'success');
       await renderAdmissionHistory();
-    } catch (e) { showToast(e.message, 'error'); }
+    } catch (e) {
+      if (sheet.isConnected) sheet.querySelector('#clear-history-error').textContent = e.message;
+      confirmButton.disabled = false;
+    }
   };
 }
 
@@ -1024,9 +1110,18 @@ async function deleteSavedUniversity(uniId, btn) {
     if (badge) {
       const n = parseInt(badge.textContent) - 1;
       badge.textContent = n;
+      const overviewCount = document.querySelector('.profile-overview-links button:first-child span');
+      if (overviewCount) overviewCount.textContent = Math.max(0, n);
       if (n <= 0) {
+        const overview = document.querySelector('.profile-overview');
+        if (overview) {
+          overview.querySelector('p').textContent = profileCopy('Начните с выбора вузов — сохраните подходящие варианты для сравнения.', 'Университеттерді таңдаудан бастаңыз — салыстыру үшін қолайлы нұсқаларды сақтаңыз.', 'Start by choosing universities and save the options you want to compare.');
+          const next = overview.querySelector('.profile-overview-actions button');
+          next.textContent = profileCopy('Выбрать вузы', 'Университет таңдау', 'Explore universities');
+          next.onclick = () => navigate('home');
+        }
         const grid = document.querySelector('.profile-saved-grid');
-        if (grid) grid.outerHTML = `<div class="profile-empty"><div class="profile-empty-icon"> </div>${t('profile_page.card_saved_empty') || 'Нет сохранённых вузов'}</div>`;
+        if (grid) grid.outerHTML = `<div class="profile-empty">${t('profile_page.card_saved_empty') || 'Нет сохранённых вузов'}<button type="button" class="btn btn-ghost" onclick="navigate('home')">${profileCopy('Выбрать вузы', 'Университет таңдау', 'Explore universities')}</button></div>`;
       }
     }
   } catch (e) {
@@ -1146,7 +1241,8 @@ function togglePW(btn) {
   const isPW = input.type === 'password';
   input.type = isPW ? 'text' : 'password';
   btn.textContent = isPW ? 'Скрыть' : 'Показать';
-  btn.setAttribute('aria-label', isPW ? t('profile_page.card_pw_hide') : t('profile_page.card_pw_show'));
+  const action = isPW ? t('profile_page.card_pw_hide') : t('profile_page.card_pw_show');
+  btn.setAttribute('aria-label', `${action}: ${input.labels?.[0]?.textContent || ''}`);
 }
 
 // Простая маска ввода для казахстанского номера: +7 (___) ___-__-__

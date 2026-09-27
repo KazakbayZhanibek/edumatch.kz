@@ -3,6 +3,7 @@ const root = document.getElementById('admin-root');
 const daysSelect = document.getElementById('admin-days');
 let activeAdminTab = 'overview';
 let reviewStatusFilter = 'all';
+let grantStatusFilter = '';
 let adminModal = null;
 
 async function api(path, options = {}) {
@@ -18,16 +19,45 @@ const date = value => value ? new Date(value).toLocaleDateString('ru-RU') : '—
 const dateFull = value => value ? new Date(value).toLocaleString('ru-RU') : '—';
 
 function showModal(title, content, onClose) {
-  if (adminModal) adminModal.remove();
+  if (adminModal) closeModal();
+  const opener = document.activeElement;
+  const background = document.querySelector('.admin-page');
+  const wasInert = background?.inert;
+  const previousOverflow = document.body.style.overflow;
   adminModal = document.createElement('div');
   adminModal.className = 'admin-modal-overlay';
-  adminModal.innerHTML = `<div class="admin-modal"><div class="admin-modal-header"><h3>${esc(title)}</h3><button class="admin-modal-close" id="modal-close">&times;</button></div><div class="admin-modal-body">${content}</div></div>`;
+  adminModal.innerHTML = `<div class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title" tabindex="-1"><div class="admin-modal-header"><h3 id="admin-modal-title">${esc(title)}</h3><button type="button" class="admin-modal-close" id="modal-close" aria-label="Закрыть">&times;</button></div><div class="admin-modal-body">${content}</div></div>`;
   document.body.appendChild(adminModal);
-  adminModal.querySelector('#modal-close').onclick = () => { adminModal.remove(); adminModal = null; if (onClose) onClose(); };
-  adminModal.onclick = e => { if (e.target === adminModal) { adminModal.remove(); adminModal = null; if (onClose) onClose(); } };
+  const overlay = adminModal;
+  if (background) background.inert = true;
+  document.body.style.overflow = 'hidden';
+  overlay.restore = () => {
+    if (background) background.inert = wasInert;
+    document.body.style.overflow = previousOverflow;
+    if (opener?.isConnected) opener.focus();
+    if (onClose) onClose();
+  };
+  overlay.querySelector('#modal-close').onclick = closeModal;
+  overlay.onclick = e => { if (e.target === overlay) closeModal(); };
+  overlay.onkeydown = e => {
+    if (e.key === 'Escape') { e.preventDefault(); closeModal(); return; }
+    if (e.key !== 'Tab') return;
+    const controls = [...overlay.querySelectorAll('button,input,select,textarea,a[href],[tabindex="0"]')].filter(el => !el.disabled && el.getClientRects().length);
+    const first = controls[0], last = controls.at(-1);
+    if (!first) { e.preventDefault(); overlay.querySelector('[role="dialog"]').focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
+  overlay.querySelector('#modal-close').focus();
 }
 
-function closeModal() { if (adminModal) { adminModal.remove(); adminModal = null; } }
+function closeModal() {
+  if (!adminModal) return;
+  const modal = adminModal;
+  adminModal = null;
+  modal.remove();
+  modal.restore?.();
+}
 
 function showToast(msg, type = 'success') {
   const t = document.createElement('div');
@@ -178,13 +208,13 @@ async function loadAdmin() {
 
       <section class="admin-section" data-admin-section="grantsAdmin">
         <div class="admin-block">
-          <div class="admin-section-header"><h2>Гранты (${grantsAdmin.length})</h2>
+          <div class="admin-section-header"><h2>Гранты (${grants.length})</h2>
             <div style="display:flex;gap:6px">
               <select id="admin-grant-status" class="admin-status-select"><option value="">Все статусы</option><option value="needs_review">Требует проверки</option><option value="verified">Проверено</option><option value="expired">Истёк</option></select>
             </div>
           </div>
           <div class="admin-table-wrap"><table><thead><tr><th>ID</th><th>Название</th><th>Вуз</th><th>Тип</th><th>Покрытие</th><th>Дедлайн</th><th>Статус</th><th>Действия</th></tr></thead><tbody>
-          ${grantsAdmin.map(g => {
+          ${grants.map(g => {
             const statusBadge = g.verification_status === 'verified'
               ? '<span class="admin-badge admin-badge-green">ПРОВЕРЕНО</span>'
               : g.verification_status === 'expired'
@@ -192,7 +222,7 @@ async function loadAdmin() {
                 : '<span class="admin-badge admin-badge-yellow">ТРЕБУЕТ ПРОВЕРКИ</span>';
             const typeLabels = { government:'Гос.', university:'Вуз', corporate:'Корп.', regional:'Рег.', foundation:'Фонд', international:'Межд.', discount:'Скидка' };
             const coverageLabels = { full:'100%', partial:'Частичн.', tuition_only:'Учёба', tuition_dorm:'Учёба+общ.', stipend_only:'Стип.', unknown:'?' };
-            return `<tr>
+            return `<tr data-grant-status="${esc(g.verification_status || 'needs_review')}">
               <td>${g.id}</td>
               <td>${esc(g.name)}</td>
               <td>${esc(g.uni_short_name || '—')}</td>
@@ -212,7 +242,6 @@ async function loadAdmin() {
       </section>`;
 
     const reviewSection = root.querySelector('[data-admin-section="reviews"] .admin-block');
-    root.insertAdjacentHTML('beforeend', '<section class="admin-section" data-admin-section="verification"><div class="admin-block" id="verification-admin"></div></section>');
     if (typeof Verification !== 'undefined') Verification.admin();
 
     const reviewStatusSelect = document.getElementById('admin-review-status');
@@ -220,6 +249,14 @@ async function loadAdmin() {
       reviewStatusSelect.value = reviewStatusFilter;
       reviewStatusSelect.addEventListener('change', () => {
         reviewStatusFilter = reviewStatusSelect.value;
+        filterAdminRows(document.getElementById('admin-search').value);
+      });
+    }
+    const grantStatusSelect = document.getElementById('admin-grant-status');
+    if (grantStatusSelect) {
+      grantStatusSelect.value = grantStatusFilter;
+      grantStatusSelect.addEventListener('change', () => {
+        grantStatusFilter = grantStatusSelect.value;
         filterAdminRows(document.getElementById('admin-search').value);
       });
     }
@@ -575,7 +612,8 @@ function filterAdminRows(value) {
   const query = value.trim().toLowerCase();
   document.querySelectorAll('.admin-section.active .admin-row, .admin-section.active tbody tr, .admin-section.active .admin-review-item').forEach(row => {
     const matchesStatus = !row.dataset.reviewStatus || reviewStatusFilter === 'all' || row.dataset.reviewStatus === reviewStatusFilter;
-    row.style.display = matchesStatus && (!query || row.textContent.toLowerCase().includes(query)) ? '' : 'none';
+    const matchesGrantStatus = !row.dataset.grantStatus || !grantStatusFilter || row.dataset.grantStatus === grantStatusFilter;
+    row.style.display = matchesStatus && matchesGrantStatus && (!query || row.textContent.toLowerCase().includes(query)) ? '' : 'none';
   });
 }
 

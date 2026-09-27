@@ -17,10 +17,12 @@ const state = window.state = {
   currentPage: 'home',
   currentParam: null,
   pageHistory: [],
+  historyIndex: 0,
   skipPageHistory: false,
   chatReplyDraft: null,
   trackerServerLoaded: false,
 };
+let chatSessionGeneration = 0, advisorInitialMarkup = null;
 
 function saveSessionChatHistory() {
   try {
@@ -47,6 +49,7 @@ async function hydrateAdvisorChatHistory() {
 
   const msgs = document.getElementById('chat-messages');
   if (msgs) {
+    if (advisorInitialMarkup === null) advisorInitialMarkup = msgs.innerHTML;
     if (state.chatHistory.length > 0) {
       const existingWelcome = msgs.querySelector('.chat-welcome');
       if (existingWelcome) existingWelcome.remove();
@@ -158,8 +161,7 @@ async function handleTrackerAdd(universityId, universityName) {
   }
   showToast(universityName + ' добавлен в трекер');
   document.querySelectorAll(`.tracker-add-btn`).forEach(btn => {
-    const onclickStr = btn.getAttribute('onclick') || '';
-    if (onclickStr.includes(universityId)) {
+    if (Number(btn.dataset.trackerId) === Number(universityId)) {
       btn.classList.add('added');
       btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ${t('tracker.added') || 'В трекере'}`;
     }
@@ -211,7 +213,10 @@ async function toggleFavorite(id) {
   }
 
   const btn = document.querySelector(`[data-favorite-btn="${id}"]`);
-  if (btn) btn.classList.toggle('favorited', state.favoriteList.includes(id));
+  if (btn) {
+    btn.classList.toggle('favorited', state.favoriteList.includes(id));
+    btn.setAttribute('aria-pressed', String(state.favoriteList.includes(id)));
+  }
 
   const isFav = state.favoriteList.includes(id);
   if (isFav && !wasFav) showToast(t('toast.added_fav'), 'success');
@@ -243,21 +248,30 @@ function updateBackButton() {
 }
 
 function navigateBack() {
-  history.back();
+  if (state.historyIndex > 0) history.back();
+  else {
+    navigate('home', null, false);
+    history.replaceState({page:'home',param:null,appIndex:0}, '', '#home');
+  }
+}
+
+function updateResponsiveShell() {
+  const mobile = window.matchMedia('(max-width: 768px)').matches;
+  document.body.classList.toggle('chat-page-active', state.currentPage === 'advisor' && mobile);
+  document.body.classList.toggle('desktop-mode', !mobile);
 }
 
 function navigate(page, param, pushBrowserHistory) {
-  const isMobile = window.innerWidth <= 768;
-
-  if (!state.skipPageHistory && (state.currentPage !== page || state.currentParam !== param)) {
-    state.pageHistory.push({ page: state.currentPage, param: state.currentParam });
-    if (state.pageHistory.length > 20) state.pageHistory.shift();
-  }
-  state.skipPageHistory = false;
-
-  if (pushBrowserHistory !== false) {
+  if (!document.getElementById('page-' + page) || (page === 'university' && !/^\d+$/.test(String(param)))) { page = '404'; param = null; }
+  param = page === 'university' ? String(param) : null;
+  const changed = state.currentPage !== page || state.currentParam !== param;
+  if (changed && state.currentPage === 'admission' && page !== 'admission') invalidateAdmissionResult();
+  if (pushBrowserHistory !== false && changed) {
+    state.historyIndex++;
     const url = param ? `#${page}/${param}` : `#${page}`;
-    history.pushState({ page, param: param || null }, '', url);
+    history.pushState({ page, param, appIndex: state.historyIndex }, '', url);
+  } else if (pushBrowserHistory !== false && !changed) {
+    return;
   }
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -268,8 +282,7 @@ function navigate(page, param, pushBrowserHistory) {
   window.scrollTo(0, 0);
 
   // Mobile advisor mode only when the user actually opens the advisor page
-  document.body.classList.toggle('chat-page-active', page === 'advisor' && isMobile);
-  document.body.classList.toggle('desktop-mode', !isMobile);
+  updateResponsiveShell();
   updateStickyCompare();
 
   if (page === 'home') {
@@ -307,10 +320,13 @@ function navigate(page, param, pushBrowserHistory) {
     document.getElementById('page-advisor').classList.add('active');
     activateNavLink('advisor');
     hydrateAdvisorChatHistory();
+  } else if (page === 'planner') {
+    document.getElementById('page-planner').classList.add('active');
+    activateNavLink('planner');
   } else if (page === 'career') {
     document.getElementById('page-career').classList.add('active');
     activateNavLink('career');
-    initCareerTest();
+    if (!careerState.answers.length) initCareerTest();
   } else if (page === 'login') {
     document.getElementById('page-login').classList.add('active');
   } else if (page === 'register') {
@@ -322,7 +338,10 @@ function navigate(page, param, pushBrowserHistory) {
     document.getElementById('page-admission').classList.add('active');
     activateNavLink('admission');
     initAdmissionPage();
+  } else if (page === '404') {
+    document.getElementById('page-404').classList.add('active');
   }
+  window.dispatchEvent(new Event('edumatch-route-changed'));
 }
 
 
@@ -371,17 +390,17 @@ function applyTranslations() {
     { selector: '.nav-links .nav-link:nth-child(1)', path: 'nav.universities' },
     { selector: '.nav-links .nav-link:nth-child(2)', path: 'nav.comparison' },
     { selector: '.nav-links .nav-link:nth-child(3)', path: 'nav.advisor' },
-    { selector: '.nav-links .nav-link:nth-child(4)', path: 'nav.admission' },
-    { selector: '.nav-links .nav-link:nth-child(5)', path: 'nav.career' },
-    { selector: '.nav-links .nav-link:nth-child(6)', path: 'nav.grants' },
-    { selector: '.nav-links .nav-link:nth-child(7)', path: 'nav.map' },
-    { selector: '.nav-links .nav-link:nth-child(8)', path: 'nav.tips' },
+    { selector: '.nav-links .nav-link:nth-child(4)', path: 'nav.planner' },
+    { selector: '.nav-links .nav-link:nth-child(5)', path: 'nav.admission' },
+    { selector: '.nav-links .nav-link:nth-child(6)', path: 'nav.career' },
+    { selector: '.nav-links .nav-link:nth-child(7)', path: 'nav.grants' },
+    { selector: '.nav-links .nav-link:nth-child(8)', path: 'nav.map' },
+    { selector: '.nav-links .nav-link:nth-child(9)', path: 'nav.tips' },
     
     // Мобильное меню
     { selector: '.mobile-menu-title', path: 'menu.title' },
     
     // Главная страница
-    { selector: '.hero-title .desktop-copy', path: 'home.hero_title' },
     { selector: '.hero-subtitle', path: 'home.hero_sub' },
     
     // Кнопки на главной странице
@@ -426,9 +445,18 @@ function getNestedTranslation(obj, path) {
 }
 
 // ─── UNIVERSITIES ────────────────────────────
+let universityRequest = 0, universityController, filterTimer;
 async function loadUniversities() {
+  renderActiveCatalogFilters();
+  const request = ++universityRequest;
+  universityController?.abort();
+  universityController = new AbortController();
+  const controller=universityController,timeout=setTimeout(()=>controller.abort(),15000);
   startProgress();
   const grid = document.getElementById('uni-grid');
+  grid.setAttribute('aria-busy', 'true');
+  const resultStatus = document.getElementById('university-results-status');
+  if (resultStatus) resultStatus.textContent = catalogText('Загружаем университеты…', 'Университеттер жүктелуде…', 'Loading universities…');
   const isMobile = window.innerWidth <= 768;
   grid.innerHTML = renderSkeletonGrid(isMobile ? 3 : 6);
 
@@ -449,8 +477,10 @@ async function loadUniversities() {
     if (lang) params.set('language', lang);
     params.set('lang', window.currentLanguage || 'ru');
 
-    const res = await fetch(`${API}/universities?${params}`);
+    const res = await fetch(`${API}/universities?${params}`, {signal: universityController.signal});
+    if (!res.ok) throw new Error('University request failed');
     let unis = await res.json();
+    if (request !== universityRequest) return;
     if (!Array.isArray(unis)) throw new Error('Invalid response');
 
     // Client-side search filter
@@ -471,8 +501,13 @@ async function loadUniversities() {
     // Refresh AOS for new cards
     setTimeout(() => { if (typeof AOS !== 'undefined') AOS.refresh(); }, 100);
   } catch (e) {
+    if (request !== universityRequest) return;
     stopProgress();
-    grid.innerHTML = `<div class="loading-state"><p style="color:var(--red)">${t('error.load_server')}</p><button class="btn btn-outline" onclick="loadUniversities()">${t('error.retry')}</button></div>`;
+    if (resultStatus) resultStatus.textContent = '';
+    grid.innerHTML = `<div class="loading-state catalog-recovery" role="status"><p style="color:var(--red)">${t('error.load_server')}</p><button class="btn btn-outline" onclick="loadUniversities()">${t('error.retry')}</button></div>`;
+  } finally {
+    clearTimeout(timeout);
+    if (request === universityRequest) grid.removeAttribute('aria-busy');
   }
 }
 
@@ -555,8 +590,10 @@ async function loadCities() {
 
 function renderUniversityGrid(unis) {
   const grid = document.getElementById('uni-grid');
+  const count=document.getElementById('university-results-status');
+  if(count)count.textContent=(window.currentLanguage==='kk'?'Табылды: ':window.currentLanguage==='en'?'Found: ':'Найдено: ')+unis.length;
   if (!unis.length) {
-    grid.innerHTML = `<div class="loading-state"><p>${t('error.no_unis_found')}</p></div>`;
+    grid.innerHTML = `<div class="loading-state" role="status"><p>${t('error.no_unis_found')}</p><button class="btn btn-outline" onclick="resetFilters()">${t('filters.reset')}</button></div>`;
     return;
   }
 
@@ -587,7 +624,7 @@ function showMoreUniversities() {
  */
 function renderSkeletonCard() {
   return `
-    <div class="skeleton-card">
+    <div class="skeleton-card" aria-hidden="true">
       <div class="sk-head">
         <div class="sk-badge"></div>
         <div class="sk-rank"></div>
@@ -619,7 +656,7 @@ function renderUniversityCard(u) {
   const isSelected = state.compareList.includes(u.id);
   const isFav = isFavorited(u.id);
   const websiteUrl = normalizeWebsiteUrl(u.website);
-  const specialties = u.specialties || [];
+  const specialties = Array.isArray(u.specialties) ? u.specialties : [];
   const shown = specialties.slice(0, 4);
   const rest = specialties.length - 4;
 
@@ -630,18 +667,18 @@ function renderUniversityCard(u) {
       : '';
 
   const specTags = shown.map(s =>
-    `<span class="specialty-tag">${trRu(s.name)}</span>`
+    `<span class="specialty-tag">${escapeHtml(trRu(typeof s === 'string' ? s : s.name || s.category || ''))}</span>`
   ).join('') + (rest > 0 ? `<span class="specialty-tag specialty-tag-more">+${rest}</span>` : '');
 
   const contactLine = (u.admission_phone || u.admission_email) ? `
     <div class="uni-contact-row">
-      ${u.admission_phone ? `<a href="tel:${u.admission_phone.split('\n')[0].replace(/[\s\-\(\)]/g,'')}" class="uni-contact-item" onclick="event.stopPropagation()">
+      ${u.admission_phone ? `<a href="tel:${escapeHtml(u.admission_phone.split('\n')[0].replace(/[\s\-\(\)]/g,''))}" class="uni-contact-item" onclick="event.stopPropagation()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-        ${u.admission_phone.split('\n')[0]}
+        ${escapeHtml(u.admission_phone.split('\n')[0])}
       </a>` : ''}
-      ${u.admission_email ? `<a href="mailto:${u.admission_email}" class="uni-contact-item" onclick="event.stopPropagation()">
+      ${u.admission_email ? `<a href="mailto:${escapeHtml(u.admission_email)}" class="uni-contact-item" onclick="event.stopPropagation()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-        ${u.admission_email}
+        ${escapeHtml(u.admission_email)}
       </a>` : ''}
     </div>
   ` : '';
@@ -650,45 +687,112 @@ function renderUniversityCard(u) {
     <div class="uni-card" id="card-${u.id}">
       <div class="uni-card-header-actions">
         <div class="uni-card-header">
-          <span class="uni-short-name">${trRu(u.short_name) || trRu(u.name).split(' ')[0]}</span>
+          <span class="uni-short-name">${escapeHtml(trRu(u.short_name) || trRu(u.name).split(' ')[0])}</span>
           ${qs}
         </div>
-        <button class="btn-favorite ${isFav ? 'favorited' : ''}" data-favorite-btn="${u.id}" onclick="toggleFavorite(${u.id}); event.stopPropagation();" title="${t('card.add_fav')}">
+        <button class="btn-favorite ${isFav ? 'favorited' : ''}" aria-pressed="${isFav}" aria-label="${t('card.add_fav')}" data-favorite-btn="${u.id}" onclick="toggleFavorite(${u.id}); event.stopPropagation();" title="${t('card.add_fav')}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         </button>
       </div>
-      <div class="uni-name">${trRu(u.name)}</div>
+      <h3 class="uni-name">${escapeHtml(trRu(u.name))}</h3>
+      ${u.city_name ? `<p class="uni-city">${escapeHtml(trRu(u.city_name))}</p>` : ''}
       ${u.data_status === 'pending' ? `<div class="uni-data-pending">${t('card.data_pending') || 'Данные уточняются'}</div>` : ''}
-      <div class="uni-description">${u.description || ''}</div>
+      ${specTags ? `<div class="uni-specialties">${specTags}</div>` : ''}
       <div class="uni-price-row">
         ${u.is_free
           ? `<span class="price-from" style="color:#16a34a;font-weight:700">${t('card.free') || 'Бесплатно'}</span>`
           : `<span class="price-label">${t('card.from')}</span>
              <span class="price-from">${fmtPrice(u.price_from)}</span>
-             <span class="price-to"> — ${fmtPrice(u.price_to)}</span>
+             ${Number(u.price_to) > 0 ? `<span class="price-to"> — ${fmtPrice(u.price_to)}</span>` : ''}
              <span class="price-period">${t('card.tenge_year')}</span>`
         }
       </div>
       ${u.address ? `<div class="uni-address">${escapeHtml(u.address)}</div>` : ''}
       ${contactLine}
-      <div class="uni-specialties">${specTags}</div>
       <div class="uni-card-actions">
-        <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" onclick="toggleCompare(${u.id}, event)" title="${isSelected ? t('card.in_compare') : t('card.compare_add')}" aria-label="${isSelected ? t('card.in_compare') : t('card.compare_add')}">
+        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})" title="${t('card.details')}" aria-label="${t('card.details')}"><span>${t('card.details')}</span><svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
+        <button class="btn btn-sm btn-compare ${isSelected ? 'selected' : ''}" aria-pressed="${isSelected}" onclick="toggleCompare(${u.id}, event)" title="${isSelected ? t('card.in_compare') : t('card.compare_add')}" aria-label="${isSelected ? t('card.in_compare') : t('card.compare_add')}">
           <svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${isSelected ? '<path d="m5 12 4 4L19 6"/>' : '<path d="M12 5v14M5 12h14"/>'}</svg>
           <span>${isSelected ? t('card.in_compare') : t('card.compare_add')}</span>
         </button>
-        ${websiteUrl ? `<a href="${websiteUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()"><svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span>${t('card.website')}</span></a>` : ''}
-        <button class="btn btn-sm btn-detail" onclick="navigate('university', ${u.id})" title="${t('card.details')}" aria-label="${t('card.details')}"><span>${t('card.details')}</span><svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg></button>
+        ${websiteUrl ? `<a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()"><svg class="card-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg><span>${t('card.website')}</span></a>` : ''}
+
       </div>
     </div>
   `;
 }
 
+function catalogText(ru, kk, en) {
+  return window.currentLanguage === 'en' ? en : window.currentLanguage === 'kk' ? kk : ru;
+}
+
+function renderActiveCatalogFilters() {
+  const anchor = document.getElementById('university-results-status') || document.getElementById('uni-grid');
+  if (!anchor) return;
+  let region = document.getElementById('active-catalog-filters');
+  if (!region) {
+    region = document.createElement('div');
+    region.id = 'active-catalog-filters';
+    region.className = 'active-catalog-filters';
+    region.setAttribute('role', 'group');
+    anchor.before(region);
+  }
+  region.setAttribute('aria-label', catalogText('Выбранные условия', 'Таңдалған шарттар', 'Selected criteria'));
+  region.replaceChildren();
+  const entries = ['search-input', 'filter-top', 'filter-city', 'filter-specialty', 'filter-price', 'filter-language', 'filter-sort'];
+  let count = 0;
+  entries.forEach(id => {
+    const control = document.getElementById(id);
+    const value = control?.value.trim();
+    if (!value || (id === 'filter-sort' && value === 'qs_world')) return;
+    count++;
+    const label = id === 'search-input' ? catalogText('Поиск: ', 'Іздеу: ', 'Search: ') + value :
+      (id === 'filter-sort' ? catalogText('Порядок: ', 'Реті: ', 'Order: ') : '') + (control.selectedOptions?.[0]?.textContent || value);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'catalog-filter-chip';
+    button.textContent = label;
+    button.setAttribute('aria-label', catalogText('Убрать: ', 'Алып тастау: ', 'Remove: ') + label);
+    const icon = document.createElement('span');
+    icon.className = 'catalog-filter-remove';
+    icon.setAttribute('aria-hidden', 'true');
+    button.append(icon);
+    button.addEventListener('click', () => {
+      control.value = id === 'filter-sort' ? 'qs_world' : '';
+      const sheet = document.getElementById(id.replace('filter-', 'sheet-'));
+      if (sheet && sheet !== control) sheet.value = control.value;
+      clearTimeout(filterTimer);
+      loadUniversities();
+      (region.querySelector('button') || document.getElementById('search-input'))?.focus();
+    });
+    region.append(button);
+  });
+  if (count) {
+    const clear = document.createElement('button');
+    clear.type = 'button';
+    clear.className = 'catalog-filter-clear';
+    clear.textContent = catalogText('Сбросить всё', 'Барлығын тазалау', 'Clear all');
+    clear.addEventListener('click', () => { resetFilters(); document.getElementById('search-input')?.focus(); });
+    region.append(clear);
+  }
+  region.hidden = count === 0;
+  document.querySelectorAll('.filter-sheet-btn').forEach(button => {
+    let badge = button.querySelector('.catalog-filter-count');
+    if (!badge) { badge = document.createElement('span'); badge.className = 'catalog-filter-count'; button.append(badge); }
+    badge.textContent = String(count);
+    badge.hidden = count === 0;
+    button.setAttribute('aria-label', catalogText('Фильтры', 'Сүзгілер', 'Filters') + (count ? ` (${count})` : ''));
+  });
+}
+
 function applyFilters() {
-  loadUniversities();
+  renderActiveCatalogFilters();
+  clearTimeout(filterTimer);
+  filterTimer = setTimeout(loadUniversities, 250);
 }
 
 function resetFilters() {
+  clearTimeout(filterTimer);
   const filterPairs = [
     ['filter-top', 'sheet-top'],
     ['filter-city', 'sheet-city'],
@@ -725,11 +829,16 @@ function toggleCompare(id, event) {
   }
 
   updateCompareBadge();
-  // Re-render affected card
-  const uni = state.universities.find(u => u.id === id);
-  if (uni) {
-    const card = document.getElementById(`card-${id}`);
-    if (card) card.outerHTML = renderUniversityCard(uni);
+  // Keep the focused control in place when changing selection.
+  const button = document.querySelector(`#card-${id} .btn-compare`);
+  if (button) {
+    const selected = state.compareList.includes(id), label = selected ? t('card.in_compare') : t('card.compare_add');
+    button.classList.toggle('selected', selected);
+    button.setAttribute('aria-pressed', String(selected));
+    button.setAttribute('aria-label', label);
+    button.title = label;
+    button.querySelector('span').textContent = label;
+    button.querySelector('svg').innerHTML = selected ? '<path d="m5 12 4 4L19 6"/>' : '<path d="M12 5v14M5 12h14"/>';
   }
 }
 
@@ -748,7 +857,10 @@ function updateCompareBadge() {
   updateStickyCompare();
 }
 
+let compareRequest = 0;
 async function renderComparePage() {
+  const request = ++compareRequest;
+  const selectedIds = state.compareList.join(',');
   const content = document.getElementById('compare-content');
 
   if (state.compareList.length < 2) {
@@ -766,16 +878,20 @@ async function renderComparePage() {
   content.innerHTML = `<div class="loading-state"><div class="spinner"></div></div>`;
 
   try {
-    const res = await fetch(`${API}/compare?ids=${state.compareList.join(',')}&lang=${window.currentLanguage || 'ru'}`);
+    const res = await Auth.fetch(`/compare?ids=${selectedIds}&lang=${window.currentLanguage || 'ru'}`);
+    if (!res.ok) throw new Error('Comparison unavailable');
     const unis = await res.json();
+    if (request !== compareRequest || selectedIds !== state.compareList.join(',')) return;
+    if (!Array.isArray(unis)) throw new Error('Invalid comparison response');
     renderCompareTable(unis, content);
   } catch (e) {
-    content.innerHTML = `<div class="loading-state"><p style="color:var(--red)">${t('error.load_error')}</p></div>`;
+    if (request !== compareRequest || selectedIds !== state.compareList.join(',')) return;
+    content.innerHTML = `<div class="loading-state" role="alert"><p style="color:var(--red)">${t('error.load_error')}</p><button class="btn btn-outline" onclick="renderComparePage()">${t('error.retry')}</button></div>`;
   }
 }
 
 function renderCompareTable(unis, container) {
-  const minPrice = Math.min(...unis.map(u => u.price_from));
+  const minPrice = Math.min(...unis.map(u => Number(u.price_from)).filter(v=>v>0));
   const bestQs = Math.min(...unis.map(u => u.qs_world || 9999));
 
   const rows = [
@@ -787,26 +903,26 @@ function renderCompareTable(unis, container) {
     { label: 'QS Asia', key: u => u.qs_asia ? `#${u.qs_asia}` : '—' },
     { label: t('compare_page.min_price_year'), key: u => fmtPrice(u.price_from) + ' ' + t('common.tenge'), isPrice: true, best: minPrice },
     { label: t('compare_page.max_price_year'), key: u => fmtPrice(u.price_to) + ' ' + t('common.tenge') },
-    { label: t('compare_page.price_4yr'), key: u => fmtPrice(u.price_from * 4) + ' ' + t('common.tenge') },
+    { label: t('compare_page.price_4yr'), key: u => u.price_from>0 ? fmtPrice(u.price_from * 4) + ' ' + t('common.tenge') : t('uni_detail_page.not_specified') },
     { label: t('compare_page.specialties_count'), key: u => (u.specialties || []).length },
-    { label: t('compare_page.website_label'), key: u => {
+    { label: t('compare_page.website_label'), html: true, key: u => {
       const href = normalizeWebsiteUrl(u.website);
       return href
-        ? `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${formatWebsiteLabel(u.website)}</a>`
+        ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">${escapeHtml(formatWebsiteLabel(u.website))}</a>`
         : '—';
     }},
   ];
 
-  const headers = unis.map(u => `<th><div class="compare-uni-head">${trRu(u.name)}</div></th>`).join('');
+  const headers = unis.map(u => `<th scope="col"><div class="compare-uni-head">${escapeHtml(trRu(u.name))}</div></th>`).join('');
   const trs = rows.map(row => {
     const cells = unis.map(u => {
       const val = row.key(u);
       let cls = '';
       if (row.isPrice && u.price_from === row.best) cls = 'compare-best';
       if (row.isQs && u.qs_world === bestQs) cls = 'compare-best';
-      return `<td class="${cls}">${val}</td>`;
+      return `<td class="${cls}">${row.html ? val : escapeHtml(String(val))}</td>`;
     }).join('');
-    return `<tr><td>${row.label}</td>${cells}</tr>`;
+    return `<tr><th scope="row">${row.label}</th>${cells}</tr>`;
   }).join('');
 
   container.innerHTML = `
@@ -822,12 +938,16 @@ function renderCompareTable(unis, container) {
       </table>
     </div>
     <div style="margin-top:24px;padding:20px;background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius-md)">
-      <p style="font-size:13px;color:var(--text-secondary)"><strong style="color:var(--accent)">${t('compare_page.finance_advice')}</strong> ${t('compare_page.price_diff')} <strong style="color:var(--text)">${fmtPrice((Math.max(...unis.map(u=>u.price_to)) - Math.min(...unis.map(u=>u.price_from))) * 4)} ${t('common.tenge')}</strong>. ${t('compare_page.budget_tip')}</p>
+      <p style="font-size:14px;color:var(--text-secondary)">${t('compare_page.budget_tip')}</p>
     </div>`;
 }
 
 function clearCompare() {
   state.compareList = [];
+  document.querySelectorAll('[data-detail-compare]').forEach(button => {
+    button.setAttribute('aria-pressed', 'false');
+    button.textContent = t('uni_detail_page.add_compare');
+  });
   updateCompareBadge();
   updateStickyCompare();
   if (state.universities.length) renderUniversityGrid(state.universities);
@@ -835,15 +955,21 @@ function clearCompare() {
 }
 
 // ─── UNIVERSITY DETAIL ───────────────────────
+let detailRequest=0;
 async function loadUniversityDetail(id) {
+  const request=++detailRequest;
   const content = document.getElementById('uni-detail-content');
   content.innerHTML = `<div class="loading-state"><div class="spinner"></div></div>`;
 
   try {
     const res = await fetch(`${API}/universities/${id}?lang=${window.currentLanguage || 'ru'}`);
+    if (!res.ok) throw new Error('University unavailable');
     const u = await res.json();
+    if(request!==detailRequest)return;
     renderUniversityDetail(u, content);
+    if(state.currentPage==='university')window.dispatchEvent(new Event('edumatch-route-changed'));
   } catch (e) {
+    if(request!==detailRequest)return;
     content.innerHTML = `<div class="loading-state"><p style="color:var(--red)">${t('error.load_error')}</p><button class="btn btn-outline" onclick="navigate('home')">${t('error.go_home')}</button></div>`;
   }
 }
@@ -873,8 +999,8 @@ function renderUniversityDetail(u, container) {
     byCategory[s.category].push(s.name);
   });
 
-  const qs4 = u.price_from * 4;
-  const qsMax4 = u.price_to * 4;
+  const qs4 = u.price_from>0 ? u.price_from * 4 : null;
+  const qsMax4 = u.price_to>0 ? u.price_to * 4 : null;
 
   const qsBadge = u.qs_world
     ? `<span class="detail-badge badge-qs">QS World #${u.qs_world}</span>`
@@ -884,8 +1010,8 @@ function renderUniversityDetail(u, container) {
 
   const specCats = Object.entries(byCategory).map(([cat, names]) => `
     <div>
-      <div class="spec-category-name">${trRu(cat)}</div>
-      <div class="spec-tags">${names.map(n => `<span class="spec-tag" onclick="showProfessionAnalysis('${n.replace(/'/g, "\\'")}')">${trRu(n)}</span>`).join('')}</div>
+      <div class="spec-category-name">${escapeHtml(trRu(cat))}</div>
+      <div class="spec-tags">${names.map(n => `<button type="button" class="spec-tag" data-profession="${escapeHtml(n)}" onclick="showProfessionAnalysis(this.dataset.profession)">${escapeHtml(trRu(n))}</button>`).join('')}</div>
     </div>
   `).join('');
 
@@ -897,7 +1023,7 @@ function renderUniversityDetail(u, container) {
   const languagesHTML = languages.length ? `
     <div class="info-block">
       <div class="info-block-title">${getSVGIcon('globe')} ${t('uni_detail_page.languages')}</div>
-      <div class="tags-list">${languages.map(lang => `<span class="tag-pill">${lang}</span>`).join('')}</div>
+      <div class="tags-list">${languages.map(lang => `<span class="tag-pill">${escapeHtml(({ru:t('filters.lang_ru'),kk:t('filters.lang_kk'),en:t('filters.lang_en')})[lang]||lang)}</span>`).join('')}</div>
     </div>
   ` : '';
 
@@ -905,7 +1031,7 @@ function renderUniversityDetail(u, container) {
   const accreditationsHTML = accreditations.length ? `
     <div class="info-block">
       <div class="info-block-title">${getSVGIcon('checkmark')} ${t('uni_detail_page.accreditations')}</div>
-      <div class="tags-list">${accreditations.map(acc => `<span class="tag-pill">${acc}</span>`).join('')}</div>
+      <div class="tags-list">${accreditations.map(acc => `<span class="tag-pill">${escapeHtml(acc)}</span>`).join('')}</div>
     </div>
   ` : '';
 
@@ -928,7 +1054,7 @@ function renderUniversityDetail(u, container) {
         ` : `
           <div class="info-row">
             <span>${t('uni_detail_page.available')}</span>
-            <span style="color: #999;">${t('uni_detail_page.no')}</span>
+            <span style="color:var(--text-secondary)">${u.has_dorm===0||u.has_dorm===false?t('uni_detail_page.no'):t('uni_detail_page.not_specified')}</span>
           </div>
         `}
       </div>
@@ -965,12 +1091,7 @@ function renderUniversityDetail(u, container) {
         <div style="color: var(--text-secondary);">
           ${t('uni_detail_page.fin_programs')}
         </div>
-        <ul class="grants-list">
-          <li>${t('uni_detail_page.gov_grants')}</li>
-          <li>${t('uni_detail_page.named_scholarships')}</li>
-          <li>${t('uni_detail_page.bolashak')}</li>
-          <li>${t('uni_detail_page.corp_grants')}</li>
-        </ul>
+        <button class="btn btn-ghost" onclick="navigate('grants')">${t('menu.grants')}</button>
       </div>
     </div>
   ` : '';
@@ -986,19 +1107,19 @@ function renderUniversityDetail(u, container) {
         ${u.admission_phone ? u.admission_phone.split('\n').map((ph, i) => `
           <div class="info-row info-contact-row">
             ${i === 0 ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>` : '<span style="width:14px;display:inline-block"></span>'}
-            <a href="tel:${ph.replace(/[\s\-\(\)]/g,'')}" style="color: var(--primary)">${ph}</a>
+            <a href="tel:${escapeHtml(ph.replace(/[\s\-\(\)]/g,''))}" style="color: var(--primary)">${escapeHtml(ph)}</a>
           </div>
         `).join('') : `<div style="color: #999;">${t('uni_detail_page.no_contacts')}</div>`}
         ${u.admission_email ? `
           <div class="info-row info-contact-row">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-            <a href="mailto:${u.admission_email}" style="color: var(--primary)">${u.admission_email}</a>
+            <a href="mailto:${escapeHtml(u.admission_email)}" style="color: var(--primary)">${escapeHtml(u.admission_email)}</a>
           </div>
         ` : ''}
         ${u.admission_whatsapp ? `
           <div class="info-row info-contact-row">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            <a href="https://wa.me/${u.admission_whatsapp.replace(/\D/g, '')}" target="_blank" style="color: var(--primary)">${u.admission_whatsapp}</a>
+            <a href="https://wa.me/${u.admission_whatsapp.replace(/\D/g, '')}" target="_blank" style="color: var(--primary)">${escapeHtml(u.admission_whatsapp)}</a>
           </div>
         ` : ''}
       </div>
@@ -1011,17 +1132,17 @@ function renderUniversityDetail(u, container) {
         <div>
           <div class="detail-badges">
             ${qsBadge}
-            <span class="detail-badge badge-city">${trRu(u.city_name) || '—'}</span>
+            <span class="detail-badge badge-city">${escapeHtml(trRu(u.city_name) || '—')}</span>
             ${u.founded ? `<span class="detail-badge badge-city">${t('compare_page.founded')} ${u.founded}</span>` : ''}
           </div>
-          <h1 class="detail-title">${trRu(u.name)}</h1>
-          <div class="detail-short">${trRu(u.short_name) || ''}</div>
-          <p class="detail-desc">${u.description || ''}</p>
+          <h1 class="detail-title">${escapeHtml(trRu(u.name))}</h1>
+          <div class="detail-short">${escapeHtml(trRu(u.short_name) || '')}</div>
           <div class="detail-actions">
-            ${normalizeWebsiteUrl(u.website) ? `<a href="${normalizeWebsiteUrl(u.website)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">${t('uni_detail_page.official_site')}</a>` : ''}
-            <button class="btn btn-ghost" onclick="addToCompareAndGo(${u.id})">${t('uni_detail_page.add_compare')}</button>
+            ${normalizeWebsiteUrl(u.website) ? `<a href="${escapeHtml(normalizeWebsiteUrl(u.website))}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">${t('uni_detail_page.official_site')}</a>` : ''}
+            <button class="btn btn-ghost" data-detail-compare="${u.id}" aria-pressed="${state.compareList.includes(u.id)}" onclick="addToCompareAndGo(${u.id})">${state.compareList.includes(u.id) ? t('card.in_compare') : t('uni_detail_page.add_compare')}</button>
             <button class="btn btn-ghost" onclick="navigate('advisor')">${t('uni_detail_page.ask_ai')}</button>
           </div>
+          ${u.description ? `<details class="detail-description"><summary>${window.currentLanguage === 'kk' ? 'Университет туралы' : window.currentLanguage === 'en' ? 'About the university' : 'Об университете'}</summary><p class="detail-desc">${escapeHtml(u.description)}</p></details>` : ''}
         </div>
         <div>
           <div class="detail-card">
@@ -1085,6 +1206,7 @@ function renderUniversityDetail(u, container) {
 }
 
 async function submitUniversityReview(universityId, form) {
+  if (form.dataset.submitting === 'true') return;
   const formData = new FormData(form);
   const payload = {
     user_name: (formData.get('user_name') || '').toString().trim(),
@@ -1101,8 +1223,12 @@ async function submitUniversityReview(universityId, form) {
     return;
   }
 
+  form.dataset.submitting = 'true';
+  form.setAttribute('aria-busy', 'true');
+  const submit = form.querySelector('[type="submit"]');
+  if (submit) submit.disabled = true;
   try {
-    const res = await fetch(`${API}/universities/${universityId}/reviews`, {
+    const res = await Auth.fetch(`/universities/${universityId}/reviews`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -1111,18 +1237,27 @@ async function submitUniversityReview(universityId, form) {
     if (!res.ok) throw new Error(data.error || 'Ошибка отправки отзыва');
     form.reset();
     showToast('Отзыв добавлен', 'success');
-    loadReviews(universityId);
+    if (form.isConnected) loadReviews(universityId);
   } catch (e) {
     showToast(e.message || 'Не удалось отправить отзыв', 'error');
+  } finally {
+    delete form.dataset.submitting;
+    form.removeAttribute('aria-busy');
+    if (submit) submit.disabled = false;
   }
 }
 
 async function loadReviews(universityId) {
   const container = document.getElementById('reviews-content');
   if (!container) return;
+  const request = (container.reviewRequest || 0) + 1;
+  container.reviewRequest = request;
+  container.setAttribute('aria-busy', 'true');
   try {
-    const res = await fetch(`${API}/universities/${universityId}/reviews`);
+    const res = await Auth.fetch(`/universities/${universityId}/reviews`);
+    if (!res.ok) throw new Error('Ошибка загрузки отзывов');
     const data = await res.json();
+    if (!container.isConnected || container.reviewRequest !== request) return;
     const avgRating = data.stats?.avg_rating ? Number(data.stats.avg_rating).toFixed(1) : '—';
     const starStr = (r) => '★'.repeat(r) + '☆'.repeat(5 - r);
     const hasReviews = Array.isArray(data.reviews) && data.reviews.length > 0;
@@ -1204,7 +1339,11 @@ async function loadReviews(universityId) {
       });
     }
   } catch (e) {
-    container.innerHTML = `<p style="color:var(--red)">Ошибка загрузки отзывов</p>`;
+    if (!container.isConnected || container.reviewRequest !== request) return;
+    container.innerHTML = `<p role="alert" style="color:var(--red)">Ошибка загрузки отзывов</p><button type="button" class="btn btn-outline">Повторить</button>`;
+    container.querySelector('button').addEventListener('click', () => loadReviews(universityId));
+  } finally {
+    if (container.reviewRequest === request) container.removeAttribute('aria-busy');
   }
 }
 
@@ -1213,18 +1352,43 @@ function addToCompareAndGo(id) {
     if (state.compareList.length < 3) {
       state.compareList.push(id);
       updateCompareBadge();
-      showToast(t('toast.added_compare'), 'success');
     } else {
       showToast(t('toast.max_3'));
+      return;
     }
   }
-  navigate('compare');
+  document.querySelectorAll('[data-detail-compare]').forEach(button => {
+    const selected = state.compareList.includes(Number(button.dataset.detailCompare));
+    button.setAttribute('aria-pressed', String(selected));
+    button.textContent = selected ? t('card.in_compare') : t('uni_detail_page.add_compare');
+  });
+  if (state.compareList.length >= 2) navigate('compare');
+  else showToast(window.currentLanguage === 'kk' ? '1 университет таңдалды. Салыстыру үшін тағы біреуін таңдаңыз.' : window.currentLanguage === 'en' ? '1 university selected. Choose one more to compare.' : 'Выбран 1 вуз. Добавьте ещё один для сравнения.');
 }
 
 // ─── AI ADVISOR CHAT ─────────────────────────
 // Rate limiting state
-let lastMessageTime = 0;
+let lastMessageTime = 0, chatPending = false;
 const MESSAGE_DELAY = 1500; // ms between messages
+
+function resetAdvisorSession() {
+  ++chatSessionGeneration;
+  chatPending = false;
+  lastMessageTime = 0;
+  state.chatHistory = [];
+  state.chatHistoryLoaded = false;
+  state.chatReplyDraft = null;
+  saveSessionChatHistory();
+  const messages = document.getElementById('chat-messages');
+  if (messages && advisorInitialMarkup !== null) messages.innerHTML = advisorInitialMarkup;
+  if (messages) { messages._followLatest = true; messages._unread = 0; updateChatFollowControl(messages); }
+  const input = document.getElementById('chat-input');
+  if (input) { input.value = ''; autoResize(input); }
+  clearReplyQuotePreview();
+  const send = document.getElementById('chat-send');
+  if (send) send.disabled = false;
+  invalidateAdmissionResult();
+}
 
 function getAiInputErrorMessage(data) {
   const reason = data?.reason || '';
@@ -1242,11 +1406,12 @@ function getAiInputErrorMessage(data) {
   return map[reason] || fallback;
 }
 
-async function sendMessage(retryMessage = null) {
+async function sendMessage(retryMessage = null, retryReply = null) {
+  if (chatPending) return;
   const input = document.getElementById('chat-input');
   let text = retryMessage || input.value.trim();
   if (!text) return;
-  const replyDraft = retryMessage ? null : state.chatReplyDraft;
+  const replyDraft = retryMessage ? retryReply : state.chatReplyDraft;
 
   // Rate limiting check
   const now = Date.now();
@@ -1255,6 +1420,9 @@ async function sendMessage(retryMessage = null) {
     return;
   }
   lastMessageTime = now;
+  chatPending = true;
+  const generation = chatSessionGeneration;
+  if (advisorInitialMarkup === null) advisorInitialMarkup = document.getElementById('chat-messages').innerHTML;
 
   if (!retryMessage) {
     input.value = '';
@@ -1292,26 +1460,24 @@ async function sendMessage(retryMessage = null) {
       }),
       timeoutMs: 120000,
     });
+    if (generation !== chatSessionGeneration) return;
 
     if (!res.ok && res.status === 429) {
       removeTyping(typingId);
-      appendMessage('ai', t('error.too_many_requests') || 'Слишком много запросов. Подождите 1 минуту.', null, null, { retryFn: () => sendMessage(text) });
+      appendMessage('ai', t('error.too_many_requests') || 'Слишком много запросов. Подождите 1 минуту.', null, null, { retryFn: () => sendMessage(text, replyDraft) });
       document.getElementById('chat-send').disabled = false;
       return;
     }
 
     const data = await res.json();
+    if (generation !== chatSessionGeneration) return;
     removeTyping(typingId);
 
     if (!data.success) {
       const errorMsg = getAiInputErrorMessage(data);
-      appendMessage('ai', errorMsg, null, null, { retryFn: () => sendMessage(text) });
+      appendMessage('ai', errorMsg, null, null, { retryFn: () => sendMessage(text, replyDraft) });
     } else {
-      // Handle language switch
-      if (data.detectedLang && data.detectedLang !== window.currentLanguage) {
-        setLanguage(data.detectedLang);
-        localStorage.setItem('edumatch_lang', data.detectedLang);
-      }
+      // The answer language must not reload the user's active conversation.
 
       // Show AI answer
       if (data.intent === 'admission' && data.admission && data.admission.type === 'result') {
@@ -1331,6 +1497,7 @@ async function sendMessage(retryMessage = null) {
       showQuickSuggestions(data.intent, text);
     }
   } catch (e) {
+    if (generation !== chatSessionGeneration) return;
     console.error('[sendMessage] Error caught:', e.name, e.message, e.stack);
     removeTyping(typingId);
     const isTimeout = e.name === 'AbortError' || e.message.includes('timeout');
@@ -1338,10 +1505,13 @@ async function sendMessage(retryMessage = null) {
       ? (t('error.timeout') || 'Сервер не отвечает')
       : (t('error.server_offline') || 'Сервер недоступен');
     
-    appendMessage('ai', `${errorMsg}`, null, null, { retryFn: () => sendMessage(text) });
+    appendMessage('ai', `${errorMsg}`, null, null, { retryFn: () => sendMessage(text, replyDraft) });
+  } finally {
+    if (generation === chatSessionGeneration) {
+      chatPending = false;
+      document.getElementById('chat-send').disabled = false;
+    }
   }
-
-  document.getElementById('chat-send').disabled = false;
 }
 
 function showQuickSuggestions(intent, userMessage) {
@@ -1471,16 +1641,19 @@ function renderMatches(matches) {
     
     const specs = (u.specialties || []).map(s => typeof s === 'string' ? s : s.name || s.category).filter(Boolean).slice(0, 3).join(', ') || 'N/A';
     const qs = u.qs_world ? `QS World: #${u.qs_world}` : (u.qs_asia ? `QS Asia: #${u.qs_asia}` : t('chat_page.no_ranking'));
-    const priceRange = `${(u.price_from/1000000).toFixed(2)}–${(u.price_to/1000000).toFixed(2)}M ${t('common.tenge')}`;
+    const knownPrice = value => value != null && Number.isFinite(Number(value)) && Number(value) > 0;
+    const priceRange = u.is_free ? t('card.free') : knownPrice(u.price_from) || knownPrice(u.price_to)
+      ? `${fmtPrice(u.price_from)}–${fmtPrice(u.price_to)} ${t('common.tenge')}`
+      : t('uni_detail_page.not_specified');
     
     html += `
     <div class="chat-rec-card" onclick="navigate('university', ${u.id})">
       <div class="chat-rec-head">
         <div>
-          <div class="chat-rec-uni-name">${trRu(u.short_name)}</div>
-          <div class="chat-rec-uni-full">${trRu(u.name)}</div>
+          <div class="chat-rec-uni-name">${escapeHtml(trRu(u.short_name))}</div>
+          <div class="chat-rec-uni-full">${escapeHtml(trRu(u.name))}</div>
         </div>
-        <div class="chat-rec-badge">${qs}</div>
+        <div class="chat-rec-badge">${escapeHtml(qs)}</div>
       </div>
       <div class="chat-rec-details">
         <div>
@@ -1489,11 +1662,11 @@ function renderMatches(matches) {
         </div>
         <div>
           <div class="chat-rec-label">${t('chat_page.study_lang')}</div>
-          <div class="chat-rec-value">${languages}</div>
+          <div class="chat-rec-value">${escapeHtml(languages)}</div>
         </div>
         <div class="chat-rec-full">
           <div class="chat-rec-label">${t('chat_page.specs')}</div>
-          <div class="chat-rec-value">${specs}${(u.specialties || []).length > 3 ? '...' : ''}</div>
+          <div class="chat-rec-value">${escapeHtml(specs)}${(u.specialties || []).length > 3 ? '...' : ''}</div>
         </div>
       </div>
       <div class="chat-rec-actions">
@@ -1544,15 +1717,11 @@ function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
           <span class="chat-admission-uni">${escapeAdmissionHtml(m.university)}</span>
           <span class="chat-admission-name">${escapeAdmissionHtml(trRu(m.name) || '')}</span>
         </div>
-        <div class="chat-admission-chance ${barClass}">${m.chance}%</div>
-      </div>
-      <div class="chat-admission-bar">
-        <div class="chat-admission-fill ${barClass}" style="width:${m.chance}%"></div>
+        <div class="chat-admission-chance">${escapeAdmissionHtml(m.portfolioLabel || '')}</div>
       </div>
       <div class="chat-admission-meta">
-        <span class="portfolio-badge ${portfolioClass}">${escapeAdmissionHtml(m.portfolioLabel || '')}</span>
         <span class="chat-admission-rec">${escapeAdmissionHtml(m.recommendation)}</span>
-        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === m.university_id) ? 'added' : ''}" onclick="event.stopPropagation(); handleTrackerAdd(${m.university_id}, '${escapeAdmissionHtml(m.university)}')">${state.trackerList.some(t => t.university_id === m.university_id) ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ${t('tracker.added') || 'В трекере'}` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> ${t('tracker.add_to_tracker') || 'В трекер'}`}</button>
+        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === m.university_id) ? 'added' : ''}" data-tracker-id="${Number(m.university_id)}" data-tracker-name="${escapeAdmissionHtml(m.university)}" onclick="event.stopPropagation(); handleTrackerAdd(Number(this.dataset.trackerId), this.dataset.trackerName)">${state.trackerList.some(t => t.university_id === m.university_id) ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ${t('tracker.added') || 'В трекере'}` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> ${t('tracker.add_to_tracker') || 'В трекер'}`}</button>
       </div>`;
 
     if (m.scoreBreakdown && m.scoreBreakdown.length > 0) {
@@ -1599,16 +1768,52 @@ function renderAdmissionChatCards(matches, input, whatIf, academicYear) {
   return html;
 }
 
-function scrollChatToBottom() {
-  requestAnimationFrame(() => {
-    const el = document.getElementById('chat-messages');
-    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+function ensureChatFollowControl() {
+  const el = document.getElementById('chat-messages');
+  if (!el) return null;
+  if (!el._followReady) {
+    el._followReady = true;
+    el._followLatest = true;
+    el._unread = 0;
+    const button = document.createElement('button');
+    button.id = 'chat-latest';
+    button.className = 'chat-latest';
+    button.type = 'button';
+    button.hidden = true;
+    el.after(button);
+    button.addEventListener('click', () => { el._followLatest = true; el._unread = 0; scrollChatToBottom(true); });
+    el.addEventListener('scroll', () => {
+      el._followLatest = el.scrollHeight - el.clientHeight - el.scrollTop < 64;
+      if (el._followLatest) el._unread = 0;
+      updateChatFollowControl(el);
+    }, {passive:true});
+  }
+  return el;
+}
+function updateChatFollowControl(el) {
+  const button = document.getElementById('chat-latest');
+  if (!button) return;
+  button.hidden = el._followLatest || !el.querySelector('.chat-msg');
+  button.textContent = catalogText('К последнему', 'Соңғы хабарламаға', 'Jump to latest') + (el._unread ? ` (${el._unread})` : '');
+  button.classList.toggle('has-unread', !!el._unread);
+}
+function scrollChatToBottom(force = false) {
+  const el = ensureChatFollowControl();
+  if (!el) return;
+  if (force) { el._followLatest = true; el._unread = 0; }
+  if (el._followLatest) requestAnimationFrame(() => {
+    if (!el._followLatest) return;
+    el.scrollTo({top:el.scrollHeight, behavior:'auto'});
+    updateChatFollowControl(el);
   });
+  else updateChatFollowControl(el);
 }
 
 function appendMessage(role, text, matches = null, admission = null, options = {}) {
   const msgs = document.getElementById('chat-messages');
 
+  ensureChatFollowControl();
+  if (!msgs.querySelector('.chat-msg')) { msgs._followLatest = true; msgs._unread = 0; }
   // Remove welcome if present
   const welcome = msgs.querySelector('.chat-welcome');
   if (welcome) welcome.remove();
@@ -1764,6 +1969,7 @@ function appendMessage(role, text, matches = null, admission = null, options = {
     }
   }
   msgs.appendChild(div);
+  if (role === 'ai' && !msgs._followLatest) msgs._unread++;
   scrollChatToBottom();
 }
 
@@ -1902,8 +2108,11 @@ function normalizeWebsiteUrl(url) {
   if (!url || typeof url !== 'string') return '';
   const trimmed = url.trim();
   if (!trimmed || !trimmed.includes('.')) return '';
-  if (/^https?:\/\//i.test(trimmed)) return trimmed;
-  return `https://${trimmed.replace(/^\/\//, '')}`;
+  if (/^[a-z][a-z\d+.-]*:/i.test(trimmed) && !/^https?:\/\//i.test(trimmed)) return '';
+  try {
+    const parsed = new URL(/^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed.replace(/^\/\//, '')}`);
+    return ['https:', 'http:'].includes(parsed.protocol) ? parsed.href : '';
+  } catch { return ''; }
 }
 
 function formatWebsiteLabel(url) {
@@ -1925,6 +2134,24 @@ function formatMarkdown(text) {
 /* ─── NOTYF TOASTS ────────────────────────── */
 let notyf;
 function showToast(msg, type = 'default') {
+  if (typeof Notyf === 'undefined') {
+    let region = document.getElementById('site-toast-stack');
+    if (!region) {
+      region = document.createElement('div');
+      region.id = 'site-toast-stack';
+      region.className = 'site-toast-stack';
+      region.setAttribute('role', 'status');
+      region.setAttribute('aria-live', 'polite');
+      document.body.append(region);
+    }
+    const notice = document.createElement('div');
+    notice.className = 'site-toast';
+    notice.textContent = String(msg);
+    region.append(notice);
+    while (region.children.length > 3) region.firstElementChild.remove();
+    setTimeout(() => notice.remove(), 6000);
+    return;
+  }
   if (!notyf) {
     notyf = new Notyf({
       duration: 3000,
@@ -1944,15 +2171,52 @@ function showToast(msg, type = 'default') {
 }
 
 /* ─── MARKED — markdown in chat ──────────── */
+function renderSafeMarkdownFallback(text) {
+  const inline = value => {
+    const tokens = [];
+    let escaped = escapeHtml(value);
+    escaped = escaped.replace(/`([^`]+)`|\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g, (all, code, label, url) => {
+      const token = code ? `<code>${code}</code>` : `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+      tokens.push(token);
+      return '\u0000' + (tokens.length - 1) + '\u0000';
+    });
+    return escaped.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>').replace(/\u0000(\d+)\u0000/g, (_, n) => tokens[Number(n)]);
+  };
+  let html = '', list = '', code = null;
+  const closeList = () => { if (list) { html += `</${list}>`; list = ''; } };
+  String(text).split(/\r?\n/).forEach(line => {
+    if (/^\s*```/.test(line)) {
+      closeList();
+      if (code === null) code = []; else { html += `<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`; code = null; }
+      return;
+    }
+    if (code !== null) { code.push(line); return; }
+    const item = line.match(/^\s*(?:([-*+])|\d+[.)])\s+(.+)$/);
+    if (item) {
+      const type = item[1] ? 'ul' : 'ol';
+      if (list !== type) { closeList(); list = type; html += `<${type}>`; }
+      html += `<li>${inline(item[2])}</li>`;
+    } else {
+      closeList();
+      const heading = line.match(/^#{1,6}\s+(.+)$/);
+      if (heading) html += `<h3>${inline(heading[1])}</h3>`;
+      else if (line.trim()) html += `<p>${inline(line)}</p>`;
+    }
+  });
+  closeList();
+  if (code !== null) html += `<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`;
+  return html;
+}
+
 function renderMarkdown(text) {
   if (!text) return '';
-  if (typeof marked === 'undefined') return `<p>${escapeHtml(text)}</p>`;
+  if (typeof marked === 'undefined' || typeof DOMPurify === 'undefined') return renderSafeMarkdownFallback(text);
   try {
     const rawHtml = marked.parse(text, { breaks: true, gfm: true });
-    return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(rawHtml) : rawHtml;
+    return DOMPurify.sanitize(rawHtml);
   } catch (e) {
     console.warn('Markdown render failed:', e);
-    return `<p>${escapeHtml(text).replace(/\n/g, '<br>')}</p>`;
+    return renderSafeMarkdownFallback(text);
   }
 }
 
@@ -2016,6 +2280,7 @@ async function loadAcademicYear() {
 
 /* ─── CONFETTI — on compare ──────────────── */
 function celebrateCompare() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (typeof confetti !== 'undefined') {
     confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 },
       colors: ['#2d6a4f', '#52b788', '#e9c46a', '#1a1917'] });
@@ -2036,6 +2301,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Handle browser back/forward buttons (mouse side buttons)
   window.addEventListener('popstate', (e) => {
+    state.historyIndex = Number.isInteger(e.state?.appIndex) ? e.state.appIndex : 0;
     if (e.state && e.state.page) {
       navigate(e.state.page, e.state.param, false);
     } else {
@@ -2043,7 +2309,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  navigate('home');
+  const initialRoute = location.hash.slice(1).split('/');
+  navigate(initialRoute[0] || 'home', initialRoute[1] || null, false);
+  state.pageHistory = [];
+  history.replaceState({page:state.currentPage,param:state.currentParam,appIndex:0}, '', state.currentParam ? `#${state.currentPage}/${state.currentParam}` : `#${state.currentPage}`);
   loadAcademicYear();
 
   // Mobile: show bottom nav, but do not force the advisor page on every resize.
@@ -2053,6 +2322,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   window.addEventListener('resize', () => {
+    updateResponsiveShell();
     const nowMobile = window.innerWidth <= 768;
     if (bottomNav) {
       bottomNav.style.display = nowMobile ? 'flex' : 'none';
@@ -2125,7 +2395,7 @@ function updateStickyCompare() {
   const bar = document.getElementById('sticky-compare');
   const count = state.compareList.length;
   if (bar) {
-    bar.classList.toggle('visible', count >= 1 && state.currentPage !== 'compare' && state.currentPage !== 'advisor');
+    bar.classList.toggle('visible', count >= 1 && ['home', 'university'].includes(state.currentPage));
     const countEl = document.getElementById('sticky-compare-count');
     if (countEl) countEl.textContent = count;
   }
@@ -2208,7 +2478,34 @@ function closeMoreSheet() { closeSheet('more-sheet-overlay', 'more-sheet'); }
    ADMISSION PREDICTOR
    ============================================= */
 
+let admissionRequest = 0;
+function admissionInputKey() {
+  return JSON.stringify(['admit-ent','admit-specialty','admit-city','admit-budget','admit-language','admit-dorm'].map(id => {
+    const field = document.getElementById(id);
+    return field.type === 'checkbox' ? field.checked : field.value;
+  }));
+}
+function invalidateAdmissionResult() {
+  admissionRequest++;
+  state.admissionLastResult = null;
+  const result = document.getElementById('admission-results');
+  result.replaceChildren();
+  result.removeAttribute('aria-busy');
+  document.getElementById('admit-submit').disabled = false;
+}
 function initAdmissionPage() {
+  const form = document.querySelector('.admission-form-card');
+  if (form && !form.dataset.eventsBound) {
+    form.dataset.eventsBound = 'true';
+    form.addEventListener('input', invalidateAdmissionResult);
+    form.addEventListener('change', invalidateAdmissionResult);
+    form.addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.isComposing && event.target.matches('input:not([type="checkbox"])')) {
+        event.preventDefault();
+        calculateAdmissionChance();
+      }
+    });
+  }
   const entInput = document.getElementById('admit-ent');
   if (entInput && entInput.value === '' && typeof Auth !== 'undefined' && Auth.isLoggedIn()) {
     Auth.getProfile().then(profile => {
@@ -2238,7 +2535,7 @@ function showAdmissionLoading() {
 function showAdmissionError(message) {
   const resultsEl = document.getElementById('admission-results');
   resultsEl.innerHTML = `
-    <div class="tool-card" style="border: 1px solid var(--red, #ef4444);">
+    <div class="tool-card" role="alert" style="border: 1px solid var(--red, #ef4444);">
       <p style="color: var(--red, #ef4444); margin: 0;">
         <strong>${t('admission_page.error_prefix')}</strong> ${escapeHtml(message)}
       </p>
@@ -2258,6 +2555,7 @@ function showAdmissionEmpty(message) {
 // ─── MAIN CALCULATOR FUNCTION ─────────────────────────
 async function calculateAdmissionChance() {
   const btn = document.getElementById('admit-submit');
+  if (btn.disabled) return;
   const resultsEl = document.getElementById('admission-results');
   
   // Получаем значения из формы
@@ -2270,16 +2568,29 @@ async function calculateAdmissionChance() {
   const needsDorm = document.getElementById('admit-dorm').checked;
 
   // Валидация
+  [['admit-ent', 'error-ent'], ['admit-specialty', 'error-specialty']].forEach(([fieldId, errorId]) => {
+    const field = document.getElementById(fieldId), error = document.getElementById(errorId);
+    field.removeAttribute('aria-invalid');
+    field.setAttribute('aria-describedby', errorId);
+    error.setAttribute('role', 'alert');
+    error.textContent = '';
+  });
   if (!Number.isInteger(entScore) || entScore < 0 || entScore > 140) {
-    showToast(t('admission_page.ent_must_be'), 'warning');
+    document.getElementById('error-ent').textContent = t('admission_page.ent_must_be');
+    document.getElementById('admit-ent').setAttribute('aria-invalid', 'true');
+    document.getElementById('admit-ent').focus();
     return;
   }
   if (!specialtyId) {
-    showToast(t('admission_page.choose_spec'), 'warning');
+    document.getElementById('error-specialty').textContent = t('admission_page.choose_spec');
+    document.getElementById('admit-specialty').setAttribute('aria-invalid', 'true');
+    document.getElementById('admit-specialty').focus();
     return;
   }
 
   btn.disabled = true;
+  const request = ++admissionRequest, inputKey = admissionInputKey();
+  resultsEl.setAttribute('aria-busy', 'true');
   showAdmissionLoading();
 
   try {
@@ -2300,6 +2611,7 @@ async function calculateAdmissionChance() {
     });
 
     const result = await res.json();
+    if (request !== admissionRequest || inputKey !== admissionInputKey()) return;
 
     // Если ошибка
     if (result.error) {
@@ -2325,10 +2637,14 @@ async function calculateAdmissionChance() {
     }
 
   } catch (err) {
+    if (request !== admissionRequest || inputKey !== admissionInputKey()) return;
     console.error('Admission calculate error:', err);
     showAdmissionError(t('admission_page.server_error'));
   } finally {
-    btn.disabled = false;
+    if (request === admissionRequest) {
+      btn.disabled = false;
+      resultsEl.removeAttribute('aria-busy');
+    }
   }
 }
 
@@ -2409,8 +2725,8 @@ function renderAdmissionCard(match, index) {
           <p class="admission-uni-full" style="font-size: 0.9rem; color: var(--gray, #666);">${escapeHtml(trRu(universityCity))}</p>
         </div>
         <div class="admission-chance-wrap">
-          <div class="admission-chance-value ${barClass}">${chancePercent}%</div>
-          <div class="admission-chance-bar"><div class="admission-chance-fill ${barClass}" style="width:${chancePercent}%"></div></div>
+          ${Number.isFinite(chancePercent) ? `<div class="admission-chance-value ${barClass}">${chancePercent}%</div>
+          <div class="admission-chance-bar"><div class="admission-chance-fill ${barClass}" style="width:${chancePercent}%"></div></div>` : `<span>${window.currentLanguage === 'kk' ? 'Деректер жеткіліксіз' : window.currentLanguage === 'en' ? 'Insufficient data' : 'Недостаточно данных'}</span>`}
         </div>
       </div>
 
@@ -2429,7 +2745,7 @@ function renderAdmissionCard(match, index) {
       ${contactsHtml}
 
       <div class="admission-card-actions" style="margin-top: 12px; display: flex; gap: 8px;">
-        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === universityId) ? 'added' : ''}" onclick="event.stopPropagation(); handleTrackerAdd(${universityId}, '${escapeAdmissionHtml(universityName)}')">${state.trackerList.some(t => t.university_id === universityId) ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ${t('tracker.added') || 'В трекере'}` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> ${t('tracker.add_to_tracker') || 'В трекер'}`}</button>
+        <button class="tracker-add-btn ${state.trackerList.some(t => t.university_id === universityId) ? 'added' : ''}" data-tracker-id="${Number(universityId)}" data-tracker-name="${escapeAdmissionHtml(universityName)}" onclick="event.stopPropagation(); handleTrackerAdd(Number(this.dataset.trackerId), this.dataset.trackerName)">${state.trackerList.some(t => t.university_id === universityId) ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> ${t('tracker.added') || 'В трекере'}` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> ${t('tracker.add_to_tracker') || 'В трекер'}`}</button>
         <button class="btn btn-sm btn-detail" onclick="navigate('university', ${universityId})">
           ${t('admission_page.uni_details')}
         </button>
@@ -2532,9 +2848,8 @@ function getCityName(cityId) {
 }
 
 function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str || '';
-  return div.innerHTML;
+  const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  return String(str ?? '').replace(/[&<>"']/g, char => entities[char]);
 }
 
 // ─── SAVE HISTORY ─────────────────────────────────────
@@ -2675,7 +2990,7 @@ function renderCareerQuestion() {
   document.getElementById('career-question-wrap').innerHTML = `
     <div class="career-question-card">
       <div class="career-q-num">${t('career_page_js.question_of')} ${careerState.current + 1}</div>
-      <div class="career-q-text">${q.q}</div>
+      <h2 class="career-q-text" tabindex="-1">${q.q}</h2>
       <div class="career-options">
         ${q.opts.map((opt, i) => `
           <button class="career-option" onclick="answerCareer(${i})">
@@ -2684,10 +2999,26 @@ function renderCareerQuestion() {
           </button>
         `).join('')}
       </div>
+      ${careerState.current>0?`<button class="btn btn-ghost career-back" onclick="previousCareerQuestion()">${t('buttons.back')}</button>`:''}
     </div>
   `;
+  const heading=document.querySelector('#career-question-wrap .career-q-text');
+  if(careerState.current>0)heading?.focus({preventScroll:true});
 }
 
+function previousCareerQuestion() {
+  if(!careerState.answers.length)return;
+  careerState.answers.pop();
+  careerState.current=careerState.answers.length;
+  careerState.scores={};careerState.budget=5000000;careerState.prestige='medium';
+  careerState.answers.forEach((answer,index)=>{
+    const option=CAREER_QUESTIONS[index].opts[answer];
+    (option.tags||[]).forEach(tag=>careerState.scores[tag]=(careerState.scores[tag]||0)+1);
+    if(option.budget)careerState.budget=option.budget;
+    if(option.prestige)careerState.prestige=option.prestige;
+  });
+  renderCareerQuestion();
+}
 function answerCareer(optIdx) {
   const q = CAREER_QUESTIONS[careerState.current];
   const opt = q.opts[optIdx];
@@ -2881,8 +3212,8 @@ function showProfessionAnalysis(name) {
 
   document.getElementById('profession-modal-content').innerHTML = `
     <div class="prof-badge">${t('prof_page.ai_analysis')}</div>
-    <div class="prof-title">${data.title}</div>
-    <div class="prof-subtitle">${name}</div>
+    <div class="prof-title">${escapeHtml(data.title)}</div>
+    <div class="prof-subtitle">${escapeHtml(name)}</div>
     <div class="prof-grid">
       <div class="prof-card">
         <div class="prof-card-icon">
@@ -2919,26 +3250,35 @@ function showProfessionAnalysis(name) {
 let mapInstance = window.mapInstance = null;
 
 async function loadMap() {
+  try { await initializeMap(); }
+  catch (error) {
+    if (mapInstance) { mapInstance.remove(); mapInstance = window.mapInstance = null; }
+    const container = document.getElementById('map-container');
+    if (container) container.innerHTML = `<div class="loading-state" role="status"><p>${t('error.load_error')}</p><button class="btn btn-outline" onclick="loadMap()">${t('error.retry')}</button><button class="btn btn-ghost" onclick="navigate('home')">${t('nav.universities')}</button></div>`;
+  }
+}
+async function initializeMap() {
   if (mapInstance) { mapInstance.invalidateSize(); return; }
-  if (typeof L === 'undefined') { setTimeout(loadMap, 500); return; }
+  if (typeof L === 'undefined') throw new Error('Map library unavailable');
 
   const mapContainer = document.getElementById('map-container');
   if (!mapContainer || mapContainer.offsetHeight === 0) {
-    setTimeout(loadMap, 500);
     return;
   }
+  mapContainer.replaceChildren();
 
   // Центр Казахстана
   mapInstance = window.mapInstance = L.map('map-container', { minZoom: 5, maxZoom: 18 }).setView([48.0, 66.9], 5);
 
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/">CARTO</a>',
-    subdomains: 'abcd',
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19
   }).addTo(mapInstance);
 
   const res = await fetch(`${API}/universities?lang=${window.currentLanguage || 'ru'}`);
+  if (!res.ok) throw new Error('Map data unavailable');
   const unis = await res.json();
+  if (!Array.isArray(unis)) throw new Error('Invalid map data');
   state.mapUniversities = Array.isArray(unis) ? unis : [];
 
   const greenIcon = L.divIcon({

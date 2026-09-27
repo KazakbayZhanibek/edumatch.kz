@@ -1,0 +1,37 @@
+/* Catalog hierarchy and reading controls. Uses the site's existing theme tokens. */
+.uni-card .uni-name{font-size:1.125rem;line-height:1.4;overflow-wrap:anywhere;margin-bottom:6px}
+.uni-card .uni-city{margin-bottom:12px}
+.uni-card .uni-specialties{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}
+.uni-card .specialty-tag{max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.4;font-size:.8125rem}
+.uni-card .uni-price-row{margin-top:auto;margin-bottom:12px;flex-wrap:wrap;row-gap:4px}
+.uni-card .uni-price-row .price-from{font-size:1.25rem}
+.uni-card .uni-card-actions{display:flex;flex-wrap:wrap;gap:8px}
+.uni-card .uni-card-actions .btn-detail{order:0;flex:1 1 44%;min-height:44px;background:var(--accent);color:var(--on-accent,#fff)}
+.uni-card .uni-card-actions .btn-compare{order:1;flex:1 1 44%;min-height:44px;background:transparent;border:1px solid var(--border);color:var(--text-secondary)}
+.uni-card .uni-card-actions .btn-compare.selected{background:var(--accent-light);color:var(--accent);border-color:var(--accent)}
+.uni-card .uni-card-actions .btn-ghost{order:2;flex:1 1 100%;min-height:44px}
+.active-catalog-filters{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0}
+.active-catalog-filters[hidden],.catalog-filter-count[hidden],.chat-latest[hidden]{display:none}
+.catalog-filter-chip,.catalog-filter-clear{font:inherit;font-size:.875rem;min-height:44px;padding:8px 12px;border-radius:10px;cursor:pointer}
+.catalog-filter-chip{display:inline-flex;align-items:center;gap:12px;max-width:100%;overflow-wrap:anywhere;text-align:left;border:1px solid var(--border);color:var(--text);background:var(--bg-secondary)}
+.catalog-filter-clear{background:transparent;border:1px solid transparent;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.catalog-filter-remove{width:12px;height:12px;flex-shrink:0;position:relative}
+.catalog-filter-remove:before,.catalog-filter-remove:after{content:'';position:absolute;left:5px;top:0;width:2px;height:12px;background:currentColor;transform:rotate(45deg)}
+.catalog-filter-remove:after{transform:rotate(-45deg)}
+.catalog-filter-count{font-size:.75rem;min-width:20px;padding:2px 5px;border-radius:6px;background:var(--accent);color:var(--on-accent,#fff);font-variant-numeric:tabular-nums}
+.catalog-filter-chip:focus-visible,.catalog-filter-clear:focus-visible,.chat-latest:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#uni-grid>.uni-grid{grid-column:1/-1;width:100%}
+#uni-grid .loading-state{grid-column:1/-1;max-width:100%;padding:36px 16px;text-align:center}
+#uni-grid .loading-state p{max-width:55ch;margin:0 auto 16px;line-height:1.6}
+.chat-latest{align-self:center;flex-shrink:0;min-height:44px;margin:6px 16px;padding:8px 16px;max-width:calc(100% - 32px);border:1px solid var(--border);border-radius:10px;background:var(--bg-secondary);color:var(--text);font:inherit;font-size:.875rem;cursor:pointer}
+.chat-latest.has-unread{background:var(--accent);color:var(--on-accent,#fff);border-color:var(--accent)}
+.chat-bubble-ai.markdown-body{line-height:1.65;overflow-wrap:anywhere}
+.chat-bubble-ai.markdown-body p{margin:0 0 .85em}
+.chat-bubble-ai.markdown-body h3{font-size:1.0625rem;line-height:1.4;margin:1.4em 0 .6em}
+.chat-bubble-ai.markdown-body h3:first-child{margin-top:0}
+.chat-bubble-ai.markdown-body ul,.chat-bubble-ai.markdown-body ol{padding-inline-start:1.5em;margin:.6em 0 1em}
+.chat-bubble-ai.markdown-body li{padding-inline-start:.15em;margin:.35em 0}
+.chat-bubble-ai.markdown-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.chat-bubble-ai.markdown-body pre{max-width:100%;overflow:auto;padding:12px;background:var(--bg);border-radius:8px;white-space:pre}
+@media(max-width:768px){.uni-card .uni-card-header-actions{margin-bottom:12px}.uni-card .uni-specialties{margin-bottom:14px}.uni-card .uni-card-actions .btn{font-size:.875rem}.uni-card .uni-name{font-size:1.0625rem}.catalog-filter-chip{font-size:.8125rem}.filter-sheet-btn{flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.skeleton-card,.skeleton-card *{animation:none!important}}
