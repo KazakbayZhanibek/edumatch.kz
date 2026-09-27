@@ -1,0 +1,409 @@
+require('dotenv').config(process.env.DOTENV_CONFIG_PATH ? { path: process.env.DOTENV_CONFIG_PATH } : {});
+const fetch = require('node-fetch');
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
+const cookieParser = require('cookie-parser');
+const path = require('path');
+
+// Глобальные обработчики ошибок
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('⚠ Unhandled Rejection:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('⚠ FATAL Uncaught Exception:', error);
+  console.error('Stack:', error.stack);
+  process.exit(1);
+});
+
+// Инициализируем БД перед импортом db модуля
+const { initDatabase } = require('./database');
+initDatabase();
+
+const { getUniversities, getUniversity, getSpecialtyCategories, getGrants, getAdmissionOpportunities, getTips, getUniversitiesContext, getCities } = require('./db');
+const aiRoutes = require('./ai-routes');
+const authRoutes = require('./auth-routes');
+const verifyRoutes = require('./verify-routes');
+const admissionRoutes = require('./admission-routes');
+const adminRoutes = require('./admin-routes');
+const dataRoutes = require('./data-routes');
+const grantsRoutes = require('./grants-routes');
+const { adminRouter: grantsAdminRouter } = require('./grants-routes');
+const { verifyAuth, verifyAdmin } = require('./auth-middleware');
+const { csrfProtection } = require('./csrf');
+
+const app = express();
+
+// Security headers (no CSP — allows all resources for dev/mobile access)
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
+// Response compression
+app.use(compression());
+
+// Validate required environment variables
+const requiredEnv = ['JWT_SECRET'];
+for (const key of requiredEnv) {
+  if (!process.env[key]) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+}
+
+if (process.env.JWT_SECRET.length < 32 || process.env.JWT_SECRET.includes('change-in-production')) {
+  throw new Error('JWT_SECRET must be a random value with at least 32 characters');
+}
+
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.ALLOWED_ORIGINS) {
+    throw new Error('ALLOWED_ORIGINS is required in production');
+  }
+  if (!process.env.OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY.startsWith('your-')) {
+    throw new Error('A real OPENROUTER_API_KEY is required in production');
+  }
+}
+
+// CORS configuration
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:3001,http://localhost:3012,http://localhost:3013,http://192.168.0.130:3000').split(',').map(o => o.trim());
+app.use(cors({
+  origin: function(origin, callback) {
+    const isLocalFile = process.env.NODE_ENV !== 'production' && origin === 'null';
+    if (!origin || isLocalFile || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      const error = new Error('Origin is not allowed');
+      error.status = 403;
+      callback(error);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-TOKEN']
+}));
+
+// Global IP-based rate limiting: 200 requests per minute
+const globalRateMap = new Map();
+const GLOBAL_RATE_WINDOW = 60000;
+const GLOBAL_RATE_MAX = 200;
+app.use((req, res, next) => {
+  const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+  const now = Date.now();
+  const record = globalRateMap.get(ip);
+  if (!record || now - record.start > GLOBAL_RATE_WINDOW) {
+    globalRateMap.set(ip, { start: now, count: 1 });
+    return next();
+  }
+  record.count++;
+  if (record.count > GLOBAL_RATE_MAX) {
+    console.warn(`Global rate limit exceeded: ip=${ip}`);
+    return res.status(429).json({ error: 'Слишком много запросов. Подождите минуту.' });
+  }
+  next();
+});
+
+// Evict stale entries without keeping a closed server (or a test process) alive.
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, record] of globalRateMap) {
+    if (now - record.start > GLOBAL_RATE_WINDOW * 2) globalRateMap.delete(ip);
+  }
+}, 120000).unref();
+
+// HTTPS redirect for production
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
+      return res.redirect(301, `https://${req.get('host')}${req.url}`);
+    }
+    next();
+  });
+}
+// Base64 adds about one third to a document's size. Keep the larger limit scoped to uploads.
+app.use('/api/verify', express.json({ limit: '8mb' }));
+app.use(express.json({ limit: '4mb' }));
+app.use(cookieParser());
+
+// CSRF protection for cookie-based requests
+app.use(csrfProtection);
+
+// Add logging middleware
+app.use((req, res, next) => {
+  process.stderr.write(`[${new Date().toISOString()}] ${req.method} ${req.path}\n`);
+  next();
+});
+
+app.get('/admin.html', verifyAuth, verifyAdmin, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('X-Content-Type-Options', 'nosniff');
+  res.set('X-Frame-Options', 'DENY');
+  res.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.set('Content-Security-Policy', "default-src 'self'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; font-src 'self' https://fonts.gstatic.com; base-uri 'none'; frame-ancestors 'none'; form-action 'self';");
+  res.sendFile(path.join(__dirname, '../frontend/admin.html'));
+});
+
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Input sanitization middleware — strip HTML/script tags from JSON body fields
+app.use((req, res, next) => {
+  if (req.body && typeof req.body === 'object') {
+    for (const key of Object.keys(req.body)) {
+      if (typeof req.body[key] === 'string') {
+        req.body[key] = req.body[key].replace(/<[^>]*>/g, '').trim();
+      }
+    }
+  }
+  next();
+});
+
+app.get('/api/cities', (req, res) => {
+  try { res.json(getCities()); }
+  catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/universities', (req, res) => {
+  try { res.json(getUniversities({ ...req.query, lang: req.query.lang || 'ru' })); }
+  catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/universities/:id', (req, res) => {
+  try {
+    const u = getUniversity(req.params.id, req.query.lang || 'ru');
+    if (!u) return res.status(404).json({ error: 'Not found' });
+    res.json(u);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/compare', (req, res) => {
+  try {
+    const ids = (req.query.ids || '').split(',').map(Number).filter(Boolean);
+    if (ids.length < 2) return res.status(400).json({ error: 'Min 2' });
+    if (ids.length > 3) return res.status(400).json({ error: 'Max 3' });
+    const lang = req.query.lang || 'ru';
+    res.json(ids.map(id => getUniversity(id, lang)).filter(Boolean));
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/specialties', (req, res) => {
+  try { res.json(getSpecialtyCategories()); }
+  catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/grants', (req, res) => {
+  try { res.json(getGrants({ lang: req.query.lang || 'ru' })); }
+  catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/opportunities', (req, res) => {
+  try {
+    res.set('Cache-Control', 'no-store');
+    res.json(getAdmissionOpportunities({ lang: req.query.lang || 'ru' }));
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/tips', (req, res) => {
+  try { res.json(getTips()); }
+  catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// TEST: Simple endpoint
+app.get('/api/test-specialties', (req, res) => {
+  try {
+    const db = require('./database').getDb();
+    const specialties = db.prepare('SELECT id, name, code, category FROM specialties ORDER BY category, name').all();
+    res.json({ test: true, specialties });
+  } catch (err) {
+    res.status(500).json({ error: err.message, stack: err.stack });
+  }
+});
+
+// AI Advisor routes (new OpenRouter-based system)
+app.use('/api/ai', aiRoutes);
+
+// Admission Predictor
+app.use('/api/admission', admissionRoutes);
+app.use('/api/planner', require('./planner-routes'));
+
+// Authentication & Profile routes (Phase 2)
+app.use('/api/auth', authRoutes);
+app.use('/api/users', authRoutes);
+// saved-universities, chat-history, test-results на /api/*
+app.use('/api', authRoutes);
+
+// Military verification & ENT uploads
+app.use('/api/verify', verifyRoutes);
+
+// Admin: Update academic year (requires auth + admin)
+app.put('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {
+  try {
+    const { year } = req.body;
+    if (!year || !/^\d{4}-\d{4}$/.test(year)) {
+      return res.status(400).json({ error: 'Format: YYYY-YYYY (e.g. 2026-2027)' });
+    }
+    const db = require('./database').getDb();
+    db.prepare('UPDATE admission_requirements SET academic_year = ?').run(year);
+    db.prepare('UPDATE grants SET academic_year = ?').run(year);
+    const arCount = db.prepare('SELECT COUNT(*) as c FROM admission_requirements').get().c;
+    const gCount = db.prepare('SELECT COUNT(*) as c FROM grants').get().c;
+    res.json({ success: true, year, admission_requirements: arCount, grants: gCount });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Admin: Get current academic year (requires admin)
+app.get('/api/admin/academic-year', verifyAuth, verifyAdmin, (req, res) => {
+  try {
+    const db = require('./database').getDb();
+    const row = db.prepare('SELECT academic_year FROM admission_requirements LIMIT 1').get();
+    res.json({ year: row?.academic_year || '2026-2027' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.use('/api/admin', adminRoutes);
+app.use('/api/admin/grants', grantsAdminRouter);
+app.use('/api/data', dataRoutes);
+app.use('/api/grants', grantsRoutes);
+
+// ─── REVIEWS API ──────────────────────────────
+const reviewRateLimit = new Map();
+const REVIEW_RATE_WINDOW = 300000; // 5 minutes
+const MAX_REVIEWS_PER_WINDOW = 3;
+
+app.get('/api/universities/:id/reviews', (req, res) => {
+  try {
+    const db = require('./database').getDb();
+    const reviews = db.prepare("SELECT * FROM reviews WHERE university_id = ? AND moderation_status != 'hidden' ORDER BY created_at DESC").all(req.params.id);
+    const stats = db.prepare("SELECT COUNT(*) as count, AVG(rating) as avg_rating FROM reviews WHERE university_id = ? AND moderation_status != 'hidden'").get(req.params.id);
+    res.json({ reviews, stats });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.post('/api/universities/:id/reviews', (req, res) => {
+  try {
+    const ip = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    const log = reviewRateLimit.get(ip) || [];
+    const recent = log.filter(t => now - t < REVIEW_RATE_WINDOW);
+    if (recent.length >= MAX_REVIEWS_PER_WINDOW) {
+      return res.status(429).json({ error: 'Too many reviews. Please wait 5 minutes.' });
+    }
+    recent.push(now);
+    reviewRateLimit.set(ip, recent);
+
+    const db = require('./database').getDb();
+    const { user_name, rating, pros, cons, comment, faculty, study_year } = req.body || {};
+    if (typeof user_name !== 'string' || !user_name.trim() || user_name.length > 100 || !Number.isInteger(rating) || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: 'Provide a name and an integer rating from 1 to 5' });
+    }
+    for (const [value, maxLength] of [[pros, 5000], [cons, 5000], [comment, 5000], [faculty, 200], [study_year, 100]]) {
+      if (value != null && (typeof value !== 'string' || value.length > maxLength)) return res.status(400).json({ error: 'Invalid review field' });
+    }
+    const universityId = Number(req.params.id);
+    if (!Number.isSafeInteger(universityId) || universityId < 1) return res.status(400).json({ error: 'Invalid university ID' });
+    if (!getUniversity(universityId)) return res.status(404).json({ error: 'University not found' });
+    const result = db.prepare('INSERT INTO reviews (university_id, user_name, rating, pros, cons, comment, faculty, study_year) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').run(
+      req.params.id, user_name, rating, pros || '', cons || '', comment || '', faculty || '', study_year || ''
+    );
+    res.json({ id: result.lastInsertRowid });
+  } catch (e) {
+    res.status(500).json({ error: 'Unable to save review' });
+  }
+});
+
+// ─── ANALYTICS API ────────────────────────────
+app.get('/api/analytics/top-queries', verifyAuth, verifyAdmin, (req, res) => {
+  try {
+    const db = require('./database').getDb();
+    const days = parseInt(req.query.days) || 7;
+    const limit = parseInt(req.query.limit) || 10;
+    const queries = db.prepare(`
+      SELECT query, intent, COUNT(*) as count, AVG(response_time_ms) as avg_ms
+      FROM query_log
+      WHERE created_at >= datetime('now', '-' || ? || ' days')
+      GROUP BY query
+      ORDER BY count DESC
+      LIMIT ?
+    `).all(days, limit);
+    res.json(queries);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/analytics/stats', verifyAuth, verifyAdmin, (req, res) => {
+  try {
+    const db = require('./database').getDb();
+    const days = parseInt(req.query.days) || 7;
+    const total = db.prepare("SELECT COUNT(*) as c FROM query_log WHERE created_at >= datetime('now', '-' || ? || ' days')").get(days);
+    const byIntent = db.prepare("SELECT intent, COUNT(*) as c FROM query_log WHERE created_at >= datetime('now', '-' || ? || ' days') GROUP BY intent ORDER BY c DESC").all(days);
+    const byLang = db.prepare("SELECT lang, COUNT(*) as c FROM query_log WHERE created_at >= datetime('now', '-' || ? || ' days') GROUP BY lang ORDER BY c DESC").all(days);
+    res.json({ total: total.c, byIntent, byLang });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Global error handler (must be after all routes)
+app.use((err, req, res, _next) => {
+  console.error('[server] Unhandled error:', err.message);
+  res.status(err.status || 500).json({
+    success: false,
+    error: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
+  });
+});
+
+// Health check endpoint must be registered before the SPA fallback.
+app.get('/health', (req, res) => {
+  try {
+    const db = require('./database').getDb();
+    db.exec('SELECT 1');
+    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  } catch (e) {
+    res.status(503).json({ status: 'error', message: e.message });
+  }
+});
+
+app.use('/api', (req, res) => {
+  res.status(404).json({ success: false, error: 'API endpoint not found' });
+});
+
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+if (require.main === module) {
+const PORT = process.env.PORT || 3000;
+const server = app.listen(PORT, () => {
+  console.log(`✓ EduMatch KZ running on port ${PORT}`);
+  console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✓ Allowed origins: ${allowedOrigins.join(', ')}`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, closing server gracefully...');
+  server.close(() => {
+    console.log('Server closed');
+    const { closeDb } = require('./database');
+    closeDb?.();
+    process.exit(0);
+  });
+  // Force shutdown after 30s
+  setTimeout(() => {
+    console.error('Forced shutdown after 30 seconds');
+    process.exit(1);
+  }, 30000);
+});
+}
+
+module.exports = app;

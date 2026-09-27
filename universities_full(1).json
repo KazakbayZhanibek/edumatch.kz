@@ -1,0 +1,2247 @@
+[
+  {
+    "id": 1,
+    "name": "Назарбаев Университет",
+    "short_name": "НУ",
+    "city": "Астана",
+    "address": "проспект Кабанбай Батыра, 53, Астана",
+    "lat": 51.0258535,
+    "lng": 71.4641981,
+    "founded": 2010,
+    "students_count": 7000,
+    "price_from": 2200000,
+    "price_to": 3800000,
+    "dormitory": true,
+    "dormitory_price_per_year": 350000,
+    "avg_graduate_salary": 650000,
+    "languages": ["казахский", "английский"],
+    "accreditations": ["AACSB", "ABET", "QAA", "EQUIS"],
+    "qs_world": 501,
+    "qs_asia": 95,
+    "grants": true,
+    "scholarships": ["Болашак", "внутренние гранты НУ (100% покрытие)", "международные стипендии"],
+    "ent_threshold": 100,
+    "faculties": [
+      {
+        "name": "Школа инженерии и цифровых наук",
+        "specialties": ["IT", "Инженерия"],
+        "programs": [
+          {"program": "Computer Science", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 120, "price_per_year": 3200000, "passing_score_2023": 110},
+          {"program": "Electrical and Computer Engineering", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 80, "price_per_year": 3200000, "passing_score_2023": 108},
+          {"program": "Chemical Engineering", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 60, "price_per_year": 3200000, "passing_score_2023": 105}
+        ]
+      },
+      {
+        "name": "Высшая школа бизнеса",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Economics", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 100, "price_per_year": 2800000, "passing_score_2023": 107},
+          {"program": "Finance", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 80, "price_per_year": 2800000, "passing_score_2023": 106},
+          {"program": "MBA", "level": "магистратура", "duration_years": 2, "budget_seats": 0, "contract_seats": 60, "price_per_year": 3800000, "passing_score_2023": null}
+        ]
+      },
+      {
+        "name": "Юридическая школа",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Jurisprudence", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 80, "price_per_year": 2600000, "passing_score_2023": 109}
+        ]
+      },
+      {
+        "name": "Медицинская школа",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Medicine", "level": "бакалавриат", "duration_years": 5, "budget_seats": 0, "contract_seats": 100, "price_per_year": 3800000, "passing_score_2023": 115}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Казахский национальный университет имени аль-Фараби",
+    "short_name": "КазНУ",
+    "city": "Алматы",
+    "address": "проспект аль-Фараби, 71, Алматы",
+    "lat": 43.22538385720178,
+    "lng": 76.92266660609735,
+    "founded": 1934,
+    "students_count": 22000,
+    "price_from": 650000,
+    "price_to": 1400000,
+    "dormitory": true,
+    "dormitory_price_per_year": 110000,
+    "avg_graduate_salary": 280000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР", "независимые международные аккредитации"],
+    "qs_world": 231,
+    "qs_asia": 46,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "именные стипендии аль-Фараби", "Болашак"],
+    "ent_threshold": 65,
+    "faculties": [
+      {
+        "name": "Факультет информационных технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Вычислительная техника и программное обеспечение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 60, "contract_seats": 150, "price_per_year": 950000, "passing_score_2023": 82},
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 120, "price_per_year": 900000, "passing_score_2023": 78},
+          {"program": "Computer Science", "level": "магистратура", "duration_years": 2, "budget_seats": 20, "contract_seats": 40, "price_per_year": 1100000, "passing_score_2023": null}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 50, "contract_seats": 200, "price_per_year": 800000, "passing_score_2023": 75},
+          {"program": "Финансы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 180, "price_per_year": 800000, "passing_score_2023": 74},
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 160, "price_per_year": 780000, "passing_score_2023": 72}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 150, "price_per_year": 900000, "passing_score_2023": 85},
+          {"program": "Международное право", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 80, "price_per_year": 950000, "passing_score_2023": 87}
+        ]
+      },
+      {
+        "name": "Медицинский факультет",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Общая медицина", "level": "бакалавриат", "duration_years": 5, "budget_seats": 30, "contract_seats": 100, "price_per_year": 1400000, "passing_score_2023": 92}
+        ]
+      },
+      {
+        "name": "Механико-математический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Математика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 750000, "passing_score_2023": 70},
+          {"program": "Механика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 760000, "passing_score_2023": 68}
+        ]
+      },
+      {
+        "name": "Факультет педагогики и психологии",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 100, "price_per_year": 680000, "passing_score_2023": 65},
+          {"program": "Дошкольное обучение и воспитание", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 650000, "passing_score_2023": 62}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+    "short_name": "ЕНУ",
+    "city": "Астана",
+    "address": "ул. Сатпаева, 2, Астана",
+    "lat": 51.1217073,
+    "lng": 71.4918972,
+    "founded": 1996,
+    "students_count": 18000,
+    "price_from": 600000,
+    "price_to": 1200000,
+    "dormitory": true,
+    "dormitory_price_per_year": 100000,
+    "avg_graduate_salary": 260000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР"],
+    "qs_world": 701,
+    "qs_asia": 151,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "именные стипендии ЕНУ", "Болашак"],
+    "ent_threshold": 60,
+    "faculties": [
+      {
+        "name": "Факультет информационных технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 50, "contract_seats": 120, "price_per_year": 850000, "passing_score_2023": 76},
+          {"program": "Вычислительная техника и программное обеспечение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 110, "price_per_year": 870000, "passing_score_2023": 78}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 55, "contract_seats": 180, "price_per_year": 750000, "passing_score_2023": 72},
+          {"program": "Финансы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 50, "contract_seats": 150, "price_per_year": 760000, "passing_score_2023": 70}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 130, "price_per_year": 850000, "passing_score_2023": 80}
+        ]
+      },
+      {
+        "name": "Факультет естественных наук",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Химия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 60, "price_per_year": 700000, "passing_score_2023": 65},
+          {"program": "Биология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 60, "price_per_year": 680000, "passing_score_2023": 63}
+        ]
+      },
+      {
+        "name": "Факультет педагогических наук",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 100, "price_per_year": 620000, "passing_score_2023": 60},
+          {"program": "Начальное образование", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 600000, "passing_score_2023": 58}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Казахский агротехнический университет имени С. Сейфуллина",
+    "short_name": "КазАТУ",
+    "city": "Астана",
+    "address": "проспект Женис, 62, Астана",
+    "lat": 51.1865826,
+    "lng": 71.4116923,
+    "founded": 1957,
+    "students_count": 12000,
+    "price_from": 550000,
+    "price_to": 950000,
+    "dormitory": true,
+    "dormitory_price_per_year": 90000,
+    "avg_graduate_salary": 220000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "ведомственные гранты МСХ РК"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Агрономический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Агрономия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 60, "contract_seats": 100, "price_per_year": 580000, "passing_score_2023": 58},
+          {"program": "Защита и карантин растений", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 60, "price_per_year": 570000, "passing_score_2023": 56}
+        ]
+      },
+      {
+        "name": "Факультет ветеринарии и животноводства",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Ветеринарная медицина", "level": "бакалавриат", "duration_years": 5, "budget_seats": 40, "contract_seats": 80, "price_per_year": 800000, "passing_score_2023": 65},
+          {"program": "Зоотехния", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 600000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Инженерно-технический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Механизация сельского хозяйства", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 90, "price_per_year": 650000, "passing_score_2023": 55},
+          {"program": "Транспорт, транспортная техника и технологии", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 680000, "passing_score_2023": 57}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика (АПК)", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 100, "price_per_year": 550000, "passing_score_2023": 55}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Карагандинский государственный технический университет",
+    "short_name": "КарГТУ",
+    "city": "Караганда",
+    "address": "бульвар Мира, 56, Караганда",
+    "lat": 49.8083,
+    "lng": 73.1414,
+    "founded": 1953,
+    "students_count": 9000,
+    "price_from": 520000,
+    "price_to": 950000,
+    "dormitory": true,
+    "dormitory_price_per_year": 85000,
+    "avg_graduate_salary": 230000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты компаний АрселорМиттал, Казахмыс"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Горно-металлургический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Горное дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 50, "contract_seats": 80, "price_per_year": 700000, "passing_score_2023": 60},
+          {"program": "Металлургия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 70, "price_per_year": 720000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Машиностроительный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Машиностроение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 80, "price_per_year": 680000, "passing_score_2023": 57},
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 90, "price_per_year": 700000, "passing_score_2023": 59}
+        ]
+      },
+      {
+        "name": "Информационных технологий факультет",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 90, "price_per_year": 800000, "passing_score_2023": 70},
+          {"program": "Вычислительная техника и программное обеспечение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 820000, "passing_score_2023": 72}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 100, "price_per_year": 550000, "passing_score_2023": 55}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Академия наук Карагандинской области имени М.О. Ауэзова",
+    "short_name": "АНК",
+    "city": "Караганда",
+    "address": "ул. Гоголя, 38, Караганда",
+    "lat": 49.7994,
+    "lng": 73.1325,
+    "founded": 1990,
+    "students_count": 3000,
+    "price_from": 480000,
+    "price_to": 800000,
+    "dormitory": false,
+    "dormitory_price_per_year": null,
+    "avg_graduate_salary": 190000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Гуманитарный факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Казахский язык и литература", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 480000, "passing_score_2023": 52},
+          {"program": "Русский язык и литература", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 50, "price_per_year": 480000, "passing_score_2023": 50}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 70, "price_per_year": 500000, "passing_score_2023": 52}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Карагандинский государственный университет имени Е. Букетова",
+    "short_name": "КарГУ",
+    "city": "Караганда",
+    "address": "ул. Университетская, 28, Караганда",
+    "lat": 49.7713856,
+    "lng": 73.1264432,
+    "founded": 1972,
+    "students_count": 11000,
+    "price_from": 520000,
+    "price_to": 1000000,
+    "dormitory": true,
+    "dormitory_price_per_year": 88000,
+    "avg_graduate_salary": 220000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "именные стипендии КарГУ"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Факультет математики и информационных технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 90, "price_per_year": 750000, "passing_score_2023": 68},
+          {"program": "Математика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 580000, "passing_score_2023": 60}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 130, "price_per_year": 560000, "passing_score_2023": 58},
+          {"program": "Финансы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 110, "price_per_year": 570000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 100, "price_per_year": 700000, "passing_score_2023": 72}
+        ]
+      },
+      {
+        "name": "Историко-педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "История", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 60, "price_per_year": 520000, "passing_score_2023": 55},
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 530000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Биолого-географический факультет",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Биология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 50, "price_per_year": 550000, "passing_score_2023": 55}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Казахский национальный аграрный университет",
+    "short_name": "КНАУ",
+    "city": "Алматы",
+    "address": "проспект Абая, 8, Алматы",
+    "lat": 43.2492,
+    "lng": 76.9437,
+    "founded": 1929,
+    "students_count": 13000,
+    "price_from": 540000,
+    "price_to": 900000,
+    "dormitory": true,
+    "dormitory_price_per_year": 95000,
+    "avg_graduate_salary": 210000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты МСХ РК"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Агрономический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Агрономия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 55, "contract_seats": 90, "price_per_year": 560000, "passing_score_2023": 57},
+          {"program": "Почвоведение и агрохимия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 50, "price_per_year": 550000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Ветеринарный факультет",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Ветеринарная медицина", "level": "бакалавриат", "duration_years": 5, "budget_seats": 45, "contract_seats": 80, "price_per_year": 820000, "passing_score_2023": 68},
+          {"program": "Ветеринарная санитария", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 60, "price_per_year": 680000, "passing_score_2023": 60}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика (АПК)", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 100, "price_per_year": 550000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Факультет инженерии и цифровых технологий",
+        "specialties": ["Инженерия", "IT"],
+        "programs": [
+          {"program": "Агроинженерия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 80, "price_per_year": 660000, "passing_score_2023": 58},
+          {"program": "Цифровые технологии в АПК", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 720000, "passing_score_2023": 62}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Павлодарский государственный педагогический университет",
+    "short_name": "ПГПУ",
+    "city": "Павлодар",
+    "address": "ул. Ломова, 60, Павлодар",
+    "lat": 52.2894,
+    "lng": 76.9728,
+    "founded": 1962,
+    "students_count": 5500,
+    "price_from": 480000,
+    "price_to": 750000,
+    "dormitory": true,
+    "dormitory_price_per_year": 80000,
+    "avg_graduate_salary": 190000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "педагогические гранты"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 80, "price_per_year": 490000, "passing_score_2023": 52},
+          {"program": "Начальное образование", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 70, "price_per_year": 480000, "passing_score_2023": 50},
+          {"program": "Дошкольное обучение и воспитание", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 60, "price_per_year": 480000, "passing_score_2023": 50}
+        ]
+      },
+      {
+        "name": "Факультет физической культуры и спорта",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Физическая культура и спорт", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 50, "price_per_year": 500000, "passing_score_2023": 50}
+        ]
+      },
+      {
+        "name": "Естественно-научный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Биология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 50, "price_per_year": 510000, "passing_score_2023": 52},
+          {"program": "Химия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 40, "price_per_year": 510000, "passing_score_2023": 52}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Павлодарский государственный университет имени С. Торайгырова",
+    "short_name": "ПГУ",
+    "city": "Павлодар",
+    "address": "ул. Ломова, 64, Павлодар",
+    "lat": 52.27,
+    "lng": 76.96,
+    "founded": 1960,
+    "students_count": 8000,
+    "price_from": 530000,
+    "price_to": 900000,
+    "dormitory": true,
+    "dormitory_price_per_year": 82000,
+    "avg_graduate_salary": 215000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "именные стипендии Торайгырова"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Инженерный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Машиностроение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 680000, "passing_score_2023": 58},
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 90, "price_per_year": 700000, "passing_score_2023": 60}
+        ]
+      },
+      {
+        "name": "Факультет информационных технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 800000, "passing_score_2023": 70},
+          {"program": "Вычислительная техника", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 70, "price_per_year": 820000, "passing_score_2023": 72}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 110, "price_per_year": 560000, "passing_score_2023": 57},
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 100, "price_per_year": 550000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 90, "price_per_year": 700000, "passing_score_2023": 68}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Восточно-Казахстанский государственный технический университет имени Д.Д. Серикова",
+    "short_name": "ВКГТУ",
+    "city": "Усть-Каменогорск",
+    "address": "ул. Серикова, 69, Усть-Каменогорск",
+    "lat": 49.9569441,
+    "lng": 82.5909312,
+    "founded": 1958,
+    "students_count": 7500,
+    "price_from": 530000,
+    "price_to": 900000,
+    "dormitory": true,
+    "dormitory_price_per_year": 85000,
+    "avg_graduate_salary": 225000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты Казцинк, Казатомпром"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Горно-металлургический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Горное дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 80, "price_per_year": 680000, "passing_score_2023": 58},
+          {"program": "Металлургия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 700000, "passing_score_2023": 60}
+        ]
+      },
+      {
+        "name": "Инженерно-технологический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 90, "price_per_year": 700000, "passing_score_2023": 60},
+          {"program": "Машиностроение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 670000, "passing_score_2023": 57}
+        ]
+      },
+      {
+        "name": "Факультет информационных технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 800000, "passing_score_2023": 70},
+          {"program": "Программная инженерия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 70, "price_per_year": 830000, "passing_score_2023": 72}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 100, "price_per_year": 550000, "passing_score_2023": 56}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Семей государственный медицинский университет",
+    "short_name": "СГМУ",
+    "city": "Семей",
+    "address": "ул. Абая, 103, Семей",
+    "lat": 50.4333,
+    "lng": 80.2667,
+    "founded": 1953,
+    "students_count": 5000,
+    "price_from": 900000,
+    "price_to": 1600000,
+    "dormitory": true,
+    "dormitory_price_per_year": 90000,
+    "avg_graduate_salary": 380000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР", "аккредитация ВОЗ (список)"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант (медицина)", "именные стипендии СГМУ"],
+    "ent_threshold": 70,
+    "faculties": [
+      {
+        "name": "Общая медицина",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Общая медицина", "level": "бакалавриат", "duration_years": 5, "budget_seats": 80, "contract_seats": 150, "price_per_year": 1400000, "passing_score_2023": 88},
+          {"program": "Педиатрия", "level": "бакалавриат", "duration_years": 5, "budget_seats": 40, "contract_seats": 80, "price_per_year": 1350000, "passing_score_2023": 85}
+        ]
+      },
+      {
+        "name": "Стоматология",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Стоматология", "level": "бакалавриат", "duration_years": 5, "budget_seats": 20, "contract_seats": 80, "price_per_year": 1600000, "passing_score_2023": 90}
+        ]
+      },
+      {
+        "name": "Фармация",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Фармация", "level": "бакалавриат", "duration_years": 5, "budget_seats": 25, "contract_seats": 70, "price_per_year": 1100000, "passing_score_2023": 80}
+        ]
+      },
+      {
+        "name": "Общественное здравоохранение",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Общественное здравоохранение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 50, "price_per_year": 900000, "passing_score_2023": 72}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Южно-Казахстанский государственный университет имени М. Ауэзова",
+    "short_name": "ЮКГУ",
+    "city": "Шымкент",
+    "address": "проспект Тауке Хана, 5, Шымкент",
+    "lat": 42.3210933,
+    "lng": 69.5902326,
+    "founded": 1943,
+    "students_count": 20000,
+    "price_from": 530000,
+    "price_to": 1200000,
+    "dormitory": true,
+    "dormitory_price_per_year": 85000,
+    "avg_graduate_salary": 215000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "региональные гранты"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Инженерно-технологический институт",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Химическая инженерия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 90, "price_per_year": 680000, "passing_score_2023": 58},
+          {"program": "Машиностроение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 660000, "passing_score_2023": 56}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 160, "price_per_year": 560000, "passing_score_2023": 58},
+          {"program": "Финансы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 140, "price_per_year": 570000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 120, "price_per_year": 720000, "passing_score_2023": 70}
+        ]
+      },
+      {
+        "name": "Медицинский факультет",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Общая медицина", "level": "бакалавриат", "duration_years": 5, "budget_seats": 30, "contract_seats": 100, "price_per_year": 1200000, "passing_score_2023": 85}
+        ]
+      },
+      {
+        "name": "Факультет информационных технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 90, "price_per_year": 790000, "passing_score_2023": 68}
+        ]
+      },
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 90, "price_per_year": 530000, "passing_score_2023": 55}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Кызылординский университет имени Коркыта Ата",
+    "short_name": "КУ",
+    "city": "Кызылорда",
+    "address": "ул. Айтеке Би, 29A, Кызылорда",
+    "lat": 44.8383,
+    "lng": 65.475,
+    "founded": 1937,
+    "students_count": 7000,
+    "price_from": 490000,
+    "price_to": 850000,
+    "dormitory": true,
+    "dormitory_price_per_year": 80000,
+    "avg_graduate_salary": 195000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "региональные гранты акимата"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Инженерный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Нефтегазовое дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 80, "price_per_year": 750000, "passing_score_2023": 62},
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 690000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 100, "price_per_year": 510000, "passing_score_2023": 52}
+        ]
+      },
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 490000, "passing_score_2023": 50},
+          {"program": "Казахский язык и литература", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 490000, "passing_score_2023": 50}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Мангистауский государственный университет имени Б. Момышулы",
+    "short_name": "МГУ",
+    "city": "Актау",
+    "address": "проспект Жаңаөзен, 29, Актау",
+    "lat": 43.6694,
+    "lng": 51.1903,
+    "founded": 1999,
+    "students_count": 6000,
+    "price_from": 510000,
+    "price_to": 850000,
+    "dormitory": true,
+    "dormitory_price_per_year": 82000,
+    "avg_graduate_salary": 240000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты нефтяных компаний региона"],
+    "ent_threshold": 52,
+    "faculties": [
+      {
+        "name": "Инженерный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Нефтегазовое дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 90, "price_per_year": 800000, "passing_score_2023": 65},
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 700000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 90, "price_per_year": 530000, "passing_score_2023": 53}
+        ]
+      },
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 510000, "passing_score_2023": 52}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "Атырауский государственный университет имени Х. Досмухамедова",
+    "short_name": "АГУ",
+    "city": "Атырау",
+    "address": "ул. Сатыбаева, 70, Атырау",
+    "lat": 47.0833,
+    "lng": 51.8639,
+    "founded": 1990,
+    "students_count": 6500,
+    "price_from": 500000,
+    "price_to": 870000,
+    "dormitory": true,
+    "dormitory_price_per_year": 82000,
+    "avg_graduate_salary": 235000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты КазМунайГаз, NCOC"],
+    "ent_threshold": 52,
+    "faculties": [
+      {
+        "name": "Нефтегазовый факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Нефтегазовое дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 50, "contract_seats": 100, "price_per_year": 820000, "passing_score_2023": 65},
+          {"program": "Химическая инженерия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 750000, "passing_score_2023": 60}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 90, "price_per_year": 520000, "passing_score_2023": 53}
+        ]
+      },
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 500000, "passing_score_2023": 52}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "Западно-Казахстанский аграрно-технический университет имени Жангира Хана",
+    "short_name": "ЗКАТУ",
+    "city": "Уральск",
+    "address": "проспект Жангир Хана, 51, Уральск",
+    "lat": 51.1769967,
+    "lng": 51.308551,
+    "founded": 1932,
+    "students_count": 7500,
+    "price_from": 490000,
+    "price_to": 820000,
+    "dormitory": true,
+    "dormitory_price_per_year": 80000,
+    "avg_graduate_salary": 200000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты МСХ РК"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Агрономический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Агрономия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 50, "contract_seats": 80, "price_per_year": 520000, "passing_score_2023": 53},
+          {"program": "Защита растений", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 50, "price_per_year": 510000, "passing_score_2023": 51}
+        ]
+      },
+      {
+        "name": "Ветеринарный факультет",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Ветеринарная медицина", "level": "бакалавриат", "duration_years": 5, "budget_seats": 40, "contract_seats": 70, "price_per_year": 780000, "passing_score_2023": 62}
+        ]
+      },
+      {
+        "name": "Инженерный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Механизация сельского хозяйства", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 640000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 490000, "passing_score_2023": 50}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "Северо-Казахстанский государственный университет",
+    "short_name": "СКГУ",
+    "city": "Петропавловск",
+    "address": "ул. Пушкина, 86, Петропавловск",
+    "lat": 54.8765422,
+    "lng": 69.1342442,
+    "founded": 1937,
+    "students_count": 7000,
+    "price_from": 500000,
+    "price_to": 870000,
+    "dormitory": true,
+    "dormitory_price_per_year": 80000,
+    "avg_graduate_salary": 198000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Инженерно-технологический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Машиностроение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 660000, "passing_score_2023": 57},
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 680000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Факультет информационных технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 70, "price_per_year": 790000, "passing_score_2023": 67}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 90, "price_per_year": 520000, "passing_score_2023": 52}
+        ]
+      },
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 500000, "passing_score_2023": 50}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "Казахский национальный педагогический университет имени Абая",
+    "short_name": "КНПУим.Абая",
+    "city": "Алматы",
+    "address": "проспект Достык, 13, Алматы",
+    "lat": 43.25650453368709,
+    "lng": 76.95454554894461,
+    "founded": 1928,
+    "students_count": 14000,
+    "price_from": 520000,
+    "price_to": 900000,
+    "dormitory": true,
+    "dormitory_price_per_year": 88000,
+    "avg_graduate_salary": 200000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "педагогические гранты МОН РК", "именные стипендии им. Абая"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 60, "contract_seats": 140, "price_per_year": 530000, "passing_score_2023": 56},
+          {"program": "Начальное образование", "level": "бакалавриат", "duration_years": 4, "budget_seats": 55, "contract_seats": 120, "price_per_year": 520000, "passing_score_2023": 55},
+          {"program": "Дошкольное обучение и воспитание", "level": "бакалавриат", "duration_years": 4, "budget_seats": 50, "contract_seats": 100, "price_per_year": 520000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Факультет физической культуры и спорта",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Физическая культура и спорт", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 80, "price_per_year": 540000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Факультет иностранных языков",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Иностранный язык (два иностранных языка)", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 120, "price_per_year": 560000, "passing_score_2023": 60},
+          {"program": "Переводческое дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 600000, "passing_score_2023": 62}
+        ]
+      },
+      {
+        "name": "Естественно-научный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Биология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 540000, "passing_score_2023": 56},
+          {"program": "Химия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 540000, "passing_score_2023": 55}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "Казахский технологический университет",
+    "short_name": "КТУ",
+    "city": "Алматы",
+    "address": "ул. Сатпаева, 100, Алматы",
+    "lat": 43.2331,
+    "lng": 76.9158,
+    "founded": 2001,
+    "students_count": 5000,
+    "price_from": 600000,
+    "price_to": 1000000,
+    "dormitory": false,
+    "dormitory_price_per_year": null,
+    "avg_graduate_salary": 210000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Технологический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Технология пищевых продуктов", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 650000, "passing_score_2023": 58},
+          {"program": "Биотехнология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 700000, "passing_score_2023": 60}
+        ]
+      },
+      {
+        "name": "Факультет IT и автоматизации",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 80, "price_per_year": 850000, "passing_score_2023": 70}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 90, "price_per_year": 620000, "passing_score_2023": 57}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "Казахский государственный женский педагогический университет",
+    "short_name": "КГЖПУ",
+    "city": "Алматы",
+    "address": "ул. Ауэзова, 99, Алматы",
+    "lat": 43.258613086331536,
+    "lng": 76.92975146134916,
+    "founded": 1944,
+    "students_count": 8000,
+    "price_from": 510000,
+    "price_to": 830000,
+    "dormitory": true,
+    "dormitory_price_per_year": 85000,
+    "avg_graduate_salary": 195000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "педагогические гранты МОН РК"],
+    "ent_threshold": 52,
+    "faculties": [
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 55, "contract_seats": 130, "price_per_year": 510000, "passing_score_2023": 53},
+          {"program": "Начальное образование", "level": "бакалавриат", "duration_years": 4, "budget_seats": 50, "contract_seats": 110, "price_per_year": 510000, "passing_score_2023": 52},
+          {"program": "Дошкольное обучение и воспитание", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 100, "price_per_year": 510000, "passing_score_2023": 52}
+        ]
+      },
+      {
+        "name": "Факультет иностранных языков",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Иностранный язык", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 100, "price_per_year": 540000, "passing_score_2023": 57}
+        ]
+      },
+      {
+        "name": "Факультет художественного образования",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Музыкальное образование", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 530000, "passing_score_2023": 52}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "name": "Туран Университет",
+    "short_name": "Туран",
+    "city": "Алматы",
+    "address": "ул. Сатпаева, 16а, Алматы",
+    "lat": 43.23786558768846,
+    "lng": 76.94046657126219,
+    "founded": 1994,
+    "students_count": 10000,
+    "price_from": 700000,
+    "price_to": 1300000,
+    "dormitory": false,
+    "dormitory_price_per_year": null,
+    "avg_graduate_salary": 240000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР", "FIBAA"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "внутренние скидки Туран до 50%", "грант «Жаңа Мүмкіндік»"],
+    "ent_threshold": 60,
+    "faculties": [
+      {
+        "name": "Бизнес-школа",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 200, "price_per_year": 800000, "passing_score_2023": 62},
+          {"program": "Финансы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 170, "price_per_year": 820000, "passing_score_2023": 63},
+          {"program": "Маркетинг", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 150, "price_per_year": 800000, "passing_score_2023": 61},
+          {"program": "MBA", "level": "магистратура", "duration_years": 2, "budget_seats": 0, "contract_seats": 100, "price_per_year": 1300000, "passing_score_2023": null}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 120, "price_per_year": 900000, "passing_score_2023": 70}
+        ]
+      },
+      {
+        "name": "Факультет IT и технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 100, "price_per_year": 950000, "passing_score_2023": 68},
+          {"program": "Data Science", "level": "бакалавриат", "duration_years": 4, "budget_seats": 10, "contract_seats": 80, "price_per_year": 1000000, "passing_score_2023": 70}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "name": "Алматинский технологический университет",
+    "short_name": "АТУ",
+    "city": "Алматы",
+    "address": "ул. Толе Би, 100, Алматы",
+    "lat": 43.252633255642834,
+    "lng": 76.92663656262056,
+    "founded": 1957,
+    "students_count": 9000,
+    "price_from": 580000,
+    "price_to": 1000000,
+    "dormitory": true,
+    "dormitory_price_per_year": 88000,
+    "avg_graduate_salary": 215000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "отраслевые гранты пищевой промышленности"],
+    "ent_threshold": 56,
+    "faculties": [
+      {
+        "name": "Факультет пищевых технологий",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Технология пищевых продуктов", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 100, "price_per_year": 620000, "passing_score_2023": 58},
+          {"program": "Биотехнология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 660000, "passing_score_2023": 60}
+        ]
+      },
+      {
+        "name": "Факультет лёгкой промышленности и дизайна",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Технология и конструирование одежды", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 80, "price_per_year": 600000, "passing_score_2023": 56},
+          {"program": "Дизайн (промышленный)", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 60, "price_per_year": 700000, "passing_score_2023": 60}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 100, "price_per_year": 590000, "passing_score_2023": 57}
+        ]
+      },
+      {
+        "name": "Факультет IT",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 80, "price_per_year": 850000, "passing_score_2023": 68}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "name": "Казахский государственный лесотехнический институт",
+    "short_name": "КГЛТИ",
+    "city": "Алматы",
+    "address": "ул. Пояркова, 45, Алматы",
+    "lat": 43.2211,
+    "lng": 76.9489,
+    "founded": 1998,
+    "students_count": 3500,
+    "price_from": 540000,
+    "price_to": 780000,
+    "dormitory": false,
+    "dormitory_price_per_year": null,
+    "avg_graduate_salary": 195000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты МСХ (лесное хозяйство)"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Лесохозяйственный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Лесное дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 60, "price_per_year": 560000, "passing_score_2023": 52},
+          {"program": "Садово-парковое и ландшафтное строительство", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 50, "price_per_year": 580000, "passing_score_2023": 53}
+        ]
+      },
+      {
+        "name": "Факультет деревообработки",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Технология деревообработки", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 50, "price_per_year": 560000, "passing_score_2023": 51}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "name": "Международный университет информационных технологий",
+    "short_name": "МУИТ",
+    "city": "Алматы",
+    "address": "ул. Манаса, 34/1, Алматы",
+    "lat": 43.235281723940524,
+    "lng": 76.90958923213088,
+    "founded": 2009,
+    "students_count": 6000,
+    "price_from": 850000,
+    "price_to": 1500000,
+    "dormitory": true,
+    "dormitory_price_per_year": 110000,
+    "avg_graduate_salary": 320000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР", "IEEE"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "IT-гранты от партнёров (Kaspi, Kolesa, Chocofamily)"],
+    "ent_threshold": 75,
+    "faculties": [
+      {
+        "name": "Факультет компьютерных наук",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Computer Science", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 150, "price_per_year": 1100000, "passing_score_2023": 88},
+          {"program": "Software Engineering", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 120, "price_per_year": 1150000, "passing_score_2023": 90},
+          {"program": "Cybersecurity", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 100, "price_per_year": 1200000, "passing_score_2023": 92},
+          {"program": "Data Science & AI", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 100, "price_per_year": 1250000, "passing_score_2023": 94}
+        ]
+      },
+      {
+        "name": "Факультет бизнеса и управления",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Digital Business", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 100, "price_per_year": 900000, "passing_score_2023": 75},
+          {"program": "IT Management", "level": "магистратура", "duration_years": 2, "budget_seats": 10, "contract_seats": 50, "price_per_year": 1500000, "passing_score_2023": null}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "name": "Казахстанский филиал Московского государственного университета имени М.В. Ломоносова",
+    "short_name": "КзФ МГУ",
+    "city": "Астана",
+    "address": "ул. Кенесары, 36, Астана",
+    "lat": 51.1747,
+    "lng": 71.4436,
+    "founded": 2001,
+    "students_count": 1200,
+    "price_from": 1500000,
+    "price_to": 2500000,
+    "dormitory": true,
+    "dormitory_price_per_year": 180000,
+    "avg_graduate_salary": 420000,
+    "languages": ["русский"],
+    "accreditations": ["МГУ (Россия)", "НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": false,
+    "scholarships": ["скидки при высоком ЕНТ", "стипендии МГУ для отличников"],
+    "ent_threshold": 90,
+    "faculties": [
+      {
+        "name": "Факультет вычислительной математики и кибернетики",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Прикладная математика и информатика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 50, "price_per_year": 2000000, "passing_score_2023": 105}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 60, "price_per_year": 2000000, "passing_score_2023": 100},
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 50, "price_per_year": 2000000, "passing_score_2023": 98}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 50, "price_per_year": 2000000, "passing_score_2023": 100}
+        ]
+      },
+      {
+        "name": "Физический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Физика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 0, "contract_seats": 30, "price_per_year": 2000000, "passing_score_2023": 97}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "name": "Университет туризма и международных отношений",
+    "short_name": "УТМО",
+    "city": "Алматы",
+    "address": "ул. Тайманова, 2, Алматы",
+    "lat": 43.2533,
+    "lng": 76.93,
+    "founded": 2005,
+    "students_count": 3000,
+    "price_from": 650000,
+    "price_to": 1000000,
+    "dormitory": false,
+    "dormitory_price_per_year": null,
+    "avg_graduate_salary": 205000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "туристические гранты"],
+    "ent_threshold": 58,
+    "faculties": [
+      {
+        "name": "Факультет туризма и сервиса",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Туризм", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 100, "price_per_year": 680000, "passing_score_2023": 60},
+          {"program": "Гостиничное дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 80, "price_per_year": 660000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Факультет международных отношений",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Международные отношения", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 80, "price_per_year": 850000, "passing_score_2023": 72},
+          {"program": "Регионоведение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 60, "price_per_year": 800000, "passing_score_2023": 70}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "name": "Казахский государственный архитектурно-строительный университет",
+    "short_name": "КГАСУ",
+    "city": "Алматы",
+    "address": "ул. Рыскулбекова, 28, Алматы",
+    "lat": 43.2222,
+    "lng": 76.9101,
+    "founded": 1999,
+    "students_count": 7000,
+    "price_from": 600000,
+    "price_to": 1000000,
+    "dormitory": true,
+    "dormitory_price_per_year": 88000,
+    "avg_graduate_salary": 230000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "отраслевые гранты строительного сектора"],
+    "ent_threshold": 58,
+    "faculties": [
+      {
+        "name": "Архитектурный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Архитектура", "level": "бакалавриат", "duration_years": 5, "budget_seats": 30, "contract_seats": 80, "price_per_year": 900000, "passing_score_2023": 68},
+          {"program": "Дизайн (архитектурная среда)", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 60, "price_per_year": 850000, "passing_score_2023": 65}
+        ]
+      },
+      {
+        "name": "Строительный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Строительство", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 100, "price_per_year": 720000, "passing_score_2023": 60},
+          {"program": "Теплогазоснабжение и вентиляция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 680000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Факультет IT и менеджмента",
+        "specialties": ["IT", "Экономика"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 70, "price_per_year": 820000, "passing_score_2023": 65},
+          {"program": "Менеджмент в строительстве", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 80, "price_per_year": 620000, "passing_score_2023": 58}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "name": "Казахский государственный индустриально-строительный университет",
+    "short_name": "КГИСУ",
+    "city": "Алматы",
+    "address": "ул. Рыскулбекова, 28, Алматы",
+    "lat": 43.2222,
+    "lng": 76.9101,
+    "founded": 2006,
+    "students_count": 4000,
+    "price_from": 580000,
+    "price_to": 950000,
+    "dormitory": false,
+    "dormitory_price_per_year": null,
+    "avg_graduate_salary": 215000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант"],
+    "ent_threshold": 56,
+    "faculties": [
+      {
+        "name": "Строительный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Строительство", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 90, "price_per_year": 700000, "passing_score_2023": 58},
+          {"program": "Промышленное и гражданское строительство", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 710000, "passing_score_2023": 59}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика в строительстве", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 80, "price_per_year": 590000, "passing_score_2023": 56}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "name": "Каспийский государственный технический университет",
+    "short_name": "КГТУ",
+    "city": "Актау",
+    "address": "ул. Молодёжи, 27, Актау",
+    "lat": 43.65,
+    "lng": 51.1667,
+    "founded": 2003,
+    "students_count": 4500,
+    "price_from": 540000,
+    "price_to": 900000,
+    "dormitory": true,
+    "dormitory_price_per_year": 82000,
+    "avg_graduate_salary": 240000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты нефтяных компаний"],
+    "ent_threshold": 53,
+    "faculties": [
+      {
+        "name": "Нефтегазовый факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Нефтегазовое дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 100, "price_per_year": 850000, "passing_score_2023": 65},
+          {"program": "Бурение нефтяных и газовых скважин", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 820000, "passing_score_2023": 63}
+        ]
+      },
+      {
+        "name": "Технический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Машиностроение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 680000, "passing_score_2023": 57},
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 700000, "passing_score_2023": 58}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 80, "price_per_year": 550000, "passing_score_2023": 54}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "name": "Университет Сулеймана Демиреля",
+    "short_name": "УСД",
+    "city": "Каскелен",
+    "address": "проспект Абая, 1/1, Каскелен",
+    "lat": 43.20794404248535,
+    "lng": 76.66903497923909,
+    "founded": 1996,
+    "students_count": 5500,
+    "price_from": 750000,
+    "price_to": 1400000,
+    "dormitory": true,
+    "dormitory_price_per_year": 180000,
+    "avg_graduate_salary": 270000,
+    "languages": ["казахский", "русский", "турецкий", "английский"],
+    "accreditations": ["НААР", "YÖK (Турция)"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "стипендии YTB (Турецкое правительство)", "внутренние скидки до 50%"],
+    "ent_threshold": 65,
+    "faculties": [
+      {
+        "name": "Факультет инженерии и естественных наук",
+        "specialties": ["IT", "Инженерия"],
+        "programs": [
+          {"program": "Computer Engineering", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 100, "price_per_year": 1100000, "passing_score_2023": 80},
+          {"program": "Electrical and Electronics Engineering", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 80, "price_per_year": 1050000, "passing_score_2023": 77},
+          {"program": "Civil Engineering", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 70, "price_per_year": 1000000, "passing_score_2023": 75}
+        ]
+      },
+      {
+        "name": "Бизнес-факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 100, "price_per_year": 900000, "passing_score_2023": 68},
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 90, "price_per_year": 880000, "passing_score_2023": 67}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 10, "contract_seats": 70, "price_per_year": 950000, "passing_score_2023": 72}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "name": "Казахский британский технический университет",
+    "short_name": "КБТУ",
+    "city": "Алматы",
+    "address": "ул. Толе Би, 59, Алматы",
+    "lat": 43.2557256,
+    "lng": 76.9431325,
+    "founded": 2001,
+    "students_count": 4500,
+    "price_from": 1400000,
+    "price_to": 2800000,
+    "dormitory": true,
+    "dormitory_price_per_year": 200000,
+    "avg_graduate_salary": 450000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР", "ABET", "QAA (UK)"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "корпоративные стипендии Shell, Chevron, KazMunayGas", "Болашак"],
+    "ent_threshold": 85,
+    "faculties": [
+      {
+        "name": "Факультет информационных технологий",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Computer Science", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 100, "price_per_year": 2200000, "passing_score_2023": 100},
+          {"program": "Software Engineering", "level": "бакалавриат", "duration_years": 4, "budget_seats": 10, "contract_seats": 80, "price_per_year": 2200000, "passing_score_2023": 102},
+          {"program": "Cybersecurity", "level": "бакалавриат", "duration_years": 4, "budget_seats": 10, "contract_seats": 60, "price_per_year": 2400000, "passing_score_2023": 104}
+        ]
+      },
+      {
+        "name": "Нефтегазовая школа",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Нефтегазовая инженерия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 80, "price_per_year": 2500000, "passing_score_2023": 98},
+          {"program": "Chemical Engineering", "level": "бакалавриат", "duration_years": 4, "budget_seats": 10, "contract_seats": 60, "price_per_year": 2400000, "passing_score_2023": 96}
+        ]
+      },
+      {
+        "name": "Бизнес-школа",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Business Administration", "level": "бакалавриат", "duration_years": 4, "budget_seats": 10, "contract_seats": 80, "price_per_year": 1800000, "passing_score_2023": 90},
+          {"program": "MBA", "level": "магистратура", "duration_years": 2, "budget_seats": 0, "contract_seats": 40, "price_per_year": 2800000, "passing_score_2023": null}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "name": "Евразийский университет",
+    "short_name": "ЕУ",
+    "city": "Астана",
+    "address": "проспект Кабанбай Батыра, 6, Астана",
+    "lat": 51.17,
+    "lng": 71.47,
+    "founded": 2003,
+    "students_count": 4000,
+    "price_from": 580000,
+    "price_to": 900000,
+    "dormitory": false,
+    "dormitory_price_per_year": null,
+    "avg_graduate_salary": 200000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 20, "contract_seats": 100, "price_per_year": 590000, "passing_score_2023": 56},
+          {"program": "Финансы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 18, "contract_seats": 90, "price_per_year": 600000, "passing_score_2023": 57}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 80, "price_per_year": 720000, "passing_score_2023": 68}
+        ]
+      },
+      {
+        "name": "Факультет IT",
+        "specialties": ["IT"],
+        "programs": [
+          {"program": "Информационные системы", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 70, "price_per_year": 820000, "passing_score_2023": 67}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "name": "Университет имени Туран-Астана",
+    "short_name": "Туран-Астана",
+    "city": "Астана",
+    "address": "проспект Абая, 1, Астана",
+    "lat": 51.17,
+    "lng": 71.47,
+    "founded": 2001,
+    "students_count": 3500,
+    "price_from": 600000,
+    "price_to": 950000,
+    "dormitory": false,
+    "dormitory_price_per_year": null,
+    "avg_graduate_salary": 195000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "внутренние скидки до 30%"],
+    "ent_threshold": 55,
+    "faculties": [
+      {
+        "name": "Бизнес-факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Менеджмент", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 100, "price_per_year": 620000, "passing_score_2023": 57},
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 15, "contract_seats": 90, "price_per_year": 610000, "passing_score_2023": 56}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 12, "contract_seats": 80, "price_per_year": 750000, "passing_score_2023": 68}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "name": "Казахский государственный медицинский университет им. С.Д. Асфендиярова",
+    "short_name": "КГМУ",
+    "city": "Алматы",
+    "address": "ул. Толе Би, 94, Алматы",
+    "lat": 43.2381,
+    "lng": 76.8975,
+    "founded": 1930,
+    "students_count": 9000,
+    "price_from": 1000000,
+    "price_to": 1800000,
+    "dormitory": true,
+    "dormitory_price_per_year": 120000,
+    "avg_graduate_salary": 400000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР", "WFME", "аккредитация ВОЗ"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант (медицина)", "именные стипендии МЗ РК", "Болашак"],
+    "ent_threshold": 72,
+    "faculties": [
+      {
+        "name": "Общая медицина",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Общая медицина", "level": "бакалавриат", "duration_years": 5, "budget_seats": 100, "contract_seats": 200, "price_per_year": 1500000, "passing_score_2023": 90},
+          {"program": "Педиатрия", "level": "бакалавриат", "duration_years": 5, "budget_seats": 40, "contract_seats": 100, "price_per_year": 1450000, "passing_score_2023": 87}
+        ]
+      },
+      {
+        "name": "Стоматология",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Стоматология", "level": "бакалавриат", "duration_years": 5, "budget_seats": 25, "contract_seats": 100, "price_per_year": 1800000, "passing_score_2023": 93}
+        ]
+      },
+      {
+        "name": "Фармация",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Фармация", "level": "бакалавриат", "duration_years": 5, "budget_seats": 30, "contract_seats": 80, "price_per_year": 1200000, "passing_score_2023": 82}
+        ]
+      },
+      {
+        "name": "Общественное здравоохранение",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Общественное здравоохранение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 1000000, "passing_score_2023": 75}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "name": "Казахский национальный медицинский университет им. С.Д. Асфендиярова",
+    "short_name": "КазНМУ",
+    "city": "Алматы",
+    "address": "ул. Толе Би, 94, Алматы",
+    "lat": 43.25322281152709,
+    "lng": 76.93179817957352,
+    "founded": 1930,
+    "students_count": 11000,
+    "price_from": 1100000,
+    "price_to": 2000000,
+    "dormitory": true,
+    "dormitory_price_per_year": 130000,
+    "avg_graduate_salary": 420000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР", "WFME", "аккредитация ВОЗ", "ECFMG (США)"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант (медицина)", "именные стипендии", "Болашак", "международные стипендии для резидентов"],
+    "ent_threshold": 75,
+    "faculties": [
+      {
+        "name": "Общая медицина",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Общая медицина", "level": "бакалавриат", "duration_years": 5, "budget_seats": 120, "contract_seats": 300, "price_per_year": 1600000, "passing_score_2023": 92},
+          {"program": "Педиатрия", "level": "бакалавриат", "duration_years": 5, "budget_seats": 50, "contract_seats": 120, "price_per_year": 1500000, "passing_score_2023": 88}
+        ]
+      },
+      {
+        "name": "Стоматология",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Стоматология", "level": "бакалавриат", "duration_years": 5, "budget_seats": 30, "contract_seats": 120, "price_per_year": 2000000, "passing_score_2023": 95}
+        ]
+      },
+      {
+        "name": "Фармация",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Фармация", "level": "бакалавриат", "duration_years": 5, "budget_seats": 35, "contract_seats": 90, "price_per_year": 1300000, "passing_score_2023": 84}
+        ]
+      },
+      {
+        "name": "Общественное здравоохранение",
+        "specialties": ["Здоровье"],
+        "programs": [
+          {"program": "Общественное здравоохранение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 1100000, "passing_score_2023": 78},
+          {"program": "Сестринское дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 1100000, "passing_score_2023": 75}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "name": "Актюбинский региональный государственный университет имени К. Жубанова",
+    "short_name": "АРГУ",
+    "city": "Актобе",
+    "address": "проспект А. Молдагулова, 34, Актобе",
+    "lat": 50.2917,
+    "lng": 57.1928,
+    "founded": 1966,
+    "students_count": 8000,
+    "price_from": 510000,
+    "price_to": 870000,
+    "dormitory": true,
+    "dormitory_price_per_year": 82000,
+    "avg_graduate_salary": 200000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "именные стипендии Жубанова"],
+    "ent_threshold": 52,
+    "faculties": [
+      {
+        "name": "Физико-математический факультет",
+        "specialties": ["IT", "Инженерия"],
+        "programs": [
+          {"program": "Информатика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 700000, "passing_score_2023": 62},
+          {"program": "Математика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 550000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 100, "price_per_year": 530000, "passing_score_2023": 53}
+        ]
+      },
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 90, "price_per_year": 510000, "passing_score_2023": 52}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 80, "price_per_year": 700000, "passing_score_2023": 65}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "name": "Актюбинский государственный педагогический институт",
+    "short_name": "АГПИ",
+    "city": "Актобе",
+    "address": "ул. Толыбаева, 80, Актобе",
+    "lat": 50.2917,
+    "lng": 57.17,
+    "founded": 1991,
+    "students_count": 4500,
+    "price_from": 480000,
+    "price_to": 720000,
+    "dormitory": true,
+    "dormitory_price_per_year": 78000,
+    "avg_graduate_salary": 185000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "педагогические гранты"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 90, "price_per_year": 480000, "passing_score_2023": 50},
+          {"program": "Начальное образование", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 480000, "passing_score_2023": 50},
+          {"program": "Дошкольное обучение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 480000, "passing_score_2023": 50}
+        ]
+      },
+      {
+        "name": "Факультет иностранных языков",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Иностранный язык", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 510000, "passing_score_2023": 55}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "name": "Западно-Казахстанский университет имени Махамбета Утемисова",
+    "short_name": "ЗКУ",
+    "city": "Уральск",
+    "address": "ул. Достык, 162, Уральск",
+    "lat": 51.2194,
+    "lng": 51.4006,
+    "founded": 1932,
+    "students_count": 7000,
+    "price_from": 490000,
+    "price_to": 830000,
+    "dormitory": true,
+    "dormitory_price_per_year": 80000,
+    "avg_graduate_salary": 195000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "именные стипендии Утемисова"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 90, "price_per_year": 490000, "passing_score_2023": 50},
+          {"program": "Начальное образование", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 490000, "passing_score_2023": 50}
+        ]
+      },
+      {
+        "name": "Инженерный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 660000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 90, "price_per_year": 510000, "passing_score_2023": 51}
+        ]
+      },
+      {
+        "name": "Юридический факультет",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Юриспруденция", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 80, "price_per_year": 690000, "passing_score_2023": 63}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "name": "Кокшетауский государственный педагогический институт",
+    "short_name": "КГПИ",
+    "city": "Кокшетау",
+    "address": "ул. Интернациональная, 36, Кокшетау",
+    "lat": 53.2883,
+    "lng": 69.3969,
+    "founded": 1962,
+    "students_count": 5000,
+    "price_from": 480000,
+    "price_to": 730000,
+    "dormitory": true,
+    "dormitory_price_per_year": 78000,
+    "avg_graduate_salary": 188000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "педагогические гранты МОН РК"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 45, "contract_seats": 100, "price_per_year": 480000, "passing_score_2023": 50},
+          {"program": "Начальное образование", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 90, "price_per_year": 480000, "passing_score_2023": 50},
+          {"program": "Дошкольное обучение", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 80, "price_per_year": 480000, "passing_score_2023": 50}
+        ]
+      },
+      {
+        "name": "Факультет иностранных языков",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Иностранный язык", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 510000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Естественно-научный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Биология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 55, "price_per_year": 510000, "passing_score_2023": 52}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "name": "Жезказганский государственный университет имени О. Айманова",
+    "short_name": "ЖГУ",
+    "city": "Жезказган",
+    "address": "ул. Ауэзова, 85, Жезказган",
+    "lat": 47.7997,
+    "lng": 67.7197,
+    "founded": 1994,
+    "students_count": 4000,
+    "price_from": 490000,
+    "price_to": 800000,
+    "dormitory": true,
+    "dormitory_price_per_year": 80000,
+    "avg_graduate_salary": 210000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "гранты Kazakhmys Corporation"],
+    "ent_threshold": 50,
+    "faculties": [
+      {
+        "name": "Горно-металлургический факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Горное дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 35, "contract_seats": 70, "price_per_year": 680000, "passing_score_2023": 55},
+          {"program": "Металлургия", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 60, "price_per_year": 700000, "passing_score_2023": 56}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 80, "price_per_year": 500000, "passing_score_2023": 51}
+        ]
+      },
+      {
+        "name": "Педагогический факультет",
+        "specialties": ["Образование"],
+        "programs": [
+          {"program": "Педагогика и психология", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 70, "price_per_year": 490000, "passing_score_2023": 50}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "name": "Каспийский государственный университет технологии и инжиниринга имени Ш. Есенова",
+    "short_name": "КГУТИ",
+    "city": "Актау",
+    "address": "Актау, 32-й микрорайон",
+    "lat": 43.6628138,
+    "lng": 51.1606003,
+    "founded": 2000,
+    "students_count": 5000,
+    "price_from": 520000,
+    "price_to": 920000,
+    "dormitory": true,
+    "dormitory_price_per_year": 82000,
+    "avg_graduate_salary": 235000,
+    "languages": ["казахский", "русский"],
+    "accreditations": ["НААР"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "нефтяные корпоративные гранты"],
+    "ent_threshold": 53,
+    "faculties": [
+      {
+        "name": "Нефтегазовый факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Нефтегазовое дело", "level": "бакалавриат", "duration_years": 4, "budget_seats": 40, "contract_seats": 90, "price_per_year": 850000, "passing_score_2023": 64},
+          {"program": "Геология и разведка МПИ", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 800000, "passing_score_2023": 61}
+        ]
+      },
+      {
+        "name": "Инженерный факультет",
+        "specialties": ["Инженерия"],
+        "programs": [
+          {"program": "Электроэнергетика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 70, "price_per_year": 700000, "passing_score_2023": 57},
+          {"program": "Строительство", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 60, "price_per_year": 680000, "passing_score_2023": 55}
+        ]
+      },
+      {
+        "name": "Экономический факультет",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Экономика", "level": "бакалавриат", "duration_years": 4, "budget_seats": 25, "contract_seats": 80, "price_per_year": 540000, "passing_score_2023": 53}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "name": "Академия государственного управления при Президенте РК",
+    "short_name": "АГУ при Президенте",
+    "city": "Астана",
+    "address": "проспект Республики, 52, Астана",
+    "lat": 51.1811,
+    "lng": 71.4702,
+    "founded": 1994,
+    "students_count": 2000,
+    "price_from": 1000000,
+    "price_to": 2000000,
+    "dormitory": true,
+    "dormitory_price_per_year": 150000,
+    "avg_graduate_salary": 450000,
+    "languages": ["казахский", "русский", "английский"],
+    "accreditations": ["НААР", "EAPAA"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственные гранты (только госслужащим)", "ведомственные гранты"],
+    "ent_threshold": 80,
+    "faculties": [
+      {
+        "name": "Факультет государственного управления",
+        "specialties": ["Право", "Экономика"],
+        "programs": [
+          {"program": "Государственное и местное управление", "level": "бакалавриат", "duration_years": 4, "budget_seats": 30, "contract_seats": 50, "price_per_year": 1200000, "passing_score_2023": 85},
+          {"program": "MPA (Master of Public Administration)", "level": "магистратура", "duration_years": 2, "budget_seats": 30, "contract_seats": 40, "price_per_year": 1800000, "passing_score_2023": null},
+          {"program": "Публичная политика", "level": "магистратура", "duration_years": 2, "budget_seats": 15, "contract_seats": 30, "price_per_year": 2000000, "passing_score_2023": null},
+          {"program": "DPA (Doctorate)", "level": "докторантура", "duration_years": 3, "budget_seats": 10, "contract_seats": 15, "price_per_year": 2000000, "passing_score_2023": null}
+        ]
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "name": "KIMEP University",
+    "short_name": "KIMEP",
+    "city": "Алматы",
+    "address": "проспект Абая, 4, Алматы",
+    "lat": 43.24215114773732,
+    "lng": 76.95561946629729,
+    "founded": 1992,
+    "students_count": 3500,
+    "price_from": 1800000,
+    "price_to": 3200000,
+    "dormitory": true,
+    "dormitory_price_per_year": 250000,
+    "avg_graduate_salary": 520000,
+    "languages": ["английский", "казахский"],
+    "accreditations": ["НААР", "AACSB", "AMBA"],
+    "qs_world": null,
+    "qs_asia": null,
+    "grants": true,
+    "scholarships": ["государственный образовательный грант", "KIMEP Presidential Scholarship (100%)", "Merit-based scholarships (25-75%)", "Болашак"],
+    "ent_threshold": 90,
+    "faculties": [
+      {
+        "name": "Bang College of Business",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Business Administration (BBA)", "level": "бакалавриат", "duration_years": 4, "budget_seats": 10, "contract_seats": 150, "price_per_year": 2200000, "passing_score_2023": 95},
+          {"program": "Accounting & Auditing", "level": "бакалавриат", "duration_years": 4, "budget_seats": 8, "contract_seats": 80, "price_per_year": 2200000, "passing_score_2023": 92},
+          {"program": "Finance", "level": "бакалавриат", "duration_years": 4, "budget_seats": 8, "contract_seats": 80, "price_per_year": 2200000, "passing_score_2023": 92},
+          {"program": "MBA", "level": "магистратура", "duration_years": 2, "budget_seats": 0, "contract_seats": 80, "price_per_year": 3200000, "passing_score_2023": null}
+        ]
+      },
+      {
+        "name": "School of Law",
+        "specialties": ["Право"],
+        "programs": [
+          {"program": "Jurisprudence (LLB)", "level": "бакалавриат", "duration_years": 4, "budget_seats": 8, "contract_seats": 80, "price_per_year": 2200000, "passing_score_2023": 94},
+          {"program": "LLM International Law", "level": "магистратура", "duration_years": 2, "budget_seats": 0, "contract_seats": 40, "price_per_year": 2800000, "passing_score_2023": null}
+        ]
+      },
+      {
+        "name": "College of Social Sciences",
+        "specialties": ["Экономика"],
+        "programs": [
+          {"program": "Journalism & Mass Communications", "level": "бакалавриат", "duration_years": 4, "budget_seats": 5, "contract_seats": 60, "price_per_year": 1900000, "passing_score_2023": 90},
+          {"program": "Political Science & International Relations", "level": "бакалавриат", "duration_years": 4, "budget_seats": 5, "contract_seats": 60, "price_per_year": 1900000, "passing_score_2023": 90}
+        ]
+      }
+    ]
+  }
+]

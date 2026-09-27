@@ -1,0 +1,704 @@
+[
+  {
+    "university": {
+      "name": "Казахский национальный университет имени аль-Фараби",
+      "short_name": "КазНУ",
+      "city": "Алматы",
+      "official_website": "https://farabi.university/"
+    },
+    "programme": {
+      "name": "Информационные системы",
+      "code": "6B06102",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": 90,
+      "grant_application_min_ent": 65,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": "2026-07-20",
+      "documents": [
+        "Аттестат / диплом + приложения (оригинал и копия)",
+        "Удостоверение личности (оригинал и копия)",
+        "Сертификат ЕНТ",
+        "Сертификаты, подтверждающие льготы и квоты (оригинал и копия)",
+        "Фото 3х4: 6 шт.",
+        "Медицинская справка формы 063/у (копия)",
+        "Медицинская справка формы 075/у"
+      ]
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, admission.paid_min_ent",
+        "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1728",
+        "title": "Информационные системы — Поступающим 2026 (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "6B06102 Бакалавриат; Информационные системы; Факультет: Информационных технологий и искусственного интеллекта; Проходной балл (для платного отделения) 90"
+      },
+      {
+        "field": "programme.group, programme.profile_subjects",
+        "url": "https://testcenter.kz/?lang=ru&page_id=15562",
+        "title": "Предметы ЕНТ — Национальный центр тестирования",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Профильные предметы выбираются в соответствии со специальностью (группой образовательных программ); Перечень групп образовательных программ с указанием профильных предметов: Список-специальностей-полной-формы-обучения-с-профильными-предметами.pdf. Содержимое PDF требует ручной сверки строки B057."
+      },
+      {
+        "field": "programme.code, programme.group",
+        "url": "https://farabi.university/faculty/27?lang=ru",
+        "title": "Факультет Информационных технологий и искусственного интеллекта — КазНУ",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Бакалавриат факультета: 6B06102 Информационные системы; 6B06103; 6B06104. Прямая метка B057 на странице отсутствует; принадлежность к B057 выведена по коду направления 6B061 и официальному перечню ГОП НЦТ."
+      },
+      {
+        "field": "admission.grant_application_min_ent, admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение (с изменениями приказом от 01.07.2026 № 321)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Для поступления в национальные вузы — не менее 65 баллов; по Истории Казахстана и двум профильным предметам ЕНТ необходимо набрать не менее 5-ти баллов, по Грамотности чтения и Математической грамотности — не менее 3-х баллов"
+      },
+      {
+        "field": "admission.deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Абитуриенты могут подать заявку на образовательные гранты на портале eGov.kz",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Онлайн-подача заявлений откроется 13 июля в 09:00 и завершится 20 июля в 18:00; результаты конкурса — не позднее 10 августа"
+      },
+      {
+        "field": "admission.documents",
+        "url": "https://welcome.kaznu.kz/ru/24371/page",
+        "title": "Перечень документов для поступления (бакалавриат, КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Аттестат / диплом + приложения (оригинал и копия); Удостоверение личности (оригинал и копия); Сертификат ЕНТ; Сертификаты подтверждающие льготы и квоты; Фото 3х4: 6 шт.; Медицинская справка формы 063/у (копия); Медицинская справка формы 075/у"
+      },
+      {
+        "field": "admission.grant_application_min_ent",
+        "url": "https://welcome.kaznu.kz/ru/26849/page",
+        "title": "Пороговые баллы 2026–2027 учебный год (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Страница содержит только ссылку на PDF 2026-2027 жж. оқуға түсу үшін шекті балл.pdf; по-программные пороги для конкурса грантов не извлечены в текстовом виде"
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://welcome.kaznu.kz/ru/19388/page",
+        "title": "Стоимость обучения (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Опубликованы только файлы стоимость утвержденная Бакалавриат 2025-2026.pdf, Магистратура 2025-2026.pdf, Докторантура 2025-2026.pdf; стоимость на 2026–2027 учебный год не опубликована"
+      },
+      {
+        "field": "tuition.installment_available",
+        "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1728",
+        "title": "Информационные системы — Поступающим 2026, раздел Прием (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Квитанция об оплате 50% стоимости обучения (на платное обучение). Формальной рассрочки это не подтверждает."
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://welcome.kaznu.kz/ru/welcome/bachelor",
+        "title": "Бакалавриат — Поступающим (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "16 корпусов общежитий; военная кафедра; Кампус"
+      }
+    ],
+    "unknown_fields": [
+      "programme.languages: язык обучения на официальных страницах программы не указан",
+      "admission.historical_passing_score: официальная публикация проходных баллов конкурса грантов по программе не найдена",
+      "admission.extra_exams: отдельный вступительный экзамен для B057 не требуется; в списке документов упоминается выписка по творческому/специальному экзамену только при наличии",
+      "admission.deadline: указан дедлайн конкурса грантов 2026-07-20; дедлайн подачи документов на платное отделение 2026–2027 на проверенных страницах КазНУ не извлечен",
+      "tuition.first_year, tuition.other_years: стоимость 2026–2027 не опубликована; переносить суммы 2025–2026 запрещено",
+      "tuition.installment_available: условия рассрочки официально не опубликованы",
+      "dormitory.price, dormitory.price_period: стоимость проживания не опубликована",
+      "dormitory.guaranteed: гарантия места первокурснику не заявлена"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 90,
+            "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1728"
+          },
+          {
+            "value": 85,
+            "url": "https://welcome.kaznu.kz/ru/27304/page"
+          }
+        ],
+        "note": "Карточка программы указывает 90 для платного отделения; сводная таблица образовательных программ указывает 85/85/85. Принято значение карточки программы (90) как более специфичное; требуется сверка с PDF пороговых баллов 2026–2027."
+      }
+    ],
+    "notes": "Соответствие минимуму 65 не означает получение гранта: конкурс идет отдельно по группе B057 с учетом результатов ЕНТ, квот и приоритетов. Языковые требования: на странице программы указан Сертификат о владении иностранным языком в общем перечне приема, но пороговые требования (IELTS/TOEFL) не указаны — поле языковых требований оставлено пустым сознательно."
+  },
+  {
+    "university": {
+      "name": "Казахский национальный университет имени аль-Фараби",
+      "short_name": "КазНУ",
+      "city": "Алматы",
+      "official_website": "https://farabi.university/"
+    },
+    "programme": {
+      "name": "Компьютерная инженерия",
+      "code": "6B06103",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": 90,
+      "grant_application_min_ent": 65,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": "2026-07-20",
+      "documents": [
+        "Аттестат / диплом + приложения (оригинал и копия)",
+        "Удостоверение личности (оригинал и копия)",
+        "Сертификат ЕНТ",
+        "Сертификаты, подтверждающие льготы и квоты (оригинал и копия)",
+        "Фото 3х4: 6 шт.",
+        "Медицинская справка формы 063/у (копия)",
+        "Медицинская справка формы 075/у"
+      ]
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, admission.paid_min_ent",
+        "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1729",
+        "title": "Компьютерная инженерия — Поступающим 2026 (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "6B06103 Бакалавриат; Компьютерная инженерия; Факультет: Информационных технологий и искусственного интеллекта; Проходной балл (для платного отделения) 90"
+      },
+      {
+        "field": "programme.group, programme.profile_subjects",
+        "url": "https://testcenter.kz/?lang=ru&page_id=15562",
+        "title": "Предметы ЕНТ — Национальный центр тестирования",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Профильные предметы выбираются в соответствии со специальностью (группой образовательных программ); официальный перечень ГОП с профильными предметами опубликован отдельным PDF. Содержимое PDF требует ручной сверки строки B057."
+      },
+      {
+        "field": "programme.code, programme.group",
+        "url": "https://farabi.university/faculty/27?lang=ru",
+        "title": "Факультет Информационных технологий и искусственного интеллекта — КазНУ",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Образовательные программы бакалавриата факультета включают коды направления 6B061. Прямая метка B057 на странице отсутствует; принадлежность к B057 выведена по коду направления и официальному перечню ГОП НЦТ."
+      },
+      {
+        "field": "admission.grant_application_min_ent, admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение (с изменениями приказом от 01.07.2026 № 321)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Для поступления в национальные вузы — не менее 65 баллов; по Истории Казахстана и двум профильным предметам ЕНТ — не менее 5-ти баллов, по Грамотности чтения и Математической грамотности — не менее 3-х баллов"
+      },
+      {
+        "field": "admission.deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Абитуриенты могут подать заявку на образовательные гранты на портале eGov.kz",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Онлайн-подача заявлений откроется 13 июля в 09:00 и завершится 20 июля в 18:00; результаты конкурса — не позднее 10 августа"
+      },
+      {
+        "field": "admission.documents",
+        "url": "https://welcome.kaznu.kz/ru/24371/page",
+        "title": "Перечень документов для поступления (бакалавриат, КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Аттестат / диплом + приложения (оригинал и копия); Удостоверение личности (оригинал и копия); Сертификат ЕНТ; Сертификаты подтверждающие льготы и квоты; Фото 3х4: 6 шт.; Медицинская справка формы 063/у (копия); Медицинская справка формы 075/у"
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://welcome.kaznu.kz/ru/19388/page",
+        "title": "Стоимость обучения (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Опубликованы только файлы 2025–2026 учебного года; стоимость на 2026–2027 учебный год не опубликована"
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://welcome.kaznu.kz/ru/welcome/bachelor",
+        "title": "Бакалавриат — Поступающим (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "16 корпусов общежитий; военная кафедра; Кампус"
+      }
+    ],
+    "unknown_fields": [
+      "programme.languages: язык обучения на официальных страницах программы не указан",
+      "admission.historical_passing_score: официальная публикация проходных баллов конкурса грантов по программе не найдена",
+      "admission.deadline: указан дедлайн конкурса грантов 2026-07-20; дедлайн подачи документов на платное отделение 2026–2027 не извлечен",
+      "tuition.first_year, tuition.other_years, tuition.installment_available: стоимость и рассрочка 2026–2027 официально не опубликованы",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не опубликованы"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 90,
+            "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1729"
+          },
+          {
+            "value": 85,
+            "url": "https://welcome.kaznu.kz/ru/27304/page"
+          }
+        ],
+        "note": "Карточка программы указывает 90 для платного отделения; сводная таблица образовательных программ указывает 85. Принято значение карточки программы (90); требуется сверка с PDF пороговых баллов 2026–2027."
+      }
+    ],
+    "notes": "Соответствие минимуму 65 не означает получение гранта. По-программные пороги участия в конкурсе грантов 2026–2027 (PDF на странице welcome.kaznu.kz/ru/26849/page) в текстовом виде не извлечены."
+  },
+  {
+    "university": {
+      "name": "Казахский национальный университет имени аль-Фараби",
+      "short_name": "КазНУ",
+      "city": "Алматы",
+      "official_website": "https://farabi.university/"
+    },
+    "programme": {
+      "name": "Компьютерные науки",
+      "code": "6B06104",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": 90,
+      "grant_application_min_ent": 65,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": "2026-07-20",
+      "documents": [
+        "Аттестат / диплом + приложения (оригинал и копия)",
+        "Удостоверение личности (оригинал и копия)",
+        "Сертификат ЕНТ",
+        "Сертификаты, подтверждающие льготы и квоты (оригинал и копия)",
+        "Фото 3х4: 6 шт.",
+        "Медицинская справка формы 063/у (копия)",
+        "Медицинская справка формы 075/у"
+      ]
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, admission.paid_min_ent",
+        "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1730",
+        "title": "Компьютерные науки — Поступающим 2026 (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "6B06104 Бакалавриат; Компьютерные науки; Факультет: Информационных технологий и искусственного интеллекта; Проходной балл (для платного отделения) 90"
+      },
+      {
+        "field": "programme.group, programme.profile_subjects",
+        "url": "https://testcenter.kz/?lang=ru&page_id=15562",
+        "title": "Предметы ЕНТ — Национальный центр тестирования",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Профильные предметы выбираются в соответствии со специальностью (группой образовательных программ); официальный перечень ГОП с профильными предметами опубликован отдельным PDF. Содержимое PDF требует ручной сверки строки B057."
+      },
+      {
+        "field": "admission.grant_application_min_ent, admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение (с изменениями приказом от 01.07.2026 № 321)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Для поступления в национальные вузы — не менее 65 баллов; по Истории Казахстана и двум профильным предметам ЕНТ — не менее 5-ти баллов, по Грамотности чтения и Математической грамотности — не менее 3-х баллов"
+      },
+      {
+        "field": "admission.deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Абитуриенты могут подать заявку на образовательные гранты на портале eGov.kz",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Онлайн-подача заявлений откроется 13 июля в 09:00 и завершится 20 июля в 18:00; результаты конкурса — не позднее 10 августа"
+      },
+      {
+        "field": "admission.documents",
+        "url": "https://welcome.kaznu.kz/ru/24371/page",
+        "title": "Перечень документов для поступления (бакалавриат, КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Аттестат / диплом + приложения (оригинал и копия); Удостоверение личности (оригинал и копия); Сертификат ЕНТ; Сертификаты подтверждающие льготы и квоты; Фото 3х4: 6 шт.; Медицинская справка формы 063/у (копия); Медицинская справка формы 075/у"
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://welcome.kaznu.kz/ru/19388/page",
+        "title": "Стоимость обучения (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Опубликованы только файлы 2025–2026 учебного года; стоимость на 2026–2027 учебный год не опубликована"
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://welcome.kaznu.kz/ru/welcome/bachelor",
+        "title": "Бакалавриат — Поступающим (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "16 корпусов общежитий; военная кафедра; Кампус"
+      }
+    ],
+    "unknown_fields": [
+      "programme.languages: язык обучения на официальных страницах программы не указан",
+      "admission.historical_passing_score: официальная публикация проходных баллов конкурса грантов по программе не найдена",
+      "admission.deadline: указан дедлайн конкурса грантов 2026-07-20; дедлайн подачи документов на платное отделение 2026–2027 не извлечен",
+      "tuition.first_year, tuition.other_years, tuition.installment_available: стоимость и рассрочка 2026–2027 официально не опубликованы",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не опубликованы"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 90,
+            "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1730"
+          },
+          {
+            "value": 85,
+            "url": "https://welcome.kaznu.kz/ru/27304/page"
+          }
+        ],
+        "note": "Карточка программы указывает 90 для платного отделения; сводная таблица образовательных программ указывает 85. Принято значение карточки программы (90); требуется сверка с PDF пороговых баллов 2026–2027."
+      }
+    ],
+    "notes": "Соответствие минимуму 65 не означает получение гранта."
+  },
+  {
+    "university": {
+      "name": "Казахский национальный университет имени аль-Фараби",
+      "short_name": "КазНУ",
+      "city": "Алматы",
+      "official_website": "https://farabi.university/"
+    },
+    "programme": {
+      "name": "Высоконагруженные информационные системы с искусственным интеллектом",
+      "code": "6B06106",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": 90,
+      "grant_application_min_ent": 65,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": "2026-07-20",
+      "documents": [
+        "Аттестат / диплом + приложения (оригинал и копия)",
+        "Удостоверение личности (оригинал и копия)",
+        "Сертификат ЕНТ",
+        "Сертификаты, подтверждающие льготы и квоты (оригинал и копия)",
+        "Фото 3х4: 6 шт.",
+        "Медицинская справка формы 063/у (копия)",
+        "Медицинская справка формы 075/у"
+      ]
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, admission.paid_min_ent",
+        "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1940",
+        "title": "Высоконагруженные информационные системы с искусственным интеллектом — Поступающим 2026 (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "6B06106 Бакалавриат; Факультет: Информационных технологий и искусственного интеллекта; Проходной балл (для платного отделения) 90; Инновационная ОП"
+      },
+      {
+        "field": "programme.group, programme.profile_subjects",
+        "url": "https://testcenter.kz/?lang=ru&page_id=15562",
+        "title": "Предметы ЕНТ — Национальный центр тестирования",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Профильные предметы выбираются в соответствии со специальностью (группой образовательных программ); официальный перечень ГОП с профильными предметами опубликован отдельным PDF. Содержимое PDF требует ручной сверки строки B057."
+      },
+      {
+        "field": "admission.grant_application_min_ent, admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение (с изменениями приказом от 01.07.2026 № 321)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Для поступления в национальные вузы — не менее 65 баллов; по Истории Казахстана и двум профильным предметам ЕНТ — не менее 5-ти баллов, по Грамотности чтения и Математической грамотности — не менее 3-х баллов"
+      },
+      {
+        "field": "admission.deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Абитуриенты могут подать заявку на образовательные гранты на портале eGov.kz",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Онлайн-подача заявлений откроется 13 июля в 09:00 и завершится 20 июля в 18:00; результаты конкурса — не позднее 10 августа"
+      },
+      {
+        "field": "admission.documents",
+        "url": "https://welcome.kaznu.kz/ru/24371/page",
+        "title": "Перечень документов для поступления (бакалавриат, КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Аттестат / диплом + приложения (оригинал и копия); Удостоверение личности (оригинал и копия); Сертификат ЕНТ; Сертификаты подтверждающие льготы и квоты; Фото 3х4: 6 шт.; Медицинская справка формы 063/у (копия); Медицинская справка формы 075/у"
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://welcome.kaznu.kz/ru/19388/page",
+        "title": "Стоимость обучения (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Опубликованы только файлы 2025–2026 учебного года; стоимость на 2026–2027 учебный год не опубликована"
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://welcome.kaznu.kz/ru/welcome/bachelor",
+        "title": "Бакалавриат — Поступающим (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "16 корпусов общежитий; военная кафедра; Кампус"
+      }
+    ],
+    "unknown_fields": [
+      "programme.languages: язык обучения на официальных страницах программы не указан",
+      "programme.group: инновационная ОП; принадлежность к B057 выведена по коду 6B061 и перечню ГОП НЦТ, прямая метка B057 на странице программы отсутствует",
+      "admission.historical_passing_score: официальная публикация проходных баллов конкурса грантов по программе не найдена",
+      "admission.deadline: указан дедлайн конкурса грантов 2026-07-20; дедлайн подачи документов на платное отделение 2026–2027 не извлечен",
+      "tuition.first_year, tuition.other_years, tuition.installment_available: стоимость и рассрочка 2026–2027 официально не опубликованы",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не опубликованы"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 90,
+            "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/1940"
+          },
+          {
+            "value": 85,
+            "url": "https://welcome.kaznu.kz/ru/27304/page"
+          }
+        ],
+        "note": "Карточка программы указывает 90 для платного отделения; сводная таблица образовательных программ указывает 85. Принято значение карточки программы (90); требуется сверка с PDF пороговых баллов 2026–2027."
+      }
+    ],
+    "notes": "Инновационная ОП. Соответствие минимуму 65 не означает получение гранта."
+  },
+  {
+    "university": {
+      "name": "Казахский национальный университет имени аль-Фараби",
+      "short_name": "КазНУ",
+      "city": "Алматы",
+      "official_website": "https://farabi.university/"
+    },
+    "programme": {
+      "name": "Наука о данных",
+      "code": "6B06107",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": 90,
+      "grant_application_min_ent": 65,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": "2026-07-20",
+      "documents": [
+        "Аттестат / диплом + приложения (оригинал и копия)",
+        "Удостоверение личности (оригинал и копия)",
+        "Сертификат ЕНТ",
+        "Сертификаты, подтверждающие льготы и квоты (оригинал и копия)",
+        "Фото 3х4: 6 шт.",
+        "Медицинская справка формы 063/у (копия)",
+        "Медицинская справка формы 075/у"
+      ]
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, admission.paid_min_ent",
+        "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/2212",
+        "title": "Наука о данных — Поступающим 2026 (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "6B06107 Бакалавриат; Наука о данных; Факультет: Информационных технологий и искусственного интеллекта; Проходной балл (для платного отделения) 90"
+      },
+      {
+        "field": "programme.group, programme.profile_subjects",
+        "url": "https://testcenter.kz/?lang=ru&page_id=15562",
+        "title": "Предметы ЕНТ — Национальный центр тестирования",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Профильные предметы выбираются в соответствии со специальностью (группой образовательных программ); официальный перечень ГОП с профильными предметами опубликован отдельным PDF. Содержимое PDF требует ручной сверки строки B057."
+      },
+      {
+        "field": "admission.grant_application_min_ent, admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение (с изменениями приказом от 01.07.2026 № 321)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Для поступления в национальные вузы — не менее 65 баллов; по Истории Казахстана и двум профильным предметам ЕНТ — не менее 5-ти баллов, по Грамотности чтения и Математической грамотности — не менее 3-х баллов"
+      },
+      {
+        "field": "admission.deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Абитуриенты могут подать заявку на образовательные гранты на портале eGov.kz",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Онлайн-подача заявлений откроется 13 июля в 09:00 и завершится 20 июля в 18:00; результаты конкурса — не позднее 10 августа"
+      },
+      {
+        "field": "admission.documents",
+        "url": "https://welcome.kaznu.kz/ru/24371/page",
+        "title": "Перечень документов для поступления (бакалавриат, КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Аттестат / диплом + приложения (оригинал и копия); Удостоверение личности (оригинал и копия); Сертификат ЕНТ; Сертификаты подтверждающие льготы и квоты; Фото 3х4: 6 шт.; Медицинская справка формы 063/у (копия); Медицинская справка формы 075/у"
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://welcome.kaznu.kz/ru/19388/page",
+        "title": "Стоимость обучения (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Опубликованы только файлы 2025–2026 учебного года; стоимость на 2026–2027 учебный год не опубликована"
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://welcome.kaznu.kz/ru/welcome/bachelor",
+        "title": "Бакалавриат — Поступающим (КазНУ)",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "16 корпусов общежитий; военная кафедра; Кампус"
+      }
+    ],
+    "unknown_fields": [
+      "programme.languages: язык обучения на официальных страницах программы не указан",
+      "programme.group: прямая метка B057 на странице программы отсутствует; принадлежность выведена по коду 6B061 и перечню ГОП НЦТ",
+      "admission.historical_passing_score: официальная публикация проходных баллов конкурса грантов по программе не найдена",
+      "admission.deadline: указан дедлайн конкурса грантов 2026-07-20; дедлайн подачи документов на платное отделение 2026–2027 не извлечен",
+      "tuition.first_year, tuition.other_years, tuition.installment_available: стоимость и рассрочка 2026–2027 официально не опубликованы",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не опубликованы"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 90,
+            "url": "https://welcome.kaznu.kz/ru/education_programs/bachelor/speciality/2212"
+          },
+          {
+            "value": 85,
+            "url": "https://welcome.kaznu.kz/ru/27304/page"
+          }
+        ],
+        "note": "Карточка программы указывает 90 для платного отделения; сводная таблица образовательных программ указывает 85. Принято значение карточки программы (90); требуется сверка с PDF пороговых баллов 2026–2027."
+      }
+    ],
+    "notes": "Соответствие минимуму 65 не означает получение гранта."
+  }
+]

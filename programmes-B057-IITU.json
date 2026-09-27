@@ -1,0 +1,254 @@
+[
+  {
+    "university": {
+      "name": "Международный университет информационных технологий",
+      "short_name": "IITU",
+      "city": "Алматы",
+      "official_website": "https://iitu.edu.kz/ru/"
+    },
+    "programme": {
+      "name": "Компьютерные науки",
+      "code": "6B06101",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": ["английский"]
+    },
+    "admission": {
+      "paid_min_ent": 50,
+      "grant_application_min_ent": 75,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3,
+        "each_profile_subject": 5
+      },
+      "extra_exams": [
+        "Экзамен по английскому языку для программ с английским языком обучения; при наличии IELTS/TOEFL экзамен можно не сдавать"
+      ],
+      "academic_year": "2026-2027",
+      "deadline": "2026-08-25",
+      "documents": [
+        "заявление",
+        "документ об общем среднем или техническом и профессиональном образовании",
+        "2 фотографии 3 x 4 см",
+        "копия документа, удостоверяющего личность",
+        "сертификат ЕНТ при наличии",
+        "копия транскрипта для зачисления на платное обучение"
+      ]
+    },
+    "tuition": {
+      "first_year": 1479000,
+      "other_years": {
+        "2": 1530000,
+        "3": 1590000,
+        "4": 1680000
+      },
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.profile_subjects, programme.languages",
+        "url": "https://iitu.edu.kz/ru/facultie/fctc/computer-science-bachelor/",
+        "title": "Компьютерные науки",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "6B06101; Профильные предметы ЕНТ: информатика + математика; длительность 4 года; форма очная; язык обучения английский"
+      },
+      {
+        "field": "admission.paid_min_ent, admission.grant_application_min_ent, programme.group",
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 — Информационные технологии | Мин. балл на грант: 75 | Мин. балл на платное: 50"
+      },
+      {
+        "field": "admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V2600039200",
+        "title": "Приказ Министра науки и высшего образования РК от 1 июля 2026 года № 321",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "по Истории Казахстана и двум профильным предметам ... не менее 5-ти баллов; Грамотности чтения и Математической грамотности не менее 3-х баллов"
+      },
+      {
+        "field": "admission.extra_exams, admission.deadline",
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Подача документов в университет: 20 июня — 25 августа; Экзамен по английскому языку: 1 июля — 25 августа, опционально; IELTS/TOEFL освобождает от экзамена"
+      },
+      {
+        "field": "admission.documents",
+        "url": "https://adilet.zan.kz/rus/docs/V2600039200",
+        "title": "Типовые правила приема с изменениями на 2026 год",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Перечень основных требований к государственной услуге включает заявление, документ об общем среднем или техническом и профессиональном образовании, 2 фотографии 3 x 4 см, копию документа, удостоверяющего личность, сертификат ЕНТ"
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 — Информационные технологии | 1 курс 1 479 000 | 2 курс 1 530 000 | 3 курс 1 590 000 | 4 курс 1 680 000 | Всего 6 279 000"
+      },
+      {
+        "field": "programme.group",
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Страница показывает B057 и список программ с кодами 6B06101 и 6B06103, но не выводит отдельную строку связи каждого кода с B057"
+      }
+    ],
+    "unknown_fields": [
+      "admission.historical_passing_score: официальный проходной балл прошлых лет для 6B06101 не найден",
+      "tuition.installment_available: условия рассрочки для 6B06101 в проверенных официальных источниках не найдены",
+      "dormitory.available: актуальное наличие общежития для набора 2026-2027 не подтверждено",
+      "dormitory.price: стоимость общежития не найдена",
+      "dormitory.price_period: период оплаты общежития не найден",
+      "dormitory.guaranteed: гарантия места не опубликована",
+      "programme.group: требуется подтверждение у приёмной комиссии или в актуальном официальном перечне образовательных программ",
+      "complete_B057_catalogue: страница МУИТ содержит дополнительные IT-коды, но их принадлежность к B057 не подтверждена отдельной официальной строкой"
+    ],
+    "conflicts": [],
+    "notes": "75 — минимум ЕНТ для участия в конкурсе на государственный грант по таблице МУИТ; это не фактический проходной конкурсный балл. 50 — минимум для платного обучения. Стоимость относится к 2026-2027 учебному году."
+  },
+  {
+    "university": {
+      "name": "Международный университет информационных технологий",
+      "short_name": "IITU",
+      "city": "Алматы",
+      "official_website": "https://iitu.edu.kz/ru/"
+    },
+    "programme": {
+      "name": "Аналитика больших данных",
+      "code": "6B06103",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": ["английский"]
+    },
+    "admission": {
+      "paid_min_ent": 50,
+      "grant_application_min_ent": 75,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3,
+        "each_profile_subject": 5
+      },
+      "extra_exams": [
+        "Экзамен по английскому языку для программ с английским языком обучения; при наличии IELTS/TOEFL экзамен можно не сдавать"
+      ],
+      "academic_year": "2026-2027",
+      "deadline": "2026-08-25",
+      "documents": [
+        "заявление",
+        "документ об общем среднем или техническом и профессиональном образовании",
+        "2 фотографии 3 x 4 см",
+        "копия документа, удостоверяющего личность",
+        "сертификат ЕНТ при наличии",
+        "копия транскрипта для зачисления на платное обучение"
+      ]
+    },
+    "tuition": {
+      "first_year": 1479000,
+      "other_years": {
+        "2": 1530000,
+        "3": 1590000,
+        "4": 1680000
+      },
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.profile_subjects, programme.languages",
+        "url": "https://iitu.edu.kz/ru/facultie/fct/big-data-analytics-bachelor/",
+        "title": "Аналитика больших данных",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "6B06103; Профильные предметы ЕНТ: математика + информатика; длительность 4 года; форма очная; язык обучения английский"
+      },
+      {
+        "field": "admission.paid_min_ent, admission.grant_application_min_ent, programme.group",
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 — Информационные технологии | Мин. балл на грант: 75 | Мин. балл на платное: 50"
+      },
+      {
+        "field": "admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V2600039200",
+        "title": "Приказ Министра науки и высшего образования РК от 1 июля 2026 года № 321",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "по Истории Казахстана и двум профильным предметам ... не менее 5-ти баллов; Грамотности чтения и Математической грамотности не менее 3-х баллов"
+      },
+      {
+        "field": "admission.extra_exams, admission.deadline",
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Подача документов в университет: 20 июня — 25 августа; Экзамен по английскому языку: 1 июля — 25 августа, опционально; IELTS/TOEFL освобождает от экзамена"
+      },
+      {
+        "field": "admission.documents",
+        "url": "https://adilet.zan.kz/rus/docs/V2600039200",
+        "title": "Типовые правила приема с изменениями на 2026 год",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Перечень основных требований к государственной услуге включает заявление, документ об общем среднем или техническом и профессиональном образовании, 2 фотографии 3 x 4 см, копию документа, удостоверяющего личность, сертификат ЕНТ"
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 — Информационные технологии | 1 курс 1 479 000 | 2 курс 1 530 000 | 3 курс 1 590 000 | 4 курс 1 680 000 | Всего 6 279 000"
+      },
+      {
+        "field": "programme.group",
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Страница показывает B057 и список программ с кодами 6B06101 и 6B06103, но не выводит отдельную строку связи каждого кода с B057"
+      }
+    ],
+    "unknown_fields": [
+      "admission.historical_passing_score: официальный проходной балл прошлых лет для 6B06103 не найден",
+      "tuition.installment_available: условия рассрочки для 6B06103 в проверенных официальных источниках не найдены",
+      "dormitory.available: актуальное наличие общежития для набора 2026-2027 не подтверждено",
+      "dormitory.price: стоимость общежития не найдена",
+      "dormitory.price_period: период оплаты общежития не найден",
+      "dormitory.guaranteed: гарантия места не опубликована",
+      "programme.group: требуется подтверждение у приёмной комиссии или в актуальном официальном перечне образовательных программ",
+      "complete_B057_catalogue: страница МУИТ содержит дополнительные IT-коды, но их принадлежность к B057 не подтверждена отдельной официальной строкой"
+    ],
+    "conflicts": [],
+    "notes": "75 — минимум ЕНТ для участия в конкурсе на государственный грант по таблице МУИТ; это не фактический проходной конкурсный балл. 50 — минимум для платного обучения. Стоимость относится к 2026-2027 учебному году."
+  }
+]

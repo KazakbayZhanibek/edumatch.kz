@@ -1,0 +1,185 @@
+/**
+ * auth-middleware.js - Authentication Middleware
+ * Проверка JWT токенов и защита endpoints
+ */
+
+const authService = require('./auth-service');
+const { tr, getLang } = require('./i18n');
+
+/**
+ * Middleware для проверки аутентификации
+ * Проверяет наличие и валидность JWT токена в httpOnly cookie или Authorization header
+ * Использование: router.get('/protected', verifyAuth, handler)
+ */
+function verifyAuth(req, res, next) {
+  try {
+    const lang = getLang(req);
+    
+    // Сначала пытаемся получить токен из httpOnly cookie
+    let token = req.cookies?.auth_token;
+    
+    // Если нет в cookie, пытаемся из Authorization header (для совместимости)
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.slice(7); // Убрать 'Bearer '
+      }
+    }
+
+    if (!token) {
+      return res.status(401).json({
+        error: tr('auth_token_missing', lang) || 'Токен не найден'
+      });
+    }
+
+    // Проверить, действителен ли токен в БД
+    const validation = authService.validateSessionToken(token);
+
+    if (!validation.valid) {
+      return res.status(401).json({
+        error: tr('auth_token_invalid', lang) || 'Токен недействителен или истёк'
+      });
+    }
+
+    // Проверить подпись JWT
+    const verification = authService.verifyToken(token);
+
+    if (!verification.valid) {
+      return res.status(401).json({
+        error: tr('auth_token_fake', lang) || 'Токен поддельный или истёк'
+      });
+    }
+
+    // Сохранить userId в request для использования в handlers
+    req.userId = verification.userId;
+    req.token = token;
+
+    next();
+  } catch (error) {
+    console.error('Auth middleware error:', error);
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_token_check_error', lang) || 'Ошибка проверки токена' });
+  }
+}
+
+/**
+ * Middleware для опциональной аутентификации
+ * Если токен есть, проверяет его; если нет, продолжает выполнение
+ */
+function verifyAuthOptional(req, res, next) {
+  try {
+    const authHeader = req.headers.authorization;
+
+    const token = req.cookies?.auth_token || (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null);
+
+    if (!token) {
+      // Токен не предоставлен, продолжаем без него
+      return next();
+    }
+
+    const validation = authService.validateSessionToken(token);
+    const verification = authService.verifyToken(token);
+
+    if (validation.valid && verification.valid && validation.userId === verification.userId) {
+      req.userId = verification.userId;
+      req.token = token;
+      req.authenticated = true;
+    }
+
+    next();
+  } catch (error) {
+    console.error('Auth middleware error:', error);
+    next();
+  }
+}
+
+/**
+ * Middleware для проверки прав доступа
+ * Проверяет, что пользователь имеет доступ к определённому ресурсу
+ */
+function verifyOwnership(req, res, next) {
+  try {
+    const lang = getLang(req);
+    // Пример: проверить, что пользователь пытается получить свой профиль
+    // Использование: router.get('/users/:id/profile', verifyAuth, verifyOwnership, handler)
+
+    const requestedUserId = req.params.userId || req.params.id;
+    const currentUserId = req.userId;
+
+    if (requestedUserId && parseInt(requestedUserId) !== currentUserId) {
+      return res.status(403).json({
+        error: tr('auth_no_access', lang) || 'У вас нет доступа к этому ресурсу'
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error('Ownership check error:', error);
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_access_check_error', lang) || 'Ошибка проверки прав доступа' });
+  }
+}
+
+/**
+ * Middleware для проверки админ-прав
+ * (для будущих функций администратора)
+ */
+function verifyAdmin(req, res, next) {
+  try {
+    const lang = getLang(req);
+    const db = require('./database').getDb();
+    const user = db.prepare('SELECT is_admin, role FROM users WHERE id = ?').get(req.userId);
+
+    // Support both old is_admin and new role system
+    const isAdmin = user && (user.is_admin === 1 || user.role === 'admin');
+
+    if (!isAdmin) {
+      console.warn(`[SECURITY] Non-admin user ${req.userId} (role: ${user?.role}) attempted admin access from ${req.ip} at ${new Date().toISOString()}`);
+      return res.status(403).json({
+        error: tr('auth_admin_required', lang) || 'Требуются права администратора'
+      });
+    }
+
+    req.isAdmin = true;
+    req.userRole = user.role || 'admin';
+    next();
+  } catch (error) {
+    console.error('Admin check error:', error);
+    const lang = getLang(req);
+    return res.status(500).json({ error: tr('auth_admin_check_error', lang) || 'Ошибка проверки прав администратора' });
+  }
+}
+
+/**
+ * Middleware для проверки роли
+ * Использование: router.get('/moderate', verifyAuth, requireRole('moderator_reviews'), handler)
+ */
+function requireRole(...roles) {
+  return (req, res, next) => {
+    try {
+      const lang = getLang(req);
+      const db = require('./database').getDb();
+      const user = db.prepare('SELECT is_admin, role FROM users WHERE id = ?').get(req.userId);
+      const userRole = user?.role || (user?.is_admin ? 'admin' : 'user');
+
+      if (userRole === 'admin' || roles.includes(userRole)) {
+        req.userRole = userRole;
+        return next();
+      }
+
+      return res.status(403).json({
+        error: tr('auth_admin_required', lang) || 'Недостаточно прав'
+      });
+    } catch (error) {
+      return res.status(500).json({ error: 'Ошибка проверки роли' });
+    }
+  };
+}
+
+module.exports = {
+  verifyAuth,
+  verifyAuthOptional,
+  verifyOwnership,
+  verifyAdmin,
+  requireRole,
+};

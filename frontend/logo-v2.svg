@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+  <title id="title">EduMatch KZ</title>
+  <desc id="desc">Логотип EduMatch KZ: слово Match выделено зелёным блоком.</desc>
+
+  <g fill="none" fill-rule="evenodd">
+    <text x="38" y="218"
+          fill="#2D6A4F"
+          font-family="Noto Sans, Arial, sans-serif"
+          font-size="158"
+          font-weight="700"
+          letter-spacing="-8">Edu</text>
+
+    <rect x="305" y="58" width="548" height="202" rx="42" fill="#2D6A4F"/>
+
+    <text x="342" y="218"
+          fill="#FFFFFF"
+          font-family="Noto Sans, Arial, sans-serif"
+          font-size="148"
+          font-weight="700"
+          letter-spacing="-7">Match</text>
+
+    <!-- Маленькая связка из двух точек — символ точного совпадения. -->
+    <g transform="translate(803 84)" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round">
+      <path d="M0 18 L22 0"/>
+      <circle cx="0" cy="18" r="6" fill="#FFFFFF" stroke="none"/>
+      <circle cx="22" cy="0" r="6" fill="#FFFFFF" stroke="none"/>
+    </g>
+
+    <text x="892" y="218"
+          fill="#2D6A4F"
+          font-family="Noto Sans, Arial, sans-serif"
+          font-size="148"
+          font-weight="700"
+          letter-spacing="-5">KZ</text>
+  </g>
+</svg>

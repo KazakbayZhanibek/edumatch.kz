@@ -1,0 +1,388 @@
+[
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.kz/ru/"
+    },
+    "programme": {
+      "name": "Информационные системы",
+      "code": "6B06103",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": 65,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": [
+        "заявление",
+        "документ об общем среднем или техническом и профессиональном образовании",
+        "2 фотографии 3 x 4 см",
+        "копия документа, удостоверяющего личность",
+        "сертификат ЕНТ при наличии"
+      ]
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.group, programme.profile_subjects, admission.paid_min_ent",
+        "url": "https://enu.kz/ru/page/university/faculties/applicants/bachelor",
+        "title": "Проходные баллы ЕНТ по группам образовательных программ на 2026-2027 учебный год",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Таблица: Информационно-коммуникационные технологии; В057 Информационные технологии; 6B06103 Информационные системы, 6B06104 Вычислительная техника и программное обеспечение, 6B06112 Технологии искусственного интеллекта; Математика, Информатика; 110. Таблица не уточняет, относится ли 110 к платному отделению, конкурсу грантов или обоим."
+      },
+      {
+        "field": "programme.code",
+        "url": "https://fit.enu.kz/ru/page/departments/department-of-information-systems",
+        "title": "Кафедра Информационные системы — Институт цифровых наук и искусственного интеллекта",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Страница кафедры содержит образовательную программу 6B06103 (файл ОП 6B06103_ИС_2024-2025). Кафедра входит в Институт цифровых наук и искусственного интеллекта ЕНУ."
+      },
+      {
+        "field": "admission.grant_application_min_ent, admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение (с изменениями приказом от 01.07.2026 № 321)",
+        "source_date": "2026-07-01",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Для поступления в национальные вузы — не менее 65 баллов; по Истории Казахстана и двум профильным предметам — не менее 5-ти баллов, по Грамотности чтения и Математической грамотности — не менее 3-х баллов"
+      },
+      {
+        "field": "admission.documents",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение",
+        "source_date": "2026-07-01",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Государственная услуга приёма: заявление, документ об образовании, 2 фото 3x4, копия удостоверения личности, сертификат ЕНТ. Отдельный перечень ЕНУ не извлечён."
+      },
+      {
+        "field": "grant_application_deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Абитуриенты могут подать заявку на образовательные гранты на портале eGov.kz",
+        "source_date": "2026-07-10",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Подача заявлений на конкурс грантов 13 июля 09:00 – 20 июля 18:00; результаты — не позднее 10 августа"
+      },
+      {
+        "field": "admission.paid_min_ent",
+        "url": "https://enu.kz/ru/news/7662",
+        "title": "Приемная комиссия ЕНУ открыла двери абитуриентам",
+        "source_date": "2026-06-05",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Приёмная комиссия открыта 05.06.2026; 87 программ бакалавриата; ректор: несмотря на повышение порогового балла, число поступающих растёт. Подтверждает повышение порогов, но не сами значения."
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://enu.kz/ru/page/applicants/tuition-fees",
+        "title": "Стоимость обучения — Прейскурант бакалавриата приема 2026 года",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Страница: 2026-2027 учебный год: Прейскурант стоимости платного обучения по ОП бакалавриата приема 2026 года. Прямая ссылка на PDF: https://smart.enu.kz/api/serve?path=/general/files/fdf23f2f-5f36-49aa-9942-00cae34f1c4e.pdf — содержимое PDF извлечь не удалось (хост недоступен), суммы по программам не подтверждены."
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://enu.kz/ru/page/student-life/infrastructure/student-houses",
+        "title": "Студенческие дома",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "В ЕНУ работают 8 студенческих домов; более половины студентов проживают в них. Стоимость проживания в тексте не извлечена."
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent: 110 из таблицы ЕНУ needs_review — таблица не разделяет платное/грант; требуется подтверждение приёмной комиссии",
+      "programme.languages: языки обучения 2026–2027 по программе официально не извлечены",
+      "admission.historical_passing_score: проходной балл прошлых лет официально не опубликован",
+      "admission.deadline: указан дедлайн конкурса грантов 2026-07-20; дедлайн платного зачисления ЕНУ не извлечён",
+      "admission.documents: приведён госминимум по Типовым правилам; отдельный перечень ЕНУ не извлечён",
+      "tuition.first_year, tuition.other_years: PDF-прайс существует, но суммы не извлечены — значения null",
+      "tuition.installment_available: рассрочка официально не подтверждена",
+      "dormitory.price, dormitory.price_period: стоимость не извлечена",
+      "dormitory.guaranteed: гарантия места не заявлена"
+    ],
+    "conflicts": [],
+    "notes": "Факультет: Институт цифровых наук и искусственного интеллекта, кафедра Информационные системы. 110 — институциональный порог ЕНУ (scope платное/грант не уточнён); 65 — госминимум для национальных вузов. Соответствие минимуму не означает получение гранта."
+  },
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.kz/ru/"
+    },
+    "programme": {
+      "name": "Вычислительная техника и программное обеспечение",
+      "code": "6B06104",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": 65,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": [
+        "заявление",
+        "документ об общем среднем или техническом и профессиональном образовании",
+        "2 фотографии 3 x 4 см",
+        "копия документа, удостоверяющего личность",
+        "сертификат ЕНТ при наличии"
+      ]
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.group, admission.paid_min_ent",
+        "url": "https://enu.kz/ru/page/university/faculties/applicants/bachelor",
+        "title": "Проходные баллы ЕНТ по группам образовательных программ на 2026-2027 учебный год",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Строка В057: 6B06104 Вычислительная техника и программное обеспечение; Математика, Информатика; 110. Scope значения (платное/грант) не уточнён."
+      },
+      {
+        "field": "programme.code",
+        "url": "https://fit.enu.kz/ru/page/departments/department-of-computer-and-software-engineering",
+        "title": "Кафедра Вычислительной техники и программного обеспечения — Институт цифровых наук и ИИ",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Страница кафедры содержит программу 6B06104 Вычислительная техника и программное обеспечение. Кафедра входит в Институт цифровых наук и искусственного интеллекта ЕНУ."
+      },
+      {
+        "field": "admission.grant_application_min_ent, admission.section_minimums, admission.documents",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема (приказ от 01.07.2026 № 321)",
+        "source_date": "2026-07-01",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Нацвузы — от 65 баллов; секции 5/5/3/3; госминимум документов приёма"
+      },
+      {
+        "field": "grant_application_deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Заявки на образовательные гранты на eGov.kz",
+        "source_date": "2026-07-10",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Конкурс грантов 13–20 июля; итоги до 10 августа"
+      },
+      {
+        "field": "tuition.first_year",
+        "url": "https://enu.kz/ru/page/applicants/tuition-fees",
+        "title": "Стоимость обучения — Прейскурант бакалавриата приема 2026 года",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "PDF-прайс: https://smart.enu.kz/api/serve?path=/general/files/fdf23f2f-5f36-49aa-9942-00cae34f1c4e.pdf — содержимое недоступно, суммы не подтверждены."
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://enu.kz/ru/page/student-life/infrastructure/student-houses",
+        "title": "Студенческие дома",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "В ЕНУ работают 8 студенческих домов"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent: 110 needs_review — scope не уточнён таблицей",
+      "programme.languages: не извлечены",
+      "admission.historical_passing_score: не опубликован",
+      "admission.deadline: дедлайн платного зачисления не извлечён",
+      "tuition.first_year, tuition.other_years, tuition.installment_available: суммы/рассрочка не подтверждены",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не извлечены/не заявлены"
+    ],
+    "conflicts": [],
+    "notes": "Факультет: Институт цифровых наук и искусственного интеллекта, кафедра Вычислительной техники и ПО."
+  },
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.kz/ru/"
+    },
+    "programme": {
+      "name": "Технологии искусственного интеллекта",
+      "code": "6B06112",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": 65,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": [
+        "заявление",
+        "документ об общем среднем или техническом и профессиональном образовании",
+        "2 фотографии 3 x 4 см",
+        "копия документа, удостоверяющего личность",
+        "сертификат ЕНТ при наличии"
+      ]
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.group, admission.paid_min_ent",
+        "url": "https://enu.kz/ru/page/university/faculties/applicants/bachelor",
+        "title": "Проходные баллы ЕНТ по группам образовательных программ на 2026-2027 учебный год",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Строка В057: 6B06112 Технологии искусственного интеллекта; Математика, Информатика; 110. Scope значения не уточнён."
+      },
+      {
+        "field": "programme.code",
+        "url": "https://fit.enu.kz/ru/page/departments/department-of-artificial-intelligence-technologies/educational-program",
+        "title": "Образовательные программы — Кафедра Технологии искусственного интеллекта",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Страница содержит паспорт программы 6B06112 (область 6B06 Информационно-коммуникационные технологии). Кафедра входит в Институт цифровых наук и искусственного интеллекта ЕНУ."
+      },
+      {
+        "field": "admission.grant_application_min_ent, admission.section_minimums, admission.documents",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема (приказ от 01.07.2026 № 321)",
+        "source_date": "2026-07-01",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Нацвузы — от 65 баллов; секции 5/5/3/3; госминимум документов приёма"
+      },
+      {
+        "field": "grant_application_deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Заявки на образовательные гранты на eGov.kz",
+        "source_date": "2026-07-10",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Конкурс грантов 13–20 июля; итоги до 10 августа"
+      },
+      {
+        "field": "tuition.first_year",
+        "url": "https://enu.kz/ru/page/applicants/tuition-fees",
+        "title": "Стоимость обучения — Прейскурант бакалавриата приема 2026 года",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "PDF-прайс: https://smart.enu.kz/api/serve?path=/general/files/fdf23f2f-5f36-49aa-9942-00cae34f1c4e.pdf — содержимое недоступно, суммы не подтверждены."
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://enu.kz/ru/page/student-life/infrastructure/student-houses",
+        "title": "Студенческие дома",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "В ЕНУ работают 8 студенческих домов"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent: 110 needs_review — scope не уточнён",
+      "programme.languages: не извлечены",
+      "admission.historical_passing_score: не опубликован",
+      "admission.deadline: дедлайн платного зачисления не извлечён",
+      "tuition.first_year, tuition.other_years, tuition.installment_available: не подтверждены",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не извлечены/не заявлены"
+    ],
+    "conflicts": [],
+    "notes": "Факультет: Институт цифровых наук и искусственного интеллекта, кафедра Технологии ИИ."
+  }
+]

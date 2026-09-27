@@ -1,0 +1,29 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test _tests/regression.test.js _tests/admission-stat-quality.test.js _tests/admission-legacy-quality.test.js _tests/ai-completion.test.js _tests/grants.test.js _tests/programme-planner.test.js _tests/programme-import.test.js _tests/funding-import.test.js _tests/planner-source-store.test.js _tests/planner-agent.test.js _tests/full-audit.test.js",
+    "load-grants": "node scripts/load-grants-data.js",
+    "admin:grant": "node scripts/grant-admin.js",
+    "programmes:check": "node scripts/import-programmes.js",
+    "funding:check": "node scripts/import-funding.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "better-sqlite3": "^12.10.0",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "node-fetch": "^3.3.2"
+  }
+}

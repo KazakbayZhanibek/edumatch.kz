@@ -1,0 +1,48 @@
+[
+  {
+    "university": {"name": "Казахстанско-Британский технический университет", "short_name": "КБТУ", "city": "Алматы", "official_website": "https://kbtu.edu.kz/ru/"},
+    "programme": {"name": "Информационные системы (ИС)", "code": "6B06101", "group": "B057", "profile_subjects": ["Информатика", "Математика"], "languages": ["английский"]},
+    "admission": {"paid_min_ent": 50, "grant_application_min_ent": 110, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "reading_literacy": 3, "mathematical_literacy": 3, "each_profile_subject": 5}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": true, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group, programme.profile_subjects, admission.paid_min_ent, admission.grant_application_min_ent", "url": "https://kbtu.edu.kz/ru/shkoly/shkola-informatsionnykh-tekhnologij-i-inzhenerii/bakalavriat-shkoly-informatsionnykh-tekhnologij", "title": "Бакалавриат Школы информационных технологий", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Текущая страница указывает 6B06101 Информационные системы, B057 Информационные технологии, профиль Информатика–Математика, порог на грант 110 и порог на платное 50; рядом отдельно указан проходной балл гранта 2025 года 110."},
+      {"field": "admission.grant_application_min_ent", "url": "https://kbtu.edu.kz/images/balls_2025_kbtu_ru.pdf", "title": "Официальная таблица баллов КБТУ 2025–2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Стр. 2: B057; paid minimum 50, grant threshold 110, 4 800 — число грантов в таблице. Таблица не является однозначным подтверждением фактического проходного балла последнего зачисленного."},
+      {"field": "admission.section_minimums", "url": "https://adilet.zan.kz/rus/docs/V2600039200", "title": "Приказ Министра науки и высшего образования РК от 1 июля 2026 года № 321", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Не менее 5 по Истории Казахстана и двум профильным предметам ЕНТ; не менее 3 по грамотности чтения и математической грамотности."},
+      {"field": "admission.deadline, programme.languages, dormitory.available", "url": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat", "title": "Поступление на бакалавриат КБТУ", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Обучение в бакалавриате на английском языке; приём документов на платное и государственный грант 20 июня–25 августа; заявки на KBTU JASTAR CITY 1–6 июля, заселение 19 августа."}
+    ],
+    "unknown_fields": ["admission.historical_passing_score: официальное однозначное подтверждение фактического проходного балла последнего зачисленного с применимостью к году не найдено", "admission.documents: отдельный список не извлечён", "tuition.first_year, tuition.other_years, tuition.installment_available: PDF/условия оплаты не извлечены", "dormitory.price, dormitory.guaranteed: цена и гарантия места не указаны", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "50 и 110 — опубликованные пороги КБТУ для строки B057; 110 из таблицы 2025–2026 и подпись «проходной балл 2025» не считаются подтверждённым фактическим проходным баллом последнего зачисленного, поэтому historical_passing_score оставлен null."
+  },
+  {
+    "university": {"name": "Казахстанско-Британский технический университет", "short_name": "КБТУ", "city": "Алматы", "official_website": "https://kbtu.edu.kz/ru/"},
+    "programme": {"name": "Вычислительная техника и программное обеспечение (ВТиПО)", "code": "6B06102", "group": "B057", "profile_subjects": ["Информатика", "Математика"], "languages": ["английский"]},
+    "admission": {"paid_min_ent": 50, "grant_application_min_ent": 110, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "reading_literacy": 3, "mathematical_literacy": 3, "each_profile_subject": 5}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": true, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group, programme.profile_subjects, admission.paid_min_ent, admission.grant_application_min_ent", "url": "https://kbtu.edu.kz/ru/shkoly/shkola-informatsionnykh-tekhnologij-i-inzhenerii/bakalavriat-shkoly-informatsionnykh-tekhnologij", "title": "Бакалавриат Школы информационных технологий", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Официальная страница КБТУ перечисляет 6B06102 Вычислительная техника и программное обеспечение; в проверенной HTML-версии страницы B057, профиль Информатика–Математика и пороги 50/110 указаны в общей таблице IT-программ. Годовая маркировка строки требует ручной сверки."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://testcenter.kz/?lang=ru&page_id=15562", "title": "Профильные предметы НЦТ", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Группу B057 и соответствующую пару предметов требуется сверить по официальной таблице НЦТ; текущий файл не повышает это поле до verified."},
+      {"field": "admission.section_minimums, admission.deadline, programme.languages", "url": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat", "title": "Поступление на бакалавриат КБТУ", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Обучение в бакалавриате на английском языке; приём документов 20 июня–25 августа; конкурс госгрантов 13–20 июля; государственные минимумы разделов указаны нормативным актом."}
+    ],
+    "unknown_fields": ["admission.historical_passing_score: фактический исторический score для 6B06102 не найден", "admission.documents: отдельный список не извлечён", "tuition.first_year, tuition.other_years, tuition.installment_available: PDF/условия оплаты не извлечены", "dormitory.price, dormitory.guaranteed: цена и гарантия места не указаны", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "Текущая страница IT-школы перечисляет 6B06102 и источник КБТУ связывает строку с B057; 50/110 оставлены как опубликованные пороги, но годовая маркировка страницы требует ручной сверки."
+  },
+  {
+    "university": {"name": "Казахстанско-Британский технический университет", "short_name": "КБТУ", "city": "Алматы", "official_website": "https://kbtu.edu.kz/ru/"},
+    "programme": {"name": "Наука о данных и искусственный интеллект", "code": "6B06110", "group": "B057", "profile_subjects": ["Информатика", "Математика"], "languages": ["английский"]},
+    "admission": {"paid_min_ent": 50, "grant_application_min_ent": 110, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "reading_literacy": 3, "mathematical_literacy": 3, "each_profile_subject": 5}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": true, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group, programme.profile_subjects, admission.paid_min_ent, admission.grant_application_min_ent", "url": "https://kbtu.edu.kz/ru/shkoly/shkola-informatsionnykh-tekhnologij-i-inzhenerii/bakalavriat-shkoly-informatsionnykh-tekhnologij", "title": "Бакалавриат Школы информационных технологий", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Проверенная HTML-версия страницы содержит 6B06110 Наука о данных и искусственный интеллект в B057, профиль Информатика–Математика и пороги 50/110; отдельная новость КБТУ подтверждает запуск программы в 2026 году."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://testcenter.kz/?lang=ru&page_id=15562", "title": "Профильные предметы НЦТ", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Принадлежность 6B06110 к B057 и профильная пара требуют сверки по официальной таблице НЦТ; не считать текущую строку verified."},
+      {"field": "admission.section_minimums, admission.deadline, programme.languages", "url": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat", "title": "Поступление на бакалавриат КБТУ", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Обучение в бакалавриате на английском языке; приём документов 20 июня–25 августа; конкурс госгрантов 13–20 июля; зачисление до 25 августа."}
+    ],
+    "unknown_fields": ["admission.historical_passing_score: фактический исторический score не найден", "admission.documents: отдельный список не извлечён", "tuition.first_year, tuition.other_years, tuition.installment_available: не извлечены", "dormitory.price, dormitory.guaranteed: не извлечены", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "Новая программа 2026; текущая страница КБТУ указывает 6B06110 в IT-школе и источник программы указывает B057/пороги 50 и 110. Это не исторический passing score и не гарантия гранта."
+  }
+]

@@ -1,0 +1,792 @@
+[
+  {
+    "university": {
+      "name": "Astana IT University",
+      "short_name": "AITU",
+      "city": "Астана",
+      "official_website": "https://astanait.edu.kz/en/"
+    },
+    "programme": {
+      "name": "Computer Science",
+      "code": "6B06101",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": ["английский"]
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": 100,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [
+        "AITU Excellence Test (AET) — обязателен для платного поступления: модуль 1 (английский, 50 вопросов/60 мин, минимум 30 из 50), модуль 2 (основы информатики и логика, 50 вопросов/60 мин, минимум 25 из 50); стоимость 3 000 KZT, 2 платные попытки; подтверждённые освобождения: IELTS от 5.5, TOEFL ITP от 460, TOEFL iBT 46–59, AITU Foundation (модуль 1), AITU iCode или Foundation по информатике (модуль 2)"
+      ],
+      "academic_year": "2026-2027",
+      "deadline": "2026-08-25",
+      "documents": [
+        "Аттестат или диплом (оригинал)",
+        "Копия паспорта",
+        "Фото 3х4, 6 штук",
+        "IELTS / TOEFL IBT / TOEFL ITP / APTIS / Duolingo / InterPress (при наличии)",
+        "Документ об образовании, оригинал и копия (конкурс госгрантов)",
+        "Документы льготной категории (при наличии)",
+        "Свидетельство о рождении + удостоверение родителя/опекуна (до 18 лет)",
+        "Форма 075/u с заключением об отсутствии противопоказаний (инвалидность I–II групп, с детства, дети-инвалиды)"
+      ]
+    },
+    "tuition": {
+      "first_year": 2500000,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.group, admission.grant_application_min_ent",
+        "url": "https://astanait.edu.kz/en/Computer-Science-bachelor",
+        "title": "Computer Science 6B06101",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "6B06101 Computer Science; 057 – Information technology, Group of educational programs; Core subjects: mathematics, computer science; Threshold Score (Grant): 100; Bachelor in ICT; Duration 3 years"
+      },
+      {
+        "field": "programme.group, programme.profile_subjects, admission.grant_application_min_ent, admission.deadline",
+        "url": "https://astanait.edu.kz/en/how-to-apply",
+        "title": "Admission after school - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 Information Technology: Software Engineering, Computer Science, Big Data Analysis, Media Technologies, Mathematical and Computational Science; Profile: Mathematics, Computer Science; Minimum paid 70; Minimum grant 100; Enrollment June 20 – August 25; admission by AET results and minimum UNT scores"
+      },
+      {
+        "field": "admission.paid_min_ent",
+        "url": "https://astanait.edu.kz/en/how-to-apply",
+        "title": "Admission after school - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "conflicting",
+        "quote_or_evidence": "B057: Minimum score (paid tuition) 70 — противоречит странице educational-grants (минимум 80). См. conflicts."
+      },
+      {
+        "field": "admission.paid_min_ent, admission.extra_exams",
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "Education Funded by Subsoil Users - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "conflicting",
+        "quote_or_evidence": "To be admitted on tuition-fee basis: UNT minimum 80 + AET (Module 1 min 30/50, Module 2 min 25/50). Противоречит 70 на how-to-apply. См. conflicts."
+      },
+      {
+        "field": "admission.extra_exams",
+        "url": "https://astanait.edu.kz/en/aitu-excellence-test",
+        "title": "AET Entrance Exam",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "AET mandatory for fee-paying applicants; registration until August 20; fee 3 000 KZT; 2 attempts (failure after two attempts removes the right to enroll); Module 1 English 50q/60min (20–29 paid + English courses, 30–50 paid + grant competition eligibility); Module 2 CS+logic 50q/60min (10–24 paid + courses, 25–50 pass); confirmed exemptions: IELTS 5.5+, TOEFL ITP 460+, TOEFL iBT 46–59, AITU Foundation for Module 1, AITU iCode or Foundation for Module 2"
+      },
+      {
+        "field": "admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение (с изменениями приказом от 01.07.2026 № 321)",
+        "source_date": "2026-07-01",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "По Истории Казахстана и двум профильным предметам ЕНТ — не менее 5-ти баллов, по Грамотности чтения и Математической грамотности — не менее 3-х баллов"
+      },
+      {
+        "field": "admission.deadline",
+        "url": "https://egov.kz/cms/ru/news/educational_grants",
+        "title": "Абитуриенты могут подать заявку на образовательные гранты на портале eGov.kz",
+        "source_date": "2026-07-10",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Онлайн-подача заявлений на конкурс грантов 13 июля 09:00 – 20 июля 18:00; результаты — не позднее 10 августа"
+      },
+      {
+        "field": "tuition.first_year, tuition.other_years",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Price list for educational services for the 2026-2027 academic year: Bachelor's Degree 2.500.000₸. Разбивка по 2–3 курсам не опубликована."
+      },
+      {
+        "field": "programme.languages",
+        "url": "https://astanait.edu.kz/en",
+        "title": "Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Bachelor's degree 3 years of intensive English-taught education"
+      },
+      {
+        "field": "dormitory.available, dormitory.price, dormitory.guaranteed",
+        "url": "https://astanait.edu.kz/en/students-dormitory",
+        "title": "Student house - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "3 жилых комплекса (мест: 139 + 229 + 232 + 67 колледж, на август 2026); договоры найма Academic Year 2026–2027; сиротам и инвалидам — бесплатно, малообеспеченным — скидка 20%; распределение по приказу МНВО № 219. Цена в тенге в тексте не извлечена (FAQ о стоимости за аккордеоном; для иностранцев указано $70/month)."
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent: значение null из-за конфликта официальных источников (70 vs 80); см. conflicts",
+      "admission.historical_passing_score: проходной балл прошлых лет официально не опубликован",
+      "tuition.other_years: цены 2–3 курсов 2026–2027 не опубликованы; переносить 2 500 000 на старшие курсы запрещено",
+      "tuition.installment_available: рассрочка обучения официально не подтверждена",
+      "dormitory.price, dormitory.price_period: цена в тенге не извлечена; $70/month относится к странице для иностранцев и не конвертируется без официального курса",
+      "dormitory.guaranteed: конкурс и приоритетные категории — гарантия места не заявлена",
+      "sources.source_date: evergreen-страницы AITU без дат публикации; даты новостей грантовых конкурсов см. в funding-файле"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 70,
+            "url": "https://astanait.edu.kz/en/how-to-apply",
+            "date": "2026-09-20"
+          },
+          {
+            "value": 80,
+            "url": "https://astanait.edu.kz/educational-grants",
+            "date": "2026-09-20"
+          }
+        ],
+        "note": "Таблица поступления (how-to-apply) указывает минимум 70 для платного отделения B057; страница subsoil-грантов требует UNT минимум 80 + AET для платного зачисления. Возможно, 80 относится к контексту грантов недропользователей, но формулировка общая. Требуется подтверждение приёмной комиссии; поле оставлено null."
+      }
+    ],
+    "notes": "100 — минимум для участия в конкурсе госгранта по таблице AITU, не фактический проходной балл и не гарантия. AET 30+/25+ открывает участие в конкурсе грантов; 20–29/10–24 — только платное + обязательные курсы AITU. Форма обучения явно не указана (3-летняя интенсивная программа, триместры); второй профильный предмет AITU называет Computer Science — учтён как Информатика."
+  },
+  {
+    "university": {
+      "name": "Astana IT University",
+      "short_name": "AITU",
+      "city": "Астана",
+      "official_website": "https://astanait.edu.kz/en/"
+    },
+    "programme": {
+      "name": "Software Engineering",
+      "code": "6B06102",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": ["английский"]
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": 100,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [
+        "AITU Excellence Test (AET) — обязателен для платного поступления: модуль 1 (английский, минимум 30 из 50), модуль 2 (информатика и логика, минимум 25 из 50); 3 000 KZT, 2 попытки"
+      ],
+      "academic_year": "2026-2027",
+      "deadline": "2026-08-25",
+      "documents": [
+        "Аттестат или диплом (оригинал)",
+        "Копия паспорта",
+        "Фото 3х4, 6 штук",
+        "IELTS / TOEFL IBT / TOEFL ITP / APTIS / Duolingo / InterPress (при наличии)",
+        "Документ об образовании, оригинал и копия (конкурс госгрантов)",
+        "Документы льготной категории (при наличии)"
+      ]
+    },
+    "tuition": {
+      "first_year": 2500000,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.group",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "School of Software Engineering: Software Engineering 6B06102"
+      },
+      {
+        "field": "programme.group, programme.profile_subjects, admission.grant_application_min_ent, admission.deadline",
+        "url": "https://astanait.edu.kz/en/how-to-apply",
+        "title": "Admission after school - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 Information Technology includes Software Engineering; Profile Mathematics + Computer Science; Minimum grant 100; Minimum paid 70 (конфликт с 80, см. conflicts); Enrollment June 20 – August 25"
+      },
+      {
+        "field": "admission.paid_min_ent",
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "Education Funded by Subsoil Users - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "conflicting",
+        "quote_or_evidence": "Платное зачисление: UNT минимум 80 + AET. Противоречит 70 на how-to-apply."
+      },
+      {
+        "field": "admission.extra_exams",
+        "url": "https://astanait.edu.kz/en/aitu-excellence-test",
+        "title": "AET Entrance Exam",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "AET mandatory for fee-paying applicants; registration until August 20; Modules English (30/50) and CS+logic (25/50); fee 3 000 KZT; 2 attempts"
+      },
+      {
+        "field": "admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема (приказ от 01.07.2026 № 321)",
+        "source_date": "2026-07-01",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "История Казахстана и профильные — от 5 баллов; грамотности — от 3 баллов"
+      },
+      {
+        "field": "tuition.first_year",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Price list 2026-2027: Bachelor's Degree 2.500.000₸"
+      },
+      {
+        "field": "programme.languages, dormitory.available",
+        "url": "https://astanait.edu.kz/en",
+        "title": "Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "3 years of intensive English-taught education"
+      },
+      {
+        "field": "dormitory.price",
+        "url": "https://astanait.edu.kz/en/students-dormitory",
+        "title": "Student house - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "needs_review",
+        "quote_or_evidence": "Договоры найма 2026–2027; цена в тенге в тексте не извлечена"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent: null из-за конфликта 70 vs 80",
+      "admission.historical_passing_score: не опубликован",
+      "tuition.other_years, tuition.installment_available: не опубликованы",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не извлечены/не заявлены"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 70,
+            "url": "https://astanait.edu.kz/en/how-to-apply",
+            "date": "2026-09-20"
+          },
+          {
+            "value": 80,
+            "url": "https://astanait.edu.kz/educational-grants",
+            "date": "2026-09-20"
+          }
+        ],
+        "note": "Расхождение официальных страниц AITU; требуется подтверждение приёмной комиссии."
+      }
+    ],
+    "notes": "Школа: School of Software Engineering. 100 — минимум участия в конкурсе грантов, не проходной балл."
+  },
+  {
+    "university": {
+      "name": "Astana IT University",
+      "short_name": "AITU",
+      "city": "Астана",
+      "official_website": "https://astanait.edu.kz/en/"
+    },
+    "programme": {
+      "name": "Big Data Analysis",
+      "code": "6B06103",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": ["английский"]
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": 100,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [
+        "AITU Excellence Test (AET) — обязателен для платного поступления: модуль 1 (английский, минимум 30 из 50), модуль 2 (информатика и логика, минимум 25 из 50); 3 000 KZT, 2 попытки"
+      ],
+      "academic_year": "2026-2027",
+      "deadline": "2026-08-25",
+      "documents": [
+        "Аттестат или диплом (оригинал)",
+        "Копия паспорта",
+        "Фото 3х4, 6 штук",
+        "IELTS / TOEFL IBT / TOEFL ITP / APTIS / Duolingo / InterPress (при наличии)",
+        "Документ об образовании, оригинал и копия (конкурс госгрантов)",
+        "Документы льготной категории (при наличии)"
+      ]
+    },
+    "tuition": {
+      "first_year": 2500000,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.group",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "School of Artificial Intelligence and Data Science: Big Data Analysis 6B06103"
+      },
+      {
+        "field": "programme.group, admission.grant_application_min_ent, admission.deadline",
+        "url": "https://astanait.edu.kz/en/how-to-apply",
+        "title": "Admission after school - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 row includes Big Data Analysis; Minimum grant 100; Enrollment June 20 – August 25"
+      },
+      {
+        "field": "admission.paid_min_ent",
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "Education Funded by Subsoil Users - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "conflicting",
+        "quote_or_evidence": "UNT минимум 80 + AET против 70 на how-to-apply"
+      },
+      {
+        "field": "admission.extra_exams",
+        "url": "https://astanait.edu.kz/en/aitu-excellence-test",
+        "title": "AET Entrance Exam",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "AET mandatory; registration until August 20; English 30/50, CS+logic 25/50; 3 000 KZT; 2 attempts"
+      },
+      {
+        "field": "admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема (приказ от 01.07.2026 № 321)",
+        "source_date": "2026-07-01",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "История Казахстана и профильные — от 5 баллов; грамотности — от 3 баллов"
+      },
+      {
+        "field": "tuition.first_year",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Price list 2026-2027: Bachelor's Degree 2.500.000₸"
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://astanait.edu.kz/en/students-dormitory",
+        "title": "Student house - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "3 жилых комплекса; договоры 2026–2027; сиротам/инвалидам бесплатно; малообеспеченным −20%"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent: null из-за конфликта 70 vs 80",
+      "admission.historical_passing_score: не опубликован",
+      "tuition.other_years, tuition.installment_available: не опубликованы",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не извлечены/не заявлены"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 70,
+            "url": "https://astanait.edu.kz/en/how-to-apply",
+            "date": "2026-09-20"
+          },
+          {
+            "value": 80,
+            "url": "https://astanait.edu.kz/educational-grants",
+            "date": "2026-09-20"
+          }
+        ],
+        "note": "Расхождение официальных страниц AITU; требуется подтверждение приёмной комиссии."
+      }
+    ],
+    "notes": "100 — минимум участия в конкурсе грантов, не проходной балл."
+  },
+  {
+    "university": {
+      "name": "Astana IT University",
+      "short_name": "AITU",
+      "city": "Астана",
+      "official_website": "https://astanait.edu.kz/en/"
+    },
+    "programme": {
+      "name": "Media Technologies",
+      "code": "6B06105",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": ["английский"]
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": 100,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [
+        "AITU Excellence Test (AET) — обязателен для платного поступления: модуль 1 (английский, минимум 30 из 50), модуль 2 (информатика и логика, минимум 25 из 50); 3 000 KZT, 2 попытки"
+      ],
+      "academic_year": "2026-2027",
+      "deadline": "2026-08-25",
+      "documents": [
+        "Аттестат или диплом (оригинал)",
+        "Копия паспорта",
+        "Фото 3х4, 6 штук",
+        "IELTS / TOEFL IBT / TOEFL ITP / APTIS / Duolingo / InterPress (при наличии)",
+        "Документ об образовании, оригинал и копия (конкурс госгрантов)",
+        "Документы льготной категории (при наличии)"
+      ]
+    },
+    "tuition": {
+      "first_year": 2500000,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "School of Creative Industries: Media Technologies 6B06105"
+      },
+      {
+        "field": "programme.group, admission.grant_application_min_ent",
+        "url": "https://astanait.edu.kz/en/how-to-apply",
+        "title": "Admission after school - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 row explicitly includes Media Technologies with the same profile subjects and Minimum grant 100"
+      },
+      {
+        "field": "admission.paid_min_ent",
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "Education Funded by Subsoil Users - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "conflicting",
+        "quote_or_evidence": "UNT минимум 80 + AET против 70 на how-to-apply"
+      },
+      {
+        "field": "admission.extra_exams",
+        "url": "https://astanait.edu.kz/en/aitu-excellence-test",
+        "title": "AET Entrance Exam",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "AET mandatory for fee-paying applicants; English 30/50, CS+logic 25/50"
+      },
+      {
+        "field": "admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема (приказ от 01.07.2026 № 321)",
+        "source_date": "2026-07-01",
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "История Казахстана и профильные — от 5 баллов; грамотности — от 3 баллов"
+      },
+      {
+        "field": "tuition.first_year",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Price list 2026-2027: Bachelor's Degree 2.500.000₸"
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://astanait.edu.kz/en/students-dormitory",
+        "title": "Student house - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "3 жилых комплекса; договоры 2026–2027"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent: null из-за конфликта 70 vs 80",
+      "admission.historical_passing_score: не опубликован",
+      "tuition.other_years, tuition.installment_available: не опубликованы",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не извлечены/не заявлены"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 70,
+            "url": "https://astanait.edu.kz/en/how-to-apply",
+            "date": "2026-09-20"
+          },
+          {
+            "value": 80,
+            "url": "https://astanait.edu.kz/educational-grants",
+            "date": "2026-09-20"
+          }
+        ],
+        "note": "Расхождение официальных страниц AITU; требуется подтверждение приёмной комиссии."
+      }
+    ],
+    "notes": "Media Technologies отнесена к B057 самой таблицей AITU (строка B057), несмотря на школу Creative Industries; творческий экзамен для неё в B057-строке не указан (в отличие от Digital Journalism B042). 100 — минимум участия в конкурсе грантов."
+  },
+  {
+    "university": {
+      "name": "Astana IT University",
+      "short_name": "AITU",
+      "city": "Астана",
+      "official_website": "https://astanait.edu.kz/en/"
+    },
+    "programme": {
+      "name": "Mathematical and Computational Science",
+      "code": "6B06107",
+      "group": "B057",
+      "profile_subjects": ["Математика", "Информатика"],
+      "languages": ["английский"]
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": 100,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "each_profile_subject": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3
+      },
+      "extra_exams": [
+        "AITU Excellence Test (AET) — обязателен для платного поступления: модуль 1 (английский, минимум 30 из 50), модуль 2 (информатика и логика, минимум 25 из 50); 3 000 KZT, 2 попытки"
+      ],
+      "academic_year": "2026-2027",
+      "deadline": "2026-08-25",
+      "documents": [
+        "Аттестат или диплом (оригинал)",
+        "Копия паспорта",
+        "Фото 3х4, 6 штук",
+        "IELTS / TOEFL IBT / TOEFL ITP / APTIS / Duolingo / InterPress (при наличии)",
+        "Документ об образовании, оригинал и копия (конкурс госгрантов)",
+        "Документы льготной категории (при наличии)"
+      ]
+    },
+    "tuition": {
+      "first_year": 2500000,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "School of Artificial Intelligence and Data Science: Mathematical and Computational Science 6B06107"
+      },
+      {
+        "field": "programme.group, admission.grant_application_min_ent",
+        "url": "https://astanait.edu.kz/en/how-to-apply",
+        "title": "Admission after school - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B057 row includes Mathematical and Computational Science; Minimum grant 100"
+      },
+      {
+        "field": "admission.paid_min_ent",
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "Education Funded by Subsoil Users - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "conflicting",
+        "quote_or_evidence": "UNT минимум 80 + AET против 70 на how-to-apply"
+      },
+      {
+        "field": "admission.extra_exams",
+        "url": "https://astanait.edu.kz/en/aitu-excellence-test",
+        "title": "AET Entrance Exam",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "AET mandatory for fee-paying applicants; English 30/50, CS+logic 25/50; registration until August 20"
+      },
+      {
+        "field": "admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема (приказ от 01.07.2026 № 321)",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "История Казахстана и профильные — от 5 баллов; грамотности — от 3 баллов"
+      },
+      {
+        "field": "tuition.first_year",
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "Bachelor's Degree",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Price list 2026-2027: Bachelor's Degree 2.500.000₸"
+      },
+      {
+        "field": "dormitory.available",
+        "url": "https://astanait.edu.kz/en/students-dormitory",
+        "title": "Student house - Astana IT University",
+        "source_date": null,
+        "applicable_year": "2026-2027",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "3 жилых комплекса; договоры 2026–2027"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent: null из-за конфликта 70 vs 80",
+      "admission.historical_passing_score: не опубликован",
+      "tuition.other_years, tuition.installment_available: не опубликованы",
+      "dormitory.price, dormitory.price_period, dormitory.guaranteed: не извлечены/не заявлены"
+    ],
+    "conflicts": [
+      {
+        "field": "admission.paid_min_ent",
+        "values": [
+          {
+            "value": 70,
+            "url": "https://astanait.edu.kz/en/how-to-apply",
+            "date": "2026-09-20"
+          },
+          {
+            "value": 80,
+            "url": "https://astanait.edu.kz/educational-grants",
+            "date": "2026-09-20"
+          }
+        ],
+        "note": "Расхождение официальных страниц AITU; требуется подтверждение приёмной комиссии."
+      }
+    ],
+    "notes": "100 — минимум участия в конкурсе грантов, не проходной балл."
+  }
+]

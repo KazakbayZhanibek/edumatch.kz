@@ -1,0 +1,494 @@
+-- schema.sql
+-- SQLite schema для EduMatchKZ
+-- Нормализованная структура с индексами и future-fields
+
+-- Города
+CREATE TABLE IF NOT EXISTS cities (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE
+);
+
+-- Специальности (категория) 
+CREATE TABLE IF NOT EXISTS specialties (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE,
+  code TEXT,
+  category TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_specialties_category ON specialties(category);
+
+-- Университеты (основная таблица)
+-- Future-fields: last_updated_at, data_status, admission_*
+CREATE TABLE IF NOT EXISTS universities (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  short_name TEXT NOT NULL,
+  city_id INTEGER NOT NULL,
+  qs_world INTEGER,
+  qs_asia INTEGER,
+  price_from INTEGER NOT NULL,
+  price_to INTEGER NOT NULL,
+  website TEXT,
+  description TEXT,
+  description_kk TEXT,
+  description_en TEXT,
+  founded INTEGER,
+  students_count INTEGER,
+  languages TEXT NOT NULL,           -- JSON array: ["Казахский", "Русский", "Английский"]
+  accreditations TEXT NOT NULL,      -- JSON array: ["Национальная", "QS Stars"]
+  has_dorm INTEGER NOT NULL,         -- 0 или 1
+  dorm_price INTEGER,
+  avg_salary INTEGER,
+  lat REAL,
+  lng REAL,
+  is_top INTEGER DEFAULT 0,          -- 0 или 1 (входит ли в ТОП-20)
+  is_free INTEGER NOT NULL DEFAULT 0,-- 0 или 1 (есть бесплатное обучение)
+  last_updated_at DATETIME,          -- future-field
+  data_status TEXT,                  -- future-field: 'active', 'inactive', 'pending'
+  admission_phone TEXT,              -- future-field
+  admission_email TEXT,              -- future-field
+  admission_whatsapp TEXT,           -- future-field
+  address TEXT,
+  source_record_id INTEGER,
+  FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE RESTRICT
+);
+-- Performance индексы
+CREATE INDEX IF NOT EXISTS idx_universities_name ON universities(name);
+CREATE INDEX IF NOT EXISTS idx_universities_short_name ON universities(short_name);
+CREATE INDEX IF NOT EXISTS idx_universities_city_id ON universities(city_id);
+CREATE INDEX IF NOT EXISTS idx_universities_price_from ON universities(price_from);
+CREATE INDEX IF NOT EXISTS idx_universities_qs_world ON universities(qs_world);
+CREATE INDEX IF NOT EXISTS idx_universities_qs_asia ON universities(qs_asia);
+CREATE INDEX IF NOT EXISTS idx_universities_is_top ON universities(is_top);
+
+-- Связь: Университет ↔ Специальность (многие-ко-многим)
+CREATE TABLE IF NOT EXISTS university_specialties (
+  university_id INTEGER NOT NULL,
+  specialty_id INTEGER NOT NULL,
+  PRIMARY KEY(university_id, specialty_id),
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  FOREIGN KEY(specialty_id) REFERENCES specialties(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_university_specialties_uni ON university_specialties(university_id);
+CREATE INDEX IF NOT EXISTS idx_university_specialties_spec ON university_specialties(specialty_id);
+
+-- Гранты
+CREATE TABLE IF NOT EXISTS grants (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  name_kk TEXT,
+  name_en TEXT,
+  type TEXT NOT NULL,                -- 'government', 'regional', 'corporate', 'university'
+  amount TEXT NOT NULL,
+  description TEXT,
+  description_kk TEXT,
+  description_en TEXT,
+  requirements TEXT NOT NULL,        -- JSON array: ["Требование 1", "Требование 2", ...]
+  requirements_kk TEXT,
+  requirements_en TEXT,
+  deadline TEXT,
+  link TEXT,
+  source_url TEXT,
+  source_title TEXT,
+  verification_status TEXT NOT NULL DEFAULT 'needs_review',
+  verified_at TEXT,
+  university_id INTEGER,
+  city_id INTEGER,
+  academic_year TEXT DEFAULT '2025-2026',
+  is_active INTEGER NOT NULL DEFAULT 1,
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE SET NULL,
+  FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_grants_name ON grants(name);
+CREATE INDEX IF NOT EXISTS idx_grants_type ON grants(type);
+CREATE INDEX IF NOT EXISTS idx_grants_academic_year ON grants(academic_year);
+
+-- Связь: Грант ↔ Специальность (многие-ко-многим)
+CREATE TABLE IF NOT EXISTS grant_specialties (
+  grant_id INTEGER NOT NULL,
+  specialty_id INTEGER NOT NULL,
+  PRIMARY KEY(grant_id, specialty_id),
+  FOREIGN KEY(grant_id) REFERENCES grants(id) ON DELETE CASCADE,
+  FOREIGN KEY(specialty_id) REFERENCES specialties(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_grant_specialties_grant ON grant_specialties(grant_id);
+CREATE INDEX IF NOT EXISTS idx_grant_specialties_spec ON grant_specialties(specialty_id);
+
+-- Советы / Рекомендации
+CREATE TABLE IF NOT EXISTS tips (
+  id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  content TEXT NOT NULL,
+  tip TEXT
+);
+
+-- ==================== PHASE 2: AUTHENTICATION ====================
+
+-- Пользователи (новое в Phase 2)
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  username TEXT UNIQUE NOT NULL,
+  full_name TEXT,
+  phone TEXT,
+  profile_picture TEXT,
+  bio TEXT,
+  ent_score INTEGER,                  -- балл ЕНТ
+  ent_verified_score INTEGER,
+  ent_verified_at TEXT,
+  military_service INTEGER DEFAULT 0, -- 0 = не служил, 1 = проходил службу
+  preferences TEXT,                  -- JSON: {"theme": "light", "language": "kk"}
+  is_admin INTEGER DEFAULT 0,        -- 0 или 1
+  role TEXT NOT NULL DEFAULT 'user' CHECK(role IN ('user', 'moderator_reviews', 'moderator_docs', 'admin')),
+  two_factor_enabled INTEGER NOT NULL DEFAULT 0,
+  two_factor_secret TEXT,
+  two_factor_backup_codes TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+
+-- Одноразовые токены сброса пароля. В базе хранится только хеш токена.
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  token_hash TEXT NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  used INTEGER NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_password_resets_user ON password_resets(user_id);
+
+-- Сохранённые вузы (избранные)
+CREATE TABLE IF NOT EXISTS saved_universities (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  university_id INTEGER NOT NULL,
+  note TEXT,
+  saved_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  UNIQUE(user_id, university_id)
+);
+CREATE INDEX IF NOT EXISTS idx_saved_universities_user_id ON saved_universities(user_id);
+
+-- Заявки пользователя и статус поступления
+CREATE TABLE IF NOT EXISTS application_tracker (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  university_id INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'collecting',
+  academic_year TEXT DEFAULT '2025-2026',
+  deadline TEXT,
+  submitted_at TEXT,
+  notes TEXT DEFAULT '',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  UNIQUE(user_id, university_id)
+);
+CREATE INDEX IF NOT EXISTS idx_application_tracker_user ON application_tracker(user_id);
+CREATE INDEX IF NOT EXISTS idx_application_tracker_status ON application_tracker(user_id, status);
+
+-- Сессии пользователя (JWT токены)
+CREATE TABLE IF NOT EXISTS user_sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  token TEXT UNIQUE NOT NULL,
+  refresh_token TEXT UNIQUE,
+  expires_at DATETIME NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_user_id ON user_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_token ON user_sessions(token);
+
+-- История чатов с ИИ
+CREATE TABLE IF NOT EXISTS chat_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  message TEXT NOT NULL,
+  response TEXT NOT NULL,
+  context TEXT,                      -- JSON с параметрами запроса
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_chat_history_user_id ON chat_history(user_id);
+CREATE INDEX IF NOT EXISTS idx_chat_history_created_at ON chat_history(created_at);
+
+-- Результаты тестов (ЕНТ, профориентация и т.д.)
+CREATE TABLE IF NOT EXISTS test_results (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  test_type TEXT NOT NULL,           -- 'ent_calc', 'career_test', 'personality'
+  score INTEGER,
+  max_score INTEGER,
+  result_data TEXT,                  -- JSON с результатами
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_test_results_user_id ON test_results(user_id);
+CREATE INDEX IF NOT EXISTS idx_test_results_test_type ON test_results(test_type);
+
+-- ==================== ADMISSION PREDICTOR ====================
+
+CREATE TABLE IF NOT EXISTS admission_requirements (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  university_id INTEGER NOT NULL,
+  specialty_id INTEGER NOT NULL,
+  min_ent INTEGER NOT NULL,
+  avg_ent INTEGER NOT NULL,
+  grant_min_ent INTEGER,
+  competition_level INTEGER DEFAULT 3,
+  academic_year TEXT DEFAULT '2025-2026',
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  FOREIGN KEY(specialty_id) REFERENCES specialties(id) ON DELETE CASCADE,
+  UNIQUE(university_id, specialty_id)
+);
+CREATE INDEX IF NOT EXISTS idx_admission_req_uni ON admission_requirements(university_id);
+CREATE INDEX IF NOT EXISTS idx_admission_req_spec ON admission_requirements(specialty_id);
+
+-- Расширяемый каталог образовательных программ. Данные импортируются только
+-- вместе с официальными источниками и отдельным статусом проверки.
+CREATE TABLE IF NOT EXISTS admission_programmes_catalogue (
+  id TEXT PRIMARY KEY,
+  university_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  code TEXT,
+  group_code TEXT NOT NULL,
+  profile_subjects TEXT NOT NULL,
+  languages TEXT NOT NULL DEFAULT '[]',
+  verification_status TEXT NOT NULL DEFAULT 'needs_review',
+  notes TEXT NOT NULL DEFAULT '',
+  is_active INTEGER NOT NULL DEFAULT 1,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE,
+  UNIQUE(university_id, code, group_code)
+);
+CREATE INDEX IF NOT EXISTS idx_programmes_catalogue_group ON admission_programmes_catalogue(group_code, is_active);
+CREATE INDEX IF NOT EXISTS idx_programmes_catalogue_university ON admission_programmes_catalogue(university_id);
+
+CREATE TABLE IF NOT EXISTS programme_admission_details (
+  programme_id TEXT PRIMARY KEY,
+  paid_min_ent INTEGER,
+  grant_application_min_ent INTEGER,
+  historical_passing_score INTEGER,
+  section_minimums TEXT NOT NULL DEFAULT '{}',
+  extra_exams TEXT NOT NULL DEFAULT '[]',
+  academic_year TEXT,
+  deadline TEXT,
+  documents TEXT NOT NULL DEFAULT '[]',
+  dormitory TEXT NOT NULL DEFAULT '{}',
+  conflicts TEXT NOT NULL DEFAULT '[]',
+  unknown_fields TEXT NOT NULL DEFAULT '[]',
+  FOREIGN KEY(programme_id) REFERENCES admission_programmes_catalogue(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS programme_tuition (
+  programme_id TEXT NOT NULL,
+  academic_year TEXT NOT NULL,
+  first_year INTEGER,
+  other_years TEXT NOT NULL DEFAULT '{}',
+  currency TEXT NOT NULL DEFAULT 'KZT',
+  installment_available INTEGER,
+  PRIMARY KEY(programme_id, academic_year),
+  FOREIGN KEY(programme_id) REFERENCES admission_programmes_catalogue(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS programme_sources (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  programme_id TEXT NOT NULL,
+  field_name TEXT NOT NULL,
+  url TEXT NOT NULL,
+  title TEXT,
+  checked_at TEXT NOT NULL,
+  verification_status TEXT NOT NULL,
+  evidence TEXT,
+  FOREIGN KEY(programme_id) REFERENCES admission_programmes_catalogue(id) ON DELETE CASCADE,
+  UNIQUE(programme_id, field_name, url, checked_at)
+);
+CREATE INDEX IF NOT EXISTS idx_programme_sources_programme ON programme_sources(programme_id);
+
+CREATE TABLE IF NOT EXISTS programme_import_batches (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_file TEXT NOT NULL,
+  record_count INTEGER NOT NULL,
+  applied INTEGER NOT NULL DEFAULT 0,
+  summary TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- История предсказаний (для улучшения модели в будущем)
+CREATE TABLE IF NOT EXISTS prediction_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  ent INTEGER,
+  specialty_category TEXT,
+  university_id INTEGER,
+  predicted_chance INTEGER,
+  actual_result INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL,
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_prediction_history_user ON prediction_history(user_id);
+
+-- ==================== ADMISSION CHANCE STATISTICS ====================
+-- Историческая статистика для детерминированного калькулятора
+-- Хранит данные о вероятности поступления по различным сценариям
+
+CREATE TABLE IF NOT EXISTS admission_chance_stats (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  year INTEGER NOT NULL,
+  university_id INTEGER,
+  specialty_id INTEGER NOT NULL,
+  city_id INTEGER,
+  grant_id INTEGER,
+  ent_score_from INTEGER NOT NULL,
+  ent_score_to INTEGER NOT NULL,
+  gpa_from REAL,
+  gpa_to REAL,
+  budget_max INTEGER,
+  language TEXT,
+  requires_dorm_support INTEGER,
+  competition_level TEXT,
+  applicants_count INTEGER,
+  admitted_count INTEGER,
+  grant_winners_count INTEGER,
+  chance_percent REAL NOT NULL,
+  confidence_level TEXT DEFAULT 'medium',
+  source_label TEXT,
+  source_url TEXT,
+  notes TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE SET NULL,
+  FOREIGN KEY(specialty_id) REFERENCES specialties(id) ON DELETE CASCADE,
+  FOREIGN KEY(city_id) REFERENCES cities(id) ON DELETE SET NULL,
+  FOREIGN KEY(grant_id) REFERENCES grants(id) ON DELETE SET NULL
+);
+
+-- Индексы для быстрого поиска статистики
+CREATE INDEX IF NOT EXISTS idx_admission_stats_year ON admission_chance_stats(year);
+CREATE INDEX IF NOT EXISTS idx_admission_stats_university ON admission_chance_stats(university_id);
+CREATE INDEX IF NOT EXISTS idx_admission_stats_specialty ON admission_chance_stats(specialty_id);
+CREATE INDEX IF NOT EXISTS idx_admission_stats_city ON admission_chance_stats(city_id);
+CREATE INDEX IF NOT EXISTS idx_admission_stats_ent_from ON admission_chance_stats(ent_score_from);
+CREATE INDEX IF NOT EXISTS idx_admission_stats_ent_to ON admission_chance_stats(ent_score_to);
+CREATE INDEX IF NOT EXISTS idx_admission_stats_composite ON admission_chance_stats(specialty_id, university_id, year);
+
+-- ==================== REVIEWS ====================
+
+CREATE TABLE IF NOT EXISTS reviews (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  university_id INTEGER NOT NULL,
+  user_name TEXT NOT NULL,
+  rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+  pros TEXT,
+  cons TEXT,
+  comment TEXT,
+  faculty TEXT,
+  study_year TEXT,
+  moderated_at DATETIME,
+  moderated_by INTEGER,
+  moderation_status TEXT NOT NULL DEFAULT 'pending' CHECK(moderation_status IN ('pending', 'approved', 'hidden')),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(university_id) REFERENCES universities(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_reviews_university ON reviews(university_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_rating ON reviews(rating);
+
+-- ==================== QUERY LOG (ANALYTICS) ====================
+
+CREATE TABLE IF NOT EXISTS query_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  query TEXT NOT NULL,
+  intent TEXT,
+  lang TEXT DEFAULT 'ru',
+  response_time_ms INTEGER,
+  user_id INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_query_log_intent ON query_log(intent);
+CREATE INDEX IF NOT EXISTS idx_query_log_created ON query_log(created_at);
+CREATE INDEX IF NOT EXISTS idx_query_log_lang ON query_log(lang);
+
+-- ==================== AUDIT LOG ====================
+CREATE TABLE IF NOT EXISTS audit_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  table_name TEXT NOT NULL,
+  record_id INTEGER,
+  action TEXT NOT NULL CHECK(action IN ('INSERT', 'UPDATE', 'DELETE')),
+  old_values TEXT,                   -- JSON
+  new_values TEXT,                   -- JSON
+  user_id INTEGER,
+  ip_address TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_audit_log_table ON audit_log(table_name);
+CREATE INDEX IF NOT EXISTS idx_audit_log_record ON audit_log(record_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_user ON audit_log(user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_created ON audit_log(created_at);
+
+-- ==================== PHASE 5: VERIFICATION & ENT ====================
+
+-- Верификация военной службы
+CREATE TABLE IF NOT EXISTS military_verifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  document_url TEXT NOT NULL,           -- base64 или путь к файлу
+  file_path TEXT,
+  file_size INTEGER,
+  auto_delete_at DATETIME,
+  service_type TEXT DEFAULT 'draft',    -- draft=по призыву, contract=контракт, alternative=альтернативная
+  status TEXT DEFAULT 'pending',        -- pending / approved / rejected
+  reviewed_by INTEGER,                  -- admin user_id
+  review_note TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at DATETIME,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY(reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_military_user ON military_verifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_military_status ON military_verifications(status);
+
+-- Загрузка результатов ЕНТ
+CREATE TABLE IF NOT EXISTS ent_uploads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  document_url TEXT NOT NULL,           -- base64 или путь к файлу
+  file_path TEXT,
+  file_size INTEGER,
+  auto_delete_at DATETIME,
+  ent_score INTEGER,                    -- распознанный балл (0-140)
+  status TEXT DEFAULT 'pending',        -- pending / approved / rejected
+  reviewed_by INTEGER,
+  review_note TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at DATETIME,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY(reviewed_by) REFERENCES users(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_ent_uploads_user ON ent_uploads(user_id);
+
+CREATE TABLE IF NOT EXISTS notifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  type TEXT NOT NULL,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  link TEXT,
+  is_read INTEGER NOT NULL DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON notifications(user_id, created_at);

@@ -1,0 +1,34 @@
+/* Profile overview and progressive disclosure; password geometry stays shared. */
+#profile-content .profile-overview { padding:0 0 24px; border-bottom:1px solid var(--border); margin-bottom:24px; }
+#profile-content .profile-overview h2 { font-size:clamp(1.3rem,2vw,1.75rem); line-height:1.2; margin:0 0 12px; }
+#profile-content .profile-overview p { max-width:65ch; color:var(--text2); line-height:1.6; margin:0 0 20px; }
+#profile-content .profile-overview-actions { display:flex; flex-wrap:wrap; gap:10px; }
+#profile-content .profile-overview-links { display:flex; flex-wrap:wrap; gap:4px 20px; margin-top:16px; }
+#profile-content .profile-overview-links button { font:inherit; text-align:left; background:none; border:0; color:var(--accent); padding:8px 0; min-height:44px; cursor:pointer; text-decoration:underline; text-underline-offset:4px; }
+#profile-content .profile-overview-links span { font-variant-numeric:tabular-nums; margin-left:4px; }
+#profile-content .profile-disclosure > summary { display:flex; align-items:center; gap:12px; min-height:44px; cursor:pointer; list-style:none; }
+#profile-content .profile-disclosure > summary::-webkit-details-marker { display:none; }
+#profile-content .profile-disclosure > summary::after { content:''; width:8px; height:8px; flex-shrink:0; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); margin:0 4px 4px auto; }
+#profile-content .profile-disclosure[open] > summary::after { transform:rotate(225deg); margin-bottom:0; }
+#profile-content .profile-disclosure > summary :is(h2,.profile-section-header) { margin:0; }
+#profile-content .profile-disclosure > summary .profile-section-header { flex:1; min-width:0; }
+#profile-content .profile-disclosure[open] > summary { margin-bottom:20px; }
+#profile-content .profile-disclosure .profile-chat-item { padding-top:14px; padding-bottom:14px; }
+#profile-content .profile-empty .btn { display:block; margin:16px auto 0; }
+#profile-content :is(.profile-overview button,.profile-disclosure > summary):focus-visible { outline:2px solid var(--accent); outline-offset:4px; border-radius:4px; }
+#profile-content :is(#profile-saved-section,#profile-tracker-section,#profile-edit-section) { scroll-margin-top:84px; }
+#planner-saved { scroll-margin-top:84px; }
+@media(max-width:600px) {
+  #profile-content .profile-user-card { display:grid; grid-template-columns:64px minmax(0,1fr); gap:10px 16px; padding:16px; border-radius:12px; box-shadow:none; text-align:left; }
+  #profile-content .profile-user-avatar { width:64px; height:64px; margin:0; font-size:24px; border:0; box-shadow:none; }
+  #profile-content .profile-user-info { padding:0; text-align:left; align-self:center; min-width:0; }
+  #profile-content .profile-user-name { font-size:16px; line-height:1.4; overflow-wrap:anywhere; }
+  #profile-content .profile-user-email { overflow-wrap:anywhere; }
+  #profile-content .profile-user-bio, #profile-content .profile-stats { display:none; }
+  #profile-content .profile-sidebar-actions { grid-column:2; padding:0; }
+  #profile-content .profile-sidebar-actions .btn { width:auto; min-height:44px; padding:8px 16px; }
+  #profile-content .profile-overview { padding-bottom:20px; margin-bottom:20px; }
+  #profile-content .profile-overview-actions .btn { flex:1 1 180px; }
+  #profile-content .profile-overview-links { gap:2px 16px; }
+  #profile-content .profile-disclosure > summary h2 { font-size:1rem; line-height:1.4; }
+}

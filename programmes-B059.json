@@ -1,0 +1,123 @@
+[
+  {
+    "university": {
+      "name": "Astana IT University",
+      "short_name": "AITU",
+      "city": "Астана",
+      "official_website": "https://astanait.edu.kz/ru/"
+    },
+    "programme": {
+      "name": "Smart Technologies",
+      "code": "6B06202",
+      "group": "B059",
+      "profile_subjects": ["Математика", "Физика"],
+      "languages": ["английский"]
+    },
+    "admission": {
+      "paid_min_ent": 70,
+      "grant_application_min_ent": 85,
+      "historical_passing_score": null,
+      "section_minimums": {
+        "history_of_kazakhstan": 5,
+        "reading_literacy": 3,
+        "mathematical_literacy": 3,
+        "each_profile_subject": 5
+      },
+      "extra_exams": [
+        "AITU Excellence Test (AET) для поступления на платной основе; минимумы AET: английский 30/50 и основы компьютерных наук и логики 25/50"
+      ],
+      "academic_year": "2026-2027",
+      "deadline": "2026-08-24",
+      "documents": [
+        "удостоверение личности",
+        "сертификат ЕНТ",
+        "документ об образовании (аттестат/диплом)",
+        "документы, подтверждающие льготную категорию (при наличии)",
+        "для несовершеннолетнего: свидетельство о рождении и удостоверение личности родителя или законного представителя"
+      ]
+    },
+    "tuition": {
+      "first_year": 2500000,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": true,
+      "price": null,
+      "price_period": null,
+      "guaranteed": false
+    },
+    "sources": [
+      {
+        "field": "programme.name, programme.code, programme.group, programme.profile_subjects, admission.paid_min_ent, admission.grant_application_min_ent",
+        "url": "https://astanait.edu.kz/ru/how-to-apply",
+        "title": "Поступление после школы",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "B059 | Коммуникации и коммуникационные технологии | Smart Technologies | 1. Математика 2. Физика | 70 | 85"
+      },
+      {
+        "field": "programme.code, programme.languages, tuition.first_year",
+        "url": "https://astanait.edu.kz/ru/bachelor",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Smart Technologies 6B06202; Обучение на английском языке; Прейскурант стоимости образовательных услуг на 2026-2027 учебный год: Бакалавриат 2.500.000₸"
+      },
+      {
+        "field": "admission.extra_exams",
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "Educational grants funded by NCOC N.V. and KPO B.V.",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "minimum passing score of 80 and successfully pass the AITU Excellence Test (AET); Module 1 ... 30 out of 50; Module 2 ... 25 out of 50"
+      },
+      {
+        "field": "admission.paid_min_ent",
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "Educational grants funded by NCOC N.V. and KPO B.V.",
+        "checked_at": "2026-09-20",
+        "status": "conflicting",
+        "quote_or_evidence": "To be admitted to Astana IT University on a tuition-fee basis ... minimum passing score of 80"
+      },
+      {
+        "field": "admission.section_minimums",
+        "url": "https://adilet.zan.kz/rus/docs/V1800017650",
+        "title": "Типовые правила приема на обучение",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "по Истории Казахстана и двум профильным предметам ... не менее 5-ти баллов ... Грамотности чтения и Математической грамотности не менее 3-х баллов"
+      },
+      {
+        "field": "admission.deadline, admission.documents",
+        "url": "https://astanait.edu.kz/ru/bachelor",
+        "title": "Бакалавриат",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "Приемная комиссия работает до 24 августа включительно; Документы для подачи заявления ... удостоверение личности, сертификат ЕНТ, документ об образовании, документы, подтверждающие льготную категорию"
+      },
+      {
+        "field": "dormitory.available, dormitory.guaranteed",
+        "url": "https://astanait.edu.kz/ru/students-dormitory",
+        "title": "Студенческий дом",
+        "checked_at": "2026-09-20",
+        "status": "verified",
+        "quote_or_evidence": "3 жилых комплекса; Иногородним студентам предоставляются три типа комнат"
+      }
+    ],
+    "unknown_fields": [
+      "admission.historical_passing_score: официальный проходной балл прошлых лет для Smart Technologies не найден",
+      "tuition.other_years: опубликована общая стоимость бакалавриата на 2026-2027, разбивка по курсам не найдена",
+      "tuition.installment_available: условия рассрочки для этой программы не найдены",
+      "dormitory.price: стоимость проживания на официальной странице не указана",
+      "dormitory.price_period: период цены не указан",
+      "admission.languages: страница бакалавриата указывает английский язык обучения на уровне университета, отдельное подтверждение по Smart Technologies не найдено"
+    ],
+    "conflicts": [
+      "Официальная страница AITU https://astanait.edu.kz/ru/how-to-apply указывает для B059 минимум 70 для платного поступления и 85 для гранта. Страница AITU https://astanait.edu.kz/educational-grants указывает для поступления на платной основе минимум 80 в контексте конкурса KAZENERGY. Назначение порога 80 требует уточнения у приёмной комиссии; значение 70 не следует применять к конкурсу KAZENERGY без отдельного подтверждения."
+    ],
+    "notes": "Порог 70 является значением из таблицы B059 на общей странице приёма, 85 — минимумом ЕНТ для участия в конкурсе на грант AITU; это не проходной балл государственного гранта и не исторический конкурсный балл. Дата проверки: 2026-09-20."
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "university": {"name": "Satbayev University", "short_name": "Satbayev University", "city": "Алматы", "official_website": "https://satbayev.university/ru/"},
+    "programme": {"name": "Computer Science", "code": "6B06102", "group": "B057", "profile_subjects": ["Математика", "Информатика"], "languages": []},
+    "admission": {"paid_min_ent": null, "grant_application_min_ent": null, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "each_profile_subject": 5, "reading_literacy": 3, "mathematical_literacy": 3}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": null, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group", "url": "https://official.satbayev.university/download/document/54839/6B06102%20Computer%20Science%202025-2026%20eng.pdf", "title": "6B06102 Computer Science programme document", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Официальный документ Satbayev содержит код 6B06102 и название Computer Science; документ относится к 2025–2026 и не подтверждает автоматически условия набора 2026–2027."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://satbayev.university/ru/specialties/kompyuternye-nauki-computer-sciences?professionSubjectId=56", "title": "Компьютерные науки — Satbayev University", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Страница специальности находится в блоке B057 Информационные технологии с профильными предметами Математика – Информатика; код на странице не отображён явно."},
+      {"field": "admission.section_minimums, admission.deadline", "url": "https://satbayev.university/ru/entrant-guide", "title": "Путеводитель абитуриента бакалавриата 2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Порог Satbayev указан как 80 баллов без разделения paid/grant; минимумы: 3 по математической и читательской грамотности, 5 по истории Казахстана и профильным предметам. Документы на зачисление должны быть завершены до 25 августа 2026; даты конкурса госгранта 13–20 июля 2026."}
+    ],
+    "unknown_fields": ["admission.paid_min_ent: значение 80 на общей странице не разделено на платное и грантовое поступление", "admission.grant_application_min_ent: отдельный порог конкурса грантов по программе не указан", "admission.documents: подробный список доступен через ссылку/файл, но не извлечён в текущем исследовании", "programme.languages: сайт сообщает языки университета в целом, язык именно этой программы не подтверждён", "tuition.first_year, tuition.other_years, dormitory: значения по программе не извлечены", "admission.deadline: 25 августа — край завершения зачисления, не отдельный срок подачи заявки", "2027-2028: отдельные условия набора не найдены"],
+    "conflicts": [],
+    "notes": "Программа включена в B057 по официальному каталогу/документу и странице специальности. 80 баллов не превращён в paid или grant threshold без раздельного подтверждения. Исторический проходной балл не опубликован в проверенном источнике."
+  },
+  {
+    "university": {"name": "Satbayev University", "short_name": "Satbayev University", "city": "Алматы", "official_website": "https://satbayev.university/ru/"},
+    "programme": {"name": "Математическое и компьютерное моделирование", "code": "6B06103", "group": "B057", "profile_subjects": ["Математика", "Информатика"], "languages": []},
+    "admission": {"paid_min_ent": null, "grant_application_min_ent": null, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "each_profile_subject": 5, "reading_literacy": 3, "mathematical_literacy": 3}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": null, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group", "url": "https://official.satbayev.university/download/document/48914/Mathematical%20and%20computer%20modeling%206B06103%202025-2026.pdf", "title": "6B06103 Mathematical and computer modeling programme document", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Официальный документ Satbayev содержит код 6B06103; документ относится к 2025–2026 и не подтверждает автоматически условия набора 2026–2027."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://satbayev.university/ru/specialties/matematicheskoe-i-kompyuternoe-modelirovanie?professionSubjectId=56", "title": "Математическое и компьютерное моделирование — Satbayev University", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Страница специальности находится в блоке B057 Информационные технологии с профильными предметами Математика – Информатика."},
+      {"field": "admission.section_minimums, admission.deadline", "url": "https://satbayev.university/ru/entrant-guide", "title": "Путеводитель абитуриента бакалавриата 2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Минимумы ЕНТ: 3 по математической и читательской грамотности, 5 по истории Казахстана и профильным предметам; завершение зачисления до 25 августа 2026."}
+    ],
+    "unknown_fields": ["admission.paid_min_ent: общий порог 80 не разделён по типу поступления", "admission.grant_application_min_ent: отдельный порог не указан", "admission.documents: подробный список не извлечён", "programme.languages: язык этой программы не подтверждён", "tuition.first_year, tuition.other_years, dormitory: значения не извлечены", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "B057 подтверждён страницей специальности; код подтверждён официальным документом предыдущего учебного года. Не переносить его показатели автоматически на 2027–2028."
+  },
+  {
+    "university": {"name": "Satbayev University", "short_name": "Satbayev University", "city": "Алматы", "official_website": "https://satbayev.university/ru/"},
+    "programme": {"name": "Информационные системы", "code": "6B06106", "group": "B057", "profile_subjects": ["Математика", "Информатика"], "languages": []},
+    "admission": {"paid_min_ent": null, "grant_application_min_ent": null, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "each_profile_subject": 5, "reading_literacy": 3, "mathematical_literacy": 3}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": null, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group", "url": "https://official.satbayev.university/download/document/54840/6B06106%20Information%20Systems%202025-2026.pdf", "title": "6B06106 Information Systems programme document", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Официальный документ Satbayev содержит код 6B06106; документ относится к 2025–2026."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://satbayev.university/ru/specialties/informatsionnye-sistemy?professionSubjectId=56", "title": "Информационные системы — Satbayev University", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "В057 Информационные технологии; предметы ЕНТ: Математика – Информатика."},
+      {"field": "admission.section_minimums, admission.deadline", "url": "https://satbayev.university/ru/entrant-guide", "title": "Путеводитель абитуриента бакалавриата 2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Минимумы ЕНТ: 3 по математической и читательской грамотности, 5 по истории Казахстана и профильным предметам; зачисление до 25 августа 2026."}
+    ],
+    "unknown_fields": ["admission.paid_min_ent: общий порог 80 не разделён по типу поступления", "admission.grant_application_min_ent: отдельный порог не указан", "admission.documents: подробный список не извлечён", "programme.languages: язык конкретной программы не подтверждён", "tuition.first_year, tuition.other_years, dormitory: значения не извлечены", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "B057 и профильные предметы подтверждены текущей страницей специальности; код — официальным документом программы предыдущего учебного года."
+  },
+  {
+    "university": {"name": "Satbayev University", "short_name": "Satbayev University", "city": "Алматы", "official_website": "https://satbayev.university/ru/"},
+    "programme": {"name": "Финансовая аналитика", "code": "6B06107", "group": "B057", "profile_subjects": ["Математика", "Информатика"], "languages": []},
+    "admission": {"paid_min_ent": null, "grant_application_min_ent": null, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "each_profile_subject": 5, "reading_literacy": 3, "mathematical_literacy": 3}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": null, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group", "url": "https://official.satbayev.university/download/document/52850/%D0%A4%D0%B8%D0%BD%D0%B0%D0%BD%D1%81%D0%BE%D0%B2%D0%B0%D1%8F%20%D0%B0%D0%BD%D0%B0%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B0%206B06107%202025-2026.pdf", "title": "6B06107 Financial analytics programme document", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Официальный документ Satbayev содержит код 6B06107; документ относится к 2025–2026."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://satbayev.university/ru/specialties/finansovaya-analitika?professionSubjectId=56", "title": "Финансовая аналитика — Satbayev University", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Страница специальности открыта через блок B057 Математика – Информатика; код на странице не отображён явно."},
+      {"field": "admission.section_minimums, admission.deadline", "url": "https://satbayev.university/ru/entrant-guide", "title": "Путеводитель абитуриента бакалавриата 2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Минимумы ЕНТ: 3 по математической и читательской грамотности, 5 по истории Казахстана и профильным предметам; зачисление до 25 августа 2026."}
+    ],
+    "unknown_fields": ["admission.paid_min_ent: общий порог 80 не разделён по типу поступления", "admission.grant_application_min_ent: отдельный порог не указан", "admission.documents: подробный список не извлечён", "programme.languages: язык конкретной программы не подтверждён", "tuition.first_year, tuition.other_years, dormitory: значения не извлечены", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "Код подтверждён официальным документом предыдущего учебного года; текущая страница Satbayev показывает программу в блоке B057."
+  },
+  {
+    "university": {"name": "Satbayev University", "short_name": "Satbayev University", "city": "Алматы", "official_website": "https://satbayev.university/ru/"},
+    "programme": {"name": "Цифровой мониторинг машин и оборудования", "code": "6B06108", "group": "B057", "profile_subjects": ["Математика", "Информатика"], "languages": []},
+    "admission": {"paid_min_ent": null, "grant_application_min_ent": null, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "each_profile_subject": 5, "reading_literacy": 3, "mathematical_literacy": 3}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": null, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group", "url": "https://official.satbayev.university/download/document/50093/Digital%20monitoring%20of%20machines%20and%20equipment%206%D0%9206108%202025-2026.pdf", "title": "6B06108 Digital monitoring programme document", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Официальный документ Satbayev содержит код 6B06108; документ относится к 2025–2026."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://satbayev.university/ru/specialties/tsifrovoy-monitoring-mashin-i-oborudovaniya?professionSubjectId=56", "title": "Цифровой мониторинг машин и оборудования — Satbayev University", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Страница специальности открыта через блок B057 Математика – Информатика."},
+      {"field": "admission.section_minimums, admission.deadline", "url": "https://satbayev.university/ru/entrant-guide", "title": "Путеводитель абитуриента бакалавриата 2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Минимумы ЕНТ: 3 по математической и читательской грамотности, 5 по истории Казахстана и профильным предметам; зачисление до 25 августа 2026."}
+    ],
+    "unknown_fields": ["admission.paid_min_ent: общий порог 80 не разделён по типу поступления", "admission.grant_application_min_ent: отдельный порог не указан", "admission.documents: подробный список не извлечён", "programme.languages: язык конкретной программы не подтверждён", "tuition.first_year, tuition.other_years, dormitory: значения не извлечены", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "Код подтверждён официальным документом предыдущего учебного года; текущая страница Satbayev показывает программу в блоке B057."
+  },
+  {
+    "university": {"name": "Satbayev University", "short_name": "Satbayev University", "city": "Алматы", "official_website": "https://satbayev.university/ru/"},
+    "programme": {"name": "Innovative Digital Products and Services", "code": "6B06109", "group": "B057", "profile_subjects": ["Математика", "Информатика"], "languages": []},
+    "admission": {"paid_min_ent": null, "grant_application_min_ent": null, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "each_profile_subject": 5, "reading_literacy": 3, "mathematical_literacy": 3}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": null, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group", "url": "https://official.satbayev.university/ru/programs", "title": "Официальный каталог образовательных программ Satbayev", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Каталог официального домена использован для проверки кода 6B06109; отдельная карточка программы и условия набора 2026–2027 в извлечённом материале не найдены."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://satbayev.university/ru/undergraduate", "title": "Бакалавриат Satbayev University", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "В разделе Математика – Информатика указано 8 образовательных программ и общий блок B057; названия и условия отображаются через раскрываемый список."},
+      {"field": "admission.section_minimums, admission.deadline", "url": "https://satbayev.university/ru/entrant-guide", "title": "Путеводитель абитуриента бакалавриата 2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Минимумы ЕНТ: 3 по математической и читательской грамотности, 5 по истории Казахстана и профильным предметам; зачисление до 25 августа 2026."}
+    ],
+    "unknown_fields": ["admission.paid_min_ent, admission.grant_application_min_ent: порог 80 общего раздела не распределён по типу поступления", "programme page: отдельная карточка программы не найдена", "admission.documents, programme.languages, tuition, dormitory: не подтверждены", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "Код и название взяты из официального каталога программ, но отдельная карточка и условия программы требуют ручной сверки с приёмной комиссией."
+  },
+  {
+    "university": {"name": "Satbayev University", "short_name": "Satbayev University", "city": "Алматы", "official_website": "https://satbayev.university/ru/"},
+    "programme": {"name": "Computer Science & AI Engineering", "code": "6B06110", "group": "B057", "profile_subjects": ["Математика", "Информатика"], "languages": []},
+    "admission": {"paid_min_ent": null, "grant_application_min_ent": null, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "each_profile_subject": 5, "reading_literacy": 3, "mathematical_literacy": 3}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": null, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group", "url": "https://official.satbayev.university/ru/programs", "title": "Официальный каталог образовательных программ Satbayev", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Каталог официального домена использован для проверки кода 6B06110 и названия Computer Science & AI Engineering; отдельный документ программы 2026–2027 не извлечён."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://satbayev.university/ru/specialties/computer-science-ai-engineering?professionSubjectId=56", "title": "Computer Science & AI Engineering — Satbayev University", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Страница специальности находится в раскрытом блоке B057 Математика – Информатика; код на странице не отображён явно."},
+      {"field": "admission.section_minimums, admission.deadline", "url": "https://satbayev.university/ru/entrant-guide", "title": "Путеводитель абитуриента бакалавриата 2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Минимумы ЕНТ: 3 по математической и читательской грамотности, 5 по истории Казахстана и профильным предметам; зачисление до 25 августа 2026."}
+    ],
+    "unknown_fields": ["admission.paid_min_ent: общий порог 80 не разделён по типу поступления", "admission.grant_application_min_ent: отдельный порог не указан", "admission.documents, programme.languages, tuition, dormitory: не подтверждены", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "Код взят из официального каталога, B057 и профильная пара — из текущего раскрытого списка Satbayev; условия программы требуют подтверждения для 2026–2027."
+  },
+  {
+    "university": {"name": "Satbayev University", "short_name": "Satbayev University", "city": "Алматы", "official_website": "https://satbayev.university/ru/"},
+    "programme": {"name": "Вычислительная механика и искусственный интеллект", "code": "6B06111", "group": "B057", "profile_subjects": ["Математика", "Информатика"], "languages": []},
+    "admission": {"paid_min_ent": null, "grant_application_min_ent": null, "historical_passing_score": null, "section_minimums": {"history_of_kazakhstan": 5, "each_profile_subject": 5, "reading_literacy": 3, "mathematical_literacy": 3}, "extra_exams": [], "academic_year": "2026-2027", "deadline": "2026-08-25", "documents": []},
+    "tuition": {"first_year": null, "other_years": {}, "currency": "KZT", "academic_year": "2026-2027", "installment_available": null},
+    "dormitory": {"available": null, "price": null, "price_period": null, "guaranteed": null},
+    "sources": [
+      {"field": "programme.name, programme.code, programme.group", "url": "https://official.satbayev.university/ru/programs", "title": "Официальный каталог образовательных программ Satbayev", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Каталог официального домена использован для проверки кода 6B06111; отдельный документ программы 2026–2027 не извлечён."},
+      {"field": "programme.group, programme.profile_subjects", "url": "https://satbayev.university/ru/specialties/vychislitelnaya-mekhanika-i-iskusstvennyy-intellekt?professionSubjectId=56", "title": "Вычислительная механика и искусственный интеллект — Satbayev University", "checked_at": "2026-09-27", "status": "needs_review", "quote_or_evidence": "Страница специальности находится в раскрытом блоке B057 Математика – Информатика."},
+      {"field": "admission.section_minimums, admission.deadline", "url": "https://satbayev.university/ru/entrant-guide", "title": "Путеводитель абитуриента бакалавриата 2026", "checked_at": "2026-09-27", "status": "verified", "quote_or_evidence": "Минимумы ЕНТ: 3 по математической и читательской грамотности, 5 по истории Казахстана и профильным предметам; зачисление до 25 августа 2026."}
+    ],
+    "unknown_fields": ["admission.paid_min_ent: общий порог 80 не разделён по типу поступления", "admission.grant_application_min_ent: отдельный порог не указан", "admission.documents, programme.languages, tuition, dormitory: не подтверждены", "2027-2028: отдельные условия не найдены"],
+    "conflicts": [],
+    "notes": "Код взят из официального каталога, B057 и профильная пара — из текущей страницы специальности; отдельный документ программы для 2026–2027 требует подтверждения."
+  }
+]
