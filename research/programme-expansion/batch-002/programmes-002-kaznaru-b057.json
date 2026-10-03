@@ -1,0 +1,49 @@
+[
+  {
+    "university": {"name":"Казахский национальный аграрный университет","short_name":"КНАУ","city":"Алматы","official_website":"https://www.kaznaru.edu.kz/ru"},
+    "programme": {"name":"Информационные системы","code":"6B06102","group":"B057","profile_subjects":["math","informatics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":null,"deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://kaznaru.edu.kz/ru/department/92","title":"Кафедра IT-технология — образовательные программы бакалавриата","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная страница перечисляет 6В06102 Информационные системы в разделе образовательных программ бакалавриата.","field":"programme.name, programme.code"},
+      {"url":"https://kaznaru.edu.kz/ru/op/50","title":"6В06102 — Информационные системы","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная карточка KazNARU содержит название и код бакалаврской образовательной программы 6В06102.","field":"programme.name, programme.code"},
+      {"url":"https://www.kaznaru.edu.kz/storage/files/37457939636867714539cc4322148585_1%20%281%29.pdf","title":"Официальная таблица профильных предметов KazNARU","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальный PDF указан как источник связки профильных предметов математика + информатика для IT-программ; текстовая экстракция PDF в текущем окружении неполная.","field":"programme.profile_subjects"},
+      {"url":"https://zan.gov.kz/api/documents/206492/rus/download/pdf","title":"Нормативный классификатор групп образовательных программ","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальный нормативный источник использован для проверки соответствия направления 6B061 группе B057; чтение PDF в текущем окружении заблокировано TLS, поэтому запись оставлена needs_review.","field":"programme.group"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.academic_year","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions","programme.group normative mapping"],
+    "conflicts":[],
+    "notes":"Официальные страницы подтверждают программу и профиль IT; группа B057 сохранена needs_review до отдельной проверки нормативного классификатора. Плановые годы 2025-2029 не трактуются как admission cycle 2027-2028."
+  },
+  {
+    "university": {"name":"Казахский национальный аграрный университет","short_name":"КНАУ","city":"Алматы","official_website":"https://www.kaznaru.edu.kz/ru"},
+    "programme": {"name":"Вычислительная техника и программное обеспечение","code":"6B06103","group":"B057","profile_subjects":["math","informatics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":null,"deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://kaznaru.edu.kz/ru/department/92","title":"Кафедра IT-технология — образовательные программы бакалавриата","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная страница перечисляет 6В06103 Вычислительная техника и программное обеспечение в разделе образовательных программ бакалавриата.","field":"programme.name, programme.code"},
+      {"url":"https://kaznaru.edu.kz/ru/op/42","title":"6В06103 — Вычислительная техника и программное обеспечение","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная карточка KazNARU содержит название и код бакалаврской образовательной программы 6В06103.","field":"programme.name, programme.code"},
+      {"url":"https://www.kaznaru.edu.kz/storage/files/37457939636867714539cc4322148585_1%20%281%29.pdf","title":"Официальная таблица профильных предметов KazNARU","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальный PDF указан как источник связки профильных предметов математика + информатика для IT-программ; текстовая экстракция PDF в текущем окружении неполная.","field":"programme.profile_subjects"},
+      {"url":"https://zan.gov.kz/api/documents/206492/rus/download/pdf","title":"Нормативный классификатор групп образовательных программ","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальный нормативный источник использован для проверки соответствия направления 6B061 группе B057; чтение PDF в текущем окружении заблокировано TLS, поэтому запись оставлена needs_review.","field":"programme.group"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.academic_year","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions","programme.group normative mapping"],
+    "conflicts":[],
+    "notes":"Официальные страницы подтверждают программу и профиль IT; группа B057 сохранена needs_review до отдельной проверки нормативного классификатора. Плановые годы 2025-2029 не трактуются как admission cycle 2027-2028."
+  },
+  {
+    "university": {"name":"Казахский национальный аграрный университет","short_name":"КНАУ","city":"Алматы","official_website":"https://www.kaznaru.edu.kz/ru"},
+    "programme": {"name":"Искусственный интеллект","code":"6B06104","group":"B057","profile_subjects":["math","informatics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":null,"deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://kaznaru.edu.kz/ru/department/92","title":"Кафедра IT-технология — образовательные программы бакалавриата","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная страница перечисляет 6B06104 Искусственный интеллект в разделе образовательных программ бакалавриата.","field":"programme.name, programme.code"},
+      {"url":"https://kaznaru.edu.kz/ru/op/193","title":"6B06104 — Искусственный интеллект","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная карточка содержит код 6B06104, бакалаврскую программу и прямо указывает ЕНТ: математика + информатика; значение от 65 не классифицировано как paid/grant/historical minimum.","field":"programme.name, programme.code, programme.profile_subjects"},
+      {"url":"https://zan.gov.kz/api/documents/206492/rus/download/pdf","title":"Нормативный классификатор групп образовательных программ","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальный нормативный источник использован для проверки соответствия направления 6B061 группе B057; чтение PDF в текущем окружении заблокировано TLS, поэтому запись оставлена needs_review.","field":"programme.group"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.academic_year","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions","programme.group normative mapping","admission threshold semantics and cycle"],
+    "conflicts":[],
+    "notes":"Официальная карточка подтверждает программу и профильные предметы. Группа B057 сохранена needs_review; значение от 65 не внесено как paid/grant/historical score."
+  }
+]

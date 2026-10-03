@@ -1,0 +1,44 @@
+[
+  {
+    "university": {"name":"Павлодарский государственный университет имени С. Торайгырова","short_name":"ПГУ","city":"Павлодар","official_website":"https://tou.edu.kz/ru/"},
+    "programme": {"name":"Информационные системы","code":"6B06102","group":"B057","profile_subjects":["math","informatics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":"2026-2027","deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://tou.edu.kz/ru/component/abitur?view=bach","title":"ToU — бакалавриат, документы приёма 2026","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная страница приёма 2026 содержит B057/6B06102 и размещает программу в блоке математика–информатика; опубликованные баллы не распределены между paid/grant/historical.","field":"programme.name, programme.code, programme.group, programme.profile_subjects"},
+      {"url":"https://tou.edu.kz/ru/component/content/article?id=10843","title":"ToU — перечень образовательных программ бакалавриата","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальный перечень содержит B057 и 6B06102.","field":"programme.name, programme.code, programme.group"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions"],
+    "conflicts":[],
+    "notes":"Условия страницы относятся к приёму 2026; значения не переносятся на 2027-2028 и не классифицируются как отдельные платный минимум, минимум конкурса грантов или исторический проходной балл."
+  },
+  {
+    "university": {"name":"Павлодарский государственный университет имени С. Торайгырова","short_name":"ПГУ","city":"Павлодар","official_website":"https://tou.edu.kz/ru/"},
+    "programme": {"name":"Computer Science","code":"6B06104","group":"B057","profile_subjects":["math","informatics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":"2026-2027","deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://tou.edu.kz/ru/component/abitur?view=bach","title":"ToU — бакалавриат, документы приёма 2026","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная страница приёма 2026 содержит B057/6B06104 и размещает программу в блоке математика–информатика; опубликованные баллы не распределены между paid/grant/historical.","field":"programme.name, programme.code, programme.group, programme.profile_subjects"},
+      {"url":"https://tou.edu.kz/ru/component/content/article?id=10843","title":"ToU — перечень образовательных программ бакалавриата","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальный перечень содержит B057 и 6B06104.","field":"programme.name, programme.code, programme.group"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions"],
+    "conflicts":[],
+    "notes":"Условия страницы относятся к приёму 2026; значения не переносятся на 2027-2028 и не классифицируются как отдельные платный минимум, минимум конкурса грантов или исторический проходной балл."
+  },
+  {
+    "university": {"name":"Павлодарский государственный университет имени С. Торайгырова","short_name":"ПГУ","city":"Павлодар","official_website":"https://tou.edu.kz/ru/"},
+    "programme": {"name":"Радиотехника, электроника и телекоммуникации","code":"6B06201","group":"B059","profile_subjects":["math","physics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":"2026-2027","deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://tou.edu.kz/ru/component/abitur?view=bach","title":"ToU — бакалавриат, документы приёма 2026","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная страница приёма 2026 содержит B059/6B06201 и размещает программу в блоке математика–физика; опубликованные баллы не распределены между paid/grant/historical.","field":"programme.name, programme.code, programme.group, programme.profile_subjects"},
+      {"url":"https://tou.edu.kz/ru/component/content/article?id=10843","title":"ToU — перечень образовательных программ бакалавриата","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальный перечень содержит B059 и 6B06201.","field":"programme.name, programme.code, programme.group"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions"],
+    "conflicts":[],
+    "notes":"Условия страницы относятся к приёму 2026; значения не переносятся на 2027-2028 и не классифицируются как отдельные платный минимум, минимум конкурса грантов или исторический проходной балл."
+  }
+]

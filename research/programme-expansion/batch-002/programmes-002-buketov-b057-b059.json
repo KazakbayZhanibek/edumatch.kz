@@ -1,0 +1,58 @@
+[
+  {
+    "university": {"name":"Карагандинский государственный университет имени Е. Букетова","short_name":"КарГУ","city":"Караганда","official_website":"https://buketov.edu.kz/ru/"},
+    "programme": {"name":"IT-предпринимательство и цифровая экономика","code":"6B06102","group":"B057","profile_subjects":["math","informatics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":"2026-2027","deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://buketov.edu.kz/files/%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B5%D0%BD%D1%8C%20%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%20%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82%D0%B0_%D0%BE%D1%87%D0%BD%D0%B0%D1%8F%20%D1%84%D0%BE%D1%80%D0%BC%D0%B0_%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC%202_26-2_27_rus.docx","title":"Перечень ОП бакалавриата, приём 2026-2027","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная таблица прямо содержит B057 и программу 6B06102.","field":"programme.name, programme.code, programme.group"},
+      {"url":"https://up.buketov.edu.kz/event/2026/27_01/%D0%9F%D0%BE%D0%BB%D1%83%D0%BF%D1%80%D0%BE%D1%85%D0%BE%D0%B4%D0%BD%D1%8B%D0%B5_%D0%B1%D0%B0%D0%BB%D0%BB%D1%8B_%D0%B8_%D0%BF%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D0%BC%D0%B5%D1%82%D1%8B_%D0%BD%D0%B0_2025-2026%20_%D1%83%D1%87%D0%B3%D0%BE%D0%B4.docx","title":"Профильные предметы Buketov","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная таблица указывает для B057 математику и информатику; опубликованные баллы не распределены между paid/grant/historical.","field":"programme.profile_subjects"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions"],
+    "conflicts":[],
+    "notes":"Источник относится к приёму 2026-2027; условия не переносятся на 2027-2028. Неизвестные баллы не трактуются как нулевые."
+  },
+  {
+    "university": {"name":"Карагандинский государственный университет имени Е. Букетова","short_name":"КарГУ","city":"Караганда","official_website":"https://buketov.edu.kz/ru/"},
+    "programme": {"name":"Информационные системы","code":"6B06103","group":"B057","profile_subjects":["math","informatics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":"2026-2027","deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://buketov.edu.kz/files/%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B5%D0%BD%D1%8C%20%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D0%BF%D1%80%D0%B0%D0%B3%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%20%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82%D0%B0_%D0%BE%D1%87%D0%BD%D0%B0%D1%8F%20%D1%84%D0%BE%D1%80%D0%BC%D0%B0_%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC%202_26-2_27_rus.docx","title":"Перечень ОП бакалавриата, приём 2026-2027","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная таблица прямо содержит B057 и программу 6B06103.","field":"programme.name, programme.code, programme.group"},
+      {"url":"https://up.buketov.edu.kz/event/2026/27_01/%D0%9F%D0%BE%D0%BB%D1%83%D0%BF%D1%80%D0%BE%D1%85%D0%BE%D0%B4%D0%BD%D1%8B%D0%B5_%D0%B1%D0%B0%D0%BB%D0%BB%D1%8B_%D0%B8_%D0%BF%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D0%BC%D0%B5%D1%82%D1%8B_%D0%BD%D0%B0_2025-2026%20_%D1%83%D1%87%D0%B3%D0%BE%D0%B4.docx","title":"Профильные предметы Buketov","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная таблица указывает для B057 математику и информатику; опубликованные баллы не распределены между paid/grant/historical.","field":"programme.profile_subjects"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions"],
+    "conflicts":[],
+    "notes":"Источник относится к приёму 2026-2027; условия не переносятся на 2027-2028. Неизвестные баллы не трактуются как нулевые."
+  },
+  {
+    "university": {"name":"Карагандинский государственный университет имени Е. Букетова","short_name":"КарГУ","city":"Караганда","official_website":"https://buketov.edu.kz/ru/"},
+    "programme": {"name":"Математическое и компьютерное моделирование","code":"6B06104","group":"B057","profile_subjects":["math","informatics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":"2026-2027","deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://buketov.edu.kz/files/%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B5%D0%BD%D1%8C%20%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D0%BF%D1%80%D0%B0%D0%B3%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%20%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82%D0%B0_%D0%BE%D1%87%D0%BD%D0%B0%D1%8F%20%D1%84%D0%BE%D1%80%D0%BC%D0%B0_%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC%202_26-2_27_rus.docx","title":"Перечень ОП бакалавриата, приём 2026-2027","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная таблица прямо содержит B057 и программу 6B06104.","field":"programme.name, programme.code, programme.group"},
+      {"url":"https://up.buketov.edu.kz/event/2026/27_01/%D0%9F%D0%BE%D0%BB%D1%83%D0%BF%D1%80%D0%BE%D1%85%D0%BE%D0%B4%D0%BD%D1%8B%D0%B5_%D0%B1%D0%B0%D0%BB%D0%BB%D1%8B_%D0%B8_%D0%BF%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D0%BC%D0%B5%D1%82%D1%8B_%D0%BD%D0%B0_2025-2026%20_%D1%83%D1%87%D0%B3%D0%BE%D0%B4.docx","title":"Профильные предметы Buketov","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная таблица указывает для B057 математику и информатику; опубликованные баллы не распределены между paid/grant/historical.","field":"programme.profile_subjects"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions"],
+    "conflicts":[],
+    "notes":"Источник относится к приёму 2026-2027; условия не переносятся на 2027-2028. Неизвестные баллы не трактуются как нулевые."
+  },
+  {
+    "university": {"name":"Карагандинский государственный университет имени Е. Букетова","short_name":"КарГУ","city":"Караганда","official_website":"https://buketov.edu.kz/ru/"},
+    "programme": {"name":"Радиотехника, электроника и телекоммуникации","code":"6B06201","group":"B059","profile_subjects":["math","physics"],"languages":[]},
+    "admission": {"paid_min_ent":null,"grant_application_min_ent":null,"historical_passing_score":null,"section_minimums":{},"extra_exams":[],"academic_year":"2026-2027","deadline":null,"documents":[]},
+    "tuition": {"first_year":null,"other_years":{},"currency":"KZT","academic_year":null,"installment_available":null},
+    "dormitory": {"available":null,"price":null,"price_period":null,"guaranteed":null},
+    "sources": [
+      {"url":"https://buketov.edu.kz/files/%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B5%D0%BD%D1%8C%20%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%20%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82%D0%B0_%D0%BE%D1%87%D0%BD%D0%B0%D1%8F%20%D1%84%D0%BE%D1%80%D0%BC%D0%B0%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC%202_26-2_27_rus.docx","title":"Перечень ОП бакалавриата, приём 2026-2027","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная таблица прямо содержит B059 и программу 6B06201.","field":"programme.name, programme.code, programme.group"},
+      {"url":"https://up.buketov.edu.kz/event/2026/27_01/%D0%9F%D0%BE%D0%BB%D1%83%D0%BF%D1%80%D0%BE%D1%85%D0%BE%D0%B4%D0%BD%D1%8B%D0%B5_%D0%B1%D0%B0%D0%BB%D0%BB%D1%8B_%D0%B8_%D0%BF%D1%80%D0%BE%D1%84%D0%B8%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D0%BC%D0%B5%D1%82%D1%8B_%D0%BD%D0%B0_2025-2026%20_%D1%83%D1%87%D0%B3%D0%BE%D0%B4.docx","title":"Профильные предметы Buketov","checked_at":"2026-09-27","status":"needs_review","quote_or_evidence":"Официальная таблица содержит B059/6B06201; баллы не распределены между paid/grant/historical.","field":"programme.profile_subjects"}
+    ],
+    "unknown_fields":["admission.paid_min_ent","admission.grant_application_min_ent","admission.historical_passing_score","admission.deadline and action","admission.documents","programme.languages","tuition","dormitory","2027-2028 conditions"],
+    "conflicts":[],
+    "notes":"Источник относится к приёму 2026-2027; условия не переносятся на 2027-2028. Неизвестные баллы не трактуются как нулевые."
+  }
+]

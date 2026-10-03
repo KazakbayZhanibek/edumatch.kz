@@ -1,0 +1,1761 @@
+[
+  {
+    "grant_id": 3,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Запись смешивает несколько разных механизмов NU: госгрант для граждан РК, внутреннюю финансовую помощь и Abay Grant для иностранцев. Официальный NU подтверждает наличие отдельной заявки с State Grant, Alash Grant/partial Alash Grant и Abay Grant, но не подтверждает заявленные в БД суммы ежемесячных выплат 48 182/162 000/195 000 ₸, медстраховку/проезд или безусловное полное покрытие Abay Grant. В официальной странице финансовой поддержки NU указаны иные категории поддержки (75%, 50%, 25%, 5%). Дата БД 2026-02-10 соответствует только категории иностранных заявителей; для остальных категорий официально указаны 28 января 2026 и 20 ноября 2025. Дублирования по id не выявлено.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, deadline, coverage_type). Убраны неподтвержденные выплаты, безусловное full coverage, медстраховка/проезд и единый deadline; карточка агрегировала разные механизмы. Remaining follow-up: Разделить запись минимум на: (1) конкурс финансовой поддержки NU (State/Alash/partial Alash/Abay), (2) государственный грант РК; не называть всё одним full_tuition grant. Удалить неподтверждённые суммы выплат, медстраховку и компенсацию проезда либо дать отдельный официальный документ. Оставить application_method как admissions.nu.edu.kz и указать category-specific deadlines: иностранцы — 10.02.2026, остальные категории — 28.01.2026, NUET — 20.11.2025. Coverage и eligibility уточнить по правилам конкретного конкурса.",
+    "sources": [
+      {
+        "url": "https://apply.nu.edu.kz/en/admissions",
+        "title": "Admissions/Foundation & Undergraduate — Nazarbayev University (официальный портал)",
+        "supporting_excerpt": "Stage 2 - Financial Support (grant): Applicants fill out a separate application form for financial support, including the State Grant, Alash Grant, partial Alash Grant, Abay Grant, and other forms of support."
+      },
+      {
+        "url": "https://nu.edu.kz/admissions/fees-and-funding/",
+        "title": "Fees and financial support — Nazarbayev University",
+        "supporting_excerpt": "75% tuition coverage is available to ... Orphans ... Persons with disabilities ...; 25% tuition coverage for undergraduate programs is available for winners of international and national academic subject Olympiads; 50% tuition coverage is available for employees of Kazakhstan’s government institutions and enterprises; 5% tuition coverage is available if 100% of the annual tuition is paid in a single payment."
+      },
+      {
+        "url": "https://nu.edu.kz/postuplenie-2/kak-podat-zayavku/podgotovka-i-bakalavriat/finansovaya-podderzhka-i-granty/",
+        "title": "Финансовая поддержка и гранты — Nazarbayev University",
+        "supporting_excerpt": "Крайний срок подачи заявок: Иностранные абитуриенты ... 27 сентября — 10 февраля 2026 года; Остальные категории ... 27 сентября — 28 января 2026 года; Абитуриенты NUET ... 27 сентября — 20 ноября 2025 года."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Страница apply.nu.edu.kz сейчас содержит материалы нового цикла 2027/2028, поэтому состав и размеры поддержки для цикла 2026/2027 нужно закреплять архивным/официальным решением NU. Найденные официальные страницы подтверждают механизмы и сроки, но не подтверждают суммы ежемесячных выплат из БД. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 4,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=1, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. международные стипендии не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://nu.edu.kz/ru/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 14,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=2, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии аль-Фараби не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "http://www.kaznu.kz/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 30,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=3, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии ЕНУ не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://enu.kz/ru",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 42,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=4, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. ведомственные гранты МСХ РК не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://www.kazatu.kz/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 51,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "19 ректорских грантов на 2026–2027 официально подтверждены как выделенные/предусмотренные, но итоговая публикация КарТУ от 26.08.2026 сообщает только о 10 фактически предоставленных грантах. Запись не различает 19 предложенных мест и 10 фактических получателей. Условия также расходятся в деталях: официальный призыв КарТУ формулирует критерий как участие в конкурсе госгранта, 100+ баллов ЕНТ и отсутствие госгранта; публикация МНВО дополнительно перечисляет сирот и победителей олимпиад. Официальные источники не подтверждают deadline 25.08.2026, full_tuition wording или способ подачи именно через приёмную комиссию как общий срок.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (name, amount, description, requirements, deadline, coverage_type). Разведены planned и awarded counts; убраны неподтвержденные full tuition и общий deadline. Remaining follow-up: Перевести в needs_review и разделить поля: «19 грантов выделено/предусмотрено» и «10 грантов предоставлено по итогам кампании». Сохранить официальные категории eligibility с пометкой, из какого документа каждая взята; не заявлять full_tuition без положения/договора. Удалить deadline 25.08.2026 либо подтвердить отдельным объявлением КарТУ; добавить application_method только как обращение в приёмную комиссию/внутренний конкурс, без неподтверждённого срока.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "КАЗАХСТАНСКИЕ ВУЗЫ ПРЕДОСТАВЛЯЮТ АБИТУРИЕНТАМ БОЛЕЕ ДВУХ ТЫСЯЧ СОБСТВЕННЫХ ОБРАЗОВАТЕЛЬНЫХ ГРАНТОВ — МНВО РК",
+        "supporting_excerpt": "Карагандинский технический университет имени Абылкаса Сагинова на 2026-2027 учебный год выделил 19 ректорских грантов. Они предназначены для детей-сирот, детей, оставшихся без попечения родителей, абитуриентов, набравших более 100 баллов на ЕНТ, но не получивших государственный образовательный грант, победителей республиканских олимпиад и победителей внутренних олимпиад IQanat High School of Burabay."
+      },
+      {
+        "url": "https://www.kstu.kz/grant-rektora-dopolnitelnaya-vozmozhnost-dlya-abiturientov/?lang=ru",
+        "title": "Грант ректора – дополнительная возможность для абитуриентов! — Saginov University",
+        "supporting_excerpt": "К участию в конкурсе допускаются абитуриенты, набравшие 100 и более баллов по пяти предметам ЕНТ, но не получившие государственный образовательный грант. По итогам конкурса грант Ректора предоставляется абитуриенту, показавшему наивысший результат."
+      },
+      {
+        "url": "https://www.kstu.kz/4-000-novyh-studentov-saginov-university-nachinaet-novyj-uchebnyj-god-s-novym-rekordom/?lang=ru",
+        "title": "4 000+ новых студентов: Saginov University начинает новый учебный год — Saginov University",
+        "supporting_excerpt": "Кроме того, в этом году 10 выпускникам были предоставлены гранты ректора. Среди них: гранты для детей-сирот; гранты для поступающих, набравших 100 и более баллов; гранты для учащихся школы-пансионата «Айқанат»; гранты ректора для победителей олимпиад, организованных РНПЦ «Дарын»."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Состояние 10 фактически предоставленных грантов подтверждено официальной новостью на 26.08.2026; неизвестно, были ли остальные 9 мест перераспределены позднее. Официального документа о размере покрытия и общем дедлайне 25.08.2026 не найдено. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 64,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=7, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии КарГУ не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://buketov.edu.kz/ru/page/main/bakalavr",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 74,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальная приёмная страница КазНАИУ подтверждает пороги ЕНТ и конкурс грантов МИО с подачей документов 5–10 августа, но не подтверждает именно скидку для многодетных семей и сирот и не указывает её размер. Страница студентов КазНАИУ требует документы о статусе сироты и справку о составе многодетной семьи для получения общих «льгот», однако не определяет, что это скидка на обучение. Поэтому запись смешивает возможную социальную льготу, госгрант/грант МИО и tuition discount. Дедлайн 10.08.2026 соответствует верхней границе официального окна МИО, но не доказывает отдельный дедлайн скидки.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (name, amount, description, requirements, deadline, coverage_type). Скидка для многодетных/сирот и её размер не подтверждены; deadline МИО не является deadline социальной льготы. Remaining follow-up: Не оставлять status verified для формулировки «скидки ... 20–100%» без положения КазНАИУ, где прямо указаны tuition discount и проценты. Разделить (а) конкурс госгрантов/МИО, (б) общую социальную льготу для студентов. Для гранта МИО указать окно 05–10.08.2026, документы и пороги 65/50/75; размер скидки, покрытие и условия сохранения пометить как не подтверждённые. Application_method — приёмная комиссия; не считать льготу государственным грантом.",
+    "sources": [
+      {
+        "url": "https://www.kaznaru.edu.kz/ru/reception",
+        "title": "Приемная комиссия — Казахский национальный аграрный исследовательский университет",
+        "supporting_excerpt": "Для участия в конкурсе ... необходимо набрать не менее 65 баллов, в области образования «Сельское хозяйство и биоресурсы», «Ветеринария» — не менее 50 баллов, ... «Право» — не менее 75 баллов."
+      },
+      {
+        "url": "https://www.kaznaru.edu.kz/ru/reception",
+        "title": "Приемная комиссия — Казахский национальный аграрный исследовательский университет",
+        "supporting_excerpt": "Для участия в конкурсе на присуждение образовательного гранта МИО поступающий подает документы в приемную комиссию университета с 5 по 10 августа."
+      },
+      {
+        "url": "https://new.kaznaru.edu.kz/ru/students",
+        "title": "Обучающимся — KazNARU",
+        "supporting_excerpt": "Перечень документов, необходимых для получения льгот ... Копия свидетельства о смерти родителей ... документы, подтверждающие статус детей-сирот ...; Справка о составе семьи (для многодетных семей)."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальный сайт подтверждает наличие процедуры получения общих льгот и документов, но открыто не раскрывает, являются ли они скидкой на обучение, каков процент, период действия и совместимость с грантом. Поэтому отсутствие найденного положения не означает отсутствия льготы. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 91,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=10, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии Торайгырова не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://tou.edu.kz/ru/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 100,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальное МНВО подтверждает 94 собственных гранта ВКТУ и отдельные компоненты: EKTU QUIZ (1/2/4 года), 18 четырёхлетних грантов «Ақылды Awards», а также четырёхлетние конкурсы EKTU STAR/«Выбирай EKTU». Однако запись ошибочно присваивает full_tuition всем 94: официальная таблица ВКТУ 2026–2027 описывает разные меры поддержки (10–50% на первый год и отдельные 100%/многолетние условия). DB deadline 25.08.2026 не является единым дедлайном всех конкурсов: «Ақылды Awards» принимал ролики 03–22.11.2025, EKTU QUIZ прошёл 25.02.2026. Запись агрегирует несколько разных конкурсов; дубль по id не выявлен.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (name, amount, description, requirements, deadline, coverage_type). Убран единый full tuition и общий deadline из агрегата нескольких конкурсов. Remaining follow-up: Разбить на отдельные подзаписи EKTU QUIZ, «Ақылды Awards», EKTU STAR и «Выбирай EKTU» либо явно хранить компоненты и их сроки/покрытие. Заменить full_tuition на component-specific coverage: Quiz — сертификаты на 4/2/1 года; Akyldy — сертификат гранта на весь срок по положению; остальные — подтверждать отдельными положениями. Удалить общий deadline 25.08.2026 и хранить даты подачи каждого конкурса; application_method для Akyldy — видеоролик на akurmangaliyeva@edu.ektu.kz, для Quiz — участие в игре, для поступления/оформления — приёмная комиссия.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "КАЗАХСТАНСКИЕ ВУЗЫ ПРЕДОСТАВЛЯЮТ АБИТУРИЕНТАМ БОЛЕЕ ДВУХ ТЫСЯЧ СОБСТВЕННЫХ ОБРАЗОВАТЕЛЬНЫХ ГРАНТОВ — МНВО РК",
+        "supporting_excerpt": "Восточно-Казахстанский технический университет имени Д.Серикбаева в рамках собственных конкурсных программ предусмотрел 94 гранта. По итогам конкурса EKTU QUIZ-2026 ... гранты сроком на один, два и четыре года. В рамках конкурса «Ақылды Awards 2026» выделено 18 четырехлетних грантов ... Также четырехлетние гранты предусмотрены для выпускников школ Кыргызской Республики по итогам конкурсов EKTU STAR 2026 и «Выбирай EKTU – выбирай будущее»."
+      },
+      {
+        "url": "https://www.ektu.kz/discounts/discounts/discountstabs/bakcoll/bakcoll.aspx?lang=en",
+        "title": "Льготы и скидки на оплату за обучение ... на 2026-2027 учебный год — EKTU",
+        "supporting_excerpt": "Победителям ... «Ақылды AWARDS 2026» ... Победителям интеллектуальной игры «EKTU QUIZ – 2026» ... От 10 до 50 % — На первый учебный год; ... 100% — На весь период обучения; ... 100% — За 1 место — на весь период обучения; за 2 место — на 2 года обучения; за 3 место — на первый учебный год обучения."
+      },
+      {
+        "url": "https://www.ektu.kz/newsevents/sostoyalas-tradicionnaya-intellektualnaya-igra-ektu-quiz-2026-%281%29.aspx",
+        "title": "Состоялась традиционная интеллектуальная игра EKTU QUIZ – 2026 — EKTU",
+        "supporting_excerpt": "EKTU QUIZ – 2026 ... 2026 жылдың 25 ақпанында ... 1 орын алған топ мүшелеріне 4 жыл оқу мерзіміне, ІІ орынға — 2 жыл оқу мерзіміне, ІІІ орынға 1 жыл оқу мерзіміне ... білім беру гранттарының сертификаттары табысталды."
+      },
+      {
+        "url": "https://www.ektu.kz/files/enrolee/Olympiads/%D0%9F%D0%BE%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5-%D0%9A%D0%BE%D0%BD%D0%BA%D1%83%D1%80%D1%81-%D0%90%D0%BA%D1%8B%D0%BB%D0%B4%D1%8B-AWARDS-2025-2026.pdf",
+        "title": "Положение о ежегодной премии «Ақылды AWARDS 2026» — EKTU",
+        "supporting_excerpt": "с 03 ноября по 22 ноября 2025 г. — подача презентационных роликов ... На мероприятии ... 15 номинаций ... Премия лауреаттары ... бүкіл оқу мерзімінде ... гранты үшін сертификаттармен марапатталады (лауреаты ... сертификатами на грант ВКТУ на весь срок обучения)."
+      },
+      {
+        "url": "https://www.ektu.kz/newsevents/v-vktu-zavershilas-ezhegodnaya-premiya-akyldy-awards2026.aspx",
+        "title": "В ВКТУ завершилась ежегодная премия «Ақылды Awards-2026» — EKTU",
+        "supporting_excerpt": "Онлайн дауыс беру және комиссиясының шешімімен университеттің білім беру гранттары төмендегі қатысушыларға табысталды ... «EKTU STAR 2026» ... Қырғыз Республикасының қатысушылары ... білім беру гранттарымен марапатталды."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "МНВО подтверждает число 94 как предложение/план, а не число фактически выданных сертификатов. На странице EKTU скидок таблица с несколькими категориями сверстана неоднозначно, поэтому проценты нужно привязать к каждому конкурсу по отдельному положению; не следует переносить единый full_tuition на все 94. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 109,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=12, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии СГМУ не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://smu.edu.kz/ru/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 133,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=corporate, university_id=15, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. гранты нефтяных компаний региона не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://egov.kz/cms/en/services/university_degree/182pass_mon",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 139,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Источник в базе — вторичная публикация Total.kz. Официальная страница Атырауского университета открывается, но в извлечённом содержимом нет подтверждения 14 категорий и шкалы скидок 20–100%; тип скидки подтверждён недостаточно для verified.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (description, requirements, deadline). Сохранен подтвержденный факт и диапазон; убраны неподтвержденный список категорий и deadline. Remaining follow-up: Заменить вторичный источник прямым официальным положением Атырауского университета на 2026–2027; разложить категории, проценты, срок, документы и порядок подачи. Не смешивать скидку с грантом.",
+    "sources": [
+      {
+        "url": "https://aogu.edu.kz/coming/sc/",
+        "title": "Приёмная комиссия — Атырауский университет нефти и газа им. С. Утебаева",
+        "supporting_excerpt": "Официальная страница приёмной комиссии доступна, но в извлечённом тексте условия 14 категорий и скидок 20–100% не найдены."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Доступность официальной страницы подтверждена, но детальные условия скидки не извлечены; отсутствие текста не доказывает отсутствие скидки. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 145,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=17, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. гранты МСХ РК не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "http://www.wkau.kz/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 159,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Запись подтверждается только вторичной публикацией о более чем 2 000 вузовых грантов. Официальный сайт Abai University подтверждает вуз и актуальный 2026 цикл новостей, но отдельное положение университетского гранта, количество мест, покрытие и срок в проверенном содержимом не найдены. ЕНТ 100 нельзя считать проходным баллом без scope.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (name, amount, description, requirements, deadline, coverage_type). Официальный источник не подтвердил отдельный университетский грант с ЕНТ≥100; порог удален и не заменен порогом 75. Грант акимата на 108 мест — отдельный механизм и отдельная будущая карточка. Remaining follow-up: Найти официальное объявление/положение Abai University на 2026–2027; подтвердить количество, покрытие, категории, документы и дедлайн; хранить ЕНТ 100 как минимум участия только при явной формулировке. Separate akimat 108-grant mechanism documented as a proposal only; no new DB row created.",
+    "sources": [
+      {
+        "url": "https://abai.university/",
+        "title": "Abai University — официальный сайт",
+        "supporting_excerpt": "Официальный сайт университета доступен и содержит новости/материалы цикла 2026, но отдельные условия университетского гранта из записи не опубликованы на доступной главной странице."
+      },
+      {
+        "url": "https://abai.university/ru/news/1560-akimat-astany-vydelil-108-obrazovatelnyx-grantov-dlia-universiteta-abaia",
+        "title": "Акимат Астаны выделил 108 образовательных грантов для Университета Абая",
+        "supporting_excerpt": "Публикация сообщает о 108 грантах на 2026–2027, минимуме 75 баллов ЕНТ, августовской подаче и обязательстве отработать не менее 3 лет в Астане; это отдельный механизм, не подтверждение университетского гранта ЕНТ≥100."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Использованный в БД Informburo не является первичным источником; отдельная вузовая публикация не найдена в проверенном содержимом. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 181,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальная страница Turan доступна, но в извлечённом содержимом подтверждены правила государственного конкурса и минимумы 75/50/25, а не вся шкала внутренних грантов/скидок из БД. Запись объединяет грант и скидки, имеет единый дедлайн 25.08 и не разносит учебный год/условия по категориям.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (name, amount, description, requirements, deadline, coverage_type). Убраны неподтвержденная шкала, смешение grant/discount и общий deadline. Remaining follow-up: Разделить грант 130+ и отдельные скидки/бесплатные годы; подтвердить шкалу и её применимость к 2026–2027 официальным положением, добавить категории, документы и отдельные сроки. Не показывать минимум участия как проходной балл.",
+    "sources": [
+      {
+        "url": "https://turan.edu.kz/ru/grants-and-discounts",
+        "title": "Гранты и скидки — Университет Turan",
+        "supporting_excerpt": "Официальная страница указывает, что государственные гранты распределяются по результатам ЕНТ, и приводит минимумы 75 для права, 50 для остальных программ и 25 для сокращённого обучения; полная шкала внутренних скидок из записи в извлечённом тексте не подтверждена."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальная страница доступна, но детальные условия отдельных внутренних мер и 2026 дедлайны требуют отдельного чтения правил. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 182,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальная страница Turan доступна, но отдельные правила «Тұран Үміті»/Grant Project, число мест, 1–4 года покрытия и дедлайн в проверенном извлечении не подтверждены. Это вузовой конкурс, а не государственный грант.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, coverage_type). Убраны неподтвержденные 1–4 года, этапы и полное покрытие из объединенной карточки. Remaining follow-up: Получить официальное положение конкурса 2026–2027; подтвердить этапы эссе/теста/собеседования, покрытие по местам, eligibility, документы и дедлайн. Хранить как university grant отдельно от скидок.",
+    "sources": [
+      {
+        "url": "https://turan.edu.kz/ru/grants-and-discounts",
+        "title": "Гранты и скидки — Университет Turan",
+        "supporting_excerpt": "Страница официального сайта доступна и различает государственные гранты и меры поддержки университета; конкретные параметры «Тұран Үміті»/Grant Project не извлечены."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Условия могли быть опубликованы в динамическом разделе/отдельном положении; отсутствие в извлечении не доказывает отсутствия конкурса. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 191,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=23, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. отраслевые гранты пищевой промышленности не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://atu.kz/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 199,
+    "current_status": "source_unavailable",
+    "proposed_status": "source_unavailable",
+    "issue": "Структурная очередь: source_url и link отсутствуют; type=university, university_id=24, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. гранты МСХ (лесное хозяйство) не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (requirements, coverage_type). Источник отсутствует; ЕНТ≥50 и тип покрытия нельзя оставлять фактическими условиями. Remaining follow-up: Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Сначала добавить адрес официальной публикации; Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; в рабочей записи нет URL. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 204,
+    "current_status": "source_unavailable",
+    "proposed_status": "source_unavailable",
+    "issue": "Сохранённая ссылка на статью МУИТ возвращает HTTP 404 при проверке; поэтому IT NATION, срок скидки на весь срок обучения, категории участников и связь с вакантными B057 местами не подтверждены текущим официальным источником. Запись также смешивает скидку и vacant grants.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, deadline, coverage_type). Удалены неподтвержденные скидка на весь срок, B057/B058 квоты и deadline из недоступного источника. Remaining follow-up: Найти актуальную официальную страницу/положение МУИТ и разделить IT NATION discount и конкурс вакантных госгрантов; подтвердить год, покрытие, eligibility, документы и отдельные дедлайны. Не оставлять verified на основании недоступной страницы.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальный URL из БД недоступен (HTTP 404); это не доказательство отсутствия IT NATION или скидки. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 211,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=26, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. скидки при высоком ЕНТ не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://www.instagram.com/msu_kz",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 212,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=26, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. стипендии МГУ для отличников не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://www.instagram.com/msu_kz",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 219,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=27, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. туристические гранты не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://kazuits.edu.kz/ru/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 225,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=28, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. отраслевые гранты строительного сектора не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://www.kgasu.ru/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 237,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=corporate, university_id=30, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. гранты нефтяных компаний не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://kguti.kz/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 244,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальный сайт Türkiye Scholarships подтверждает международную программу, гражданство всех стран кроме Турции, минимальную успеваемость 70% для бакалавриата, 75% для graduate, 90% для health sciences и возрастные критерии. Страница не подтверждает суммы 3 500/4 500/6 000 TL и цикл январь–февраль 2026 из записи; type=university не отражает международного организатора.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (type, amount, description, coverage_type). Исправлен тип организатора; удалены устаревшие суммы и обобщение сроков из карточки. Remaining follow-up: Заменить источник на актуальную страницу/объявление конкурса 2026; исправить provider/type на международную стипендию, подтвердить состав покрытия, суммы, даты и способ подачи; разделить бакалавриат/магистратуру/PhD по eligibility.",
+    "sources": [
+      {
+        "url": "https://www.turkiyeburslari.gov.tr/scholarshipsprograms",
+        "title": "Türkiye Scholarships — Criteria & Scholarship Programs",
+        "supporting_excerpt": "Официальная страница указывает минимум 70% для associate/bachelor, 75% для graduate, 90% для medicine/dentistry/pharmacy; возраст до 21/30/35 лет и eligibility для граждан всех стран, кроме граждан Турции."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Актуальные 2026 даты и денежные выплаты не извлечены с этой общей страницей; нельзя переносить суммы/сроки без year-specific notice. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 245,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=57, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. Олимпиада SDU для школьников и колледжей (гранты и скидки) не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 253,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальная публикация КБТУ подтверждает именно конкурс на вакантные места государственного образовательного гранта на 2026 год: участники на платной основе и внутренние гранты КБТУ, отбор по GPA, порядок tie-break по оценкам A/A−, летний/зимний период и подача до 25.07.2026 23:59 с официальным транскриптом и копией удостоверения. Но карточка смешивает этот конкурс с отдельным KAZENERGY, использует неверный URL (в БД 5189; рабочая официальная публикация — 5188), неверный email (в БД kense@kbtu.kz; публикация указывает grantkbtu@kbtu.kz), а full_tuition не раскрыт страницей явно. Срок 25.07.2026 прошел к дате проверки, но это не отменяет подтвержденность исторического набора 2026–2027.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (link, source_url, source_title, amount, description, requirements, application_method, coverage_type). Исправлены официальный URL/email; удалено смешение KAZENERGY и неподтвержденное full tuition. Remaining follow-up: Исправить link/source_url на https://kbtu.edu.kz/ru/novosty/5188-konkurs-vakantnykh-grantov-kbtu-2025-2026-rus-2026 и application_method на grantkbtu@kbtu.kz; отделить конкурс вакантных госгрантов от KAZENERGY в две записи либо явно разделить сроки/категории; добавить требования (официальный транскрипт за весь период, копия удостоверения), eligibility (платное обучение/внутренний грант), study level/programme group если опубликованы; не называть покрытие full_tuition без явного подтверждения, указать «государственный образовательный грант; размер покрытия в публикации не указан».",
+    "sources": [
+      {
+        "url": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat",
+        "title": "Поступление на бакалавриат — КБТУ",
+        "supporting_excerpt": "В блоке важных дат отдельно указано: «20 июля – 31 августа — Прием и регистрация документов к участию в конкурсе на грант KAZENERGY»; это отдельный конкурс от подачи на государственные гранты 13–20 июля."
+      },
+      {
+        "url": "https://kbtu.edu.kz/ru/novosty/5188-konkurs-vakantnykh-grantov-kbtu-2025-2026-rus-2026",
+        "title": "KBTU — Конкурс вакантных грантов 2026",
+        "supporting_excerpt": "Официальная публикация описывает конкурс вакантных государственных грантов, отбор по GPA и подачу на grantkbtu@kbtu.kz до 25.07.2026."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "KBTU undergraduate page does not print an explicit academic-year label in the extracted dates; the vacant-grant publication explicitly says 2026. The KAZENERGY route is confirmed as a separate KBTU route, but its coverage amount/documents were not established here. No secondary source was used. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 268,
+    "current_status": "conflicting",
+    "proposed_status": "conflicting",
+    "issue": "Официальные страницы TAU подтверждают существование конкурса гранта ректора и скидок на 2026–2027, но содержат прямое расхождение порога ЕНТ: новость от 12.06.2026 указывает от 100 баллов, а страница «Гранты Университета» — от 110. Карточка БД также не соответствует подтвержденным условиям: 10–50% вместо официальных 10–100% на 1 год, «Алтын белгі» — в БД на весь период вместо 4 лет на официальной странице, дата 25.08 — дата зачисления/закрытия приема, тогда как конкурс гранта ректора указан 01.07–23.08; условия про 25% лучшей десятке по GPA, социально уязвимые семьи, сирот и грант Т. Аубакирова в найденных актуальных публикациях не подтверждены. Сроки 2026 уже прошли.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, deadline, coverage_type). Убраны неподтвержденные объединенные проценты, full coverage, GPA/social claims и deadline зачисления. Remaining follow-up: Оставить конфликтный статус до подтверждения действующего порога у приемной комиссии; разделить в карточке грант ректора, олимпиадные скидки, 100% для «Алтын белгі» и государственный грант. Исправить покрытие: грант ректора 10–100% на 1 год, олимпиада 100/50/30% на 1 год, «Алтын белгі» + ЕНТ≥100 — 100% на 4 года; указывать документы/30% предоплату и запрет для обучающихся за счет предприятий. Уточнить дедлайн именно подачи (23.08 для конкурса) отдельно от зачисления до 25.08; убрать либо пометить неподтвержденные GPA/социальные/Аубакиров условия.",
+    "sources": [
+      {
+        "url": "https://tau-edu.kz/news?slug=konkurs-na-grant-rektora-universiteta-tau",
+        "title": "Конкурс на Грант Ректора университета TAU (12 июня 2026)",
+        "supporting_excerpt": "TAU указывает ЕНТ от 100 баллов, достижения и обязательное указание TAU первым (код 184); прием заявок и конкурсный отбор — с 1 июля по 23 августа, результаты — 24 августа."
+      },
+      {
+        "url": "https://tau-edu.kz/content/granty-universiteta-turan-astana",
+        "title": "Гранты Университета «Туран-Астана»",
+        "supporting_excerpt": "Страница указывает для гранта ректора ЕНТ от 110, «Алтын белгі» и достижения; финансовая поддержка: 100% на 4 года для «Алтын белгі» + ЕНТ≥100, грант ректора 10–100% на 1 год, олимпиада 1–3 место 100%, 4–6 50%, 7–10 30%; подача до 23 августа, зачисление 10–25 августа."
+      },
+      {
+        "url": "https://tau-edu.kz/content/postuplenie-2026-2027",
+        "title": "Поступление 2026–2027 — приемная комиссия TAU",
+        "supporting_excerpt": "Официальная страница 2026–2027 указывает документы на госгранты 13–20 июля, подачу документов/зачисление 1 апреля–25 августа и отдельно перечисляет страницу грантов TAU."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Обе конфликтующие страницы принадлежат TAU; страница грантов не содержит явной даты публикации, поэтому нельзя определить, является ли порог 110 новым исправлением или общей страницей. Для 2026 конкурса источники первичные, не вторичные; отдельное подтверждение гранта Т. Аубакирова не найдено. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 273,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=36, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии МЗ РК не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://kaznmu.edu.kz/ru/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 281,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=36, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://kaznmu.edu.kz/ru/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 283,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=36, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. международные стипендии для резидентов не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://kaznmu.edu.kz/ru/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 291,
+    "current_status": "source_unavailable",
+    "proposed_status": "source_unavailable",
+    "issue": "Структурная очередь: source_url и link отсутствуют; type=university, university_id=37, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии Жубанова не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (requirements, coverage_type). Источник отсутствует; ЕНТ≥52 и вид покрытия нельзя оставлять фактическими условиями. Remaining follow-up: Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Сначала добавить адрес официальной публикации; Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; в рабочей записи нет URL. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 304,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=39, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. именные стипендии Утемисова не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://wku.edu.kz/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 318,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=corporate, university_id=41, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. гранты Kazakhmys Corporation не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://zhezu.edu.kz/ru/home/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 324,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=corporate, university_id=42, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. нефтяные корпоративные гранты не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://kguti.kz/",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 331,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальные материалы Академии полностью подтверждают набор 2026–2027 по государственному образовательному заказу: 200 мест магистратуры и 12 докторантуры, даты приема 01.04–01.06.2026, конкурс/зачисление, уровни и требования. Публикация результатов дает точное распределение 200 мест магистратуры (12/47/9/43/26/22/34/7) и 12 мест докторантуры (2/1/5/4). В БД сумма указана приблизительно, study_levels/documents/eligibility не заполнены, а full_tuition — интерпретация государственного заказа, не числовая выплата. Обычный срок приема уже прошел; это не противоречит подтвержденному набору 2026–2027.",
+    "proposed_changes": "Заменить «около 200/12» на точные квоты по образовательным программам; заполнить study_levels (магистратура, докторантура), eligibility и documents: направление госоргана для госслужащих, удостоверение личности, диплом, QAZAQ RESMI TEST/ҚАЗТЕСТ ≥B1 (кроме иностранцев), языковой сертификат для указанных программ, послужной список/подтверждение трудовой деятельности, research proposal для докторантуры, заявление с ЭЦП. Описать funding как государственный образовательный заказ; не добавлять размер стипендии или иное покрытие, которого источник не сообщает. Сохранить deadline 2026-06-01 и пометить как прошедший.",
+    "sources": [
+      {
+        "url": "https://www.apa.kz/ru/2026/04/%D0%B2-%D0%B0%D0%BA%D0%B0%D0%B4%D0%B5%D0%BC%D0%B8%D0%B8-%D0%B3%D0%BE%D1%81%D1%83%D0%B4%D0%B0%D1%80%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%BE%D0%B3%D0%BE-%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%b5-3/",
+        "title": "В Академии государственного управления стартовал прием документов на новый учебный год",
+        "supporting_excerpt": "На 2026–2027 начат прием; по государственному образовательному заказу — 200 человек в магистратуру и 12 в докторантуру; заявки 1 апреля–1 июня; конкурс 5–19 июня, предварительное зачисление 25 июня, финальное 10 июля."
+      },
+      {
+        "url": "https://www.apa.kz/ru/2026/06/84254/",
+        "title": "Подведены итоги предварительного зачисления в магистратуру и докторантуру Академии",
+        "supporting_excerpt": "Для 2026–2027 опубликовано распределение госзаказа: магистратура — Государственная политика 12, Государственное управление 47, Международные отношения 9, Региональное развитие 43, Стратегическое управление человеческими ресурсами 26, Экономика 22, Цифровая аналитика и ИИ 34, Цифровое государственное управление 7; докторантура — Экономика 2, Международные отношения 1, Государственное управление 5, Цифровое государственное управление 4."
+      },
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page2.html",
+        "title": "Правила приема 2026–2027, стр. 2",
+        "supporting_excerpt": "Правила приложены к приказу ректора Академии от 31 марта 2026 года №212; прием ведется в рамках государственного образовательного заказа и иных источников, а конкурс по госзаказу допускает госслужащих."
+      },
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page3.html",
+        "title": "Правила приема 2026–2027, стр. 3",
+        "supporting_excerpt": "Пункт 9: претенденты регистрируются и подают заявку в информационной системе Академии с 1 апреля до 1 июня включительно."
+      },
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page13.html",
+        "title": "Правила приема 2026–2027, стр. 13",
+        "supporting_excerpt": "Конкурс: для магистратуры с отрывом — аналитическое эссе и интервью; для модульной магистратуры — эссе и интервью; для докторантуры — оценка research proposal, эссе и интервью."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальные материалы подтверждают funding route и места, но не публикуют сумму в тенге или отдельный размер стипендии; full_tuition следует трактовать как тип государственного образовательного заказа, а не как подтвержденную денежную выплату. Источники первичные (Академия), отдельная публикация МНВО не требовалась для подтверждения организатором."
+  },
+  {
+    "grant_id": 332,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Правила Академии подтверждают ведомственный маршрут: модульные программы могут быть доступны госслужащим, представителям подведомственных организаций, субъектов квазигоссектора и депутатам маслихатов за счет иных источников/направляющих организаций; требуется направление и документы об образовании. Однако карточка обобщает разные программы и виды финансирования, которые в правилах имеют разные сроки и требования, и ошибочно/неполно фиксирует только 01.06.2026: для дополнительного приема на одногодичную модульную магистратуру правила указывают 01–27.11.2026. В источниках нет общего числа таких ведомственных мест. full_tuition не подтвержден: правила говорят о средствах направляющей организации/иных источниках, а не о гарантированном полном покрытии.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, deadline, coverage_type). Убраны full tuition, общий deadline и объединение разных программ. Remaining follow-up: Разделить записи по программе и механизму финансирования: модульные MPA/EMBA/MRD — отдельный ведомственный конкурс с дополнительным окном 1–27 ноября; full-time MPP, MIR, Economics, digital analytics и другие программы — не объединять без отдельного подтверждения применимости ведомственного финансирования. Заменить coverage_type full_tuition на «за счет направляющей организации/иных источников»; добавить eligibility (категория организации, направление, высшее образование, стаж по конкретной программе), документы и точные сроки; не указывать число мест без официальной квоты.",
+    "sources": [
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page3.html",
+        "title": "Правила приема 2026–2027, стр. 3",
+        "supporting_excerpt": "Пункт 6: модульная магистратура предназначена для госслужащих, представителей подведомственных организаций, финансируемых из бюджета, субъектов квазигоссектора и депутатов маслихатов; пункт 9 устанавливает обычную подачу 1 апреля–1 июня."
+      },
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page4.html",
+        "title": "Правила приема 2026–2027, стр. 4",
+        "supporting_excerpt": "Дополнительный прием на одногодичную модульную магистратуру для этих категорий за счет иных источников финансирования проводится с 1 ноября по 27 ноября включительно; среди документов — направление госоргана, удостоверение личности, документ о высшем образовании и языковой сертификат."
+      },
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page7.html",
+        "title": "Правила приема 2026–2027, стр. 7",
+        "supporting_excerpt": "Для Executive MPA за счет иных источников допускаются госслужащие, представители бюджетных подведомственных организаций, квазигоссектора и депутаты маслихатов при наличии не менее двух лет стажа на руководящих должностях."
+      },
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page8.html",
+        "title": "Правила приема 2026–2027, стр. 8",
+        "supporting_excerpt": "Для Executive MBA по модульному принципу за счет иных источников допускаются те же категории при наличии не менее двух лет стажа на руководящих должностях."
+      },
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page11.html",
+        "title": "Правила приема 2026–2027, стр. 11",
+        "supporting_excerpt": "Для модульного MRD за счет иных источников допускаются госслужащие, представители бюджетных подведомственных организаций, субъекты квазигоссектора и депутаты маслихатов с не менее чем двумя годами общего стажа."
+      },
+      {
+        "url": "https://admission.apa.kz/docs/main/rules/ru/files/basic-html/page14.html",
+        "title": "Правила приема 2026–2027, стр. 14",
+        "supporting_excerpt": "По итогам конкурса формируются отдельные ранжированные списки по госзаказу и за счет собственных/иных источников; это подтверждает, что ведомственное финансирование нельзя автоматически считать госгрантом."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Правила подтверждают категории и отдельные модульные программы, но не подтверждают общий набор программ из карточки, количество мест или полное покрытие обучения. Все использованные источники первичные (Академия); вторичных источников не использовано. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 338,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=44, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. KIMEP Presidential Scholarship (100%) не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://www.kimep.kz/prospective-students/en/financial-aid/rules",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 339,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Структурная очередь: type=university, university_id=44, academic_year=2026-2027; неполные поля: coverage_type, coverage_amount, deadline, application_method, documents, eligibility_categories, programme_codes; amount/coverage, требования, категории, документы и порядок подачи требуют содержательной проверки. Merit-based scholarships (25-75%) не следует считать подтвержденной возможностью только по статусу needs_review.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://www.kimep.kz/prospective-students/en/financial-aid/rules",
+        "title": "Ссылка из рабочей БД — содержимое не проверялось в structural triage",
+        "supporting_excerpt": "Структурная очередь фиксирует наличие URL в записи; официальный текст, учебный год и условия по этой ссылке не использовались как доказательство."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 349,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальное МНВО подтверждает конкурс 2026 и более 75 тыс. грантов, прием 13–20 июля и зачисление до 25 августа; сохраненная цифра 89 457 и разбиение по уровням взяты из вторичного источника и требуют сверки с первичным постановлением/МНВО.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements). Убраны неподтвержденные 89 457/127 041 и процентные разбиения; сохранены подтвержденные даты конкурса. Remaining follow-up: Заменить result.univision.kz первичным актом/сообщением МНВО; подтвердить 89 457 и разбиение, отдельно хранить national scope, госминимумы, документы, сроки и конкурсный проходной балл.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270585?lang=ru",
+        "title": "МНВО РК — обладатели государственных образовательных грантов",
+        "supporting_excerpt": "МНВО сообщает о результатах конкурса грантов 2026–2027 и свыше 75 тысячах грантов; минимум допуска не равен фактическому проходному баллу."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Точная цифра 89 457 и распределение 75 371/11 007/3 079 не подтверждены найденным первичным текстом. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 350,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальная программа «Болашак» подтверждает международную стипендию 2026 и окно подачи 16.03–16.10.2026 по карточке источника, но запись объединяет уровни/стажировки и требует разнесения eligibility и документов.",
+    "proposed_changes": "Сохранить verified для существования маршрута, но разделить обучение и научные стажировки, заполнить точные уровни, языковые требования, документы и отдельные сроки из официального объявления.",
+    "sources": [
+      {
+        "url": "https://bolashak.gov.kz",
+        "title": "АО «Центр международных программ» — официальный портал «Болашак»",
+        "supporting_excerpt": "Официальный портал является источником конкурсов международной стипендии и научных стажировок; применимость условий фиксируется отдельными объявлениями 2026 года."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Детали конкретного объявления 2026 в доступном извлечении портала не полностью раскрыты."
+  },
+  {
+    "grant_id": 351,
+    "current_status": "conflicting",
+    "proposed_status": "conflicting",
+    "issue": "Запись утверждает 165 научных стажировок, тогда как проверенная официальная публикация «Болашак» указывает 250 стажировок и отдельный срок подачи до 30 октября. Число и тип программы конфликтуют.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, coverage_type). Убрано конфликтующее число 165 и неподтвержденные единые требования; сохранена дата официального приема. Remaining follow-up: Сверить официальное объявление и заменить 165 на подтвержденное число либо разделить квоты; не смешивать научные стажировки с академической стипендией «Болашак».",
+    "sources": [
+      {
+        "url": "https://bolashak.gov.kz",
+        "title": "АО «Центр международных программ» — «Болашак»",
+        "supporting_excerpt": "Официальная публикация 2026 сообщает о научных стажировках и сроке приема до 30 октября; в найденных материалах число стажировок указано как 250, а не 165."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Нужно закрепить точную редакцию объявления/приказа; конфликт не означает отсутствие программы. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 352,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальный gov.kz подтверждает программу «Серпін» и более 2 000 грантов для целевых сельских регионов, но точное число 2 180 из записи не подтверждено в найденном тексте; requirements и список вузов/программ неполны.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, deadline, coverage_type). Убраны неподтвержденные 2 180, региональный список и единый deadline. Remaining follow-up: Подтвердить квоту 2 180 первичной таблицей МНВО, добавить регионы, группы программ, документы и календарь; не считать общий минимум ЕНТ проходным баллом.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz",
+        "title": "Gov.kz — официальная платформа государственных органов",
+        "supporting_excerpt": "Официальные материалы gov.kz подтверждают программу «Серпін» и целевое распределение грантов для региональных категорий; точная квота требует отдельной таблицы."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Точное число и параметры конкурса не извлечены из адресной первичной публикации. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 353,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальные материалы подтверждают 2 392 региональных гранта акиматов, но сроки и условия различаются по региону; карточка слишком агрегирована и не содержит разбивки по всем регионам/категориям.",
+    "proposed_changes": "Сохранить verified для national route и объема, но разделить по акиматам/регионам, добавить региональные сроки, документы, группы программ и application routes.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz",
+        "title": "Gov.kz — образовательные гранты местных исполнительных органов",
+        "supporting_excerpt": "Акиматы выделяют целевые образовательные гранты по потребностям регионов; конкурс проводит комиссия соответствующего акимата, сроки и документы зависят от региона."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Карточка не является заменой отдельным объявлениям акиматов; один общий deadline может быть неверен."
+  },
+  {
+    "grant_id": 354,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальный фонд подтверждает программу «Қазақстан халқына», но в проверенных публикациях фигурируют 350 плановых и 220 фактически выданных грантов; запись не различает план и результат и не подтверждает единый deadline.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, coverage_type). Убраны неподтвержденные единые 350/220, сумма покрытия, возраст/регион как универсальные условия и несуществующий общий deadline. Remaining follow-up: Разделить planned quota и awarded count; указать официальное покрытие, возраст/региональные категории, документы и срок только из правил фонда.",
+    "sources": [
+      {
+        "url": "https://qf.kz",
+        "title": "Общественный фонд «Қазақстан халқына» — официальный сайт",
+        "supporting_excerpt": "Фонд публикует программу образовательных грантов для социально уязвимых категорий; число плановых и фактически выданных грантов должно храниться раздельно."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Разница 350/220 требует сверки с итоговым официальным сообщением фонда. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 355,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальная форма KAZENERGY подтверждает конкурс финансирования за счет недропользователей и период 25.07–31.08.2026. Карточка не раскрывает полный список eligible специальностей и документов.",
+    "proposed_changes": "Сохранить verified для конкурса, но добавить прямую application_url, список специальностей, документы, критерии и точный scope покрытия из правил KAZENERGY.",
+    "sources": [
+      {
+        "url": "https://grant.kazenergy.com",
+        "title": "KAZENERGY — регистрация образовательной программы",
+        "supporting_excerpt": "Официальная форма предназначена для регистрации на образовательную программу за счет средств недропользователей; конкурсный маршрут и условия должны сверяться с правилами организатора."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Размер и программный перечень в доступной форме не извлечены полностью."
+  },
+  {
+    "grant_id": 356,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальная программа Murager подтверждает корпоративное финансирование «Казатомпром» и конкурс для приоритетных регионов/специальностей, но карточка не содержит точного deadline и критериев GPA из актуальной формы.",
+    "proposed_changes": "Сохранить verified для программы; добавить deadline 14.08.2026, регионы, GPA 2.67, eligibility и партнерские вузы только из официальных правил.",
+    "sources": [
+      {
+        "url": "https://www.kazatomprom.kz",
+        "title": "АО «Казатомпром» — программа Murager",
+        "supporting_excerpt": "Официальные материалы «Казатомпрома» описывают программу Murager и конкурсное финансирование обучения по приоритетным направлениям и регионам."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Точные условия формы/документов требуют закрепления прямой страницей программы."
+  },
+  {
+    "grant_id": 357,
+    "current_status": "conflicting",
+    "proposed_status": "conflicting",
+    "issue": "Запись является агрегатом «2 000+» и смешивает ректорские гранты, внутренние гранты, скидки и именные стипендии разных вузов. Такой объект нельзя считать одной возможностью с единым покрытием, сроком или способом подачи; source_url отсутствует.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, deadline, coverage_type, source_url, source_title). Убран единый amount/deadline и универсальные требования; добавлен первичный источник агрегата. Remaining follow-up: Разбить на отдельные записи по вузу и виду финансирования; удалить единый amount/deadline, добавить первичный источник каждой программы и не считать агрегат verified.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "МНВО РК — собственные гранты и скидки вузов",
+        "supporting_excerpt": "МНВО различает собственные образовательные гранты, скидки и именные стипендии; количество, порядок и критерии определяет каждый вуз."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Агрегированное число не дает условий для конкретного абитуриента или конкретного вуза. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 358,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальное сообщение МНВО подтверждает 500 образовательных квот Турции на 2026–2027, прием 10–15 августа и требования к гражданству/ЕНТ. Сохраненная ссылка Informburo вторична и карточке не хватает точной процедуры МКТУ.",
+    "proposed_changes": "Сохранить verified для маршрута, заменить источник на gov.kz/МКТУ, добавить точный application route, вузовой порог и документы; не обещать получение квоты.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "МНВО РК — собственные гранты и квоты вузов",
+        "supporting_excerpt": "Турции выделено 500 образовательных квот на 2026–2027; документы принимаются 10–15 августа; участники — граждане РК с действующим сертификатом ЕНТ и проходным баллом вуза."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Количество квот подтверждено, но индивидуальное зачисление и конкретные программы требуют объявления МКТУ."
+  },
+  {
+    "grant_id": 359,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальное МНВО подтверждает 125 внутренних грантов Коркыт Ата и два полных гранта для сирот/выпускников детской деревни, но запись не разделяет эти конкурсы и не содержит точных категорий, сроков и документов.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, coverage_type). Разделены 125 грантов и 2 социальных гранта; убраны неподтвержденные единые full tuition и требования. Remaining follow-up: Разделить 125 IT/олимпиадных грантов и 2 социальных гранта; заполнить покрытие, eligibility, deadline, документы и подачу по официальному положению вуза.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "МНВО РК — собственные гранты вузов",
+        "supporting_excerpt": "Кызылординский университет им. Коркыт ата выделил 125 внутренних грантов победителям IT-олимпиад/проектов и два полных гранта для отдельных социальных категорий."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "МНВО подтверждает факт и объем, но не полный регламент конкурса. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 360,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальное сообщение МНВО подтверждает 20 ректорских грантов АУНГ и категории победителей олимпиад/школы «Зерделі», но не подтверждает покрытие, deadline и способ подачи из карточки.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (description, requirements, coverage_type). Убраны неподтвержденные full tuition, ЕНТ и единый способ подачи. Remaining follow-up: Получить положение АУНГ, заполнить coverage, срок, документы и application; не переносить общий deadline 25.08 на конкурс автоматически.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "МНВО РК — собственные гранты вузов",
+        "supporting_excerpt": "Атырауский университет нефти и газа выделил 20 ректорских грантов для победителей областных олимпиад и выпускников школ «Зерделі»."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Точная процедура и размер покрытия не указаны. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 361,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальное МНВО подтверждает 12 собственных грантов ВКУ им. Аманжолова, но карточка не содержит опубликованных условий, покрытия, категорий, документов и срока.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (description, requirements, coverage_type). Убраны неподтвержденные full tuition, ЕНТ и общий способ подачи. Remaining follow-up: Найти положение ВКУ 2026–2027 и заполнить условия; до этого не считать full_tuition и общий способ подачи подтвержденными.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "МНВО РК — собственные гранты вузов",
+        "supporting_excerpt": "ВКУ им. С. Аманжолова предусмотрел 12 собственных образовательных грантов."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Объем подтвержден, остальные поля требуют первичного документа вуза. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 362,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальное МНВО подтверждает 10 ректорских грантов Рудненского индустриального университета для социальных категорий, но карточка не подтверждает full_tuition, deadline и порядок подачи.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (description, requirements, coverage_type). Убраны неподтвержденные full tuition, ЕНТ и общий способ подачи. Remaining follow-up: Уточнить категории и документы по положению РИУ; отдельно подтвердить покрытие и срок, не считать общий deadline единым.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "МНВО РК — собственные гранты вузов",
+        "supporting_excerpt": "Рудненский индустриальный университет предусмотрел 10 ректорских грантов для сирот и абитуриентов из малообеспеченных, неполных и многодетных семей."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Публикация подтверждает категории и количество, но не полные условия. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 363,
+    "current_status": "conflicting",
+    "proposed_status": "conflicting",
+    "issue": "Официальное МНВО подтверждает два разных механизма Карагандинского индустриального университета: грант после первого курса и именной грант Ишмухамедова с полным обучением и 150 000 ₸/мес. Карточка объединяет их и не раскрывает GPA, ENT и сроки.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, deadline, coverage_type). Убрано объединенное покрытие и единые требования; два механизма оставлены для последующего разделения. Remaining follow-up: Разделить два гранта; для каждого заполнить eligibility, level (студенты после 1 курса/абитуриенты), документы, deadline и источник вуза; не переносить условия одного конкурса на другой.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270978?lang=ru",
+        "title": "МНВО РК — гранты Карагандинского индустриального университета",
+        "supporting_excerpt": "Грант университета позволяет студентам после первого курса продолжить обучение за счет вуза; именной грант Ишмухамедова предусматривает полную оплату и 150 000 ₸ в месяц."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Две программы подтверждены, но детализация условий и сроки требуют официального положения вуза. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 364,
+    "current_status": "conflicting",
+    "proposed_status": "conflicting",
+    "issue": "Официальная страница MNU описывает Maqsut Narikbayev Scholarship/скидку до 99% и отдельную стипендиальную поддержку; карточка называет это IATS и добавляет неподтвержденный порог ЕНТ 120/800 госгрантников. Название и механизм смешаны.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (name, amount, description, requirements, deadline, coverage_type). Исправлено название механизма и удалены неподтвержденные IATS/ЕНТ120/800 claims. Remaining follow-up: Разделить scholarship/discount и государственные гранты; исправить название, критерии, срок (20.05–21.06 по странице) и не переносить утверждение о бесплатном обучении без отдельного конкурса.",
+    "sources": [
+      {
+        "url": "https://intl.mnu.kz/en/resident-undergraduate",
+        "title": "MNU — Resident Undergraduate financial support",
+        "supporting_excerpt": "Официальная страница описывает Maqsut Narikbayev Scholarship с покрытием до 99% и конкурсной подачей; это не подтверждает все формулировки карточки IATS/ЕНТ 120."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Нужна сверка названия конкурса и действующих условий 2026–2027. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 365,
+    "current_status": "conflicting",
+    "proposed_status": "conflicting",
+    "issue": "Официальная новость МУА подтверждает именную стипендию академика Даленова двум студентам третьего курса по GPA; карточка также включает 332 гранта в резидентуру, то есть смешивает стипендию и отдельный государственный набор.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, coverage_type). Убраны 332 резидентурных гранта из стипендии и оставлены подтвержденные условия. Remaining follow-up: Разделить именную стипендию и государственные гранты резидентуры; убрать 332 из amount этой записи, добавить уровень, eligibility, GPA, срок и документы по стипендии.",
+    "sources": [
+      {
+        "url": "https://amu.edu.kz/ru/infocenter/news/17722",
+        "title": "МУА — именная стипендия академика Е.Д. Даленова",
+        "supporting_excerpt": "Новость сообщает о назначении именной стипендии двум студентам третьего курса по результатам GPA; резидентурные гранты являются отдельным фактом."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Точный размер стипендии и период подачи в открытом извлечении не указаны. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 366,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальное AITU объявление подтверждает 2026–2027 конкурс вакантных грантов, включая B057 — 50 мест, и дедлайн 25.07. Это маршрут для уже обучающихся платников, не грант первичного поступления.",
+    "proposed_changes": "Сохранить verified, но явно ограничить eligibility студентами платного отделения и не показывать запись как обычный грант для абитуриента; хранить распределение по курсам из таблицы.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/ru/announcement-competition-award-vacant-grants",
+        "title": "AITU — конкурс вакантных образовательных грантов",
+        "supporting_excerpt": "В объявлении 2026–2027 по B057 указано 50 вакантных грантов; заявления принимаются до 25 июля 2026 года, конкурс предназначен для студентов."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Присуждение зависит от конкурса; число мест не означает гарантию."
+  },
+  {
+    "grant_id": 367,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальный KRU подтверждает программы скидок 2026–2027 и сроки 16–25.09.2026: ҚАМҚОР 100/40%, КӨМЕК 15%, ЖӘРДЕМ 50%, ЗЕРЕК 50%. DB использует вторичный источник, диапазон 15–100 и NULL deadline.",
+    "proposed_changes": "Заменить источник официальной страницей KRU, разложить программы/категории/документы и deadline 25.09.2026; сохранять type=discount, не grant.",
+    "sources": [
+      {
+        "url": "https://ksu.edu.kz/granty-stipendii-lgoty-po-oplate/priem-zayavlenij-i-dokumentov-na-skidki-po-oplate-za-obuchenie-na-2026-2027-uchebnyj-god/",
+        "title": "КРУ — прием документов на скидки за 2026–2027",
+        "supporting_excerpt": "Официальная страница устанавливает прием 16–25 сентября 2026 и отдельные программы ҚАМҚОР, КӨМЕК, ЖӘРДЕМ, ЗЕРЕК с процентами и категориями."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Срок подачи на 27.09 уже завершен; условия сохранения скидки нужно брать из правил каждой программы."
+  },
+  {
+    "grant_id": 368,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Официальная ALT подтверждает ректорские гранты для социальных категорий и набравших ЕНТ 90+, гранты по Math+Physics/олимпиаде и скидки 5–100%. DB объединяет несколько механизмов и добавляет неподтвержденную ежемесячную/общую формулировку.",
+    "proposed_changes": "Сохранить verified для существования маршрутов, но разделить rector grant, olympiad grants и discount ladder; добавить 30% предоплату/категории, срок и отсутствие стипендии.",
+    "sources": [
+      {
+        "url": "https://alt.edu.kz/ru/postupayushhim/bakalavriat/granty-stipendii-skidki",
+        "title": "ALT University — гранты, стипендии, скидки",
+        "supporting_excerpt": "Официальная страница описывает категории ректорских грантов, ЕНТ-порог, олимпиады и шкалу скидок 5–100% для бакалавриата."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Разные меры поддержки имеют разные сроки и документы; единый DB amount вводит в заблуждение."
+  },
+  {
+    "grant_id": 369,
+    "current_status": "source_unavailable",
+    "proposed_status": "source_unavailable",
+    "issue": "Сохраненный Narxoz URL не разрешается DNS, а текущая доступная страница бакалавриата не подтверждает перечисленные 2026–2027 внутренние гранты/скидки и суммы. Нельзя считать отсутствие текущей публикации отсутствием программы.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, deadline, coverage_type). Удалены неподтвержденные суммы, проценты, eligibility и deadline при недоступном источнике. Remaining follow-up: Найти рабочий официальный домен/архив и отдельные положения Narxoz; до повторной проверки перевести в source_unavailable и убрать суммы/проценты из карточки.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальный источник недоступен по DNS; условия 2026–2027 не подтверждены. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 370,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Официальная приемная страница ЮКУ подтверждает разделы «Гранты на обучение» и «Скидки и льготы» и период работы 1.06–25.08, но не подтверждает amount, квоту, категории или отдельный конкурс именно этой записи.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, coverage_type). Убраны неподтвержденные детали и требования; наличие раздела не превращается в конкретную возможность. Remaining follow-up: Получить детальные страницы/положения ЮКУ 2026–2027, разделить грант и скидку, добавить coverage, categories, documents, deadline и способ подачи; не считать наличие раздела подтверждением конкретной выплаты.",
+    "sources": [
+      {
+        "url": "https://priem.auezov.edu.kz/ru",
+        "title": "ЮКУ им. М. Ауэзова — приемная комиссия",
+        "supporting_excerpt": "На официальной странице есть разделы «Гранты на обучение» и «Скидки и льготы», а приемная комиссия работает 1 июня–25 августа; отдельные суммы и квоты не указаны."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Существование раздела подтверждено, но конкретная программа и условия не извлечены. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 371,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "МУИТ действительно публикует цикл бакалавриата 2026–2027 и таблицу B057: 75 — минимальный балл на грант, 50 — на платное; это минимум участия, не исторический проходной балл и не квота МУИТ. В записи deadline 2026-08-25 — дата зачисления, а не окно конкурса госгрантов; покрытие кодами B057 неполное.",
+    "proposed_changes": "Оставить needs_review; разделить national minimum/порог МУИТ/фактический конкурсный проходной; для grant deadline хранить 13–20.07.2026 по общегосударственному календарю, 25.08 — как зачисление; подтвердить квоту и полный перечень кодов B057.",
+    "sources": [
+      {
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "МУИТ — Бакалавриат",
+        "supporting_excerpt": "В таблице ЕНТ для B057 указано: минимальный балл на грант 75 и на платное 50; этапы подачи документов в университет — 20 июня–25 августа, зачисление — 25 августа."
+      },
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1256968?lang=ru",
+        "title": "МНВО РК — Начался прием заявлений для участия в конкурсе грантов",
+        "supporting_excerpt": "Заявления на конкурс образовательных грантов принимаются 13–20 июля 2026 года; вузы могут устанавливать собственные пороговые баллы."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Квота именно МУИТ/B057 и фактический балл последнего зачисленного официально в найденных материалах не подтверждены."
+  },
+  {
+    "grant_id": 372,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Страница AITU подтверждает конкурс KAZENERGY/NCOC/KPO 2026–2027 и даты 25.07–31.08, но запись ошибочно помечена кодами B059/6B06202 и не B057 AITU. Размер покрытия и перечень eligible-программ оставлены за документами KAZENERGY.",
+    "proposed_changes": "Исправить programme_codes и название/привязку: либо B057 и фактические коды AITU, либо оставить запись как общий KAZENERGY без вузоспецифичной B057-привязки; не повышать до verified без списка специальностей и покрытия KAZENERGY.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "AITU — Educational grants funded by NCOC N.V. and KPO B.V.",
+        "supporting_excerpt": "Для конкурса 2026–2027 указаны прием заявок 25 июля–31 августа, граждане РК и действующий сертификат ЕНТ; eligible-специальности и подробные документы вынесены на официальный сайт KAZENERGY."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Отдельное подтверждение применимости конкурса к конкретным кодам B057 AITU и размера финансирования не извлечено."
+  },
+  {
+    "grant_id": 373,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Отдельное положение/объявление о внутренних грантах МУИТ для B057 на 2026–2027 не найдено; обычная страница бакалавриата подтверждает прием и скидочный документ, но не внутренний грант.",
+    "proposed_changes": "Сохранить not_published; не показывать как доступный грант до официального положения с количеством мест, категориями, покрытием, сроком и каналом подачи.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Публикация внутреннего гранта не найдена в проверенных официальных материалах; отсутствие публикации не доказывает отсутствия программы."
+  },
+  {
+    "grant_id": 374,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Размеры/категории скидок МУИТ именно для B057 и набора 2026–2027 в проверенных извлечениях не установлены; tuition нельзя выдавать за discount.",
+    "proposed_changes": "Сохранить not_published; при появлении официального положения разделить tuition, скидку и социальную льготу отдельными записями с процентом и scope.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальная публикация с условиями скидок не извлечена."
+  },
+  {
+    "grant_id": 375,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Корпоративная программа для B057 МУИТ на 2026–2027 не идентифицирована ни по организатору, ни по официальному объявлению.",
+    "proposed_changes": "Сохранить not_published; не добавлять внешние программы без первичного объявления организатора и подтверждения применимости к МУИТ/B057.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Причина — публикация официального организатора или МУИТ не найдена; это не вывод о несуществовании гранта."
+  },
+  {
+    "grant_id": 376,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Запись смешивает рассрочку МУИТ и государственно регулируемый образовательный кредит. В проверенной странице МУИТ конкретные банк, ставка, график и собственная рассрочка не опубликованы.",
+    "proposed_changes": "Оставить needs_review; разделить university installment и bank education loan, заполнить только после договора/условий банка или официального положения МУИТ.",
+    "sources": [
+      {
+        "url": "https://iitu.edu.kz/ru/applicants/bachelor/",
+        "title": "МУИТ — Бакалавриат",
+        "supporting_excerpt": "Страница дает ссылки на стоимость обучения 2026–2027 и положение об оплате/скидках, но не содержит условий рассрочки или конкретного кредитного продукта."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Нормативная ссылка Adilet открылась без извлеченного текста, поэтому условия кредита нельзя приписать МУИТ."
+  },
+  {
+    "grant_id": 377,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Это запись про AITU/B059 (6B06202), а не про B057; общий нормативный конкурс подтвержден, но AITU/B059-квота и 2026–2027-specific параметры в источнике не указаны.",
+    "proposed_changes": "Пометить явно как вне B057; либо исключить из B057-каталога, либо оставить отдельным B059 finding. Не переносить порог 85 или общий госминимум в фактический проходной балл.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/en/how-to-apply",
+        "title": "AITU — Admission After School",
+        "supporting_excerpt": "Таблица 2026 содержит отдельную строку B059/Communications and Communication Technologies с minimum Grant 85; это не B057."
+      },
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1243733?lang=ru",
+        "title": "МНВО РК — Прием документов от абитуриентов",
+        "supporting_excerpt": "МНВО публикует общий календарь конкурса и минимумы, одновременно указывая, что вузы могут устанавливать пороги по группам программ."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Количество мест AITU по B059 и фактический проходной балл не подтверждены."
+  },
+  {
+    "grant_id": 378,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "КБТУ подтверждает прием заявлений на госгрант 13–20.07.2026 и публикацию результатов до 10.08, но 110 в старой таблице нельзя считать проходным баллом 2026; запись покрывает только 6B06101, тогда как IT school перечисляет также 6B06102 и 6B06110.",
+    "proposed_changes": "Оставить needs_review; хранить 110 как историческое/неуточненного scope значение, не как проходной; разделить госминимум, порог КБТУ и фактический конкурс; расширить/проверить B057 programme_codes.",
+    "sources": [
+      {
+        "url": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat",
+        "title": "КБТУ — Поступление на бакалавриат",
+        "supporting_excerpt": "Для поступающих на государственный грант указаны прием документов 20 июня–25 августа, подача заявления на конкурс 13–20 июля и результаты до 10 августа."
+      },
+      {
+        "url": "https://kbtu.edu.kz/ru/shkoly/shkola-informatsionnykh-tekhnologij-i-inzhenerii/bakalavriat-shkoly-informatsionnykh-tekhnologij",
+        "title": "КБТУ — Бакалавриат Школы информационных технологий",
+        "supporting_excerpt": "Официальная страница перечисляет 6B06101 Информационные системы, 6B06102 Вычислительная техника и ПО и 6B06110 Наука о данных и ИИ."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "PDF с баллами 2025–2026 и правилами не дал надежно извлечь scope 110; фактический балл последнего зачисленного 2026 не найден."
+  },
+  {
+    "grant_id": 379,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "КБТУ подтверждает окно KAZENERGY 20.07–31.08 и ссылку на PDF, но размер покрытия, eligible-специальности, документы и B057 scope не сверены; PDF в текущем чтении недоступен.",
+    "proposed_changes": "Сохранить needs_review; после извлечения PDF заполнить покрытие, категории, документы и коды, не считать общий KAZENERGY автоматически грантом КБТУ/B057.",
+    "sources": [
+      {
+        "url": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat",
+        "title": "КБТУ — Поступление на бакалавриат",
+        "supporting_excerpt": "Важные даты: прием и регистрация документов к конкурсу гранта KAZENERGY — 20 июля–31 августа; отдельный конкурсный маршрут."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Ссылка на PDF KAZENERGY имелась, но содержимое не удалось извлечь из-за TLS/бинарного ограничения; применимость B057 не установлена."
+  },
+  {
+    "grant_id": 380,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Отдельного официального положения о внутренних/ректорских грантах КБТУ для B057 на 2026–2027 не найдено.",
+    "proposed_changes": "Сохранить not_published; не показывать грант без официального документа с coverage, eligibility, quota и deadline.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Публикация не найдена; это не доказательство отсутствия внутренней программы."
+  },
+  {
+    "grant_id": 381,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Размеры скидок, олимпиадных льгот и соцподдержки КБТУ для B057 2026–2027 в найденных материалах не опубликованы; студенческий взнос не является скидкой.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (description, requirements, coverage_type). Карточка уже не утверждает сумму; явно убраны не подтвержденные требования и тип coverage. Remaining follow-up: Сохранить not_published; разделить скидку, олимпиадную льготу и соцподдержку после появления первичных условий.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальные условия не извлечены. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 382,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Публичная страница КБТУ описывает даты и оплату, но не подтверждает рассрочку или конкретный образовательный кредит для B057.",
+    "proposed_changes": "Сохранить not_published; не трактовать оплату первого семестра как installment.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальный график рассрочки/кредитный продукт не найден."
+  },
+  {
+    "grant_id": 383,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "Факт общего государственного конкурса 2026–2027 и применимый госминимум для национального вуза подтверждены; 65 — только минимум допуска, не проходной B057 и не гарантия. КазНУ-specific quota/последний зачисленный B057 в найденном тексте не подтверждены.",
+    "proposed_changes": "Сохранить verified только для generic state-grant route; убрать/не показывать как factual passing score или KazNU quota; добавить отдельные поля для госминимума, вузовского порога и фактического результата конкурса.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1243733?lang=ru",
+        "title": "МНВО РК — 20 июня в вузах начинается прием документов",
+        "supporting_excerpt": "Для конкурса грантов заявления принимаются 13–20 июля 2026; порог для национальных вузов — 65, по разделам ЕНТ — 5 и 3; вузы могут устанавливать свои пороги по группам программ."
+      },
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1270585?lang=ru",
+        "title": "МНВО РК — Известны имена обладателей государственных образовательных грантов",
+        "supporting_excerpt": "МНВО опубликовало списки обладателей грантов на 2026–2027 и сообщает о свыше 75 тысячах грантов; наличие гранта определяется конкурсом, а не минимальным баллом."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Список/таблица с точным распределением B057 внутри КазНУ не был надежно извлечен; verified не означает подтверждение индивидуального зачисления."
+  },
+  {
+    "grant_id": 384,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Государственный источник подтверждает наличие квот/мер поддержки, но не дает исчерпывающий список категорий и размеров для конкретного B057 КазНУ.",
+    "proposed_changes": "Оставить needs_review; сверить с действующими правилами МНВО/НПА и хранить quota category, scope и документы отдельно, не смешивая с общим конкурсом.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1256968?lang=ru",
+        "title": "МНВО РК — Начался прием заявлений для участия в конкурсе грантов",
+        "supporting_excerpt": "Для сельских абитуриентов и социально уязвимых слоев предусмотрены специальные меры поддержки и установленные государством квоты."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Детальные категории и B057-specific quota в найденном сообщении не перечислены."
+  },
+  {
+    "grant_id": 385,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Официального положения КазНУ о внутренних/ректорских грантах B057 на 2026–2027 не найдено; общенациональное число внутренних грантов не доказывает наличие в КазНУ.",
+    "proposed_changes": "Сохранить not_published; не поднимать статус без документа КазНУ с условиями.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Публикация КазНУ не найдена; отсутствие в извлечении не доказывает отсутствия программы."
+  },
+  {
+    "grant_id": 386,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Раздел «Скидки и льготы» КазНУ упоминается, но процент, категории и B057/2026–2027 scope в извлеченных официальных материалах отсутствуют.",
+    "proposed_changes": "Сохранить not_published; заполнить только после чтения приказа/таблицы скидок.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальное содержание раздела не удалось извлечь из-за проблем сертификата домена КазНУ."
+  },
+  {
+    "grant_id": 387,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Финансовый центр действительно является оператором образовательных программ и гарантом от лица государства по образовательным кредитам, но запись не подтверждает конкретные банк, ставку, сумму или B057-применимость.",
+    "proposed_changes": "Оставить needs_review; разделить operator fact и конкретный loan offer; добавить банки, ставку, лимит, eligibility и дату только из действующих договоров/условий.",
+    "sources": [
+      {
+        "url": "https://fincenter.kz/",
+        "title": "АО «Финансовый центр» — оператор финансирования образования",
+        "supporting_excerpt": "Сайт называет АО оператором образовательного заказа и указывает: «Гарант от лица государства по образовательным кредитам, выданным финансовыми организациями»."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "B057-specific условия кредита в источнике не указаны."
+  },
+  {
+    "grant_id": 388,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Фраза о квитанции 50% при зачислении на платное обучение не подтверждает рассрочку, график платежей или кредит; это может быть только условием оплаты.",
+    "proposed_changes": "Переименовать/разделить в payment requirement, убрать тип installment до публикации графика и юридических условий.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Страница программы КазНУ и точная цитата не извлеклись из-за проблем TLS; у записи нет достаточного первичного текста."
+  },
+  {
+    "grant_id": 389,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "AITU официально публикует для цикла 2026 таблицу B057 с minimum score Grant 100; AET-минимумы 30/50 и 25/50 являются отдельным условием участия. 100 не является фактическим проходным конкурсным баллом и не гарантирует грант; квота AITU/B057 не указана.",
+    "proposed_changes": "Сохранить verified для опубликованного eligibility threshold/route; явно назвать 100 минимумом участия, не проходным, и добавить отдельные поля для AET, квоты и итогового конкурса.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/en/how-to-apply",
+        "title": "AITU — Admission After School",
+        "supporting_excerpt": "В таблице UNT-2026 для B057 указаны профиль Mathematics + Computer Science, minimum score paid 70 и Grant 100."
+      },
+      {
+        "url": "https://astanait.edu.kz/en/aitu-excellence-test",
+        "title": "AITU — AITU Excellence Test",
+        "supporting_excerpt": "30–50 по модулю English дает возможность участвовать в scholarship competition; по модулю CS/Logic успешный диапазон начинается с 25; более низкие диапазоны исключают конкурс гранта."
+      },
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1256968?lang=ru",
+        "title": "МНВО РК — Прием заявлений для конкурса грантов",
+        "supporting_excerpt": "Общий конкурс 2026 проходил 13–20 июля; опубликованный минимум сам по себе не равен результату распределения."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Число грантов AITU по B057 и фактический проходной балл 2026 не опубликованы в извлеченном тексте."
+  },
+  {
+    "grant_id": 390,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "AITU прямо объявила конкурс вакантных грантов 2026–2027: B057 Information Technologies — 50 мест, заявки до 25.07.2026; это перевод/перераспределение среди уже обучающихся платников, не грант для первичного поступления.",
+    "proposed_changes": "Сохранить verified; усилить eligibility «студент платного отделения», хранить 50 как объявленные vacant places, не показывать абитуриентам как первичный admission grant.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/announcement-competition-award-vacant-grants",
+        "title": "AITU — Announcement on the Competition for the Award of Vacant Educational Grants",
+        "supporting_excerpt": "В таблице 2026–2027 строка B057 содержит 50 vacant grants; applications accepted until July 25, 2026; отдельно указаны исключения и порядок конкурса для студентов."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Объявление не дает персональной гарантии присуждения; распределение по курсам/годам находится в таблице объявления."
+  },
+  {
+    "grant_id": 391,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Факт конкурса KAZENERGY/NCOC/KPO и дат 25.07–31.08 подтвержден AITU, но официальный фрагмент не подтверждает, что eligible-specialties включают B057; в записи B057 уже зафиксирован как факт.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (amount, description, requirements, coverage_type). Убрано утверждение, что B057 уже eligible; сохранены только общие условия конкурса. Remaining follow-up: Понизить до needs_review до сверки списка специальностей KAZENERGY; сохранить общий конкурс verified отдельно, заполнить application_url grant.kazenergy.com, coverage и documents только по документу организатора.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/educational-grants",
+        "title": "AITU — Educational grants funded by NCOC N.V. and KPO B.V.",
+        "supporting_excerpt": "AITU подтверждает конкурс tuition funding 2026–2027, период 25 июля–31 августа и ссылку на официальный KAZENERGY; список required eligible specialities находится в документах KAZENERGY, а не в тексте страницы."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "B057-specific eligibility и размер покрытия не извлечены; текущий verified слишком широк для вузо-/программной привязки. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 392,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Запись — отрицательное утверждение об отсутствии ректорского гранта B057, а не опубликованный грант; homepage не доказывает отрицание, programme_codes пусты и B057 не привязан.",
+    "proposed_changes": "APPLIED 2026-09-27: content fields corrected (name, amount, description, requirements, deadline, coverage_type). Отрицательное утверждение заменено нейтральной пометкой not_published; B057 и неподтвержденное покрытие удалены. Remaining follow-up: Понизить до not_published либо удалить из каталога opportunities; если нужен audit trail, хранить отдельной negative-evidence заметкой с датой проверки, не как verified grant.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Отсутствие объявления нельзя доказать одной главной страницей; отдельное положение/объявление rector grant B057 не найдено. Content correction was applied transactionally; no row was split or deleted."
+  },
+  {
+    "grant_id": 393,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Отдельного положения AITU о внутренних грантах B057 2026–2027 не найдено; общая bachelor page не является доказательством такого финансирования.",
+    "proposed_changes": "Сохранить not_published; не публиковать как возможность до официального регламента с квотой и условиями.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Публикация не найдена; отсутствие публикации не равно отсутствию программы."
+  },
+  {
+    "grant_id": 394,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Страница AITU действительно содержит раздел Types of Discounts и ссылку на отдельный Regulations document, но проценты/категории в самой странице не раскрыты; нельзя заполнить amount догадкой.",
+    "proposed_changes": "Оставить needs_review; извлечь и привязать официальный regulations document, отделив tuition discounts от dormitory benefits (id 395).",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "AITU — Bachelor’s Degree",
+        "supporting_excerpt": "В разделе Types of Discounts указано, что detailed procedure and amounts are in a separate Regulations on Scholarships and Discounts document."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Содержимое внешнего Google Drive документа в текущем извлечении не прочитано."
+  },
+  {
+    "grant_id": 395,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "AITU подтверждает free accommodation для сирот и студентов с инвалидностью и 20% discount для семей ниже прожиточного минимума; также опубликованы свободные места на август 2026. Это льгота проживания, не tuition grant и не гарантия места.",
+    "proposed_changes": "Сохранить verified; сузить/детализировать categories (включая группы инвалидности и документы), отдельно указать limited availability и отсутствие гарантии места.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/en/students-dormitory",
+        "title": "AITU — Student House",
+        "supporting_excerpt": "Страница говорит: orphans and students with disabilities receive free accommodation; families below subsistence minimum receive a 20% discount; as of August 2026 places listed as 139, 229 and 232 (plus 67 college)."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Свободное место конкретному заявителю не гарантируется; льгота действует по правилам конкурсного распределения общежития."
+  },
+  {
+    "grant_id": 396,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "AET-путь подтвержден, но это экзаменационное условие, а не grant. Страница AET указывает registration for fee-paying applicants until 20.08, 30–50 English и 25–50 CS/Logic для допуска к scholarship competition; провал/низкие диапазоны ведут только к платному маршруту.",
+    "proposed_changes": "Сохранить verified как admissions requirement, но не считать funding opportunity; хранить deadline как AET registration deadline, не deadline госгранта.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/en/aitu-excellence-test",
+        "title": "AITU — AITU Excellence Test",
+        "supporting_excerpt": "Registration for fee-paying applicants is open until August 20; English 30–50 permits scholarship competition, CS/Logic 25–50 is successful; lower ranges exclude scholarship competition."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "AET открывает только право участвовать в отдельном конкурсе, не гарантирует присуждение гранта."
+  },
+  {
+    "grant_id": 397,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Официальная AITU bachelor page дает paid-services agreement и отдельный partial-payment grant-holder agreement, но не подтверждает рассрочку стоимости обучения.",
+    "proposed_changes": "Сохранить not_published; не путать частичную оплату держателем отдельного гранта с installment для платника.",
+    "sources": [
+      {
+        "url": "https://astanait.edu.kz/en/bachelor",
+        "title": "AITU — Bachelor’s Degree",
+        "supporting_excerpt": "Страница отдельно перечисляет paid educational services agreement и agreement for a holder of an educational grant for partial payment; это не опубликованный график рассрочки."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Банковская/вузовская рассрочка B057 не найдена."
+  },
+  {
+    "grant_id": 398,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Запись корректно предупреждает о смешении 110 и 65: 65 — государственный минимум для национального вуза, 110 на таблице ЕНУ имеет неясный scope; ни одно число не является фактическим проходным B057.",
+    "proposed_changes": "Оставить needs_review; убрать 110 из grant requirement до определения scope, хранить 65 как national minimum, запросить ENU-specific threshold/квоту и фактический результат конкурса.",
+    "sources": [
+      {
+        "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1243733?lang=ru",
+        "title": "МНВО РК — Прием документов от абитуриентов",
+        "supporting_excerpt": "Минимум для национальных вузов — 65; вузы могут устанавливать собственные пороги по группам образовательных программ; конкурс грантов 13–20 июля."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальная страница ЕНУ в текущем извлечении не дала читаемого контекста 110; scope и B057 quota не подтверждены."
+  },
+  {
+    "grant_id": 399,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Числа целевых грантов B057 для Атырауской/Мангистауской областей извлекались из объявления без явного учебного года; URL объявления сейчас отвечает 404. Нельзя переносить числа на 2026–2027 или считать отсутствующими.",
+    "proposed_changes": "Оставить needs_review; найти актуальное объявление акиматов/ЕНУ с годом, квотой, категориями и сроками; до этого не показывать 30/30 как действующую 2026 quota.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Проверка невозможна: указанный официальный URL ENU возвращает HTTP 404, год и первичный текст не подтверждены; 404 не доказывает отсутствия гранта."
+  },
+  {
+    "grant_id": 400,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "ЕНУ официально публикует процедуру вакантных госгрантов по приказу №443: конкурс среди платников по GPA за весь период, без F/FX/академической задолженности, списки мест публикуются университетом; это pathway, не гарантированное B057 место.",
+    "proposed_changes": "Сохранить verified как процедуру; явно пометить eligibility paid students и отсутствие фиксированной B057 квоты/дедлайна, требовать отдельное объявление числа мест.",
+    "sources": [
+      {
+        "url": "https://enu.kz/ru/page/for-students/procedure-for-distributing-vacant-state-educational-grants",
+        "title": "ЕНУ — Порядок распределения вакантных государственных образовательных грантов",
+        "supporting_excerpt": "Вакантные гранты присуждаются конкурсом обучающимся на платной основе по GPA за весь период; при F/FX участие невозможно; университет публикует объявление с количеством мест, списки формируются ежегодно на 1 января и 1 июля."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Процедура не подтверждает, что в текущем объявлении есть конкретные B057 vacant places; это определяется отдельным notice."
+  },
+  {
+    "grant_id": 401,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Отдельного положения ЕНУ о внутренних/ректорских грантах B057 на 2026–2027 не найдено.",
+    "proposed_changes": "Сохранить not_published; не показывать как доступный grant без официального документа ЕНУ.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Публикация не найдена; отсутствие публикации не доказывает отсутствия программы."
+  },
+  {
+    "grant_id": 402,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Страница стоимости ЕНУ ссылается на PDF «Размеры скидок для обучающихся на платной основе, 2026–2027», но категории/проценты/B057 scope не извлечены.",
+    "proposed_changes": "Оставить needs_review; извлечь PDF и разделить discount eligibility, rate, stacking, срок и документы; не публиковать неизвестный процент.",
+    "sources": [
+      {
+        "url": "https://enu.kz/ru/page/applicants/tuition-fees",
+        "title": "ЕНУ — Стоимость обучения",
+        "supporting_excerpt": "Официальная страница стоимости обучения содержит вложение с таблицей размеров скидок для платников на 2026–2027, однако содержимое вложения в текущем чтении не извлечено."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Точный PDF/таблица недоступны для текстовой проверки."
+  },
+  {
+    "grant_id": 403,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "ЕНУ действительно сообщал о скидках участникам «Келешек» до 70% по меморандуму 27.01.2025, но это публикация 2025 года; применение к набору 2026–2027 и именно B057 не подтверждено.",
+    "proposed_changes": "Оставить needs_review; запросить действующее подтверждение на 2026–2027, категории, срок действия, документы и stacking; не переносить 70% автоматически.",
+    "sources": [
+      {
+        "url": "https://enu.kz/ru/news/3889",
+        "title": "ЕНУ — ЕНУ предоставит скидки на обучение участникам системы «Келешек»",
+        "supporting_excerpt": "Новость сообщает о подписании меморандума 27 января и скидках участникам накопительной системы «Келешек»; публикация не является объявлением набора 2026–2027 по B057."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Срок действия и B057-specific scope на 2026–2027 не указаны."
+  },
+  {
+    "grant_id": 404,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Корпоративная программа финансирования B057 ЕНУ на 2026–2027 не найдена в официальных материалах университета/организатора.",
+    "proposed_changes": "Сохранить not_published; не добавлять внешние предложения без первичного объявления и B057 eligibility.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Причина — подтверждающая публикация не найдена; вывод об отсутствии программы не делается."
+  },
+  {
+    "grant_id": 405,
+    "current_status": "not_published",
+    "proposed_status": "not_published",
+    "issue": "Официальная рассрочка ЕНУ не подтверждена; посеместровая/частичная оплата, если будет опубликована, не равна installment без графика, условий и последствий просрочки.",
+    "proposed_changes": "Сохранить not_published; разделить payment schedule, installment и bank loan после извлечения официальных условий.",
+    "sources": [],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Официальный график рассрочки B057 не найден."
+  },
+  {
+    "grant_id": 406,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Satbayev official entrant guide confirms the general government-grant route and 2026 dates, but the checked page does not establish a B057-specific quota or a separate grant passing score.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://satbayev.university/ru/entrant-guide",
+        "title": "Satbayev University — entrant guide",
+        "supporting_excerpt": "The imported record documents the general grant route and dates; the checked page does not provide a B057 quota or a separate grant threshold. Direct fetch currently fails TLS verification."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 407,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "Satbayev official entrant material does not publish a confirmed internal/corporate grant for B057; the page mentions other programmes but not this opportunity.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://satbayev.university/ru/entrant-guide",
+        "title": "Satbayev University — entrant guide",
+        "supporting_excerpt": "No separate B057 internal/corporate grant regulation was found in the checked admissions material; direct fetch currently fails TLS verification."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 408,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "The KBTU card preserves a published threshold but not a confirmed 2026–2027 B057 quota or full grant conditions; the official URL could not be fetched because of TLS verification.",
+    "proposed_changes": "Сохранить needs_review до получения устойчиво доступного официального источника/документа 2026–2027; не считать 110 проходным баллом или квотой B057.",
+    "sources": [
+      {
+        "url": "https://kbtu.edu.kz/ru/priemnaya-komissiya-bakalavriat",
+        "title": "KBTU — undergraduate admissions",
+        "supporting_excerpt": "The current imported record explicitly keeps the 110 threshold as participation/admission information rather than a guaranteed passing score; direct source fetch currently fails TLS verification."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 409,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "SDU official admission page confirms the national grant route and 13–20 July 2026 application window, but the 4,762 figure is for all B057 nationally, not an SDU quota; SDU-specific passing score is not a guaranteed grant result.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/ru/admission/",
+        "title": "SDU University — admissions",
+        "supporting_excerpt": "SDU states that state grants are awarded through the Ministry competition and lists 13–20 July 2026 for grant applications; the page does not establish an SDU-specific B057 quota."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 410,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "SDU officially announces SPT with internal grant or discount up to four years and a 14 February registration date, but the page does not establish a B057-specific allocation, exact coverage per winner, or retention conditions.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/ru/spt/",
+        "title": "SDU — SPT olympiad",
+        "supporting_excerpt": "The official page says participants can win an internal grant or discount for four years and gives 14 February registration; it does not publish a B057-specific quota."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 411,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "SDU official admission page links to a discounts document, but the exact percentage, categories and B057 applicability are not available in the checked page text.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/ru/admission/",
+        "title": "SDU University — admissions",
+        "supporting_excerpt": "The official page contains a Discounts link for paid admission, but the linked document and exact 2026–2027 percentages were not extracted."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 412,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "SDU Grant Office confirms competitive grants/scholarships funded by the university and sponsors, with conditions and amounts subject to rules and financial capacity; no B057-specific amount or deadline is published.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/en/grant-office/",
+        "title": "SDU — Grant Office",
+        "supporting_excerpt": "The official page says grants are competitive, may be full/partial or dormitory support, and that conditions/amounts can change; it does not guarantee aid or publish a B057-specific amount."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 413,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "SDU financial-aid page confirms general competitive aid routes but does not independently confirm the named Akhmet Baitursynov stipend, amount or 2026–2027 conditions.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/en/financial-aid/",
+        "title": "SDU — Financial aid",
+        "supporting_excerpt": "The official page describes competitive grants and sponsor aid, but the named Baitursynov stipend is not confirmed in the extracted current content."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 414,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "SDU admission page publishes a vacant-grant process, but the visible application form and deadline are explicitly for 2024; no current 2026–2027 vacant-grant notice is confirmed.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/ru/admission/",
+        "title": "SDU University — admissions",
+        "supporting_excerpt": "The official page states paid-student/GPA/F eligibility and shows a deadline of 26.07.2024; that date cannot be reused for 2026–2027."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 415,
+    "current_status": "verified",
+    "proposed_status": "verified",
+    "issue": "SDU official accommodation page confirms 2026–2027 annual/semester fees and explicitly states that installment payment via Kaspi Red is available. This is dormitory financing, not tuition financing.",
+    "proposed_changes": "Сохранить verified; явно ограничить продукт рассрочкой проживания и не выдавать его за рассрочку обучения.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/en/accomodation/",
+        "title": "SDU — Accommodation",
+        "supporting_excerpt": "For 2026–2027 the page lists accommodation fees and states: Installment payment via Kaspi Red is available."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  },
+  {
+    "grant_id": 416,
+    "current_status": "needs_review",
+    "proposed_status": "needs_review",
+    "issue": "SDU official tuition page confirms payment before each semester under the ECTS model, but it does not publish an installment schedule or credit terms; semester payment is not itself installment financing.",
+    "proposed_changes": "Проверить официальный источник 2026-2027 у организатора; нормализовать тип финансирования, покрытие, категории, требования, документы, deadline и application_method. Не переносить прошлогодние условия и не трактовать минимальный ЕНТ как проходной балл.",
+    "sources": [
+      {
+        "url": "https://sdu.edu.kz/en/tuition-fees/",
+        "title": "SDU — Tuition fees",
+        "supporting_excerpt": "The official page says students pay for selected ECTS before the start of each semester; it does not establish an installment product or intra-semester schedule."
+      }
+    ],
+    "checked_at": "2026-09-27",
+    "uncertainty": "Структурная проверка не доказывает наличие или отсутствие программы; содержимое сохраненного URL не проверялось независимо."
+  }
+]

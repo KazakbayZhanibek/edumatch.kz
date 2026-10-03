@@ -1,0 +1,63 @@
+[
+  {
+    "correction_id": "COR-001",
+    "grant_id": 244,
+    "status": "proposal_only",
+    "confidence": "high",
+    "correction_type": "scope_mismatch",
+    "current": {
+      "name": "Стипендии Türkiye Burslari (обучение в Турции)",
+      "type": "international",
+      "provider": "YTB (Турция)",
+      "university_id": 57,
+      "academic_year": "2026-2027",
+      "source_url": "https://turkiyeburslari.gov.tr",
+      "verification_status": "needs_review"
+    },
+    "proposed": {
+      "action": "remove_university_attachment_or_move_to_global_international_catalog",
+      "reason": "Türkiye Scholarships is for study in Turkey; the source does not make SDU a provider or host university.",
+      "do_not_create_per_university_duplicates": true
+    },
+    "evidence": [
+      {
+        "url": "https://turkiyeburslari.gov.tr",
+        "fact": "The programme concerns study in Turkey and university placement in Turkey."
+      },
+      {
+        "url": "https://sdu.edu.kz/grant-office-kz/",
+        "fact": "SDU Grant Office is a separate university-funded mechanism."
+      }
+    ],
+    "notes": "Proposal only; choose global-catalogue representation before applying."
+  },
+  {
+    "correction_id": "COR-002",
+    "grant_id": 387,
+    "status": "proposal_only",
+    "confidence": "high",
+    "correction_type": "national_scope_not_university_specific",
+    "current": {
+      "name": "Гарантирование образовательных кредитов (АО Финансовый центр)",
+      "type": "installment",
+      "provider": "АО «Финансовый центр»",
+      "university_id": 2,
+      "academic_year": "2026-2027",
+      "source_url": "https://fincenter.kz/",
+      "verification_status": "needs_review"
+    },
+    "proposed": {
+      "action": "represent_as_one_national_mechanism_with_applicability_mapping",
+      "reason": "Official EGI page describes the Financial Center state-guaranteed educational credit for Kazakhstan higher/postgraduate education, not only KazNU.",
+      "do_not_create_per_university_duplicates": true,
+      "keep_current_university_link_only_if_catalogue_requires_provenance": true
+    },
+    "evidence": [
+      {
+        "url": "https://egi.edu.kz/ru_ru/students/students-credits/",
+        "fact": "The official EGI page says the credit applies to higher and postgraduate education and is issued by second-tier banks under the Financial Center guarantee."
+      }
+    ],
+    "notes": "No EGI or Esil duplicate is added; exact 2026–2027 bank terms require operator verification."
+  }
+]

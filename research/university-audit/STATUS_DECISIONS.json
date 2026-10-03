@@ -1,0 +1,708 @@
+{
+  "meta": {
+    "database": "backend/edumatch.db",
+    "mode": "readonly",
+    "snapshot": {
+      "data_version": 2,
+      "empty_status_count": 29,
+      "duplicate_count": 15
+    },
+    "rule": "recommendations only; no active/merge/delete/hide applied"
+  },
+  "decisions": [
+    {
+      "university_id": 30,
+      "current_name": "Каспийский государственный технический университет",
+      "current_status": null,
+      "current_city": "Актау",
+      "current_website": "https://kgtu.kz",
+      "identity": "Каспийский государственный университет технологии и инжиниринга имени Ш. Есенова; ID 30 выглядит как историческое/сокращённое имя записи ID 42",
+      "classification": "прежнее название существующего вуза",
+      "recommended_action": "merge_candidate_to_42_after_historical_legal_verification",
+      "evidence": [
+        {
+          "url": "https://kguti.kz/",
+          "fact": "Официальная историческая страница описывает преобразования и переименование в 2008 году в КГУТИ имени Ш. Есенова; текущая запись ID 42 имеет это имя."
+        },
+        {
+          "url": "https://yu.edu.kz/ru/o-nas/",
+          "fact": "Официальный сайт продолжает идентичность Yessenov University в Актау."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Государственный справочник содержит современную организацию вуза, но не подтверждает сам mapping старого ID."
+        }
+      ],
+      "confidence": "medium",
+      "unresolved_questions": [
+        "Подтвердить, что название ID 30 — не отдельное юридическое лицо, а историческое имя ID 42.",
+        "Сохранить историческое название и связи ID 30 при eventual merge."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 45,
+      "current_name": "Caspian University (Abay st corpus)",
+      "current_status": null,
+      "current_city": "Алматы",
+      "current_website": "https://cu.edu.kz",
+      "identity": "Caspian University, корпус на ул. Абая; та же организация, что записи ID 46/50",
+      "classification": "дубль",
+      "recommended_action": "merge_candidate_group_45_46_50_without_choosing_canonical_id",
+      "evidence": [
+        {
+          "url": "https://cu.edu.kz/",
+          "fact": "Официальный сайт использует единый бренд Caspian University и единый домен."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник содержит одну запись Каспийского общественного университета в Алматы, а не отдельный вуз на каждый корпус."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Выбрать юридически каноническую запись между ID 46 и ID 50.",
+        "Подтвердить, что Abay st corpus — корпус/адрес, а не отдельное юридическое лицо; адреса в строках не заполнены."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 57,
+      "current_name": "С.Демирель атындағы университет",
+      "current_status": null,
+      "current_city": "Каскелен",
+      "current_website": "https://sdu.edu.kz",
+      "identity": "Университет имени Сулеймана Демиреля (SDU University), Каскелен",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_after_leader_approval_and_keep_31_to_57_relation",
+      "evidence": [
+        {
+          "url": "https://sdu.edu.kz/",
+          "fact": "Официальный сайт SDU University публикует программы, приём и адрес в Каскелене."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник указывает Университет имени Сулеймана Демиреля в Каскелене."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Выбрать момент перевода пустого статуса в active; это решение не применяется данным аудитом.",
+        "Перед merge 31→57 перенести программы ID 31, гранты и M:N-связи по плану."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 69,
+      "current_name": "Семей қаласының Шәкәрім атындағы  университеті",
+      "current_status": null,
+      "current_city": "Семей",
+      "current_website": "https://shakarim.university",
+      "identity": "Shakarim University, Семей",
+      "classification": "дубль",
+      "recommended_action": "merge_candidate_to_131_preserving_provenance",
+      "evidence": [
+        {
+          "url": "https://shakarim.university/kk",
+          "fact": "Официальный сайт идентифицирует Shakarim University в Семее и публикует бакалавриат, магистратуру и PhD."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник подтверждает университет в Семее."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Проверить, что ID 69 не хранит отдельный исторический набор данных; dependency counts приведены в MERGE_PLAN.md."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 72,
+      "current_name": "Халықаралық Тараз  инновациялық институты",
+      "current_status": null,
+      "current_city": "Тараз",
+      "current_website": "https://htu.edu.kz",
+      "identity": "Международный Таразский инновационный университет имени Шерхана Муртазы, Тараз",
+      "classification": "дубль",
+      "recommended_action": "merge_candidate_to_110_preserving_provenance",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник содержит университет в Таразе; ID 110 имеет то же официальное имя, адрес и сайт."
+        },
+        {
+          "url": "https://htu.edu.kz/",
+          "fact": "Домен HTU совпадает у обеих записей; официальный сайт доступен feed-ом."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Проверить отсутствие отдельного исторического юридического лица до merge."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 76,
+      "current_name": "Қазақстан инновациялық және телекеммуникациялық  жүйелер университеті",
+      "current_status": null,
+      "current_city": "Уральск",
+      "current_website": "https://kazuits.edu.kz",
+      "identity": "Казахстанский университет инновационных и телекоммуникационных систем, Уральск",
+      "classification": "дубль",
+      "recommended_action": "merge_candidate_to_111_preserving_provenance",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник содержит КУИТС в Уральске с тем же адресом."
+        },
+        {
+          "url": "https://kazuits.edu.kz/",
+          "fact": "Официальный домен совпадает с ID 111; сайт отвечает feed-ом."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Проверить юридическое наименование в лицензии перед merge."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 77,
+      "current_name": "Қарағанды  индустриалдық университеті",
+      "current_status": null,
+      "current_city": "Темиртау",
+      "current_website": "https://tttu.edu.kz",
+      "identity": "Карагандинский индустриальный университет, Темиртау",
+      "classification": "дубль",
+      "recommended_action": "merge_candidate_to_133_preserving_provenance",
+      "evidence": [
+        {
+          "url": "https://tttu.edu.kz/",
+          "fact": "Официальный сайт прямо называет Карагандинский индустриальный университет и указывает Темиртау, проспект Республики, 30."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник содержит тот же вуз в Темиртау."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Сохранить две группы specialties/chance stats при dependency migration; target ID 133 уже имеет одну grant-связь."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 78,
+      "current_name": "Қарағанды медициналық университеті",
+      "current_status": null,
+      "current_city": "Караганда",
+      "current_website": "https://kmu.edu.kz",
+      "identity": "Карагандинский медицинский университет, Караганда",
+      "classification": "дубль",
+      "recommended_action": "merge_candidate_to_118_after_domain_verification",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник указывает Медицинский университет Караганды, ул. Гоголя, 40."
+        },
+        {
+          "url": "https://qmu.edu.kz/",
+          "fact": "Официальный target-домен ID 118; текущий kmu.edu.kz не прошёл TLS-проверку, поэтому домен не используется как единственное доказательство."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Подтвердить, что старый домен kmu.edu.kz относится к тому же юридическому лицу."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 103,
+      "current_name": "Оңтүстік Қазақстан медицина академиясы",
+      "current_status": null,
+      "current_city": "Шымкент",
+      "current_website": "https://skma.edu.kz",
+      "identity": "Южно-Казахстанская медицинская академия (ЮКМА/SKMA), Шымкент",
+      "classification": "дубль",
+      "recommended_action": "merge_candidate_to_119_preserving_provenance",
+      "evidence": [
+        {
+          "url": "https://skma.edu.kz/",
+          "fact": "Официальный сайт ЮКМА публикует устав АО, бакалавриат, магистратуру, докторантуру и адрес в Шымкенте."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник содержит Южно-Казахстанскую медицинскую академию в Шымкенте."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Перед merge перенести specialty/chance связи; target ID 119 active и имеет совпадающий сайт."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 112,
+      "current_name": "Товарищество с ограниченной ответственностью «Astana IT University»",
+      "current_status": null,
+      "current_city": "Астана",
+      "current_website": "https://astanait.edu.kz",
+      "identity": "Astana IT University, Астана",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_after_leader_approval",
+      "evidence": [
+        {
+          "url": "https://astanait.edu.kz/en",
+          "fact": "Официальный сайт публикует бакалавриат, магистратуру, PhD, колледж и текущую деятельность Astana IT University."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник содержит Astana IT University по адресу проспект Мангилик Ел, 55/11."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Подтвердить policy: включаются ли все лицензированные специализированные вузы в общий active-каталог; status не меняется этим аудитом."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 124,
+      "current_name": "Республиканское государственное учреждение «Академия управления Министерства внутренних дел Республики Казахстан»",
+      "current_status": null,
+      "current_city": "Астана",
+      "current_website": "https://academy.gov.kz",
+      "identity": "Академия управления МВД РК, Астана; специализированное ведомственное высшее учебное заведение",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/qriim/activities/10766",
+          "fact": "Официальная страница МВД называет Академию управления МВД среди пяти высших учебных заведений МВД, работающих на основании учредительных документов и лицензий."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение ведомственных вузов в общий каталог.",
+        "Профиль МВД указывает домен aumvd.edu.kz, тогда как текущий academy.gov.kz не разрешается исправлять в readonly-аудите."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 125,
+      "current_name": "Товарищество с ограниченной ответственностью «Woosong University Kaxakhstan»",
+      "current_status": null,
+      "current_city": "Туркестан",
+      "current_website": "https://woosong.edu.kz",
+      "identity": "Woosong University Kazakhstan, Туркестан; казахстанская организация с корейской аффилиацией",
+      "classification": "филиал",
+      "recommended_action": "retain_empty_and_verify_license_application_and_legal_form",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/794238?lang=ru",
+          "fact": "Миннауки описывает открытие филиала Университета Woosong в Туркестане."
+        },
+        {
+          "url": "https://www.gov.kz/memleket/entities/ontustik/press/news/details/1058312?lang=kk",
+          "fact": "Акимат сообщает о регистрации ТОО «Вусонг Университеті Қазақстан» и наличии лицензии как у высшего учебного заведения."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Уточнить: филиал иностранного университета или отдельное казахстанское юридическое лицо с иностранным брендом.",
+        "Получить номер лицензии и приложение через eLicense; сайт woosong.edu.kz не разрешился."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 126,
+      "current_name": "Некоммерческое акционерное общество \"Университет Ұлытау\"",
+      "current_status": null,
+      "current_city": "Жезказган",
+      "current_website": "https://ultau.edu.kz",
+      "identity": "Университет Ұлытау / проект Технического университета Ұлытау, Жезказган",
+      "classification": "организация с неустановленным статусом",
+      "recommended_action": "retain_empty_and_reconcile_legal_entity_name_and_license",
+      "evidence": [
+        {
+          "url": "https://adilet.zan.kz/rus/docs/P2300000702",
+          "fact": "Правительственный акт создаёт Технический университет Ұлытау и предусматривает образовательную деятельность; это не равно подтверждённой лицензии конкретного НАО из DB."
+        },
+        {
+          "url": "https://ultau.edu.kz/",
+          "fact": "URL записан в DB, но DNS не разрешился при проверке."
+        }
+      ],
+      "confidence": "low",
+      "unresolved_questions": [
+        "Совпадает ли НАО «Университет Ұлытау» с ранее созданным РГП «Технический университет Ұлытау»?",
+        "Подтвердить действующую лицензию, приложение и фактический запуск программ."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 129,
+      "current_name": "ТОО «Иностранное учебное заведение «University of Innovation and Technology»",
+      "current_status": null,
+      "current_city": "Алматы",
+      "current_website": "https://innotech.edu.kz",
+      "identity": "University of Innovation and Technology (Innotech), Алматы; частный международный проект при поддержке Arizona State University",
+      "classification": "организация с неустановленным статусом",
+      "recommended_action": "retain_empty_until_license_and_legal_status_are_verified",
+      "evidence": [
+        {
+          "url": "https://innotech.edu.kz/",
+          "fact": "Официальный сайт называет Innotech частным международным университетом в Казахстане, powered by ASU, с кампусом в Алматы."
+        },
+        {
+          "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/1082248?utm_source=openai",
+          "fact": "Миннауки сообщает о запуске проекта University of Innovation and Technology powered by ASU, но публикация не подтверждает лицензию."
+        }
+      ],
+      "confidence": "medium",
+      "unresolved_questions": [
+        "Найти номер действующей лицензии и приложение с образовательными программами.",
+        "Не смешивать с Arizona State University: партнёрство не доказывает филиал или отдельную лицензию."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 130,
+      "current_name": "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «New York Film Academy Kazakhstan»",
+      "current_status": null,
+      "current_city": "Каскелен",
+      "current_website": "https://nyfa.edu.kz",
+      "identity": "New York Film Academy Kazakhstan, Каскелен; филиал иностранной киноакадемии",
+      "classification": "филиал",
+      "recommended_action": "retain_empty_and_verify_host_legal_entity_and_licensed_programmes",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/sci/press/news/details/948824?lang=ru",
+          "fact": "Публикация Миннауки об открытии NYFA Kazakhstan описывает филиал в Каскелене; публикация не подтверждает отдельную казахстанскую лицензию."
+        },
+        {
+          "url": "https://nyfa.edu.kz/",
+          "fact": "URL записи не разрешился; рабочий сайт не используется как подтверждение статуса."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Адрес записи и госсправочник подтверждают кампус/город, но не самостоятельный вуз."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Верифицировать юридическое лицо-хост и конкретную лицензию для программ.",
+        "Определить, как отображать филиал в общем каталоге."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 136,
+      "current_name": "Государственное учреждение «Академия гражданской защиты имени Малика Габдуллина» Министерства по чрезвычайным ситуациям Республики Казахстан",
+      "current_status": null,
+      "current_city": "Кокшетау",
+      "current_website": "https://agz.gov.kz",
+      "identity": "Академия гражданской защиты имени Малика Габдуллина МЧС РК, Кокшетау",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/emer/activities/15194",
+          "fact": "МЧС прямо называет академию единственным высшим учебным заведением по подготовке офицеров гражданской защиты и перечисляет четыре программы бакалавриата."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать отдельную категорию ведомственных вузов в каталоге."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 137,
+      "current_name": "Республиканское государственное учреждение «Костанайская академия Министерства внутренних дел Республики Казахстан имени Шракбека Кабылбаева»",
+      "current_status": null,
+      "current_city": "Костанай",
+      "current_website": "https://qpa.edu.kz",
+      "identity": "Костанайская академия МВД имени Ш. Кабылбаева, Костанай",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/qriim/activities/10766",
+          "fact": "Страница МВД называет академию высшим учебным заведением и перечисляет программы высшего/послевузовского образования."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение ведомственных академий без смешивания с гражданскими дублями."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 138,
+      "current_name": "Республиканское государственное учреждение «Национальный университет обороны Республики Казахстан» Министерства обороны Республики Казахстан",
+      "current_status": null,
+      "current_city": "Астана",
+      "current_website": "https://nau.gov.kz",
+      "identity": "Национальный университет обороны РК, Астана",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/mod/press/article/details/593",
+          "fact": "Минобороны публикует Национальный университет обороны и адрес Астана, проспект Туран, 72."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение военных вузов; текущая строка остаётся без статуса."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 139,
+      "current_name": "Государственное учреждение «Академия Комитета национальной безопасности Республики Казахстан»",
+      "current_status": null,
+      "current_city": "Алматы",
+      "current_website": "https://anb.gov.kz",
+      "identity": "Академия КНБ РК, Алматинская область/Алматы",
+      "classification": "организация с неустановленным статусом",
+      "recommended_action": "retain_empty_until_official_education_profile_and_license_are_confirmed",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/knb/press/article/9?directions=_140&lang=ru",
+          "fact": "Доступная страница КНБ подтверждает орган и его полномочия, но не содержит проверяемого профиля Академии КНБ или лицензии."
+        },
+        {
+          "url": "https://anb.gov.kz/",
+          "fact": "Домен записан в DB, но отдельное подтверждение содержания/лицензии не получено."
+        }
+      ],
+      "confidence": "low",
+      "unresolved_questions": [
+        "Подтвердить текущую официальную образовательную организацию, юридический адрес и лицензию."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 140,
+      "current_name": "Республиканское государственное учреждение «Военно-инженерный институт радиоэлектроники и связи» Министерства обороны Республики Казахстан",
+      "current_status": null,
+      "current_city": "Алматы",
+      "current_website": "https://viirs.gov.kz",
+      "identity": "Военно-инженерный институт радиоэлектроники и связи, Алматы",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/mod/press/article/details/593",
+          "fact": "Минобороны прямо перечисляет институт и адрес Алматы, ул. Жандосова, 53."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение военных институтов."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 141,
+      "current_name": "Республиканское государственное учреждение «Карагандинская академия Министерства внутренних дел Республики Казахстан имени Баримбека Бейсенова»",
+      "current_status": null,
+      "current_city": "Караганда",
+      "current_website": "https://kau.gov.kz",
+      "identity": "Карагандинская академия МВД имени Б. Бейсенова, Караганда",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/qriim/activities/10766",
+          "fact": "Официальная страница МВД перечисляет Карагандинскую академию среди высших учебных заведений МВД и описывает её программы."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение ведомственных академий."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 142,
+      "current_name": "Республиканское государственное учреждение «Военный институт Сухопутных войск имени Сагадата Нурмагамбетова» Министерства обороны Республики Казахстан",
+      "current_status": null,
+      "current_city": "Алматы",
+      "current_website": "",
+      "identity": "Военный институт Сухопутных войск имени С. Нурмагамбетова, Алматы",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/mod/press/article/details/593",
+          "fact": "Минобороны прямо перечисляет институт и адрес Алматы, ул. Красногорская, 4."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение военных вузов."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 143,
+      "current_name": "Республиканское государственное учреждение «Военный институт Сил воздушной обороны имени дважды Героя Советского Союза Т.Я.Бегельдинова» Министерства обороны Республики Казахстан",
+      "current_status": null,
+      "current_city": "Актобе",
+      "current_website": "https://visvo.edu.kz",
+      "identity": "Военный институт Сил воздушной обороны имени Т. Бегельдинова, Актобе",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/mod/press/article/details/593",
+          "fact": "Минобороны прямо перечисляет институт и адрес Актобе, проспект Алии Молдагуловой, 39."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение военных вузов."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 144,
+      "current_name": "Республиканское государственное учреждение «Алматинская академия Министерства внутренних дел Республики Казахстан имени Макана Есбулатова»",
+      "current_status": null,
+      "current_city": "Алматы",
+      "current_website": "https://aau.gov.kz",
+      "identity": "Алматинская академия МВД имени М. Есбулатова, Алматы",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/qriim/activities/10766",
+          "fact": "Страница МВД перечисляет Алматинскую академию и программы бакалавриата, магистратуры и PhD."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение ведомственных академий."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 145,
+      "current_name": "Республиканское государственное учреждение «Пограничная академия Комитета национальной безопасности Республики Казахстан»",
+      "current_status": null,
+      "current_city": "Алматы",
+      "current_website": "https://pau.gov.kz",
+      "identity": "Пограничная академия КНБ РК, Алматы",
+      "classification": "организация с неустановленным статусом",
+      "recommended_action": "retain_empty_until_official_education_profile_and_license_are_confirmed",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/knb/press/article/9?directions=_140&lang=ru",
+          "fact": "Доступная страница КНБ не содержит проверяемого профиля Пограничной академии или лицензии."
+        },
+        {
+          "url": "https://pau.gov.kz/",
+          "fact": "Домен записан в DB, но содержимое/лицензия не подтверждены доступным источником."
+        }
+      ],
+      "confidence": "low",
+      "unresolved_questions": [
+        "Подтвердить, что PAU является действующей организацией высшего образования, и получить лицензию."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 146,
+      "current_name": "Государственное учреждение «Академия правоохранительных органов при Генеральной прокуратуре Республики Казахстан»",
+      "current_status": null,
+      "current_city": "Косшы",
+      "current_website": "https://apo.gov.kz",
+      "identity": "Академия правоохранительных органов при Генеральной прокуратуре РК, Косшы",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/prokuror/documents/details/22307",
+          "fact": "Официальный нормативный материал прямо называет Академию при Генеральной прокуратуре и регулирует обучение в ней."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение специализированных академий."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 147,
+      "current_name": "Республиканское государственное учреждение «Академия Национальной гвардии Республики Казахстан»",
+      "current_status": null,
+      "current_city": "Петропавловск",
+      "current_website": "https://ang.gov.kz",
+      "identity": "Академия Национальной гвардии РК, Петропавловск; название расходится с официальным «Военный институт Национальной гвардии МВД»",
+      "classification": "организация с неустановленным статусом",
+      "recommended_action": "retain_empty_and_reconcile_current_name_with_official_mvd_name",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/qriim/activities/10766",
+          "fact": "МВД подтверждает военный институт Национальной гвардии в Петропавловске, но использует иное название, чем запись ID 147."
+        }
+      ],
+      "confidence": "medium",
+      "unresolved_questions": [
+        "Установить, является ли ID 147 прежним названием того же института или отдельной организацией.",
+        "Получить текущий юридический документ и лицензию."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 148,
+      "current_name": "Республиканское государственное учреждение «Академия правосудия при Высшем Судебном Совете Республики Казахстан»",
+      "current_status": null,
+      "current_city": "Астана",
+      "current_website": "https://ap.gov.kz",
+      "identity": "Академия правосудия при Высшем Судебном Совете РК, Астана",
+      "classification": "самостоятельный вуз",
+      "recommended_action": "recommend_active_if_specialized_vuz_is_in_catalog_scope",
+      "evidence": [
+        {
+          "url": "https://www.gov.kz/memleket/entities/vss/press/news/8?lang=ru",
+          "fact": "Высший Судебный Совет называет Академию единственным в Казахстане высшим учебным заведением с особым статусом и описывает магистратуру/докторантуру."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Согласовать включение специализированного вуза с особым статусом."
+      ],
+      "checked_at": "2026-09-27"
+    },
+    {
+      "university_id": 155,
+      "current_name": "Товарищество с ограниченной ответственностью «Международная образовательная корпорация»",
+      "current_status": null,
+      "current_city": "Алматы",
+      "current_website": "https://iec.edu.kz",
+      "identity": "Международная образовательная корпорация (МОК), Алматы; головная образовательная корпорация, а не отдельный вуз",
+      "classification": "организация с неустановленным статусом",
+      "recommended_action": "keep_as_parent_organization_outside_university_active_status",
+      "evidence": [
+        {
+          "url": "https://iec.edu.kz/",
+          "fact": "Официальный сайт прямо описывает МОК как комплекс, включающий KazGASA, KAU, колледжи и школы; это parent-организация."
+        },
+        {
+          "url": "https://www.gov.kz/article/657",
+          "fact": "Госсправочник отдельно перечисляет Международную образовательную корпорацию и входящие в неё образовательные организации."
+        }
+      ],
+      "confidence": "high",
+      "unresolved_questions": [
+        "Определить, нужна ли в каталоге отдельная сущность parent-организации; не объединять ID 155 с KazGASA или KAU без parent-child модели."
+      ],
+      "checked_at": "2026-09-27"
+    }
+  ]
+}

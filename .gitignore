@@ -49,3 +49,10 @@ _archive/
 # Local audit output and agent context
 /artifacts/
 /.impeccable/
+
+# Local audit helpers and downloaded reference bundle
+/awesome-rules-main/
+/_check_grants.js
+/backend/_check_grant_quality.js
+/backend/_query.js
+/backend/check-admission2.js

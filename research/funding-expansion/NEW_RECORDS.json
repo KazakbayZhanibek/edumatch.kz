@@ -1,0 +1,705 @@
+[
+  {
+    "programme_groups": [
+      "B002"
+    ],
+    "programme_codes": [],
+    "documents": [
+      "Сертификат ЕНТ",
+      "Иные документы приёма — перечень на странице не раскрыт"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Гранты МИО для ЕАГИ на 2026 год",
+    "type": "regional",
+    "provider": "Акимат города Астаны",
+    "universities": [
+      "Евразийский университет"
+    ],
+    "coverage": {
+      "type": "unknown",
+      "amount": "20 грантов на базе общего среднего образования и 10 грантов на базе ТиПО; бесплатное высшее образование и ежемесячная стипендия; сумма не указана"
+    },
+    "requirements": [
+      "Сертификат ЕНТ за период 10.05–10.07.2026",
+      "Для общего среднего образования: не менее 75 баллов; история Казахстана и два профильных предмета — не менее 5; грамотность чтения и математическая грамотность — не менее 3",
+      "Для ТиПО: не менее 35 баллов и не менее 5 по каждой дисциплине",
+      "Последующее гарантированное трудоустройство в городе Астана заявлено источником"
+    ],
+    "application_method": "Подача документов через приёмную комиссию ЕАГИ; точный канал подачи в источнике не указан",
+    "academic_year": "2026-2027",
+    "source_url": "https://egi.edu.kz/ru_ru/students/students-grands/",
+    "source_title": "ЕАГИ — гранты и скидки",
+    "notes": "Региональный государственный образовательный заказ; не объединять с республиканским конкурсом госгрантов.",
+    "proposal_id": "NE-001",
+    "target_university_ids": [
+      33
+    ],
+    "target_university_names": [
+      "Евразийский университет"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Материалы личного дела",
+      "Сертификат ЕНТ; полный пакет документов источником не перечислен"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Ректорские гранты ЕАГИ — 6 мест",
+    "type": "university",
+    "provider": "Евразийский гуманитарный институт имени А.К. Кусаинова",
+    "universities": [
+      "Евразийский университет"
+    ],
+    "coverage": {
+      "type": "partial",
+      "amount": "6 грантов: 1 × 100%, 2 × 50%, 3 × 25% скидки на обучение"
+    },
+    "requirements": [
+      "Абитуриент подал документы в ЕАГИ на платное обучение",
+      "Сертификат ЕНТ с проходным баллом для выбранной образовательной программы",
+      "Конкурс в два тура: онлайн-тестирование и Zoom-тестирование/собеседование",
+      "Победители определяются по итогам двух туров"
+    ],
+    "application_method": "Регистрация по QR-коду на странице, затем вступление в WhatsApp-чат; ссылки на регистрацию/этапы размещаются в чате",
+    "academic_year": "2026-2027",
+    "source_url": "https://egi.edu.kz/ru_ru/students/students-grands/",
+    "source_title": "ЕАГИ — ректорский грант 2026",
+    "notes": "Публикация указывает даты туров 21 и 24 августа 2026, но не указывает дедлайн первичной регистрации; deadline оставлен null.",
+    "proposal_id": "NE-002",
+    "target_university_ids": [
+      33
+    ],
+    "target_university_names": [
+      "Евразийский университет"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Подтверждающие документы по социальной категории; полный перечень на странице не раскрыт"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Социальные скидки ЕАГИ",
+    "type": "discount",
+    "provider": "Евразийский гуманитарный институт имени А.К. Кусаинова",
+    "universities": [
+      "Евразийский университет"
+    ],
+    "coverage": {
+      "type": "partial",
+      "amount": "20% сиротам; 10% инвалидам I–II групп и инвалидам с детства; 10% одному из двух и более студентов одной семьи; 5% выпускникам Высшего колледжа ЕАГИ; гибкая оплата частями"
+    },
+    "requirements": [
+      "Категории и размер скидки должны подтверждаться приёмной комиссией",
+      "Для ректорского гранта действует отдельный конкурс"
+    ],
+    "application_method": "Обращение в приёмную комиссию ЕАГИ",
+    "academic_year": "2026-2027",
+    "source_url": "https://egi.edu.kz/ru_ru/students/students-grands/",
+    "source_title": "ЕАГИ — скидки и льготы",
+    "notes": "Не смешивать скидки с ректорским грантом и грантом МИО.",
+    "proposal_id": "NE-003",
+    "target_university_ids": [
+      33
+    ],
+    "target_university_names": [
+      "Евразийский университет"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Сертификат ЕНТ для поступающих",
+      "Документы для внутренней заявки действующего студента не раскрыты"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Внутренние гранты КАУ",
+    "type": "university",
+    "provider": "Казахстанско-Американский свободный университет",
+    "universities": [
+      "Қазақстан-Америка еркін университеті"
+    ],
+    "coverage": {
+      "type": "partial",
+      "amount": "Скидка или полноценный грант за счёт университета на 1, 2 или 4 года; размер и число мест не указаны"
+    },
+    "requirements": [
+      "Для поступающих: ЕНТ от 50 баллов; для направления «Юриспруденция» — от 75",
+      "Не менее 5 баллов по каждому профильному предмету и не менее 3 по грамотности чтения и математической грамотности",
+      "После результатов государственного гранта доступен второй шанс на внутренний грант",
+      "Для действующих студентов — ежегодно после завершения учебного года по академической успеваемости и вовлечённости"
+    ],
+    "application_method": "Поступающие — регистрация/консультация через KAU; действующие студенты — внутренняя заявка, точный канал не раскрыт",
+    "academic_year": "2026-2027",
+    "source_url": "https://kau.kz/olimpic",
+    "source_title": "КАУ — внутренние гранты",
+    "notes": "Страница содержит также олимпиадную регистрацию с датой до 15.07; это не следует трактовать как единый дедлайн всех внутренних грантов.",
+    "proposal_id": "NE-004",
+    "target_university_ids": [
+      67
+    ],
+    "target_university_names": [
+      "Қазақстан-Америка еркін университеті"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Эссе 1000–1200 слов",
+      "Сертификат ЕНТ",
+      "IELTS и КАЗТЕСТ",
+      "Для исключения: подтверждение «Алтын белгі» и дипломы олимпиад"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": "2026-07-24",
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Caspian Dream Team — университетский грант",
+    "type": "university",
+    "provider": "Caspian University",
+    "universities": [
+      "Caspian University (Abay st corpus)",
+      "Caspian University (Seyfulin st corpus)",
+      "Каспий қоғамдық университеті"
+    ],
+    "coverage": {
+      "type": "unknown",
+      "amount": "Университетский грант на обучение по программе «Юриспруденция будущего (Multilingual model)»; размер покрытия и число победителей не указаны"
+    },
+    "requirements": [
+      "Выпускник колледжа или школы",
+      "ЕНТ не менее 100 баллов",
+      "IELTS 5.5 и КАЗТЕСТ A2",
+      "Исключение для обладателей «Алтын белгі» с 95–100 баллами при наличии олимпиадных и языковых подтверждений",
+      "Три этапа: эссе, тестирование, собеседование"
+    ],
+    "application_method": "Эссе и документы направляются на caspiandream@mail.ru; регистрация на тестирование через форму",
+    "academic_year": "2026-2027",
+    "source_url": "https://cu.edu.kz/granty-i-skidki/",
+    "source_title": "Caspian University — Caspian Dream Team",
+    "notes": "Связь сохранена одновременно с тремя текущими карточками одного бренда; canonical university ID не выбирался.",
+    "proposal_id": "NE-005",
+    "target_university_ids": [
+      45,
+      46,
+      50
+    ],
+    "target_university_names": [
+      "Caspian University (Abay st corpus)",
+      "Caspian University (Seyfulin st corpus)",
+      "Каспий қоғамдық университеті"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Сертификат ЕНТ или результаты творческих экзаменов"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Caspian University — скидки по баллам ЕНТ",
+    "type": "discount",
+    "provider": "Caspian University",
+    "universities": [
+      "Caspian University (Abay st corpus)",
+      "Caspian University (Seyfulin st corpus)",
+      "Каспий қоғамдық университеті"
+    ],
+    "coverage": {
+      "type": "partial",
+      "amount": "79–98 баллов: 25%; 99–128: 50%; 129–140: 100% на весь период обучения. Для Архитектуры/Дизайна: 21–24: 25%; 25–29: 50%; 30: 100%"
+    },
+    "requirements": [
+      "Для основных направлений — ЕНТ от 79 баллов по опубликованной шкале",
+      "Учитываются результаты ЕНТ всех дат 2026 года",
+      "Для Архитектуры/Дизайна применяется отдельная шкала творческих экзаменов"
+    ],
+    "application_method": "Через приёмную комиссию Caspian University; отдельная форма в источнике не указана",
+    "academic_year": "2026-2027",
+    "source_url": "https://cu.edu.kz/granty-i-skidki/",
+    "source_title": "Caspian University — гранты и скидки",
+    "notes": "Трёхуровневая скидка не является государственным грантом.",
+    "proposal_id": "NE-006",
+    "target_university_ids": [
+      45,
+      46,
+      50
+    ],
+    "target_university_names": [
+      "Caspian University (Abay st corpus)",
+      "Caspian University (Seyfulin st corpus)",
+      "Каспий қоғамдық университеті"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Заявление ректору",
+      "Копия удостоверения личности",
+      "Сведения о составе семьи",
+      "Сведения о доходах/пенсионных выплатах",
+      "Документы об инвалидности, если применимо",
+      "Иные подтверждения необходимости поддержки"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Caspian University — социальная скидка",
+    "type": "discount",
+    "provider": "Caspian University",
+    "universities": [
+      "Caspian University (Abay st corpus)",
+      "Caspian University (Seyfulin st corpus)",
+      "Каспий қоғамдық университеті"
+    ],
+    "coverage": {
+      "type": "partial",
+      "amount": "От 5% до 50% на один год; повторная подача требуется ежегодно"
+    },
+    "requirements": [
+      "Дети-инвалиды, дети-сироты, малоимущие и многодетные семьи, лица, нуждающиеся в финансовой помощи",
+      "Решение комиссии по академическим и социальным грантам/скидкам"
+    ],
+    "application_method": "Подача в приёмную комиссию с 1 июня по 20 августа; повторная подача до 15 сентября",
+    "academic_year": "2026-2027",
+    "source_url": "https://cu.edu.kz/granty-i-skidki/",
+    "source_title": "Caspian University — социальные скидки",
+    "notes": "Страница ссылается на положение о финансовой поддержке 2025–2026; условия 2026–2027 требуют повторной сверки.",
+    "proposal_id": "NE-007",
+    "target_university_ids": [
+      45,
+      46,
+      50
+    ],
+    "target_university_names": [
+      "Caspian University (Abay st corpus)",
+      "Caspian University (Seyfulin st corpus)",
+      "Каспий қоғамдық университеті"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Документы по форме Grant Office; ссылка на перечень документов размещена на странице"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "SDU Grant Office — гранты и стипендии фонда и спонсоров",
+    "type": "university",
+    "provider": "SDU University Foundation and sponsors",
+    "universities": [
+      "С.Демирель атындағы университет"
+    ],
+    "coverage": {
+      "type": "unknown",
+      "amount": "Размер финансовой поддержки определяется правилами университета и финансовыми возможностями; гарантия всем заявителям отсутствует"
+    },
+    "requirements": [
+      "Конкурсная основа",
+      "Учитываются академические достижения и социальная активность",
+      "Поддержка предназначена для абитуриентов бакалавриата и действующих студентов; точные программы и суммы не указаны"
+    ],
+    "application_method": "Онлайн-форма Grant Office; при необходимости оригиналы документов передаются в Grant Office",
+    "academic_year": "2026-2027",
+    "source_url": "https://sdu.edu.kz/grant-office-kz/",
+    "source_title": "SDU University — Grant Office",
+    "notes": "Отдельно от текущей карточки SDU олимпиады (grant 245) и международной Türkiye Scholarships (grant 244). Сроки на странице: 15.08–15.09 и 15.12–15.01.",
+    "proposal_id": "NE-008",
+    "target_university_ids": [
+      57
+    ],
+    "target_university_names": [
+      "С.Демирель атындағы университет"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Документы и подтверждения достижений; полный список не указан"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "SDU — поддержка талантливых студентов",
+    "type": "university",
+    "provider": "SDU University",
+    "universities": [
+      "С.Демирель атындағы университет"
+    ],
+    "coverage": {
+      "type": "partial",
+      "amount": "Полные или частичные гранты либо место в общежитии; размер и число мест не указаны"
+    },
+    "requirements": [
+      "Выдающиеся академические и социальные достижения",
+      "Для сохранения гранта требуется минимальный средний балл каждый семестр; конкретное значение не опубликовано"
+    ],
+    "application_method": "Через SDU Grant Office; порядок подачи опубликован на странице Grant Office",
+    "academic_year": "2026-2027",
+    "source_url": "https://sdu.edu.kz/karzhylyk-komek/",
+    "source_title": "SDU University — финансовая помощь",
+    "notes": "Финансирование общежития указано как возможная форма поддержки и не преобразовано в отдельную dorm-карточку без условий мест/стоимости.",
+    "proposal_id": "NE-009",
+    "target_university_ids": [
+      57
+    ],
+    "target_university_names": [
+      "С.Демирель атындағы университет"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Документы по категории кандидата и подтверждение достижений; полный перечень приведён в приложении к положению"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Шәкәрім атындағы білім беру гранты",
+    "type": "university",
+    "provider": "Shakarim University",
+    "universities": [
+      "Семей қаласының Шәкәрім атындағы  университеті",
+      "Некоммерческое акционерное общество «Шәкәрім университет»"
+    ],
+    "coverage": {
+      "type": "full",
+      "amount": "100% оплаты обучения; может предоставляться на один учебный год или весь период обучения"
+    },
+    "requirements": [
+      "Кандидаты: сироты, лица без попечения родителей, лица с инвалидностью I–III групп/с детства",
+      "Обладатели «Алтын белгі», не получившие государственный грант",
+      "Иностранные граждане, успешно прошедшие вступительные испытания",
+      "Для действующих студентов: достижения, активность, GPA не ниже 3,5 и иные категории положения",
+      "Количество грантов ежегодно утверждается Учёным советом"
+    ],
+    "application_method": "Подача документов через деканат/университетскую комиссию; точная форма и даты зависят от заседаний комиссии",
+    "academic_year": "2026-2027",
+    "source_url": "https://shakarim.university/storage/pdfs/01KC9TCQ45CXQW74DQ6ZS5TQJV.pdf",
+    "source_title": "Shakarim University — положение о гранте и скидках",
+    "notes": "Связи сохранены для исторической карточки ID69 и текущей ID131; не объединять с государственным грантом.",
+    "proposal_id": "NE-010",
+    "target_university_ids": [
+      69,
+      131
+    ],
+    "target_university_names": [
+      "Семей қаласының Шәкәрім атындағы  университеті",
+      "Некоммерческое акционерное общество «Шәкәрім университет»"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Заявление",
+      "Подтверждение статуса/достижений",
+      "Документы из приложения к положению"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Шәкәрім университеті — внутренние скидки на обучение",
+    "type": "discount",
+    "provider": "Shakarim University",
+    "universities": [
+      "Семей қаласының Шәкәрім атындағы  университеті",
+      "Некоммерческое акционерное общество «Шәкәрім университет»"
+    ],
+    "coverage": {
+      "type": "partial",
+      "amount": "Скидки 20–50% на один учебный год по категориям положения"
+    },
+    "requirements": [
+      "Поступающие: призёры спортивных и творческих конкурсов, места 2–3 университетских олимпиад, дети сотрудников, выпускники колледжа",
+      "Действующие студенты: GPA от 3,5, достижения в науке/общественной работе, спорт/творчество, студенческие и проектные активности",
+      "Одновременно применяется только один вид скидки; возможна отмена при нарушениях/неуспеваемости"
+    ],
+    "application_method": "Заявление в университетскую комиссию; срок определяется заседанием комиссии и учебным годом",
+    "academic_year": "2026-2027",
+    "source_url": "https://shakarim.university/storage/pdfs/01KC9TCQ45CXQW74DQ6ZS5TQJV.pdf",
+    "source_title": "Shakarim University — положение о скидках",
+    "notes": "Размеры и категории взяты из официального положения от 03.10.2025; даты 2026–2027 требуют подтверждения.",
+    "proposal_id": "NE-011",
+    "target_university_ids": [
+      69,
+      131
+    ],
+    "target_university_names": [
+      "Семей қаласының Шәкәрім атындағы  университеті",
+      "Некоммерческое акционерное общество «Шәкәрім университет»"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Табель/школьный сертификат или transcript колледжа",
+      "IELTS/TOEFL",
+      "Сертификат UNT",
+      "Эссе/результат письменной оценки"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": "2026-02-22",
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "Coventry University Kazakhstan — scholarships 2026–2027",
+    "type": "university",
+    "provider": "Coventry University Kazakhstan",
+    "universities": [
+      "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «Coventry Kazakhstan»"
+    ],
+    "coverage": {
+      "type": "unknown",
+      "amount": "Scholarship; сумма/процент не опубликованы в объявлении"
+    },
+    "requirements": [
+      "Только граждане РК, выпускники школы или колледжа 2026 года",
+      "GPA от 4/5 для школьников или transcript для выпускников колледжа",
+      "IELTS 6.0 без секции ниже 5.0 либо TOEFL iBT от 79",
+      "UNT после отбора: минимум 50; отдельные минимумы по грамотности, истории и профильным предметам",
+      "Оценка GPA/IELTS/эссе и дополнительные критерии олимпиад"
+    ],
+    "application_method": "Онлайн-заявка через Coventry University Kazakhstan; уведомление по email",
+    "academic_year": "2026-2027",
+    "source_url": "https://coventry.edu.kz/scholarships",
+    "source_title": "Coventry University Kazakhstan — scholarship applications",
+    "notes": "В объявлении также есть Early Bird discount до 20%; это отдельный механизм и не объединён со scholarship.",
+    "proposal_id": "NE-012",
+    "target_university_ids": [
+      123
+    ],
+    "target_university_names": [
+      "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «Coventry Kazakhstan»"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Offer letter Coventry University Kazakhstan",
+      "Подтверждение гражданства, UNT и GPA; точный пакет в публикации не перечислен"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": "2026-08-31",
+    "checked_at": "2026-09-27",
+    "verification_status": "verified",
+    "name": "KAZENERGY Educational Grant — Coventry University Kazakhstan",
+    "type": "corporate",
+    "provider": "KAZENERGY Association; North Caspian and Karachaganak projects; NCOC/KPO",
+    "universities": [
+      "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «Coventry Kazakhstan»"
+    ],
+    "coverage": {
+      "type": "tuition_only",
+      "amount": "Финансирование стоимости обучения; сумма не указана"
+    },
+    "requirements": [
+      "Гражданство РК",
+      "UNT 80+",
+      "GPA 3.0+",
+      "Offer letter Coventry University Kazakhstan до 26.08.2026",
+      "Программы: Astana — Computer Science, Computer Science with AI, IT Management; Almaty — Computer Science, Computer Science with AI, Architectural Technology, Construction Project Management"
+    ],
+    "application_method": "Онлайн-заявка через grant.kazenergy.com; вопросы по offer letter — admissions Coventry",
+    "academic_year": "2026-2027",
+    "source_url": "https://coventry.edu.kz/news/348",
+    "source_title": "Coventry University Kazakhstan — KAZENERGY grants",
+    "notes": "Корпоративный механизм, не национальный государственный грант.",
+    "proposal_id": "NE-013",
+    "target_university_ids": [
+      123
+    ],
+    "target_university_names": [
+      "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «Coventry Kazakhstan»"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "InnoTech — approved 20% tuition scholarship/discount",
+    "type": "discount",
+    "provider": "InnoTech University",
+    "universities": [
+      "ТОО «Иностранное учебное заведение «University of Innovation and Technology»"
+    ],
+    "coverage": {
+      "type": "partial",
+      "amount": "20% approved discount; порядок и eligibility не опубликованы на странице оплаты"
+    },
+    "requirements": [
+      "Наличие approved discount",
+      "Программа и enrollment period выбираются в форме оплаты; остальные условия неизвестны"
+    ],
+    "application_method": "Через admissions/tuition-payment InnoTech; approval process не раскрыт",
+    "academic_year": "2026-2027",
+    "source_url": "https://innotech.edu.kz/tuition-payment/",
+    "source_title": "InnoTech — Tuition Payment",
+    "notes": "Не трактовать 20% как гарантированную скидку для всех абитуриентов.",
+    "proposal_id": "NE-014",
+    "target_university_ids": [
+      129
+    ],
+    "target_university_names": [
+      "ТОО «Иностранное учебное заведение «University of Innovation and Technology»"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "InnoTech — tuition payment in four installments",
+    "type": "installment",
+    "provider": "InnoTech University",
+    "universities": [
+      "ТОО «Иностранное учебное заведение «University of Innovation and Technology»"
+    ],
+    "coverage": {
+      "type": "unknown",
+      "amount": "Оплата остатка после $1,000 enrollment deposit; предусмотрены 4 tranches, график и комиссии не опубликованы"
+    },
+    "requirements": [
+      "Enrollment deposit $1,000 для фиксации места",
+      "Остаток можно оплатить полностью или installments; условия eligibility не раскрыты"
+    ],
+    "application_method": "Онлайн через страницу tuition-payment; TipTop Pay",
+    "academic_year": "2026-2027",
+    "source_url": "https://innotech.edu.kz/tuition-payment/",
+    "source_title": "InnoTech — Tuition Payment",
+    "notes": "Кредитом не является; банковское финансирование не заявлено.",
+    "proposal_id": "NE-015",
+    "target_university_ids": [
+      129
+    ],
+    "target_university_names": [
+      "ТОО «Иностранное учебное заведение «University of Innovation and Technology»"
+    ]
+  },
+  {
+    "programme_groups": [],
+    "programme_codes": [],
+    "documents": [
+      "Точный перечень в PDF 100-grant не извлечён"
+    ],
+    "eligibility_categories": [],
+    "study_levels": [
+      "bachelor"
+    ],
+    "deadline": null,
+    "checked_at": "2026-09-27",
+    "verification_status": "needs_review",
+    "name": "ХТУ — 100 университетских грантов",
+    "type": "university",
+    "provider": "Международный Таразский инновационный университет имени Шерхана Муртазы",
+    "universities": [
+      "Халықаралық Тараз  инновациялық институты",
+      "Учреждение «Международный Таразский инновационный университет имени Шерхана Муртазы»"
+    ],
+    "coverage": {
+      "type": "unknown",
+      "amount": "100 университетских грантов; размер покрытия и распределение не извлечены из PDF"
+    },
+    "requirements": [
+      "Проект для студентов первого курса, обучающихся на платной основе",
+      "Мотивация образовательной, научной и практической активности"
+    ],
+    "application_method": "Порядок подачи и сроки указаны в официальном PDF, который требует ручного чтения/OCR",
+    "academic_year": "2026-2027",
+    "source_url": "https://htu.edu.kz/component/content/article/37-call-center/652-khtu-dy-100-granty",
+    "source_title": "ХТУ — 100 грантов",
+    "notes": "HTML-анонс подтверждает название и число грантов; PDF с условиями на 3 страницах имеет неполное текстовое извлечение, поэтому needs_review.",
+    "proposal_id": "NE-016",
+    "target_university_ids": [
+      72,
+      110
+    ],
+    "target_university_names": [
+      "Халықаралық Тараз  инновациялық институты",
+      "Учреждение «Международный Таразский инновационный университет имени Шерхана Муртазы»"
+    ]
+  }
+]

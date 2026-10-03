@@ -1,0 +1,2395 @@
+[
+  {
+    "university_id": 1,
+    "current_name": "Назарбаев Университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://nu.edu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 2,
+    "current_name": "Казахский национальный университет имени аль-Фараби",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "http://www.kaznu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 3,
+    "current_name": "Евразийский национальный университет имени Л.Н. Гумилева",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://enu.kz/ru",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 4,
+    "current_name": "Казахский агротехнический университет имени С. Сейфуллина",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://www.kazatu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 5,
+    "current_name": "Карагандинский государственный технический университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "http://www.kstu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 6,
+    "current_name": "Академия наук Карагандинской области имени М.О. Ауэзова",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "auezovinstitute.kz ведёт к Институту литературы и искусства им. М.О. Ауэзова, а запись названа академией в Караганде; identity и city не соответствуют.",
+    "evidence_urls": [
+      "https://auezovinstitute.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Определить судьбу записи в университетском каталоге."
+    ]
+  },
+  {
+    "university_id": 7,
+    "current_name": "Карагандинский государственный университет имени Е. Букетова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://buketov.edu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 8,
+    "current_name": "Казахский национальный аграрный университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://www.kaznaru.edu.kz/ru",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 9,
+    "current_name": "Павлодарский государственный педагогический университет",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: website corrected pu.edu.kz -> ppu.edu.kz/. pu.edu.kz — legacy/неразрешимый домен; официальная запись относится к Павлодарскому педагогическому университету, ссылка требует обновления.",
+    "evidence_urls": [
+      "https://ppu.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 10,
+    "current_name": "Павлодарский государственный университет имени С. Торайгырова",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 135,
+    "reason": "Павлодарский государственный университет имени С. Торайгырова и Toraighyrov University — историческое и текущее название одной организации на tou.edu.kz.",
+    "evidence_urls": [
+      "https://tou.edu.kz/en/news/9537-psu-is-officially-renamed-into-toraighyrov-university",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 11,
+    "current_name": "Восточно-Казахстанский государственный технический университет имени Д.Д. Серикова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://www.ektu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 12,
+    "current_name": "Семей государственный медицинский университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://smu.edu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 13,
+    "current_name": "Южно-Казахстанский государственный университет имени М. Ауэзова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://auezov.edu.kz/rus",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 14,
+    "current_name": "Кызылординский университет имени Коркыта Ата",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://korkyt.edu.kz/ru",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 15,
+    "current_name": "Мангистауский государственный университет имени Б. Момышулы",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "Название «Мангистауский государственный университет им. Б. Момышулы» и домен mangystau.edu.kz не подтверждены как отдельный вуз; домен относится к ресурсам управления образования.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/mangystau-edu",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Установить историческое/юридическое происхождение записи."
+    ]
+  },
+  {
+    "university_id": 16,
+    "current_name": "Атырауский государственный университет имени Х. Досмухамедова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://www.atyrau.edu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 17,
+    "current_name": "Западно-Казахстанский аграрно-технический университет имени Жангира Хана",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 73,
+    "reason": "wkau.kz и wkau.edu.kz относятся к одной Западно-Казахстанской аграрно-технической организации в Уральске.",
+    "evidence_urls": [
+      "https://wkau.edu.kz/ru/",
+      "https://new.wkau.kz/ru/kontakty/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 18,
+    "current_name": "Северо-Казахстанский государственный университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "http://nku.edu.kz/maps?lang=ru",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 19,
+    "current_name": "Казахский национальный педагогический университет имени Абая",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kaznpu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 20,
+    "current_name": "Казахский технологический университет",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 23,
+    "reason": "atu.kz официально принадлежит Алматинскому технологическому университету; отдельное имя «Казахский технологический университет» не подтверждается как самостоятельный вуз.",
+    "evidence_urls": [
+      "https://atu.edu.kz/university/",
+      "https://atu.edu.kz/university/passport/istoriya-universiteta/",
+      "https://enic-kazakhstan.edu.kz/page/Organizations_of_higher_and_%28or%29_postgraduate_education"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 21,
+    "current_name": "Казахский государственный женский педагогический университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "http://kazmkpu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 22,
+    "current_name": "Туран Университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://turan.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 23,
+    "current_name": "Алматинский технологический университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://atu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 24,
+    "current_name": "Казахский государственный лесотехнический институт",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "klsti.edu.kz не разрешился, а отдельный действующий лесотехнический вуз с этим именем не подтверждён в проверенном госсправочнике.",
+    "evidence_urls": [
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": [
+      "Найти лицензию/юридическое лицо или пометить запись устаревшей."
+    ]
+  },
+  {
+    "university_id": 25,
+    "current_name": "Международный университет информационных технологий",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://iitu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 26,
+    "current_name": "Казахстанский филиал Московского государственного университета имени М.В. Ломоносова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://msu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 27,
+    "current_name": "Университет туризма и международных отношений",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "umto.edu.kz не подтверждён; официальный профильный вуз туризма — IUTH в Туркестане, а запись указывает Алматы.",
+    "evidence_urls": [
+      "https://iuth.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Установить identity ID 27 до любых изменений."
+    ]
+  },
+  {
+    "university_id": 28,
+    "current_name": "Казахский государственный архитектурно-строительный университет",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: website corrected www.kgasu.ru -> kazgasa.kz/. kgasu.ru — официальный домен российского Казанского архитектурно-строительного университета, не казахстанского KazGASA; ссылка не соответствует записи.",
+    "evidence_urls": [
+      "https://kazgasa.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Проверить связь с parent ID 155."
+    ]
+  },
+  {
+    "university_id": 29,
+    "current_name": "Казахский государственный индустриально-строительный университет",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "kgiu.kz идентифицируется как сайт Карагандинского индустриального университета в Темиртау, тогда как запись названа индустриально-строительным вузом Алматы; возможна ошибка identity/домен.",
+    "evidence_urls": [
+      "https://tttu.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить юридическое лицо ID 29 перед merge."
+    ]
+  },
+  {
+    "university_id": 30,
+    "current_name": "Каспийский государственный технический университет",
+    "current_status": null,
+    "proposed_action": "propose_merge",
+    "canonical_id": 42,
+    "reason": "Старая/ошибочная запись Каспийского государственного технического университета соответствует Yessenov University в Актау; kgtu.kz не подтверждён как текущий официальный домен.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/mfa-berlin/press/news/details/1232180",
+      "https://kguti.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Уточнить историческую связь kgtu.kz с ID 42."
+    ]
+  },
+  {
+    "university_id": 31,
+    "current_name": "Университет Сулеймана Демиреля",
+    "current_status": "duplicate_of_57",
+    "proposed_action": "propose_merge",
+    "canonical_id": 57,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://sdu.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 32,
+    "current_name": "Казахский британский технический университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kbtu.edu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 33,
+    "current_name": "Евразийский университет",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://egi.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 34,
+    "current_name": "Университет имени Туран-Астана",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://tau-edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 35,
+    "current_name": "Казахский государственный медицинский университет им. С.Д. Асфендиярова",
+    "current_status": "duplicate_of_36",
+    "proposed_action": "propose_merge",
+    "canonical_id": 36,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://kaznmu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 36,
+    "current_name": "Казахский национальный медицинский университет им. С.Д. Асфендиярова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kaznmu.edu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 37,
+    "current_name": "Актюбинский региональный государственный университет имени К. Жубанова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://zhubanov.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 38,
+    "current_name": "Актюбинский государственный педагогический институт",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 37,
+    "reason": "Актюбинский государственный педагогический институт был объединён с Жубановым в 2013; запись является историческим дублем ID 37.",
+    "evidence_urls": [
+      "https://adilet.zan.kz/rus/docs/P1300000583",
+      "https://zhubanov.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 39,
+    "current_name": "Западно-Казахстанский университет имени Махамбета Утемисова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://wku.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 40,
+    "current_name": "Кокшетауский государственный педагогический институт",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://shokan.edu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 41,
+    "current_name": "Жезказганский государственный университет имени О. Айманова",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 84,
+    "reason": "zhezu.edu.kz и zhezu.kz ведут к одному Жезказганскому университету имени О. Байконурова в Жезказгане.",
+    "evidence_urls": [
+      "https://zhezu.edu.kz/ru/home/",
+      "https://zhezu.kz/ru/university-contacts/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 42,
+    "current_name": "Каспийский государственный университет технологии и инжиниринга имени Ш. Есенова",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kguti.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 43,
+    "current_name": "Академия государственного управления при Президенте РК",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://www.apa.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 44,
+    "current_name": "KIMEP University",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://www.kimep.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 45,
+    "current_name": "Caspian University (Abay st corpus)",
+    "current_status": null,
+    "proposed_action": "propose_merge",
+    "canonical_id": 46,
+    "reason": "Caspian University: одинаковый официальный домен и организация; Abay/Seyfullin — корпуса, а не отдельные вузы.",
+    "evidence_urls": [
+      "https://cu.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Проверить канонический корпус для адресных полей."
+    ]
+  },
+  {
+    "university_id": 46,
+    "current_name": "Caspian University (Seyfulin st corpus)",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://cu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 47,
+    "current_name": "Еуразиялық технологиялық университет",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "meta.edu.kz подтверждает Eurasian Technological University, но официальный контакт указывает Алматы; snapshot city — Каскелен.",
+    "evidence_urls": [
+      "https://meta.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить текущий зарегистрированный город."
+    ]
+  },
+  {
+    "university_id": 48,
+    "current_name": "Қазақстан инженерлік-технологиялық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://metu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 49,
+    "current_name": "«Нұр-Мүбарак» Мысыр ислам мәдениеті университеті",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: city corrected Костанай -> Алматы. Нур-Мубарак подтверждён как вуз в Алматы; snapshot city — Костанай.",
+    "evidence_urls": [
+      "https://www.nmu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Исправить city_id после сверки справочника."
+    ]
+  },
+  {
+    "university_id": 50,
+    "current_name": "Каспий қоғамдық университеті",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 46,
+    "reason": "Каспийский общественный университет — юридическая/историческая форма Caspian University на том же домене.",
+    "evidence_urls": [
+      "https://cu.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить последовательность юридических названий."
+    ]
+  },
+  {
+    "university_id": 51,
+    "current_name": "Алматы гуманитарлы-экономикалық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://ageu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 52,
+    "current_name": "Қазақ Еңбек және әлеуметтік қатынастар академиясы",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kazatiso.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 53,
+    "current_name": "Алматы менеджмент университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://almau.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 54,
+    "current_name": "Л.Гончаров атындағы Қазақ автомобиль жолдары академиясы",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kazadi.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 55,
+    "current_name": "«ҚДЖМ» Қазақ медициналық университеті",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 122,
+    "reason": "«ҚДЖМ»/«ҚДСЖМ» Казахский медицинский университет ВШОЗ: официальный справочник и ksph.edu.kz указывают одну организацию; kazmu.kz устарел.",
+    "evidence_urls": [
+      "https://ksph.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 56,
+    "current_name": "Ілияс Жансүгүров атындағы Жетісу университеті",
+    "current_status": "duplicate_of_117",
+    "proposed_action": "propose_merge",
+    "canonical_id": 117,
+    "reason": "APPLIED 2026-09-27: city corrected Шымкент -> Талдыкорган; duplicate relation retained. Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://zhetysu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 57,
+    "current_name": "С.Демирель атындағы университет",
+    "current_status": null,
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: city corrected Тараз -> Каскелен; status and duplicate relations retained. SDU — самостоятельный вуз, но city_id указывает Тараз; официальный сайт и госсправочник указывают Каскелен, Алматинская область.",
+    "evidence_urls": [
+      "https://sdu.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Нормализовать город как Каскелен либо хранить город и область раздельно."
+    ]
+  },
+  {
+    "university_id": 58,
+    "current_name": "Қ. Жұбанов атындағы Ақтөбе өңірлік  университеті",
+    "current_status": "duplicate_of_37",
+    "proposed_action": "propose_merge",
+    "canonical_id": 37,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://zhubanov.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 59,
+    "current_name": "М.Оспанов атындағы Батыс-Қазақстан   медициналық университет",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: city corrected Уральск -> Актобе. Ospanov Medical University подтверждён в Актобе, а snapshot city — Уральск.",
+    "evidence_urls": [
+      "https://ospanov.university",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Исправить city_id по юридическому адресу."
+    ]
+  },
+  {
+    "university_id": 60,
+    "current_name": "С.Баишев атындағы Ақтөбе университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://bu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 61,
+    "current_name": "Қазақ-Орыс халықаралық университеті",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: city corrected Тараз -> Актобе; muctr.kz remains pending. muctr.kz относится к Российскому химико-технологическому университету/филиалу, а не к Казахстанско-Российскому международному университету; госсправочник указывает этот вуз в Актобе, snapshot — Тараз.",
+    "evidence_urls": [
+      "https://www.gov.kz/article/657",
+      "https://krmu.kz",
+      "https://muctr.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Уточнить юридический вуз и корректный домен."
+    ]
+  },
+  {
+    "university_id": 62,
+    "current_name": "Х.Досмұхамедов атындағы Атырау университеті",
+    "current_status": "duplicate_of_16",
+    "proposed_action": "propose_merge",
+    "canonical_id": 16,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://asu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 63,
+    "current_name": "С. Өтебаев атындағы Атырау мұнай және газ университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://aogu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 64,
+    "current_name": "Атырау  инженерлік-гуманитарлық институт",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://aigi.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 65,
+    "current_name": "Д.Серікбаев атындағы Шығыс-Қазақстан  техникалық университеті",
+    "current_status": "duplicate_of_11",
+    "proposed_action": "propose_merge",
+    "canonical_id": 11,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://ektu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 66,
+    "current_name": "С.Аманжолов атындағы  Шығыс-Қазақстан  университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://vku.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 67,
+    "current_name": "Қазақстан-Америка еркін университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kau.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 68,
+    "current_name": "Семей медицина университеті",
+    "current_status": "duplicate_of_12",
+    "proposed_action": "propose_merge",
+    "canonical_id": 12,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://smu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 69,
+    "current_name": "Семей қаласының Шәкәрім атындағы  университеті",
+    "current_status": null,
+    "proposed_action": "propose_merge",
+    "canonical_id": 131,
+    "reason": "Shakarim University в Семее: одинаковый официальный домен, одна организация, различается форма названия.",
+    "evidence_urls": [
+      "https://shakarim.university/kk",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 70,
+    "current_name": "Қазақ гуманитарлық-заң инновациялық университеті",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "kazguiu.kz — старый сайт Alikhan Bokeikhan University в Семее, тогда как запись указывает Astana.",
+    "evidence_urls": [
+      "https://abu.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Определить организацию ID 70."
+    ]
+  },
+  {
+    "university_id": 71,
+    "current_name": "М.Дулати атындағы Тараз  өңірлік университеті",
+    "current_status": "duplicate_of_132",
+    "proposed_action": "propose_merge",
+    "canonical_id": 132,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://dulaty.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 72,
+    "current_name": "Халықаралық Тараз  инновациялық институты",
+    "current_status": null,
+    "proposed_action": "propose_merge",
+    "canonical_id": 110,
+    "reason": "Международный Таразский инновационный институт и текущий Международный Таразский университет имени Ш. Муртазы — одна организация после переименования.",
+    "evidence_urls": [
+      "https://htu.edu.kz/",
+      "https://htu.edu.kz/ru/tigu-turaly/tarikhy",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 73,
+    "current_name": "Жәңгір хан атындағы Батыс-Қазақстан агротехникалық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://wkau.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 74,
+    "current_name": "М.Өтемісов атындағы Батыс-Қазақстан   университеті",
+    "current_status": "duplicate_of_39",
+    "proposed_action": "propose_merge",
+    "canonical_id": 39,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://wku.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 75,
+    "current_name": "Батыс-Қазақстан инновациялық-технологиялық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://wkitu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 76,
+    "current_name": "Қазақстан инновациялық және телекеммуникациялық  жүйелер университеті",
+    "current_status": null,
+    "proposed_action": "propose_merge",
+    "canonical_id": 111,
+    "reason": "Казахстанский университет инновационных и телекоммуникационных систем: одинаковый домен, город Уральск и организация.",
+    "evidence_urls": [
+      "https://kazuits.edu.kz/",
+      "https://kazuits.edu.kz/ru/o-vuze/rekvizity",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 77,
+    "current_name": "Қарағанды  индустриалдық университеті",
+    "current_status": null,
+    "proposed_action": "propose_merge",
+    "canonical_id": 133,
+    "reason": "APPLIED 2026-09-27: city corrected Караганда -> Темиртау; no merge applied. Карагандинский индустриальный университет: одинаковый домен и организация; официальный адрес — Темиртау, а не Караганда.",
+    "evidence_urls": [
+      "https://tttu.edu.kz/contacts/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Исправить город канонической записи ID 133 на Темиртау."
+    ]
+  },
+  {
+    "university_id": 78,
+    "current_name": "Қарағанды медициналық университеті",
+    "current_status": null,
+    "proposed_action": "propose_merge",
+    "canonical_id": 118,
+    "reason": "Карагандинский медицинский университет: qmu.edu.kz — официальный домен, kmu.edu.kz не подтверждён; имя и город совпадают с ID 118.",
+    "evidence_urls": [
+      "https://qmu.edu.kz/ru/",
+      "https://kmu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Проверить исторический статус kmu.edu.kz."
+    ]
+  },
+  {
+    "university_id": 79,
+    "current_name": "Қарағанды техникалық университеті",
+    "current_status": "duplicate_of_5",
+    "proposed_action": "propose_merge",
+    "canonical_id": 5,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://kstu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 80,
+    "current_name": "Академик Е.Бөкетов атындағы Қарағанды    университеті",
+    "current_status": "duplicate_of_7",
+    "proposed_action": "propose_merge",
+    "canonical_id": 7,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://buketov.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 81,
+    "current_name": "Қазақстан тұтынушылар одағының Қарағанды    экономикалық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://www.keu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 82,
+    "current_name": "«Болашақ» академиясы",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://bolashaq.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 83,
+    "current_name": "Орталық-Қазақстан академиясы",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://c-k-a.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 84,
+    "current_name": "О.Байқоңуров атындағы Жезқазган университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://zhezu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 85,
+    "current_name": "Ы.Алтынсарин атындағы Арқалық педагогикалық институты",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "au.edu.kz — устаревшая/неподтверждённая ссылка; для Arkalyk Pedagogical Institute официальный реестр указывает api.edu.kz.",
+    "evidence_urls": [
+      "https://api.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Сверить актуальное название после реорганизации."
+    ]
+  },
+  {
+    "university_id": 86,
+    "current_name": "Рудный индустриалдық институты",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 134,
+    "reason": "rii.edu.kz и rii.kz — два домена одной Рудненской индустриальной организации.",
+    "evidence_urls": [
+      "https://www.rii.edu.kz/ru/home-2/",
+      "https://www.rii.kz/ru/%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D0%B8%D0%BD%D1%81%D1%82%D0%B8%D1%82%D1%83%D1%82%D0%B0/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 87,
+    "current_name": "А.Байтұрсынов атындағы Қостанай   өңірлік университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://ksu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 88,
+    "current_name": "М.Дулатов атындағы Қостанай  инженерлік-экономикалық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kineu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 89,
+    "current_name": "З.Алдамжар атындағы Қостанай   әлеуметтік-техникалық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kosstu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 90,
+    "current_name": "Қорқыт Ата атындағы Қызылорда университеті",
+    "current_status": "duplicate_of_14",
+    "proposed_action": "propose_merge",
+    "canonical_id": 14,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://korkyt.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 100,
+    "current_name": "Х.А.Ясауи атындағы Халықаралық қазақ-түрік университеті",
+    "current_status": "duplicate_of_149",
+    "proposed_action": "propose_merge",
+    "canonical_id": 149,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://ayu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 101,
+    "current_name": "Халықаралық туризм және меймандостық университеті",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "IUTH в Туркестане — самостоятельный вуз; дополнительная запись ID 114 использует iut.edu.kz, тогда как подтверждённый текущий домен — iuth.edu.kz.",
+    "evidence_urls": [
+      "https://iuth.edu.kz/ru/rekvizity/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Сверить юридическую форму ID 114 перед merge."
+    ]
+  },
+  {
+    "university_id": 102,
+    "current_name": "Сырдария университеті",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "Sirdariya University исторически переехал/переименован в Zh. Tashenev University в Шымкенте; snapshot указывает Атырау и старый домен sirdariya.kz.",
+    "evidence_urls": [
+      "https://tashenov.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Уточнить alias или объединение с текущей записью."
+    ]
+  },
+  {
+    "university_id": 103,
+    "current_name": "Оңтүстік Қазақстан медицина академиясы",
+    "current_status": null,
+    "proposed_action": "propose_merge",
+    "canonical_id": 119,
+    "reason": "APPLIED 2026-09-27: city corrected Жезказган -> Шымкент; no merge applied. Южно-Казахстанская медицинская академия: тот же официальный домен skma.edu.kz; официальный город Шымкент, а в ID 103 указан Жезказган.",
+    "evidence_urls": [
+      "https://skma.edu.kz/ru",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Исправить город на Шымкент."
+    ]
+  },
+  {
+    "university_id": 104,
+    "current_name": "Оңтүстік Қазақстан мемлекеттік педагогикалық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://ukgpu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 105,
+    "current_name": "М. Әуэзов атындағы Оңтүстік Қазақстан университеті",
+    "current_status": "duplicate_of_13",
+    "proposed_action": "propose_merge",
+    "canonical_id": 13,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://auezov.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 106,
+    "current_name": "«Мирас» университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://miras.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 107,
+    "current_name": "Шымкент университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://univershu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 108,
+    "current_name": "Орталық Азия инновациялық университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://caiu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 109,
+    "current_name": "ҚМ. Куатбеков атындағы халықтар достығы университеті",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://udn.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 110,
+    "current_name": "Учреждение «Международный Таразский инновационный университет имени Шерхана Муртазы»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://htu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 111,
+    "current_name": "Негосударственное учреждение образования «Казахстанский университет инновационных и телекоммуникационных систем»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kazuits.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 112,
+    "current_name": "Товарищество с ограниченной ответственностью «Astana IT University»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Astana IT University подтверждён официальным сайтом и госсправочником в Астане; пустой статус можно предложить перевести в active после проверки политики статусов.",
+    "evidence_urls": [
+      "https://astanait.edu.kz/en",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 113,
+    "current_name": "Товарищество с ограниченной ответственностью «Международный университет «Астана»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://aiu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 114,
+    "current_name": "Некоммерческое акционерное общество «Международный университет туризма и гостеприимства»",
+    "current_status": "active",
+    "proposed_action": "propose_merge",
+    "canonical_id": 101,
+    "reason": "ID 114 и ID 101 обозначают International University of Tourism and Hospitality в Туркестане; iut.edu.kz не подтверждён, текущий домен — iuth.edu.kz.",
+    "evidence_urls": [
+      "https://iuth.edu.kz/ru/rekvizity/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 115,
+    "current_name": "Акционерное общество «ALT университет имени Мухамеджана Тынышпаева»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://alt.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 116,
+    "current_name": "Товарищество с ограниченной ответственностью «Кызылординский Университет «Болашак»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://bolashak-edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 117,
+    "current_name": "Некоммерческое акционерное общество «Жетысуский университет имени Ильяса Жансугурова»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://zhetysu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 118,
+    "current_name": "Некоммерческое акционерное общество «Карагандинский медицинский университет»",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "qmu.edu.kz — подтверждённый официальный домен Карагандинского медицинского университета; связанная ID 78 содержит legacy-домен kmu.edu.kz.",
+    "evidence_urls": [
+      "https://qmu.edu.kz/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 119,
+    "current_name": "Акционерное общество «Южно-Казахстанская медицинская академия»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://skma.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 120,
+    "current_name": "Некоммерческое Акционерное Общество «Медицинский университет Астана»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://amu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 121,
+    "current_name": "Негосударственное учреждение образования «Казахстанско-Российский медицинский университет»",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: website corrected kbtu.kz -> new.krmu.edu.kz/. kbtu.kz — сайт KBTU, не Казахстанско-Российского медицинского университета; для КРМУ указаны medkrmu.kz/new.krmu.edu.kz.",
+    "evidence_urls": [
+      "https://medkrmu.kz/",
+      "https://new.krmu.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Исправить website после подтверждения юридического лица."
+    ]
+  },
+  {
+    "university_id": 122,
+    "current_name": "Товарищество с ограниченной ответственностью «Казахстанский медицинский университет «ВШОЗ»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://ksph.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 123,
+    "current_name": "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «Coventry Kazakhstan»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://coventry.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 124,
+    "current_name": "Республиканское государственное учреждение «Академия управления Министерства внутренних дел Республики Казахстан»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Академия управления МВД — отдельное ведомственное учебное заведение в Астане, подтверждено МВД.",
+    "evidence_urls": [
+      "https://aumvd.edu.kz",
+      "https://www.gov.kz/memleket/entities/qriim/activities/10766"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Проверить актуальный URL academy.gov.kz."
+    ]
+  },
+  {
+    "university_id": 125,
+    "current_name": "Товарищество с ограниченной ответственностью «Woosong University Kaxakhstan»",
+    "current_status": null,
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "Woosong University Kazakhstan подтверждён как международный проект/филиал в Туркестане; в названии опечатка Kaxakhstan, домен не подтверждён, модель филиала не установлена.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/ontustik/press/news/details/1075243",
+      "https://woosong.edu.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить юридическое имя, лицензию и статус филиала."
+    ]
+  },
+  {
+    "university_id": 126,
+    "current_name": "Некоммерческое акционерное общество \"Университет Ұлытау\"",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Университет Ұлытау в официальных материалах находится на стадии создания/лицензирования; перевод в active до подтверждения лицензии не предлагается.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/sci/press/news/details/1100963?lang=ru",
+      "https://www.gov.kz/memleket/entities/sci/press/news/details/1159132?lang=ru",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Дата лицензирования и фактического начала набора."
+    ]
+  },
+  {
+    "university_id": 127,
+    "current_name": "Некоммерческое акционерное общество «Кокшетауский университет имени Ш.Уалиханова»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kuam.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 128,
+    "current_name": "Товарищество с ограниченной ответственностью \"Национальный исследовательский университет искусственного интеллекта\"",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: website corrected nao.kz -> qairu.edu.kz/. nao.kz не идентифицирует QAIRU; официальный домен Qazaq AI Research University — qairu.edu.kz.",
+    "evidence_urls": [
+      "https://qairu.edu.kz/"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить юридическую запись."
+    ]
+  },
+  {
+    "university_id": 129,
+    "current_name": "ТОО «Иностранное учебное заведение «University of Innovation and Technology»",
+    "current_status": null,
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "InnoTech подтверждён официальным сайтом как международный кампус/организация в Алматы, но самостоятельная запись в государственном реестре и модель диплома требуют проверки.",
+    "evidence_urls": [
+      "https://innotech.edu.kz/"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": [
+      "Проверить лицензию и запись в реестре иностранных учебных заведений."
+    ]
+  },
+  {
+    "university_id": 130,
+    "current_name": "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «New York Film Academy Kazakhstan»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: city corrected Алматы -> Каскелен. NYFA Kazakhstan подтверждён как филиал в Каскелене, а не самостоятельный вуз в Алматы; официальный материал госоргана указывает другую локацию.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/sci/press/news/details/1076321",
+      "https://nyfa.edu.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить юридическую модель филиала и политику каталога по филиалам."
+    ]
+  },
+  {
+    "university_id": 131,
+    "current_name": "Некоммерческое акционерное общество «Шәкәрім университет»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://shakarim.university",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 132,
+    "current_name": "Некоммерческое акционерное общество «Таразский университет имени М.Х. Дулати»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://dulaty.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 133,
+    "current_name": "Некоммерческое акционерное общество «Карагандинский индустриальный университет»",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: city corrected Караганда -> Темиртау; no merge applied. ID 133 — текущая запись Карагандинского индустриального университета, но официальный адрес в Темиртау; city_id Караганда неверен.",
+    "evidence_urls": [
+      "https://tttu.edu.kz/contacts/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Исправить город на Темиртау при консолидации с ID 77."
+    ]
+  },
+  {
+    "university_id": 134,
+    "current_name": "Некоммерческое акционерное общество «Рудненский индустриальный университет»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://rii.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 135,
+    "current_name": "Некоммерческое акционерное общество «Торайгыров Университет»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://tou.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 136,
+    "current_name": "Государственное учреждение «Академия гражданской защиты имени Малика Габдуллина» Министерства по чрезвычайным ситуациям Республики Казахстан",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Академия гражданской защиты МЧС — отдельная академия в Кокшетау, подтверждена страницей МЧС.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/emer/activities/15194",
+      "https://agz.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Перепроверить agz.gov.kz."
+    ]
+  },
+  {
+    "university_id": 137,
+    "current_name": "Республиканское государственное учреждение «Костанайская академия Министерства внутренних дел Республики Казахстан имени Шракбека Кабылбаева»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Костанайская академия МВД — отдельная академия в Костанае, подтверждена МВД; qpa.edu.kz идентифицирован как её домен.",
+    "evidence_urls": [
+      "https://qpa.edu.kz",
+      "https://www.gov.kz/memleket/entities/qriim/activities/10766"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Проверить текущую доступность qpa.edu.kz."
+    ]
+  },
+  {
+    "university_id": 138,
+    "current_name": "Республиканское государственное учреждение «Национальный университет обороны Республики Казахстан» Министерства обороны Республики Казахстан",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Национальный университет обороны — отдельный военный вуз в Астане, подтверждён Минобороны.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/mod/press/article/details/593",
+      "https://www.gov.kz/memleket/entities/mod/activities/136",
+      "https://nau.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить актуальный домен вместо nau.gov.kz."
+    ]
+  },
+  {
+    "university_id": 139,
+    "current_name": "Государственное учреждение «Академия Комитета национальной безопасности Республики Казахстан»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Академия КНБ — отдельная академия в Алматы, подтверждена государственными материалами.",
+    "evidence_urls": [
+      "https://egov.kz/cms/ru/articles/university_degree/wkola_fknb",
+      "https://www.gov.kz/memleket/entities/knb/press/article/details/24442?lang=ru",
+      "https://anb.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить актуальный URL."
+    ]
+  },
+  {
+    "university_id": 140,
+    "current_name": "Республиканское государственное учреждение «Военно-инженерный институт радиоэлектроники и связи» Министерства обороны Республики Казахстан",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Военно-инженерный институт радиоэлектроники и связи — отдельный военный институт в Алматы, подтверждён Минобороны.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/mod/press/article/details/593",
+      "https://www.gov.kz/memleket/entities/mod/press/news/details/1258728?lang=ru",
+      "https://viirs.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Проверить TLS и актуальность viirs.gov.kz."
+    ]
+  },
+  {
+    "university_id": 141,
+    "current_name": "Республиканское государственное учреждение «Карагандинская академия Министерства внутренних дел Республики Казахстан имени Баримбека Бейсенова»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Карагандинская академия МВД — отдельная академия в Караганде, подтверждена МВД.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/qriim/activities/10766",
+      "https://kau.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Подтвердить актуальный URL."
+    ]
+  },
+  {
+    "university_id": 142,
+    "current_name": "Республиканское государственное учреждение «Военный институт Сухопутных войск имени Сагадата Нурмагамбетова» Министерства обороны Республики Казахстан",
+    "current_status": null,
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "Военный институт Сухопутных войск в Алматы подтверждён Минобороны; website в каталоге пуст, что требует отдельного поиска официальной ссылки.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/mod/press/article/details/593",
+      "https://www.gov.kz/memleket/entities/mod/activities/136"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Найти официальный веб-адрес."
+    ]
+  },
+  {
+    "university_id": 143,
+    "current_name": "Республиканское государственное учреждение «Военный институт Сил воздушной обороны имени дважды Героя Советского Союза Т.Я.Бегельдинова» Министерства обороны Республики Казахстан",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Военный институт Сил воздушной обороны — отдельный институт в Актобе, подтверждён Минобороны.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/mod/press/article/details/593",
+      "https://visvo.edu.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 144,
+    "current_name": "Республиканское государственное учреждение «Алматинская академия Министерства внутренних дел Республики Казахстан имени Макана Есбулатова»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Алматинская академия МВД — отдельная академия в Алматы, подтверждена МВД; домен aau.gov.kz не разрешился.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/qriim/activities/10766",
+      "https://aau.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Сверить с официальным доменом alpolac.edu.kz."
+    ]
+  },
+  {
+    "university_id": 145,
+    "current_name": "Республиканское государственное учреждение «Пограничная академия Комитета национальной безопасности Республики Казахстан»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Пограничная академия/Академия Пограничной службы КНБ — отдельная академия в Алматы, подтверждена КНБ.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/knb/press/article/9?directions=_140&lang=ru",
+      "https://egov.kz/cms/ru/articles/university_degree/wkola_fknb",
+      "https://pau.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Уточнить официальную форму названия и URL."
+    ]
+  },
+  {
+    "university_id": 146,
+    "current_name": "Государственное учреждение «Академия правоохранительных органов при Генеральной прокуратуре Республики Казахстан»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Академия правоохранительных органов — отдельная академия в Косшы, подтверждена прокуратурой.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/prokuror/documents/details/22307",
+      "https://apo.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 147,
+    "current_name": "Республиканское государственное учреждение «Академия Национальной гвардии Республики Казахстан»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Академия Национальной гвардии — отдельная академия в Петропавловске, подтверждена госматериалами МВД.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/qriim/press/news/details/1017832",
+      "https://ang.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 148,
+    "current_name": "Республиканское государственное учреждение «Академия правосудия при Высшем Судебном Совете Республики Казахстан»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Академия правосудия — отдельная академия при ВСС в Астане, подтверждена страницей ВСС.",
+    "evidence_urls": [
+      "https://www.gov.kz/memleket/entities/vss/press/news/8?lang=ru",
+      "https://ap.gov.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 149,
+    "current_name": "Учреждение «Международный казахско-турецкий университет имени Ходжи Ахмеда Ясави»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://ayu.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 150,
+    "current_name": "Товарищество с ограниченной ответственностью «De Montfort University Kazakhstan (Де Монтфорт Юниверсити Казахстан)»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://dmuk.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 151,
+    "current_name": "Акционерное общество «Университет КАЗГЮУ имени М.С. Нарикбаева»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://kazguu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 152,
+    "current_name": "Некоммерческое акционерное общество «Алматинский университет энергетики и связи имени Гумарбека Даукеева»",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "aues.edu.kz перенаправляет на energo.university; это похоже на официальный ребрендинг, но canonical URL следует нормализовать.",
+    "evidence_urls": [
+      "https://energo.university/kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 153,
+    "current_name": "Некоммерческое акционерное общество «Казахская академия спорта и туризма»",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "kazast.edu.kz возвращает 404 по проверенному адресу; организация существует, ссылку нужно обновить.",
+    "evidence_urls": [
+      "https://www.gov.kz/article/657",
+      "https://kazast.edu.kz"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": [
+      "Найти актуальный официальный домен КазАСТ."
+    ]
+  },
+  {
+    "university_id": 154,
+    "current_name": "Акционерное общество «Академия гражданской авиации»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://caa.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 155,
+    "current_name": "Товарищество с ограниченной ответственностью «Международная образовательная корпорация»",
+    "current_status": null,
+    "proposed_action": "propose_status_change",
+    "canonical_id": null,
+    "reason": "Международная образовательная корпорация подтверждена как parent-корпорация KazGASA/KAU и колледжей, а не очевидно самостоятельный вуз.",
+    "evidence_urls": [
+      "https://iec.edu.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Проверить связь с ID 28 и политику parent organizations."
+    ]
+  },
+  {
+    "university_id": 156,
+    "current_name": "Некоммерческое акционерное общество «Университет КИМЭП»",
+    "current_status": "duplicate_of_44",
+    "proposed_action": "propose_merge",
+    "canonical_id": 44,
+    "reason": "Пометка duplicate_of подтверждается официальными названиями/доменами; отношение является предложением, не применённым объединением.",
+    "evidence_urls": [
+      "https://kimep.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 157,
+    "current_name": "Республиканское государственное учреждение «Казахская национальная академия искусств имени Темирбека Жургенова» Министерства культуры и информации Республики Казахстан",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: website corrected conservatoire.edu.kz -> kaznai.kz/. conservatoire.edu.kz — сайт Казахской национальной консерватории, а не КазНАИ; для KazNAI подтверждён kaznai.kz.",
+    "evidence_urls": [
+      "https://kaznai.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Исправить website ID 157."
+    ]
+  },
+  {
+    "university_id": 158,
+    "current_name": "Некоммерческое Акционерное общество «Университет Нархоз»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://narxoz.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 159,
+    "current_name": "Учреждение «Esil University»",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://esil.edu.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 160,
+    "current_name": "Товарищество с ограниченной ответственностью «Университет Кунаева»",
+    "current_status": "active",
+    "proposed_action": "review",
+    "canonical_id": null,
+    "reason": "uib.edu.kz — сайт UIB, а не Университета Кунаева; официальный домен Университета Кунаева — vuzkunaeva.kz.",
+    "evidence_urls": [
+      "https://vuzkunaeva.kz/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": [
+      "Исправить website ID 160."
+    ]
+  },
+  {
+    "university_id": 161,
+    "current_name": "Республиканское государственное учреждение «Казахская национальная консерватория имени Курмангазы» Министерства культуры и информации Республики Казахстан",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "APPLIED 2026-09-27: website corrected kaznai.kz -> conservatoire.edu.kz/. В рамках проверки identity-дублей отдельный конфликт не выявлен; доступность сайта сама по себе не считалась доказательством статуса.",
+    "evidence_urls": [
+      "https://conservatoire.edu.kz/",
+      "https://kaznai.kz",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "medium",
+    "unresolved_questions": []
+  },
+  {
+    "university_id": 162,
+    "current_name": "Satbayev University",
+    "current_status": "active",
+    "proposed_action": "keep",
+    "canonical_id": null,
+    "reason": "Satbayev University присутствует отдельной записью; повторный импорт и merge не требуются.",
+    "evidence_urls": [
+      "https://satbayev.university/ru/",
+      "https://www.gov.kz/article/657"
+    ],
+    "checked_at": "2026-09-27",
+    "confidence": "high",
+    "unresolved_questions": []
+  }
+]

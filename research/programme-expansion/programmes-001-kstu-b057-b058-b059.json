@@ -1,0 +1,659 @@
+[
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "Информационные системы",
+      "code": "6B06102",
+      "group": "B057",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  },
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "IT-медицина",
+      "code": null,
+      "group": "B057",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  },
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "Вычислительная техника и программное обеспечение",
+      "code": null,
+      "group": "B057",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  },
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "Data Science",
+      "code": null,
+      "group": "B057",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  },
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "IT-инжиниринг",
+      "code": null,
+      "group": "B057",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  },
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "Системы информационной безопасности",
+      "code": "6B06301",
+      "group": "B058",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  },
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "Сетевая безопасность",
+      "code": null,
+      "group": "B058",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  },
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "Радиотехника, электроника и телекоммуникации",
+      "code": null,
+      "group": "B059",
+      "profile_subjects": [
+        "math",
+        "physics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  },
+  {
+    "university": {
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "https://www.kstu.kz"
+    },
+    "programme": {
+      "name": "Сетевые технологии и системы связи",
+      "code": null,
+      "group": "B059",
+      "profile_subjects": [
+        "math",
+        "physics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": null,
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": null,
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf",
+        "title": "Официальная таблица групп, профильных предметов и грантов KSTU",
+        "checked_at": "2026-09-27",
+        "status": "conflicting",
+        "quote_or_evidence": "PDF официального KSTU показывает B057/B058/B059, профильные пары и названия программ, но извлечение/годовые подписи требуют ручной сверки; значения 2025/2026 не переносятся на 2027-2028.",
+        "field": "programme.group, programme.profile_subjects"
+      },
+      {
+        "url": "https://www.kstu.kz/ofis-registratsii/?lang=ru",
+        "title": "Офис регистрации KSTU",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальный результат KSTU подтверждает 6B06102 Информационные системы и 6B06301 Системы информационной безопасности; остальные коды текущего пакета не извлечены из проверенного каталога.",
+        "field": "programme.code"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Группа и профильная пара подтверждены официальным PDF; индивидуальный code оставлен null, если он не был извлечён из официального каталога."
+  }
+]

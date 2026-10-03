@@ -1,0 +1,392 @@
+[
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.enu.kz/ru/page/applicants/bachelor"
+    },
+    "programme": {
+      "name": "Информационные системы",
+      "code": "6B06103",
+      "group": "B057",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://enu.enu.kz/ru/page/applicants/bachelor",
+        "title": "Бакалавриат — приём 2026",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальная страница ЕНУ прямо показывает группу, код программы, профильные предметы и указанный балл цикла 2026-2027. Указанный балл не заносится как historical passing score или гарантия гранта без уточнения его смысла.",
+        "field": "programme.name, programme.code, programme.group, programme.profile_subjects"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Источник подтверждает программу и профильную группу на странице приёма 2026. Paid minimum, action-specific deadline, documents, language and historical score remain unknown; 2026 is not transferred to 2027-2028."
+  },
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.enu.kz/ru/page/applicants/bachelor"
+    },
+    "programme": {
+      "name": "Вычислительная техника и программное обеспечение",
+      "code": "6B06104",
+      "group": "B057",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://enu.enu.kz/ru/page/applicants/bachelor",
+        "title": "Бакалавриат — приём 2026",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальная страница ЕНУ прямо показывает группу, код программы, профильные предметы и указанный балл цикла 2026-2027. Указанный балл не заносится как historical passing score или гарантия гранта без уточнения его смысла.",
+        "field": "programme.name, programme.code, programme.group, programme.profile_subjects"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Источник подтверждает программу и профильную группу на странице приёма 2026. Paid minimum, action-specific deadline, documents, language and historical score remain unknown; 2026 is not transferred to 2027-2028."
+  },
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.enu.kz/ru/page/applicants/bachelor"
+    },
+    "programme": {
+      "name": "Технологии искусственного интеллекта",
+      "code": "6B06112",
+      "group": "B057",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://enu.enu.kz/ru/page/applicants/bachelor",
+        "title": "Бакалавриат — приём 2026",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальная страница ЕНУ прямо показывает группу, код программы, профильные предметы и указанный балл цикла 2026-2027. Указанный балл не заносится как historical passing score или гарантия гранта без уточнения его смысла.",
+        "field": "programme.name, programme.code, programme.group, programme.profile_subjects"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Источник подтверждает программу и профильную группу на странице приёма 2026. Paid minimum, action-specific deadline, documents, language and historical score remain unknown; 2026 is not transferred to 2027-2028."
+  },
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.enu.kz/ru/page/applicants/bachelor"
+    },
+    "programme": {
+      "name": "Системы информационной безопасности",
+      "code": "6B06306",
+      "group": "B058",
+      "profile_subjects": [
+        "math",
+        "informatics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://enu.enu.kz/ru/page/applicants/bachelor",
+        "title": "Бакалавриат — приём 2026",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальная страница ЕНУ прямо показывает группу, код программы, профильные предметы и указанный балл цикла 2026-2027. Указанный балл не заносится как historical passing score или гарантия гранта без уточнения его смысла.",
+        "field": "programme.name, programme.code, programme.group, programme.profile_subjects"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Источник подтверждает программу и профильную группу на странице приёма 2026. Paid minimum, action-specific deadline, documents, language and historical score remain unknown; 2026 is not transferred to 2027-2028."
+  },
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.enu.kz/ru/page/applicants/bachelor"
+    },
+    "programme": {
+      "name": "Радиотехника, электроника и телекоммуникации",
+      "code": "6B06219",
+      "group": "B059",
+      "profile_subjects": [
+        "math",
+        "physics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://enu.enu.kz/ru/page/applicants/bachelor",
+        "title": "Бакалавриат — приём 2026",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальная страница ЕНУ прямо показывает группу, код программы, профильные предметы и указанный балл цикла 2026-2027. Указанный балл не заносится как historical passing score или гарантия гранта без уточнения его смысла.",
+        "field": "programme.name, programme.code, programme.group, programme.profile_subjects"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Источник подтверждает программу и профильную группу на странице приёма 2026. Paid minimum, action-specific deadline, documents, language and historical score remain unknown; 2026 is not transferred to 2027-2028."
+  },
+  {
+    "university": {
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.enu.kz/ru/page/applicants/bachelor"
+    },
+    "programme": {
+      "name": "Проектирование и конструирование радиоэлектронной аппаратуры",
+      "code": "6B06220",
+      "group": "B059",
+      "profile_subjects": [
+        "math",
+        "physics"
+      ],
+      "languages": []
+    },
+    "admission": {
+      "paid_min_ent": null,
+      "grant_application_min_ent": null,
+      "historical_passing_score": null,
+      "section_minimums": {},
+      "extra_exams": [],
+      "academic_year": "2026-2027",
+      "deadline": null,
+      "documents": []
+    },
+    "tuition": {
+      "first_year": null,
+      "other_years": {},
+      "currency": "KZT",
+      "academic_year": "2026-2027",
+      "installment_available": null
+    },
+    "dormitory": {
+      "available": null,
+      "price": null,
+      "price_period": null,
+      "guaranteed": null
+    },
+    "sources": [
+      {
+        "url": "https://enu.enu.kz/ru/page/applicants/bachelor",
+        "title": "Бакалавриат — приём 2026",
+        "checked_at": "2026-09-27",
+        "status": "needs_review",
+        "quote_or_evidence": "Официальная страница ЕНУ прямо показывает группу, код программы, профильные предметы и указанный балл цикла 2026-2027. Указанный балл не заносится как historical passing score или гарантия гранта без уточнения его смысла.",
+        "field": "programme.name, programme.code, programme.group, programme.profile_subjects"
+      }
+    ],
+    "unknown_fields": [
+      "admission.paid_min_ent",
+      "admission.grant_application_min_ent",
+      "admission.historical_passing_score",
+      "admission.extra_exams",
+      "admission.deadline and action",
+      "admission.documents",
+      "programme.languages",
+      "tuition",
+      "dormitory",
+      "2027-2028 conditions"
+    ],
+    "conflicts": [],
+    "notes": "Источник подтверждает программу и профильную группу на странице приёма 2026. Paid minimum, action-specific deadline, documents, language and historical score remain unknown; 2026 is not transferred to 2027-2028."
+  }
+]

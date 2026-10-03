@@ -1,0 +1,3845 @@
+{
+  "schema_version": "programme-expansion.v1",
+  "checked_at": "2026-09-27",
+  "database": "backend/edumatch.db",
+  "read_mode": "readonly",
+  "scope": {
+    "catalogue_rows": 153,
+    "independent_universities": 138,
+    "duplicates_excluded": 15,
+    "researched_batches": [
+      1,
+      2
+    ],
+    "researched_universities": 10,
+    "coverage_is_complete": false
+  },
+  "rules": [
+    "A missing programme is not evidence of absence.",
+    "Group assignment requires an official group/catalogue statement; code prefix alone is insufficient.",
+    "No 2026 fact is transferred to 2027-2028.",
+    "Unknown values remain null/unknown."
+  ],
+  "records": [
+    {
+      "university_id": 1,
+      "name": "Назарбаев Университет",
+      "short_name": "НУ",
+      "city": "Астана",
+      "official_website": "https://nu.edu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": 1,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "confirmed",
+        "source_status": "accessible",
+        "title": "All programs (A-Z) / Bachelor of Science in Computer Science",
+        "urls": [
+          "https://nu.edu.kz/admissions/programs/",
+          "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/"
+        ]
+      },
+      "target_groups": {
+        "B057": "unknown",
+        "B058": "unknown",
+        "B059": "unknown"
+      },
+      "other_groups": {
+        "status": "unknown",
+        "groups": []
+      },
+      "evidence": "Официальный каталог NU доступен и содержит бакалаврскую BSc in Computer Science (English, undergraduate, 4 years), но национальные группы B057/B058/B059 на проверенных страницах не обозначены. Отсутствие обозначения не трактуется как отсутствие группы.",
+      "unknowns": [
+        "national group mapping for NU",
+        "full catalogue extraction for all undergraduate programmes",
+        "programme code, profile subjects, Kazakh admission minimums, documents, deadlines"
+      ],
+      "next_action": "Найти официальный NU admission catalogue или нормативное соответствие программ национальным группам."
+    },
+    {
+      "university_id": 2,
+      "name": "Казахский национальный университет имени аль-Фараби",
+      "short_name": "КазНУ",
+      "city": "Алматы",
+      "official_website": "http://www.kaznu.kz",
+      "identity_status": "independent",
+      "research_batch": 1,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "confirmed",
+        "source_status": "accessible",
+        "title": "Поступающим 2026 — Образовательные программы",
+        "urls": [
+          "https://welcome.kaznu.kz/ru/27304/page"
+        ]
+      },
+      "target_groups": {
+        "B057": "confirmed",
+        "B058": "confirmed",
+        "B059": "confirmed"
+      },
+      "other_groups": {
+        "status": "confirmed",
+        "groups": [
+          "B053",
+          "B054",
+          "B061",
+          "B071",
+          "B072",
+          "B073",
+          "B101",
+          "B111",
+          "B123"
+        ]
+      },
+      "evidence": "Официальная таблица КазНУ перечисляет 6B06102/03/04/05/06/07/08, 6B06301/02 и 6B06201; в той же таблице присутствуют другие коды групп. Пороговые значения 0 в таблице не трактуются как нулевые баллы.",
+      "unknowns": [
+        "profile subjects require separate authoritative group mapping check",
+        "language per programme",
+        "paid minimum versus grant competition minimum",
+        "historical passing score semantics/year",
+        "additional exams, deadline action, documents, tuition and 2027-2028"
+      ],
+      "next_action": "Проверить профильные предметы и admission details по официальным страницам отдельных программ/НЦТ; не переносить 2026 на 2027."
+    },
+    {
+      "university_id": 3,
+      "name": "Евразийский национальный университет имени Л.Н. Гумилева",
+      "short_name": "ЕНУ",
+      "city": "Астана",
+      "official_website": "https://enu.kz/ru",
+      "identity_status": "independent",
+      "research_batch": 1,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "confirmed",
+        "source_status": "accessible",
+        "title": "Бакалавриат — приём 2026",
+        "urls": [
+          "https://enu.enu.kz/ru/page/applicants/bachelor"
+        ]
+      },
+      "target_groups": {
+        "B057": "confirmed",
+        "B058": "confirmed",
+        "B059": "confirmed"
+      },
+      "other_groups": {
+        "status": "confirmed",
+        "groups": [
+          "другие группы присутствуют в полном перечне бакалавриата"
+        ]
+      },
+      "evidence": "Официальная страница ЕНУ содержит таблицу B057/B058/B059, коды программ, профильные предметы и указанный проходной балл для цикла 2026-2027. Указанный балл не перенесён в historical_passing_score без явного подтверждения смысла.",
+      "unknowns": [
+        "paid minimums",
+        "whether displayed score is grant application minimum or historical passing score",
+        "languages, extra exams, action-specific deadlines, documents, tuition, 2027-2028"
+      ],
+      "next_action": "Собрать admission details по каждой программе и разнести deadline по действию."
+    },
+    {
+      "university_id": 4,
+      "name": "Казахский агротехнический университет имени С. Сейфуллина",
+      "short_name": "КазАТУ",
+      "city": "Астана",
+      "official_website": "https://www.kazatu.kz/",
+      "identity_status": "independent",
+      "research_batch": 1,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "unknown",
+        "source_status": "source_unavailable",
+        "title": null,
+        "urls": [
+          "https://kazatu.edu.kz/files/docs/buklety-KATU-kaz-2026-2027-5e2abb73fcf4642ca42393aaab9d8124.pdf",
+          "https://kazatu.edu.kz/ru/abiturientu"
+        ]
+      },
+      "target_groups": {
+        "B057": "unknown",
+        "B058": "unknown",
+        "B059": "unknown"
+      },
+      "other_groups": {
+        "status": "unknown",
+        "groups": []
+      },
+      "evidence": "Официальный домен и URL буклета найдены, но чтение документа завершилось TLS certificate verification failure. Search result не используется как достаточное подтверждение содержимого.",
+      "unknowns": [
+        "all catalogue fields",
+        "all target group presence",
+        "other groups"
+      ],
+      "next_action": "Повторить чтение официального PDF через доступ с валидной цепочкой сертификата или официальный HTML-каталог."
+    },
+    {
+      "university_id": 5,
+      "name": "Карагандинский государственный технический университет",
+      "short_name": "КарГТУ",
+      "city": "Караганда",
+      "official_website": "http://www.kstu.kz/",
+      "identity_status": "independent",
+      "research_batch": 1,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "confirmed",
+        "source_status": "accessible",
+        "title": "Поступление в бакалавриат / образовательные программы / threshold PDF",
+        "urls": [
+          "https://www.kstu.kz/bakalavriat-2/?lang=ru",
+          "https://www.kstu.kz/obrazovatelnye-programmy/?lang=ru",
+          "https://www.kstu.kz/wp-content/uploads/2025/07/STU-BB-toly-o-ytu-ZHOO-kody-032.pdf"
+        ]
+      },
+      "target_groups": {
+        "B057": "confirmed",
+        "B058": "confirmed",
+        "B059": "confirmed"
+      },
+      "other_groups": {
+        "status": "confirmed",
+        "groups": [
+          "B044",
+          "B045",
+          "B046",
+          "B047",
+          "B050",
+          "B060",
+          "B061",
+          "B062",
+          "B063",
+          "B064",
+          "B065",
+          "B071",
+          "B073",
+          "B074",
+          "B075",
+          "B076",
+          "B094",
+          "B095",
+          "B126"
+        ]
+      },
+      "evidence": "Официальная страница KSTU публикует разделы bachelor programmes, thresholds and documents. Официальный PDF связывает B057/B058/B059 с профилями и программными названиями; отдельные документы содержат коды 6B06102 and 6B06301. PDF имеет годовые обозначения, требующие сверки.",
+      "unknowns": [
+        "complete programme code list for B057/B059",
+        "2026 versus 2025/2027 applicability of thresholds",
+        "paid minimums, action-specific deadlines, languages, documents, tuition, 2027-2028"
+      ],
+      "next_action": "Проверить полный code/name catalogue and separate 2026 intake documents; keep historical values year-scoped."
+    },
+    {
+      "university_id": 6,
+      "name": "Академия наук Карагандинской области имени М.О. Ауэзова",
+      "short_name": "АНК",
+      "city": "Караганда",
+      "official_website": "https://auezovinstitute.kz/?lang=ru",
+      "identity_status": "conflict",
+      "research_batch": 2,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "unknown",
+        "source_status": "accessible",
+        "title": "Официальный сайт Института литературы и искусства имени М.О. Ауэзова",
+        "urls": [
+          "https://auezovinstitute.kz/?lang=ru"
+        ]
+      },
+      "target_groups": {
+        "B057": "unknown",
+        "B058": "unknown",
+        "B059": "unknown"
+      },
+      "other_groups": {
+        "status": "unknown",
+        "groups": []
+      },
+      "evidence": "В БД ID 6 называется «Академия наук Карагандинской области имени М.О. Ауэзова», но официальный сайт по URL из БД идентифицирует другое учреждение — Институт литературы и искусства имени М.О. Ауэзова. Подтвержденного каталога бакалавриата нет. Автоматический выбор между сущностями не сделан.",
+      "unknowns": [
+        "identity mismatch between DB row and official website",
+        "bachelor catalogue",
+        "B057/B058/B059 mapping",
+        "all admission fields"
+      ],
+      "next_action": "Разрешить identity blocker и подтвердить, является ли строка ID 6 вузом."
+    },
+    {
+      "university_id": 7,
+      "name": "Карагандинский государственный университет имени Е. Букетова",
+      "short_name": "КарГУ",
+      "city": "Караганда",
+      "official_website": "https://buketov.edu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": 2,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "confirmed",
+        "source_status": "accessible",
+        "title": "Перечень образовательных программ бакалавриата, приём 2026-2027",
+        "urls": [
+          "https://buketov.edu.kz/ru/page/main/bakalavr",
+          "https://buketov.edu.kz/files/%D0%9F%D0%B5%D1%80%D0%B5%D1%87%D0%B5%D0%BD%D1%8C%20%D0%BE%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%D1%8B%D1%85%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%20%D0%B1%D0%B0%D0%BA%D0%B0%D0%BB%D0%B0%D0%B2%D1%80%D0%B8%D0%B0%D1%82%D0%B0_%D0%BE%D1%87%D0%BD%D0%B0%D1%8F%20%D1%84%D0%BE%D1%80%D0%BC%D0%B0_%20%D0%BF%D1%80%D0%B8%D0%B5%D0%BC%202_26-2_27_rus.docx"
+        ]
+      },
+      "target_groups": {
+        "B057": "confirmed",
+        "B058": "not_found",
+        "B059": "confirmed"
+      },
+      "other_groups": {
+        "status": "confirmed",
+        "groups": [
+          "B001",
+          "B002",
+          "B003",
+          "B004",
+          "B005",
+          "B007",
+          "B008",
+          "B009",
+          "B010",
+          "B011",
+          "B012",
+          "B013",
+          "B014",
+          "B015",
+          "B016",
+          "B017",
+          "B018",
+          "B019",
+          "B020",
+          "B030",
+          "B031",
+          "B032",
+          "B033",
+          "B034",
+          "B036",
+          "B037",
+          "B038",
+          "B040",
+          "B041",
+          "B042",
+          "B044",
+          "B045",
+          "B046",
+          "B047",
+          "B049",
+          "B050",
+          "B051",
+          "B052",
+          "B053",
+          "B054",
+          "B055",
+          "B056",
+          "B060",
+          "B062",
+          "B063",
+          "B064",
+          "B065",
+          "B072",
+          "B090",
+          "B091",
+          "B092",
+          "B093",
+          "B094",
+          "B095",
+          "B134",
+          "B140",
+          "B142",
+          "B157",
+          "B162"
+        ]
+      },
+      "evidence": "Официальный перечень бакалавриата прямо содержит B057 с 6B06102/03/04 и B059 с 6B06201. Официальная таблица профилей указывает для B057 математику и информатику. B058 в перечне не найден.",
+      "unknowns": [
+        "paid minimum",
+        "grant application minimum",
+        "historical passing score semantics",
+        "2027-2028 conditions",
+        "B058 absence beyond checked catalogue"
+      ],
+      "next_action": "Сверить новый admission cycle и распределение опубликованных баллов перед production import."
+    },
+    {
+      "university_id": 8,
+      "name": "Казахский национальный аграрный университет",
+      "short_name": "КНАУ",
+      "city": "Алматы",
+      "official_website": "https://www.kaznaru.edu.kz/ru",
+      "identity_status": "independent",
+      "research_batch": 2,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "confirmed",
+        "source_status": "accessible",
+        "title": "Кафедра IT-технология — образовательные программы бакалавриата",
+        "urls": [
+          "https://kaznaru.edu.kz/ru/department/92",
+          "https://kaznaru.edu.kz/ru/op/50",
+          "https://kaznaru.edu.kz/ru/op/42",
+          "https://kaznaru.edu.kz/ru/op/193"
+        ]
+      },
+      "target_groups": {
+        "B057": "confirmed",
+        "B058": "unknown",
+        "B059": "unknown"
+      },
+      "other_groups": {
+        "status": "confirmed",
+        "groups": [
+          "B071"
+        ]
+      },
+      "evidence": "Официальная KazNARU page перечисляет бакалаврские 6В06102, 6В06103 и 6B06104; карточка 6B06104 указывает математика + информатика и порог от 65. Нормативная привязка 6B061 к B057 сохранена needs_review из-за недоступности классификационного PDF. B058/B059 в проверенном IT-каталоге не найдены, что не доказывает отсутствия.",
+      "unknowns": [
+        "B057 normative mapping source fetch",
+        "B058/B059 full catalogue",
+        "paid/grant/historical semantics",
+        "2027-2028 conditions"
+      ],
+      "next_action": "Проверить нормативный классификатор и admission catalogue KazNARU перед применением записей."
+    },
+    {
+      "university_id": 9,
+      "name": "Павлодарский государственный педагогический университет",
+      "short_name": "ПГПУ",
+      "city": "Павлодар",
+      "official_website": "https://ppu.edu.kz/",
+      "identity_status": "independent",
+      "research_batch": 2,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "confirmed",
+        "source_status": "accessible",
+        "title": "Образовательные программы университета и профильные предметы бакалавриата",
+        "urls": [
+          "https://ppu.edu.kz/ru/obrazovatelnyie-programmyi-universiteta/",
+          "https://ppu.edu.kz/ru/kombi-profiletov-po-obrazovgrammkalavriat%29"
+        ]
+      },
+      "target_groups": {
+        "B057": "unknown",
+        "B058": "unknown",
+        "B059": "unknown"
+      },
+      "other_groups": {
+        "status": "confirmed",
+        "groups": [
+          "B001",
+          "B002",
+          "B003",
+          "B004",
+          "B005",
+          "B007",
+          "B008",
+          "B009",
+          "B010",
+          "B011",
+          "B012",
+          "B013",
+          "B014",
+          "B015",
+          "B016",
+          "B017"
+        ]
+      },
+      "evidence": "Официальный каталог ППУ перечисляет педагогические 6B011–6B017, включая 6B01530/32/33 «Информатика...». Эти программы не отнесены к B057 только по похожему названию или коду; B058/B059 на проверенных страницах не подтверждены.",
+      "unknowns": [
+        "national group mapping for 6B01530/32/33",
+        "B057/B058/B059 catalogue mapping",
+        "paid/grant/historical semantics",
+        "2027-2028 conditions"
+      ],
+      "next_action": "Найти официальный источник, прямо связывающий конкретную педагогическую ОП с B057, если такая привязка предусмотрена."
+    },
+    {
+      "university_id": 10,
+      "name": "Павлодарский государственный университет имени С. Торайгырова",
+      "short_name": "ПГУ",
+      "city": "Павлодар",
+      "official_website": "https://tou.edu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": 2,
+      "coverage_status": "checked",
+      "catalogue": {
+        "status": "confirmed",
+        "source_status": "accessible",
+        "title": "ToU — бакалавриат и перечень образовательных программ",
+        "urls": [
+          "https://tou.edu.kz/ru/component/abitur?view=bach",
+          "https://tou.edu.kz/ru/component/content/article?id=10843"
+        ]
+      },
+      "target_groups": {
+        "B057": "confirmed",
+        "B058": "not_found",
+        "B059": "confirmed"
+      },
+      "other_groups": {
+        "status": "confirmed",
+        "groups": [
+          "B021",
+          "B023",
+          "B031",
+          "B034",
+          "B036",
+          "B037",
+          "B039",
+          "B040",
+          "B041",
+          "B042",
+          "B043",
+          "B044",
+          "B045",
+          "B046",
+          "B047",
+          "B049",
+          "B050",
+          "B051",
+          "B052",
+          "B053",
+          "B054",
+          "B055",
+          "B056",
+          "B060",
+          "B062",
+          "B063",
+          "B064",
+          "B065",
+          "B071",
+          "B073",
+          "B074",
+          "B075",
+          "B076",
+          "B077",
+          "B078",
+          "B079",
+          "B090",
+          "B091",
+          "B093",
+          "B094",
+          "B095",
+          "B162"
+        ]
+      },
+      "evidence": "Официальные страницы ToU содержат B057/6B06102, B057/6B06104 и B059/6B06201. Таблица приёма 2026 размещает B057 в блоке математика–информатика, B059 в блоке математика–физика. B058 в проверенных каталогах не найден.",
+      "unknowns": [
+        "paid minimum",
+        "grant application minimum",
+        "historical passing score semantics",
+        "2027-2028 conditions",
+        "B058 absence beyond checked catalogue"
+      ],
+      "next_action": "Проверить следующий admission cycle и отдельные документы по B058 перед production import."
+    },
+    {
+      "university_id": 11,
+      "name": "Восточно-Казахстанский государственный технический университет имени Д.Д. Серикова",
+      "short_name": "ВКГТУ",
+      "city": "Усть-Каменогорск",
+      "official_website": "https://www.ektu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 12,
+      "name": "Семей государственный медицинский университет",
+      "short_name": "СГМУ",
+      "city": "Семей",
+      "official_website": "https://smu.edu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 13,
+      "name": "Южно-Казахстанский государственный университет имени М. Ауэзова",
+      "short_name": "ЮКГУ",
+      "city": "Шымкент",
+      "official_website": "https://auezov.edu.kz/rus",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 14,
+      "name": "Кызылординский университет имени Коркыта Ата",
+      "short_name": "КУ",
+      "city": "Кызылорда",
+      "official_website": "https://korkyt.edu.kz/ru",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 15,
+      "name": "Мангистауский государственный университет имени Б. Момышулы",
+      "short_name": "МГУ",
+      "city": "Актау",
+      "official_website": "https://mangystau.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 16,
+      "name": "Атырауский государственный университет имени Х. Досмухамедова",
+      "short_name": "АГУ",
+      "city": "Атырау",
+      "official_website": "https://www.atyrau.edu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 17,
+      "name": "Западно-Казахстанский аграрно-технический университет имени Жангира Хана",
+      "short_name": "ЗКАТУ",
+      "city": "Уральск",
+      "official_website": "http://www.wkau.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 18,
+      "name": "Северо-Казахстанский государственный университет",
+      "short_name": "СКГУ",
+      "city": "Петропавловск",
+      "official_website": "http://nku.edu.kz/maps?lang=ru",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 19,
+      "name": "Казахский национальный педагогический университет имени Абая",
+      "short_name": "КНПУим.Абая",
+      "city": "Алматы",
+      "official_website": "https://kaznpu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 20,
+      "name": "Казахский технологический университет",
+      "short_name": "КТУ",
+      "city": "Алматы",
+      "official_website": "https://atu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 21,
+      "name": "Казахский государственный женский педагогический университет",
+      "short_name": "КГЖПУ",
+      "city": "Алматы",
+      "official_website": "http://kazmkpu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 22,
+      "name": "Туран Университет",
+      "short_name": "Туран",
+      "city": "Алматы",
+      "official_website": "https://turan.edu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 23,
+      "name": "Алматинский технологический университет",
+      "short_name": "АТУ",
+      "city": "Алматы",
+      "official_website": "https://atu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 24,
+      "name": "Казахский государственный лесотехнический институт",
+      "short_name": "КГЛТИ",
+      "city": "Алматы",
+      "official_website": "https://klsti.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 25,
+      "name": "Международный университет информационных технологий",
+      "short_name": "МУИТ",
+      "city": "Алматы",
+      "official_website": "https://iitu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 26,
+      "name": "Казахстанский филиал Московского государственного университета имени М.В. Ломоносова",
+      "short_name": "КзФ МГУ",
+      "city": "Астана",
+      "official_website": "https://msu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 27,
+      "name": "Университет туризма и международных отношений",
+      "short_name": "УТМО",
+      "city": "Алматы",
+      "official_website": "https://umto.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 28,
+      "name": "Казахский государственный архитектурно-строительный университет",
+      "short_name": "КГАСУ",
+      "city": "Алматы",
+      "official_website": "https://kazgasa.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 29,
+      "name": "Казахский государственный индустриально-строительный университет",
+      "short_name": "КГИСУ",
+      "city": "Алматы",
+      "official_website": "https://kgiu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 30,
+      "name": "Каспийский государственный технический университет",
+      "short_name": "КГТУ",
+      "city": "Актау",
+      "official_website": "https://kgtu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 32,
+      "name": "Казахский британский технический университет",
+      "short_name": "КБТУ",
+      "city": "Алматы",
+      "official_website": "https://kbtu.edu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 33,
+      "name": "Евразийский университет",
+      "short_name": "ЕУ",
+      "city": "Астана",
+      "official_website": "https://egi.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 34,
+      "name": "Университет имени Туран-Астана",
+      "short_name": "Туран-Астана",
+      "city": "Астана",
+      "official_website": "https://tau-edu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 36,
+      "name": "Казахский национальный медицинский университет им. С.Д. Асфендиярова",
+      "short_name": "КазНМУ",
+      "city": "Алматы",
+      "official_website": "https://kaznmu.edu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 37,
+      "name": "Актюбинский региональный государственный университет имени К. Жубанова",
+      "short_name": "АРГУ",
+      "city": "Актобе",
+      "official_website": "https://zhubanov.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 38,
+      "name": "Актюбинский государственный педагогический институт",
+      "short_name": "АГПИ-Актобе",
+      "city": "Актобе",
+      "official_website": "https://agpi.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 39,
+      "name": "Западно-Казахстанский университет имени Махамбета Утемисова",
+      "short_name": "ЗКУ-Уральск",
+      "city": "Уральск",
+      "official_website": "https://wku.edu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 40,
+      "name": "Кокшетауский государственный педагогический институт",
+      "short_name": "КГПИ",
+      "city": "Кокшетау",
+      "official_website": "https://shokan.edu.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 41,
+      "name": "Жезказганский государственный университет имени О. Айманова",
+      "short_name": "ЖГУ",
+      "city": "Жезказган",
+      "official_website": "https://zhezu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 42,
+      "name": "Каспийский государственный университет технологии и инжиниринга имени Ш. Есенова",
+      "short_name": "КГУТИ",
+      "city": "Актау",
+      "official_website": "https://kguti.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 43,
+      "name": "Академия государственного управления при Президенте РК",
+      "short_name": "АГУ при Президенте",
+      "city": "Астана",
+      "official_website": "https://www.apa.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 44,
+      "name": "KIMEP University",
+      "short_name": "KIMEP",
+      "city": "Алматы",
+      "official_website": "https://www.kimep.kz/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 45,
+      "name": "Caspian University (Abay st corpus)",
+      "short_name": "Caspian",
+      "city": "Алматы",
+      "official_website": "https://cu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 46,
+      "name": "Caspian University (Seyfulin st corpus)",
+      "short_name": "Caspian",
+      "city": "Алматы",
+      "official_website": "https://cu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 47,
+      "name": "Еуразиялық технологиялық университет",
+      "short_name": "Евразийский Тех",
+      "city": "Каскелен",
+      "official_website": "https://meta.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 48,
+      "name": "Қазақстан инженерлік-технологиялық университеті",
+      "short_name": "Казахстанский и",
+      "city": "Алматы",
+      "official_website": "https://metu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 49,
+      "name": "«Нұр-Мүбарак» Мысыр ислам мәдениеті университеті",
+      "short_name": "Египетский унив",
+      "city": "Алматы",
+      "official_website": "https://www.nmu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 50,
+      "name": "Каспий қоғамдық университеті",
+      "short_name": "Каспийский",
+      "city": "Алматы",
+      "official_website": "https://cu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 51,
+      "name": "Алматы гуманитарлы-экономикалық университеті",
+      "short_name": "Алматинский гум",
+      "city": "Алматы",
+      "official_website": "https://ageu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 52,
+      "name": "Қазақ Еңбек және әлеуметтік қатынастар академиясы",
+      "short_name": "Казахская акаде",
+      "city": "Алматы",
+      "official_website": "https://kazatiso.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 53,
+      "name": "Алматы менеджмент университеті",
+      "short_name": "Алматы Менеджме",
+      "city": "Алматы",
+      "official_website": "https://almau.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 54,
+      "name": "Л.Гончаров атындағы Қазақ автомобиль жолдары академиясы",
+      "short_name": "Казахская автом",
+      "city": "Алматы",
+      "official_website": "https://kazadi.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 55,
+      "name": "«ҚДЖМ» Қазақ медициналық университеті",
+      "short_name": "Казахстанский м",
+      "city": "Алматы",
+      "official_website": "https://kazmu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 57,
+      "name": "С.Демирель атындағы университет",
+      "short_name": "Университет им.",
+      "city": "Каскелен",
+      "official_website": "https://sdu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 59,
+      "name": "М.Оспанов атындағы Батыс-Қазақстан   медициналық университет",
+      "short_name": "ЗКМУ",
+      "city": "Актобе",
+      "official_website": "https://ospanov.university",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 60,
+      "name": "С.Баишев атындағы Ақтөбе университеті",
+      "short_name": "Актюбинский уни",
+      "city": "Актобе",
+      "official_website": "https://bu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 61,
+      "name": "Қазақ-Орыс халықаралық университеті",
+      "short_name": "Казахско-Русски",
+      "city": "Актобе",
+      "official_website": "https://muctr.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 63,
+      "name": "С. Өтебаев атындағы Атырау мұнай және газ университеті",
+      "short_name": "Атырауский-нефт",
+      "city": "Атырау",
+      "official_website": "https://aogu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 64,
+      "name": "Атырау  инженерлік-гуманитарлық институт",
+      "short_name": "Атырауский инже",
+      "city": "Атырау",
+      "official_website": "https://aigi.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 66,
+      "name": "С.Аманжолов атындағы  Шығыс-Қазақстан  университеті",
+      "short_name": "ВКГУ",
+      "city": "Усть-Каменогорск",
+      "official_website": "https://vku.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 67,
+      "name": "Қазақстан-Америка еркін университеті",
+      "short_name": "Казахстанско-Ам",
+      "city": "Усть-Каменогорск",
+      "official_website": "https://kau.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 69,
+      "name": "Семей қаласының Шәкәрім атындағы  университеті",
+      "short_name": "Университет им.",
+      "city": "Семей",
+      "official_website": "https://shakarim.university",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 70,
+      "name": "Қазақ гуманитарлық-заң инновациялық университеті",
+      "short_name": "Казахский гуман",
+      "city": "Астана",
+      "official_website": "https://kazguiu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 72,
+      "name": "Халықаралық Тараз  инновациялық институты",
+      "short_name": "Международный Т",
+      "city": "Тараз",
+      "official_website": "https://htu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 73,
+      "name": "Жәңгір хан атындағы Батыс-Қазақстан агротехникалық университеті",
+      "short_name": "ЗКАТУ-Каз",
+      "city": "Уральск",
+      "official_website": "https://wkau.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 75,
+      "name": "Батыс-Қазақстан инновациялық-технологиялық университеті",
+      "short_name": "ЗКИТУ",
+      "city": "Уральск",
+      "official_website": "https://wkitu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 76,
+      "name": "Қазақстан инновациялық және телекеммуникациялық  жүйелер университеті",
+      "short_name": "Казахстанский у",
+      "city": "Уральск",
+      "official_website": "https://kazuits.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 77,
+      "name": "Қарағанды  индустриалдық университеті",
+      "short_name": "Карагандинский",
+      "city": "Темиртау",
+      "official_website": "https://tttu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 78,
+      "name": "Қарағанды медициналық университеті",
+      "short_name": "Медицинский уни",
+      "city": "Караганда",
+      "official_website": "https://kmu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 81,
+      "name": "Қазақстан тұтынушылар одағының Қарағанды    экономикалық университеті",
+      "short_name": "КарЭкон",
+      "city": "Караганда",
+      "official_website": "https://www.keu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 82,
+      "name": "«Болашақ» академиясы",
+      "short_name": "Академия \"Болаш",
+      "city": "Караганда",
+      "official_website": "https://bolashaq.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 83,
+      "name": "Орталық-Қазақстан академиясы",
+      "short_name": "Центрально-Каза",
+      "city": "Караганда",
+      "official_website": "https://c-k-a.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 84,
+      "name": "О.Байқоңуров атындағы Жезқазган университеті",
+      "short_name": "ЖГУ-К",
+      "city": "Жезказган",
+      "official_website": "https://zhezu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 85,
+      "name": "Ы.Алтынсарин атындағы Арқалық педагогикалық институты",
+      "short_name": "АГПИ-Аркалык",
+      "city": "Аркалык",
+      "official_website": "https://au.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 86,
+      "name": "Рудный индустриалдық институты",
+      "short_name": "РИИ",
+      "city": "Рудный",
+      "official_website": "https://rii.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 87,
+      "name": "А.Байтұрсынов атындағы Қостанай   өңірлік университеті",
+      "short_name": "КРУ",
+      "city": "Костанай",
+      "official_website": "https://ksu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 88,
+      "name": "М.Дулатов атындағы Қостанай  инженерлік-экономикалық университеті",
+      "short_name": "КИЭУ",
+      "city": "Костанай",
+      "official_website": "https://kineu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 89,
+      "name": "З.Алдамжар атындағы Қостанай   әлеуметтік-техникалық университеті",
+      "short_name": "КСТУ",
+      "city": "Костанай",
+      "official_website": "https://kosstu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 101,
+      "name": "Халықаралық туризм және меймандостық университеті",
+      "short_name": "Международный университет туризма и гостеприимства (IUTH)",
+      "city": "Туркестан",
+      "official_website": "https://iuth.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 102,
+      "name": "Сырдария университеті",
+      "short_name": "Университет им. Жумабека Ташенова (бывш. \"Сырдария\")",
+      "city": "Атырау",
+      "official_website": "https://sirdariya.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 103,
+      "name": "Оңтүстік Қазақстан медицина академиясы",
+      "short_name": "Южно-Казахстанская медицинская академия (ЮКМА / SKMA)",
+      "city": "Шымкент",
+      "official_website": "https://skma.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 104,
+      "name": "Оңтүстік Қазақстан мемлекеттік педагогикалық университеті",
+      "short_name": "ЮКГПУ",
+      "city": "Шымкент",
+      "official_website": "https://ukgpu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 106,
+      "name": "«Мирас» университеті",
+      "short_name": "Мирас",
+      "city": "Шымкент",
+      "official_website": "https://miras.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 107,
+      "name": "Шымкент университеті",
+      "short_name": "Шымкентский уни",
+      "city": "Шымкент",
+      "official_website": "https://univershu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 108,
+      "name": "Орталық Азия инновациялық университеті",
+      "short_name": "ЦАИУ",
+      "city": "Шымкент",
+      "official_website": "https://caiu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 109,
+      "name": "ҚМ. Куатбеков атындағы халықтар достығы университеті",
+      "short_name": "Университет Дру",
+      "city": "Шымкент",
+      "official_website": "https://udn.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 110,
+      "name": "Учреждение «Международный Таразский инновационный университет имени Шерхана Муртазы»",
+      "short_name": "«Международный Таразский инновационный университет имени Шерхана Муртазы»",
+      "city": "Тараз",
+      "official_website": "https://htu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 111,
+      "name": "Негосударственное учреждение образования «Казахстанский университет инновационных и телекоммуникационных систем»",
+      "short_name": "«Казахстанский университет инновационных и телекоммуникационных систем»",
+      "city": "Уральск",
+      "official_website": "https://kazuits.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 112,
+      "name": "Товарищество с ограниченной ответственностью «Astana IT University»",
+      "short_name": "Astana IT University (AITU)",
+      "city": "Астана",
+      "official_website": "https://astanait.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 113,
+      "name": "Товарищество с ограниченной ответственностью «Международный университет «Астана»",
+      "short_name": "AIU",
+      "city": "Астана",
+      "official_website": "https://aiu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 114,
+      "name": "Некоммерческое акционерное общество «Международный университет туризма и гостеприимства»",
+      "short_name": "«Международный университет туризма и гостеприимства»",
+      "city": "Туркестан",
+      "official_website": "https://iut.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 115,
+      "name": "Акционерное общество «ALT университет имени Мухамеджана Тынышпаева»",
+      "short_name": "ALT University им. М. Тынышпаева",
+      "city": "Алматы",
+      "official_website": "https://alt.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 116,
+      "name": "Товарищество с ограниченной ответственностью «Кызылординский Университет «Болашак»",
+      "short_name": "Болашак-Кызылорда",
+      "city": "Кызылорда",
+      "official_website": "https://bolashak-edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 117,
+      "name": "Некоммерческое акционерное общество «Жетысуский университет имени Ильяса Жансугурова»",
+      "short_name": "«Жетысуский университет имени Ильяса Жансугурова»",
+      "city": "Талдыкорган",
+      "official_website": "https://zhetysu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 118,
+      "name": "Некоммерческое акционерное общество «Карагандинский медицинский университет»",
+      "short_name": "Карагандинский медицинский университет (КМУ)",
+      "city": "Караганда",
+      "official_website": "https://qmu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 119,
+      "name": "Акционерное общество «Южно-Казахстанская медицинская академия»",
+      "short_name": "ЮКМА",
+      "city": "Шымкент",
+      "official_website": "https://skma.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 120,
+      "name": "Некоммерческое Акционерное Общество «Медицинский университет Астана»",
+      "short_name": "МУА",
+      "city": "Астана",
+      "official_website": "https://amu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 121,
+      "name": "Негосударственное учреждение образования «Казахстанско-Российский медицинский университет»",
+      "short_name": "КРМУ",
+      "city": "Алматы",
+      "official_website": "https://new.krmu.edu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 122,
+      "name": "Товарищество с ограниченной ответственностью «Казахстанский медицинский университет «ВШОЗ»",
+      "short_name": "КМУ ВШОЗ",
+      "city": "Алматы",
+      "official_website": "https://ksph.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 123,
+      "name": "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «Coventry Kazakhstan»",
+      "short_name": "Coventry KZ",
+      "city": "Астана",
+      "official_website": "https://coventry.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 124,
+      "name": "Республиканское государственное учреждение «Академия управления Министерства внутренних дел Республики Казахстан»",
+      "short_name": "Академия управления МВД РК",
+      "city": "Астана",
+      "official_website": "https://academy.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 125,
+      "name": "Товарищество с ограниченной ответственностью «Woosong University Kaxakhstan»",
+      "short_name": "«Woosong University Kaxakhstan»",
+      "city": "Туркестан",
+      "official_website": "https://woosong.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 126,
+      "name": "Некоммерческое акционерное общество \"Университет Ұлытау\"",
+      "short_name": "Университет Ұлытау",
+      "city": "Жезказган",
+      "official_website": "https://ultau.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 127,
+      "name": "Некоммерческое акционерное общество «Кокшетауский университет имени Ш.Уалиханова»",
+      "short_name": "«Кокшетауский университет имени Ш.Уалиханова»",
+      "city": "Кокшетау",
+      "official_website": "https://kuam.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 128,
+      "name": "Товарищество с ограниченной ответственностью \"Национальный исследовательский университет искусственного интеллекта\"",
+      "short_name": "Qazaq AI Research University (QAIRU)",
+      "city": "Астана",
+      "official_website": "https://qairu.edu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 129,
+      "name": "ТОО «Иностранное учебное заведение «University of Innovation and Technology»",
+      "short_name": "InnoTech University (при поддержке Arizona State University)",
+      "city": "Алматы",
+      "official_website": "https://innotech.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 130,
+      "name": "Товарищество с ограниченной ответственностью «Иностранное учебное заведение «New York Film Academy Kazakhstan»",
+      "short_name": "NYFA Kazakhstan",
+      "city": "Каскелен",
+      "official_website": "https://nyfa.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 131,
+      "name": "Некоммерческое акционерное общество «Шәкәрім университет»",
+      "short_name": "«Шәкәрім университет»",
+      "city": "Семей",
+      "official_website": "https://shakarim.university",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 132,
+      "name": "Некоммерческое акционерное общество «Таразский университет имени М.Х. Дулати»",
+      "short_name": "Таразский У",
+      "city": "Тараз",
+      "official_website": "https://dulaty.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 133,
+      "name": "Некоммерческое акционерное общество «Карагандинский индустриальный университет»",
+      "short_name": "«Карагандинский индустриальный университет»",
+      "city": "Темиртау",
+      "official_website": "https://tttu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 134,
+      "name": "Некоммерческое акционерное общество «Рудненский индустриальный университет»",
+      "short_name": "РИУ",
+      "city": "Рудный",
+      "official_website": "https://rii.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 135,
+      "name": "Некоммерческое акционерное общество «Торайгыров Университет»",
+      "short_name": "«Торайгыров Университет»",
+      "city": "Павлодар",
+      "official_website": "https://tou.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 136,
+      "name": "Государственное учреждение «Академия гражданской защиты имени Малика Габдуллина» Министерства по чрезвычайным ситуациям Республики Казахстан",
+      "short_name": "Государственное учреждение «Академия гражданской защиты имени Малика Габдуллина»",
+      "city": "Кокшетау",
+      "official_website": "https://agz.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 137,
+      "name": "Республиканское государственное учреждение «Костанайская академия Министерства внутренних дел Республики Казахстан имени Шракбека Кабылбаева»",
+      "short_name": "Республиканское государственное учреждение «Костанайская академия Министерства в",
+      "city": "Костанай",
+      "official_website": "https://qpa.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 138,
+      "name": "Республиканское государственное учреждение «Национальный университет обороны Республики Казахстан» Министерства обороны Республики Казахстан",
+      "short_name": "Национальный университет обороны РК",
+      "city": "Астана",
+      "official_website": "https://nau.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 139,
+      "name": "Государственное учреждение «Академия Комитета национальной безопасности Республики Казахстан»",
+      "short_name": "Академия КНБ РК",
+      "city": "Алматы",
+      "official_website": "https://anb.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 140,
+      "name": "Республиканское государственное учреждение «Военно-инженерный институт радиоэлектроники и связи» Министерства обороны Республики Казахстан",
+      "short_name": "ВИИРЭиС",
+      "city": "Алматы",
+      "official_website": "https://viirs.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 141,
+      "name": "Республиканское государственное учреждение «Карагандинская академия Министерства внутренних дел Республики Казахстан имени Баримбека Бейсенова»",
+      "short_name": "Республиканское государственное учреждение «Карагандинская академия Министерства",
+      "city": "Караганда",
+      "official_website": "https://kau.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 142,
+      "name": "Республиканское государственное учреждение «Военный институт Сухопутных войск имени Сагадата Нурмагамбетова» Министерства обороны Республики Казахстан",
+      "short_name": "Военный институт Сухопутных войск (ВИСВ)",
+      "city": "Алматы",
+      "official_website": "",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 143,
+      "name": "Республиканское государственное учреждение «Военный институт Сил воздушной обороны имени дважды Героя Советского Союза Т.Я.Бегельдинова» Министерства обороны Республики Казахстан",
+      "short_name": "Военный институт Сил воздушной обороны им. Т.Я. Бегельдинова",
+      "city": "Актобе",
+      "official_website": "https://visvo.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 144,
+      "name": "Республиканское государственное учреждение «Алматинская академия Министерства внутренних дел Республики Казахстан имени Макана Есбулатова»",
+      "short_name": "Алматинская академия МВД РК им. М. Есбулатова",
+      "city": "Алматы",
+      "official_website": "https://aau.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 145,
+      "name": "Республиканское государственное учреждение «Пограничная академия Комитета национальной безопасности Республики Казахстан»",
+      "short_name": "Пограничная академия КНБ РК",
+      "city": "Алматы",
+      "official_website": "https://pau.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 146,
+      "name": "Государственное учреждение «Академия правоохранительных органов при Генеральной прокуратуре Республики Казахстан»",
+      "short_name": "Государственное учреждение «Академия правоохранительных органов при Генеральной ",
+      "city": "Косшы",
+      "official_website": "https://apo.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 147,
+      "name": "Республиканское государственное учреждение «Академия Национальной гвардии Республики Казахстан»",
+      "short_name": "Республиканское государственное учреждение «Академия Национальной гвардии Респуб",
+      "city": "Петропавловск",
+      "official_website": "https://ang.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 148,
+      "name": "Республиканское государственное учреждение «Академия правосудия при Высшем Судебном Совете Республики Казахстан»",
+      "short_name": "Академия правосудия при ВСС РК",
+      "city": "Астана",
+      "official_website": "https://ap.gov.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 149,
+      "name": "Учреждение «Международный казахско-турецкий университет имени Ходжи Ахмеда Ясави»",
+      "short_name": "«Международный казахско-турецкий университет имени Ходжи Ахмеда Ясави»",
+      "city": "Туркестан",
+      "official_website": "https://ayu.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 150,
+      "name": "Товарищество с ограниченной ответственностью «De Montfort University Kazakhstan (Де Монтфорт Юниверсити Казахстан)»",
+      "short_name": "De Montfort University Kazakhstan (DMUK)",
+      "city": "Алматы",
+      "official_website": "https://dmuk.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 151,
+      "name": "Акционерное общество «Университет КАЗГЮУ имени М.С. Нарикбаева»",
+      "short_name": "Maqsut Narikbayev University (MNU)",
+      "city": "Астана",
+      "official_website": "https://kazguu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 152,
+      "name": "Некоммерческое акционерное общество «Алматинский университет энергетики и связи имени Гумарбека Даукеева»",
+      "short_name": "АУЭС (Energo University)",
+      "city": "Алматы",
+      "official_website": "https://aues.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 153,
+      "name": "Некоммерческое акционерное общество «Казахская академия спорта и туризма»",
+      "short_name": "Казахская академия спорта и туризма (КазАСТ)",
+      "city": "Алматы",
+      "official_website": "https://kazast.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 154,
+      "name": "Акционерное общество «Академия гражданской авиации»",
+      "short_name": "Академия гражданской авиации",
+      "city": "Алматы",
+      "official_website": "https://caa.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 155,
+      "name": "Товарищество с ограниченной ответственностью «Международная образовательная корпорация»",
+      "short_name": "МОК (Международная образовательная корпорация)",
+      "city": "Алматы",
+      "official_website": "https://iec.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 157,
+      "name": "Республиканское государственное учреждение «Казахская национальная академия искусств имени Темирбека Жургенова» Министерства культуры и информации Республики Казахстан",
+      "short_name": "КазНАИ им. Т. Жургенова",
+      "city": "Алматы",
+      "official_website": "https://kaznai.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 158,
+      "name": "Некоммерческое Акционерное общество «Университет Нархоз»",
+      "short_name": "Университет Нархоз",
+      "city": "Алматы",
+      "official_website": "https://narxoz.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 159,
+      "name": "Учреждение «Esil University»",
+      "short_name": "Esil University",
+      "city": "Астана",
+      "official_website": "https://esil.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 160,
+      "name": "Товарищество с ограниченной ответственностью «Университет Кунаева»",
+      "short_name": "Университет Кунаева",
+      "city": "Алматы",
+      "official_website": "https://uib.edu.kz",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 161,
+      "name": "Республиканское государственное учреждение «Казахская национальная консерватория имени Курмангазы» Министерства культуры и информации Республики Казахстан",
+      "short_name": "Консерватория им. Курмангазы",
+      "city": "Алматы",
+      "official_website": "https://conservatoire.edu.kz/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    },
+    {
+      "university_id": 162,
+      "name": "Satbayev University",
+      "short_name": "Satbayev University",
+      "city": "Алматы",
+      "official_website": "https://satbayev.university/ru/",
+      "identity_status": "independent",
+      "research_batch": null,
+      "coverage_status": "not_checked",
+      "catalogue": null,
+      "target_groups": {
+        "B057": "not_checked",
+        "B058": "not_checked",
+        "B059": "not_checked"
+      },
+      "other_groups": {
+        "status": "not_checked",
+        "groups": []
+      },
+      "evidence": null,
+      "unknowns": [
+        "catalogue not researched yet"
+      ],
+      "next_action": "Очередь исследования не начата."
+    }
+  ],
+  "excluded_duplicates": [
+    {
+      "university_id": 31,
+      "name": "Университет Сулеймана Демиреля",
+      "short_name": "УСД",
+      "data_status": "duplicate_of_57",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 35,
+      "name": "Казахский государственный медицинский университет им. С.Д. Асфендиярова",
+      "short_name": "КГМУ",
+      "data_status": "duplicate_of_36",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 56,
+      "name": "Ілияс Жансүгүров атындағы Жетісу университеті",
+      "short_name": "Жетысуский уни",
+      "data_status": "duplicate_of_117",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 58,
+      "name": "Қ. Жұбанов атындағы Ақтөбе өңірлік  университеті",
+      "short_name": "Актюбинский рег",
+      "data_status": "duplicate_of_37",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 62,
+      "name": "Х.Досмұхамедов атындағы Атырау университеті",
+      "short_name": "Атырауский-Досм",
+      "data_status": "duplicate_of_16",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 65,
+      "name": "Д.Серікбаев атындағы Шығыс-Қазақстан  техникалық университеті",
+      "short_name": "ВКТТУ",
+      "data_status": "duplicate_of_11",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 68,
+      "name": "Семей медицина университеті",
+      "short_name": "КарГМУ",
+      "data_status": "duplicate_of_12",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 71,
+      "name": "М.Дулати атындағы Тараз  өңірлік университеті",
+      "short_name": "Таразский регио",
+      "data_status": "duplicate_of_132",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 74,
+      "name": "М.Өтемісов атындағы Батыс-Қазақстан   университеті",
+      "short_name": "Западно-Казахст",
+      "data_status": "duplicate_of_39",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 79,
+      "name": "Қарағанды техникалық университеті",
+      "short_name": "КарГТУ-К",
+      "data_status": "duplicate_of_5",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 80,
+      "name": "Академик Е.Бөкетов атындағы Қарағанды    университеті",
+      "short_name": "КарГУ-К",
+      "data_status": "duplicate_of_7",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 90,
+      "name": "Қорқыт Ата атындағы Қызылорда университеті",
+      "short_name": "КГУ",
+      "data_status": "duplicate_of_14",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 100,
+      "name": "Х.А.Ясауи атындағы Халықаралық қазақ-түрік университеті",
+      "short_name": "МКТУ им. Х.А. Ясави",
+      "data_status": "duplicate_of_149",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 105,
+      "name": "М. Әуэзов атындағы Оңтүстік Қазақстан университеті",
+      "short_name": "ЮКГУ-2",
+      "data_status": "duplicate_of_13",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    },
+    {
+      "university_id": 156,
+      "name": "Некоммерческое акционерное общество «Университет КИМЭП»",
+      "short_name": "Университет КИМЭП (KIMEP University)",
+      "data_status": "duplicate_of_44",
+      "excluded_reason": "duplicate row; investigate canonical university only"
+    }
+  ]
+}
